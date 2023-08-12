@@ -1,0 +1,13 @@
+{
+  "type": "filament",
+  "setting_id": "GFSA05_01",
+  "name": "Cosmyx PLA Silk @0.40-nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PLA Silk @base",
+  "filament_max_volumetric_speed": ["12"],
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle"
+  ]
+}

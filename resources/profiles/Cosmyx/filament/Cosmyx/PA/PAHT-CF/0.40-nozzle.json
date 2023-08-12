@@ -1,0 +1,12 @@
+{
+  "type": "filament",
+  "setting_id": "GFSN04",
+  "name": "Cosmyx PAHT-CF @0.40-nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PAHT-CF @base",
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle"
+  ]
+}

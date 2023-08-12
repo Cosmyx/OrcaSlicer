@@ -1,0 +1,13 @@
+{
+  "type": "machine",
+  "setting_id": "GM003",
+  "name": "Cosmyx SuperNova 0.4 nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "fdm_cosmyx_common",
+  "printer_model": "Cosmyx Nova",
+  "default_filament_profile": ["Cosmyx PLA Basic @0.40-nozzle"],
+  "default_print_profile": "0.20mm Standard @Cosmyx Nova 0.4 nozzle",
+  "nozzle_diameter": ["0.4"],
+  "printable_area": ["0x0", "300x0", "300x300", "0x300"]
+}

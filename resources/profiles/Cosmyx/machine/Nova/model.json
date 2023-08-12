@@ -1,0 +1,13 @@
+{
+  "type": "machine_model",
+  "name": "Cosmyx Nova",
+  "model_id": "cosmyx_nova",
+  "url": "http://www.cosmyx3d.com/",
+  "nozzle_diameter": "0.25;0.4;0.6;0.8;1.0",
+  "machine_tech": "FFF",
+  "family": "Cosmyx",
+  "bed_model": "machine/Nova/bed.stl",
+  "bed_texture": "machine/Nova/bed_texture.svg",
+  "hotend_model": "bbl-3dp-hotend.stl",
+  "default_materials": "Cosmyx PLA Basic @0.40-nozzle;"
+}

@@ -1,0 +1,12 @@
+{
+  "type": "filament",
+  "setting_id": "GFSG99",
+  "name": "Generic PETG @0.40-nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Generic PETG @base",
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle"
+  ]
+}

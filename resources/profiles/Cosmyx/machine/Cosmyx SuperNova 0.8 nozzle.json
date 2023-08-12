@@ -1,9 +1,0 @@
-{
-  "type": "machine",
-  "setting_id": "GM104",
-  "name": "Cosmyx SuperNova 0.8 nozzle",
-  "from": "system",
-  "instantiation": "true",
-  "inherits": "Cosmyx Nova 0.8 nozzle",
-  "printable_area": ["0x0", "300x0", "300x300", "0x300"]
-}

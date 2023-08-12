@@ -46,7 +46,6 @@
   "single_extruder_multi_material": "0",
   "change_filament_gcode": "",
   "wipe": ["1"],
-  "default_print_profile": "0.16mm Optimal @Cosmyx Nova 0.4 nozzle",
   "machine_start_gcode": "M104 S[first_layer_temperature] ; set extruder temp\nM140 S[first_layer_bed_temperature] ; set bed temp\nM190 S[first_layer_bed_temperature] ; wait for bed temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nG1 Z5 F15000 ; lift\nG1 X299 Y160 F4500 ; move to prime\nG1 Z0.29 F4500 ; get ready to prime\nG92 E0 ; reset extrusion distance\nG1 Y150 E9.0 F600 ; prime nozzle\nG1 Y110 E12.5 F600 ; prime nozzle\nG1 Y80 F5000 ; quick wipe",
   "machine_end_gcode": ""
 }

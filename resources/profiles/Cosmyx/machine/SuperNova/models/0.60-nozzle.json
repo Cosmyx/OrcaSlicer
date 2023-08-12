@@ -1,0 +1,17 @@
+{
+  "type": "machine",
+  "setting_id": "GM006",
+  "name": "Cosmyx SuperNova 0.6 nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "fdm_cosmyx_common",
+  "printer_model": "Cosmyx Nova",
+  "default_filament_profile": ["Cosmyx PLA Basic @0.60-nozzle"],
+  "default_print_profile": "0.30mm Standard @Cosmyx Nova 0.6 nozzle",
+  "nozzle_diameter": ["0.6"],
+  "max_layer_height": ["0.42"],
+  "min_layer_height": ["0.12"],
+  "retraction_length": ["1.4"],
+  "retraction_minimum_travel": ["3"],
+  "printable_area": ["0x0", "300x0", "300x300", "0x300"]
+}

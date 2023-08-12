@@ -1,0 +1,12 @@
+{
+  "type": "filament",
+  "setting_id": "GFSG50_01",
+  "name": "Cosmyx PETG-CF @0.40-nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PETG-CF @base",
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle"
+  ]
+}

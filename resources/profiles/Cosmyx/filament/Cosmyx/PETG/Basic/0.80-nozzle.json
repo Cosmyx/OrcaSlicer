@@ -1,0 +1,15 @@
+{
+  "type": "filament",
+  "setting_id": "GFSG00_02",
+  "name": "Cosmyx PETG Basic @0.80-nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PETG Basic @base",
+  "filament_max_volumetric_speed": ["16"],
+  "fan_max_speed": ["60"],
+  "fan_min_speed": ["20"],
+  "compatible_printers": [
+    "Cosmyx Nova 0.8 nozzle",
+    "Cosmyx SuperNova 0.8 nozzle"
+  ]
+}
