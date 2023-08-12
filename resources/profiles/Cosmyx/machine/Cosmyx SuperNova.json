@@ -1,0 +1,13 @@
+{
+  "type": "machine_model",
+  "name": "Cosmyx SuperNova",
+  "model_id": "supernova",
+  "url": "http://www.cosmyx3d.com/Parameters/printer_model/cosmyx_supernova.json",
+  "nozzle_diameter": "0.4;0.25;0.6;0.8;1",
+  "machine_tech": "FFF",
+  "family": "Cosmyx",
+  "bed_model": "Cosmyx_SuperNova_bed.stl",
+  "bed_texture": "Cosmyx_SuperNova_ejection.svg",
+  "hotend_model": "bbl-3dp-hotend.stl",
+  "default_materials": "Generic PLA Silk;Generic PLA;Cosmyx PLA Basic @Cosmyx Nova;Cosmyx ABS @Cosmyx Nova;Cosmyx PC @Cosmyx Nova;Cosmyx Support W @Cosmyx Nova;Cosmyx TPU 95A @Cosmyx Nova;PolyLite PLA @Cosmyx Nova;"
+}

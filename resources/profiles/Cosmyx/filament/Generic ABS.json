@@ -1,0 +1,12 @@
+{
+  "type": "filament",
+  "setting_id": "GFSB99",
+  "name": "Generic ABS",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Generic ABS @base",
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle"
+  ]
+}

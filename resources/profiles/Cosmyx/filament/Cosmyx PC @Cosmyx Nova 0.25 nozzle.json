@@ -1,0 +1,14 @@
+{
+  "type": "filament",
+  "setting_id": "GFSC00_02",
+  "name": "Cosmyx PC @Cosmyx Nova 0.25 nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PC @base",
+  "filament_max_volumetric_speed": ["1"],
+  "nozzle_temperature": ["260"],
+  "compatible_printers": [
+    "Cosmyx Nova 0.25 nozzle",
+    "Cosmyx SuperNova 0.25 nozzle"
+  ]
+}

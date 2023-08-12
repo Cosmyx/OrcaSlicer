@@ -1,0 +1,20 @@
+{
+  "type": "filament",
+  "setting_id": "GFST01",
+  "name": "Cosmyx PET-CF @Cosmyx Nova",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PET-CF @base",
+  "slow_down_for_layer_cooling": ["1"],
+  "reduce_fan_stop_start_freq": ["0"],
+  "slow_down_min_speed": ["10"],
+  "slow_down_layer_time": ["2"],
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx Nova 0.6 nozzle",
+    "Cosmyx Nova 0.8 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle",
+    "Cosmyx SuperNova 0.6 nozzle",
+    "Cosmyx SuperNova 0.8 nozzle"
+  ]
+}

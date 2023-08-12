@@ -1,0 +1,17 @@
+{
+  "type": "filament",
+  "setting_id": "GFSA02",
+  "name": "Cosmyx PLA Metal @Cosmyx Nova",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Cosmyx PLA Metal @base",
+  "filament_max_volumetric_speed": ["21"],
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx Nova 0.6 nozzle",
+    "Cosmyx Nova 0.8 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle",
+    "Cosmyx SuperNova 0.6 nozzle",
+    "Cosmyx SuperNova 0.8 nozzle"
+  ]
+}

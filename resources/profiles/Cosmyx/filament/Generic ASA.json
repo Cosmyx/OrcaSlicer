@@ -1,0 +1,12 @@
+{
+  "type": "filament",
+  "setting_id": "GFSB98",
+  "name": "Generic ASA",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "Generic ASA @base",
+  "compatible_printers": [
+    "Cosmyx Nova 0.4 nozzle",
+    "Cosmyx SuperNova 0.4 nozzle"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "type": "machine",
+  "setting_id": "GM005",
+  "name": "Cosmyx Nova 0.1 nozzle",
+  "from": "system",
+  "instantiation": "true",
+  "inherits": "fdm_cosmyx_common",
+  "nozzle_diameter": ["1"],
+  "printer_variant": "0.8",
+  "printer_model": "Cosmyx Nova",
+  "default_filament_profile": ["Cosmyx PLA Basic @Coxmyx Nova 0.8 nozzle"],
+  "default_print_profile": "0.40mm Standard @Cosmyx Nova 0.8 nozzle",
+  "max_layer_height": ["1"],
+  "min_layer_height": ["0.2"],
+  "retraction_length": ["0.8"],
+  "retraction_minimum_travel": ["1"],
+  "retract_length_toolchange": ["3"],
+  "machine_start_gcode": "M104 S[first_layer_temperature] ; set extruder temp\nM140 S[first_layer_bed_temperature] ; set bed temp\nM190 S[first_layer_bed_temperature] ; wait for bed temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nG1 Z5 F15000 ; lift\nG1 X299 Y160 F4500 ; move to prime\nG1 Z0.29 F4500 ; get ready to prime\nG92 E0 ; reset extrusion distance\nG1 Y150 E9.0 F600 ; prime nozzle\nG1 Y110 E12.5 F600 ; prime nozzle\nG1 Y80 F5000 ; quick wipe"
+}
