@@ -22,14 +22,14 @@ namespace Slic3r {
 namespace GUI {
 
 static const ColorRGBA GRABBER_COLOR = ColorRGBA::YELLOW();
-static const ColorRGBA UPPER_PART_COLOR = ColorRGBA::CYAN();
+static const ColorRGBA UPPER_PART_COLOR = ColorRGBA::MAGENTA();
 static const ColorRGBA LOWER_PART_COLOR = ColorRGBA::MAGENTA();
 static const ColorRGBA MODIFIER_COLOR   = ColorRGBA(0.75f, 0.75f, 0.75f, 0.5f);
 
 // connector colors
 static const ColorRGBA PLAG_COLOR           = ColorRGBA::YELLOW();
 static const ColorRGBA DOWEL_COLOR          = ColorRGBA::DARK_YELLOW();
-static const ColorRGBA HOVERED_PLAG_COLOR   = ColorRGBA::CYAN();
+static const ColorRGBA HOVERED_PLAG_COLOR   = ColorRGBA::MAGENTA();
 static const ColorRGBA HOVERED_DOWEL_COLOR  = ColorRGBA(0.0f, 0.5f, 0.5f, 1.0f);
 static const ColorRGBA SELECTED_PLAG_COLOR  = ColorRGBA::GRAY();
 static const ColorRGBA SELECTED_DOWEL_COLOR = ColorRGBA::DARK_GRAY();
