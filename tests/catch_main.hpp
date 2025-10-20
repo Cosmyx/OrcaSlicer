@@ -13,7 +13,7 @@ struct VerboseConsoleReporter : public ConsoleReporter {
     
     void testCaseStarting(TestCaseInfo const& _testInfo) override
     {
-        Colour::use(Colour::Cyan);
+        Colour::use(Colour::Magenta);
         stream << "Testing ";
         Colour::use(Colour::None);
         stream << _testInfo.name << std::endl;
