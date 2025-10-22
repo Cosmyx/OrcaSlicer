@@ -18,7 +18,6 @@
         "0x0"
     ],
     "machine_load_filament_time": "29",
-    "machine_start_gcode": "PREHEAT B={max(first_layer_bed_temperature[0],first_layer_bed_temperature[1])} TL={first_layer_temperature[0]} TR={first_layer_temperature[1]}\n\n;; start_print ;;",
     "machine_unload_filament_time": "28",
     "scan_first_layer": "1",
     "upward_compatible_machine": [

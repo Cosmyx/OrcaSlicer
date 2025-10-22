@@ -149,6 +149,7 @@
     "layer_change_gcode": "G92 E0.0",
     "machine_end_gcode": ";; end_print ;;",
     "machine_pause_gcode": "PAUSE",
+    "machine_start_gcode": "PREHEAT B={max(first_layer_bed_temperature[0],first_layer_bed_temperature[1])} TL={first_layer_temperature[0]} TR={first_layer_temperature[1]}\n\n;; start_print ;;",
     "wipe": [
         "1"
     ]
