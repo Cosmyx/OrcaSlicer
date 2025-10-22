@@ -1,0 +1,13 @@
+{
+    "type": "machine_model",
+    "name": "Cosmyx Nova",
+    "model_id": "BL-P001",
+    "url": "http://www.cosmyx.com/Parameters/printer_model/Cosmyx Nova.json",
+    "nozzle_diameter": "0.4;0.2;0.6;0.8",
+    "machine_tech": "FFF",
+    "family": "Cosmyx-3DP",
+    "bed_model": "Nova-bed_model.stl",
+    "bed_texture": "Nova-bed_texture.svg",
+    "hotend_model": "cosmyx-3dp-hotend.stl",
+    "default_materials": "Generic PLA Silk;Generic PLA;Cosmyx PLA Matte @Cosmyx Nova;Cosmyx PLA Basic @Cosmyx Nova;Cosmyx ABS @Cosmyx Nova;Cosmyx PC @Cosmyx Nova;Cosmyx Support W @Cosmyx Nova;Cosmyx TPU 95A @Cosmyx Nova;PolyTerra PLA @Cosmyx Nova;PolyLite PLA @Cosmyx Nova;"
+}
