@@ -1839,7 +1839,7 @@ void Sidebar::sync_ams_list()
     wxGetApp().app_config ->set("ams_filament_ids", p->ams_list_device, ams_filament_ids);
     if (unknowns > 0) {
         MessageDialog dlg(this,
-            _L("There are some unknown filaments mapped to generic preset. Please update OrcaCosmyx or restart OrcaCosmyx to check if there is an update to system presets."),
+            _L("There are some unknown filaments mapped to generic preset. Please update OrcaSlicer or restart OrcaSlicer to check if there is an update to system presets."),
             _L("Sync filaments with AMS"), wxOK);
         dlg.ShowModal();
     }
@@ -9352,7 +9352,7 @@ void Plater::import_model_id(wxString download_info)
                         error);
 
                     if (retry_count == max_retries) {
-                        msg = _L("Importing to OrcaCosmyx failed. Please download the file and manually import it.");
+                        msg = _L("Importing to OrcaSlicer failed. Please download the file and manually import it.");
                         cont = false;
                     }
                 })
@@ -14467,7 +14467,7 @@ void Plater::show_object_info()
 
     #ifndef __WINDOWS__
     if (non_manifold_edges > 0) {
-        info_manifold += into_u8("\n" + _L("Tips:") + "\n" +_L("\"Fix Model\" feature is currently only on Windows. Please repair the model on OrcaCosmyx(windows) or CAD softwares."));
+        info_manifold += into_u8("\n" + _L("Tips:") + "\n" +_L("\"Fix Model\" feature is currently only on Windows. Please repair the model on OrcaSlicer(windows) or CAD softwares."));
     }
     #endif //APPLE & LINUX
 
