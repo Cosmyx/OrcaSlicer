@@ -11,7 +11,7 @@
         },
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete Metal Ceramique.json"
+            "sub_path": "machine/SuperNovaDT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique.json"
         },
         {
             "name": "Cosmyx Nova",
@@ -461,19 +461,19 @@
         },
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle.json"
+            "sub_path": "machine/SuperNovaDT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle.json"
         },
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle.json"
+            "sub_path": "machine/SuperNovaDT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle.json"
         },
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle.json"
+            "sub_path": "machine/SuperNovaDT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle.json"
         },
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle.json"
+            "sub_path": "machine/SuperNovaDT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle.json"
         }
     ]
 }
