@@ -5,6 +5,10 @@
     "description": "Orca Filament Library",
     "filament_list": [
         {
+            "name": "fdm_filament_common",
+            "sub_path": "filament/base/fdm_filament_common.json"
+        },
+        {
             "name": "fdm_filament_abs",
             "sub_path": "filament/base/fdm_filament_abs.json"
         },
@@ -15,10 +19,6 @@
         {
             "name": "fdm_filament_bvoh",
             "sub_path": "filament/base/fdm_filament_bvoh.json"
-        },
-        {
-            "name": "fdm_filament_common",
-            "sub_path": "filament/base/fdm_filament_common.json"
         },
         {
             "name": "fdm_filament_eva",
