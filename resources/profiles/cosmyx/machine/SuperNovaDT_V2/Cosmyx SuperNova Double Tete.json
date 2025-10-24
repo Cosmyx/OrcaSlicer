@@ -9,5 +9,5 @@
     "bed_model": "SuperNova-bed_model.stl",
     "bed_texture": "SuperNova-bed_texture.png",
     "hotend_model": "cosmyx-3dp-hotend.stl",
-    "default_materials": "TECTONIC CPE JAUNE @Cosmyx Nova"
+    "default_materials": "Cosmyx ASA;Cosmyx PA6-CF;Cosmyx PETG Basic;Cosmyx PLA Basic;Cosmyx TPU 95A"
 }

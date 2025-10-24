@@ -9,5 +9,5 @@
     "bed_model": "SuperNova-bed_model.stl",
     "bed_texture": "SuperNova-bed_texture.png",
     "hotend_model": "cosmyx-3dp-hotend.stl",
-    "default_materials": "Generic PLA Silk;Generic PLA;Cosmyx PLA Matte @Cosmyx Nova;Cosmyx PLA Basic @Cosmyx Nova;Cosmyx ABS @Cosmyx Nova;Cosmyx PC @Cosmyx Nova;Cosmyx Support W @Cosmyx Nova;Cosmyx TPU 95A @Cosmyx Nova;PolyTerra PLA @Cosmyx Nova;PolyLite PLA @Cosmyx Nova;"
+    "default_materials": "Cosmyx ASA;Cosmyx PA6-CF;Cosmyx PETG Basic;Cosmyx PLA Basic;Cosmyx TPU 95A"
 }
