@@ -58,7 +58,7 @@
     "extruder_offset": [
         "0x0"
     ],
-    "single_extruder_multi_material": "0",
+    "single_extruder_multi_material": "1",
     "extruders_count": "2"    
 
 
