@@ -14,6 +14,8 @@
 #include <wx/wupdlock.h>
 #include <wx/debug.h>
 #include <wx/msgdlg.h>
+#include <wx/uri.h>
+#include <wx/webview.h>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
@@ -56,42 +58,53 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
     txt_filename->OSXDisableAllSmartSubstitutions();
 #endif
 }
+#include <wx/webview.h>
+
 void PrintHostSendDialog::init()
 {
-    // --- WebView popup: Hello world ---
+    // 0) Hard reset : plus aucun widget résiduel
+    Freeze();
+    SetSizer(nullptr);       // détache tout ancien sizer
+    DestroyChildren();       // détruit champ texte, icône, etc.
+
+    // 1) WebView
+#if wxCHECK_VERSION(3,2,0)
     auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
-                               wxDefaultPosition, wxSize(520, 360));
-    web->SetPage(
-        "<!DOCTYPE html><html><head><meta charset='utf-8'/>"
-        "<style>"
-        "html,body{height:100%;margin:0}"
+                               wxDefaultPosition, FromDIP(wxSize(640,420)),
+                               "", wxWEBVIEW_BACKEND_DEFAULT);
+#else
+    auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
+                               wxDefaultPosition, FromDIP(wxSize(640,420)));
+#endif
+
+    const wxString html =
+        "<!doctype html><meta charset=utf-8>"
+        "<style>html,body{height:100%;margin:0;background:#fafafa}"
         "body{display:flex;align-items:center;justify-content:center;"
         "font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif}"
         ".card{padding:24px 28px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.15);"
-        "font-size:28px;font-weight:600;}"
-        "</style></head>"
-        "<body><div class='card'>Hello world</div></body></html>", ""
-    );
+        "background:#fff;font-size:28px;font-weight:600}</style>"
+        "<div class=card>Hello world</div>";
 
-    // Réutilise le sizer de MsgDialog si dispo, sinon crée un sizer local.
-    if (content_sizer) {
-        content_sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
-        // Bouton "Fermer" (ou ce que tu veux)
-        add_button(wxID_CANCEL, false, _L("Close"));
-        finalize();
-    } else {
-        auto* sizer = new wxBoxSizer(wxVERTICAL);
-        sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
-        auto* btn = new wxButton(this, wxID_CANCEL, _L("Close"));
-        sizer->Add(btn, 0, wxALIGN_RIGHT | wxALL, FromDIP(8));
-        btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
-        SetSizerAndFit(sizer);
-    }
+    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html](wxWebViewEvent&){ web->SetPage(html, ""); });
+    web->LoadURL("about:blank");
+
+    // 2) Nouveau layout minimal
+    auto* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
+
+    auto* btn = new wxButton(this, wxID_CANCEL, _L("Fermer"));
+    sizer->Add(btn, 0, wxALIGN_RIGHT | wxALL, FromDIP(8));
+    btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
+
+    SetSizerAndFit(sizer);
+    Layout();
+    CentreOnParent();
+    Thaw();
     return;
-
-    // --- (UI originale en dessous, intacte, jamais exécutée ici) ---
-
 }
+
+
 std::string PrintHostSendDialog::storage() const
 {
     if (!combo_storage)
@@ -825,20 +838,18 @@ void ElegooPrintHostSendDialog::refresh()
 
 boost::filesystem::path PrintHostSendDialog::filename() const
 {
-    // Si l'UI native est présente, on lit le champ ; sinon on renvoie un path vide.
     if (txt_filename)
         return boost::filesystem::path(txt_filename->GetValue().ToStdString());
-    return boost::filesystem::path(); // neutre
+    return boost::filesystem::path();
 }
 
 Slic3r::PrintHostPostUploadAction PrintHostSendDialog::post_action() const
 {
-    return post_upload_action; // déjà membre de la classe
+    return post_upload_action;
 }
 
 std::string PrintHostSendDialog::group() const
 {
-    // Pas de champ "group" dans ta version → renvoyer une chaîne vide.
     return std::string();
 }
 
