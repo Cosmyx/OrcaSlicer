@@ -107,11 +107,11 @@
     "xy_hole_compensation": "0",
     "xy_contour_compensation": "0",
     "wall_generator": "classic",
-    "default_jerk": "9",
-    "outer_wall_jerk": "9",
-    "inner_wall_jerk": "9",
-    "infill_jerk": "9",
-    "top_surface_jerk": "9",
+    "default_jerk": "7",
+    "outer_wall_jerk": "4",
+    "inner_wall_jerk": "7",
+    "infill_jerk": "7",
+    "top_surface_jerk": "4",
     "initial_layer_jerk": "9",
-    "travel_jerk": "9"
+    "travel_jerk": "7"
 }
