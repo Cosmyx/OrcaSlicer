@@ -18,6 +18,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/nowide/convert.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include "GUI.hpp"
 #include "GUI_App.hpp"
@@ -90,7 +91,7 @@ void PrintHostSendDialog::init()
 
     // --- (UI originale en dessous, intacte, jamais exécutée ici) ---
 
-
+}
 std::string PrintHostSendDialog::storage() const
 {
     if (!combo_storage)
@@ -820,6 +821,25 @@ void ElegooPrintHostSendDialog::refresh()
     }
     this->Layout();
     this->Fit();
+}
+
+boost::filesystem::path PrintHostSendDialog::filename() const
+{
+    // Si l'UI native est présente, on lit le champ ; sinon on renvoie un path vide.
+    if (txt_filename)
+        return boost::filesystem::path(txt_filename->GetValue().ToStdString());
+    return boost::filesystem::path(); // neutre
+}
+
+Slic3r::PrintHostPostUploadAction PrintHostSendDialog::post_action() const
+{
+    return post_upload_action; // déjà membre de la classe
+}
+
+std::string PrintHostSendDialog::group() const
+{
+    // Pas de champ "group" dans ta version → renvoyer une chaîne vide.
+    return std::string();
 }
 
 }}
