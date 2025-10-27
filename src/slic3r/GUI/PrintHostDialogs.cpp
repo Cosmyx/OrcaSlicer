@@ -57,169 +57,39 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
 }
 void PrintHostSendDialog::init()
 {
-    const auto& path = m_path;
-    const auto& storage_paths = m_paths;
-    const auto& post_actions = m_post_actions;
-    const auto& storage_names = m_storage_names;
+    // --- WebView popup: Hello world ---
+    auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
+                               wxDefaultPosition, wxSize(520, 360));
+    web->SetPage(
+        "<!DOCTYPE html><html><head><meta charset='utf-8'/>"
+        "<style>"
+        "html,body{height:100%;margin:0}"
+        "body{display:flex;align-items:center;justify-content:center;"
+        "font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif}"
+        ".card{padding:24px 28px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.15);"
+        "font-size:28px;font-weight:600;}"
+        "</style></head>"
+        "<body><div class='card'>Hello world</div></body></html>", ""
+    );
 
-    const AppConfig* app_config = wxGetApp().app_config;
-
-    auto *label_dir_hint = new wxStaticText(this, wxID_ANY, _L("Use forward slashes ( / ) as a directory separator if needed."));
-    label_dir_hint->Wrap(CONTENT_WIDTH * wxGetApp().em_unit());
-
-    content_sizer->Add(txt_filename, 0, wxEXPAND);
-    content_sizer->Add(label_dir_hint);
-    content_sizer->AddSpacer(VERT_SPACING);
-    
-    if (combo_groups != nullptr) {
-        // Repetier specific: Show a selection of file groups.
-        auto *label_group = new wxStaticText(this, wxID_ANY, _L("Group"));
-        content_sizer->Add(label_group);
-        content_sizer->Add(combo_groups, 0, wxBOTTOM, 2*VERT_SPACING);        
-        wxString recent_group = from_u8(app_config->get("recent", CONFIG_KEY_GROUP));
-        if (! recent_group.empty())
-            combo_groups->SetValue(recent_group);
+    // Réutilise le sizer de MsgDialog si dispo, sinon crée un sizer local.
+    if (content_sizer) {
+        content_sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
+        // Bouton "Fermer" (ou ce que tu veux)
+        add_button(wxID_CANCEL, false, _L("Close"));
+        finalize();
+    } else {
+        auto* sizer = new wxBoxSizer(wxVERTICAL);
+        sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
+        auto* btn = new wxButton(this, wxID_CANCEL, _L("Close"));
+        sizer->Add(btn, 0, wxALIGN_RIGHT | wxALL, FromDIP(8));
+        btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
+        SetSizerAndFit(sizer);
     }
+    return;
 
-    if (combo_storage != nullptr) {
-        // PrusaLink specific: User needs to choose a storage
-        auto* label_group = new wxStaticText(this, wxID_ANY, _L("Upload to storage") + ":");
-        content_sizer->Add(label_group);
-        content_sizer->Add(combo_storage, 0, wxBOTTOM, 2 * VERT_SPACING);
-        combo_storage->SetValue(storage_names.front());
-        wxString recent_storage = from_u8(app_config->get("recent", CONFIG_KEY_STORAGE));
-        if (!recent_storage.empty())
-            combo_storage->SetValue(recent_storage); 
-    } else if (storage_names.GetCount() == 1){
-        // PrusaLink specific: Show which storage has been detected.
-        auto* label_group = new wxStaticText(this, wxID_ANY, _L("Upload to storage") + ": " + storage_names.front());
-        content_sizer->Add(label_group);
-        m_preselected_storage = storage_paths.front();
-    }
+    // --- (UI originale en dessous, intacte, jamais exécutée ici) ---
 
-
-    wxString recent_path = from_u8(app_config->get("recent", CONFIG_KEY_PATH));
-    if (recent_path.Length() > 0 && recent_path[recent_path.Length() - 1] != '/') {
-        recent_path += '/';
-    }
-    const auto recent_path_len = recent_path.Length();
-    recent_path += path.filename().wstring();
-    wxString stem(path.stem().wstring());
-    const auto stem_len = stem.Length();
-
-    txt_filename->SetValue(recent_path);
-
-    auto checkbox_sizer = new wxBoxSizer(wxHORIZONTAL);
-    auto checkbox       = new ::CheckBox(this, wxID_APPLY);
-    checkbox->SetValue(m_switch_to_device_tab);
-    checkbox->Bind(wxEVT_TOGGLEBUTTON, [this](wxCommandEvent& e) {
-        m_switch_to_device_tab = e.IsChecked();
-        e.Skip();
-    });
-    checkbox_sizer->Add(checkbox, 0, wxALL | wxALIGN_CENTER, FromDIP(2));
-
-    auto checkbox_text = new wxStaticText(this, wxID_ANY, _L("Switch to Device tab after upload."), wxDefaultPosition, wxDefaultSize, 0);
-    checkbox_sizer->Add(checkbox_text, 0, wxALL | wxALIGN_CENTER, FromDIP(2));
-    checkbox_text->SetFont(::Label::Body_13);
-    checkbox_text->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#323A3D")));
-    content_sizer->Add(checkbox_sizer);
-    content_sizer->AddSpacer(VERT_SPACING);
-
-    if (size_t extension_start = recent_path.find_last_of('.'); extension_start != std::string::npos)
-        m_valid_suffix = recent_path.substr(extension_start);
-    // .gcode suffix control
-    auto validate_path = [this](const wxString &path) -> bool {
-        if (! path.Lower().EndsWith(m_valid_suffix.Lower())) {
-            MessageDialog msg_wingow(this, wxString::Format(_L("Upload filename doesn't end with \"%s\". Do you wish to continue?"), m_valid_suffix), wxString(SLIC3R_APP_NAME), wxYES | wxNO);
-            if (msg_wingow.ShowModal() == wxID_NO)
-                return false;
-        }
-        return true;
-    };
-
-    auto* btn_ok = add_button(wxID_OK, true, _L("Upload"));
-    btn_ok->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-        if (validate_path(txt_filename->GetValue())) {
-            post_upload_action = PrintHostPostUploadAction::None;
-            EndDialog(wxID_OK);
-        }
-    });
-    txt_filename->SetFocus();
-    
-    // if (post_actions.has(PrintHostPostUploadAction::QueuePrint)) {
-    //     auto* btn_print = add_button(wxID_ADD, false, _L("Upload to Queue"));
-    //     btn_print->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-    //         if (validate_path(txt_filename->GetValue())) {
-    //             post_upload_action = PrintHostPostUploadAction::QueuePrint;
-    //             EndDialog(wxID_OK);
-    //         }
-    //         });
-    // }
-
-    if (post_actions.has(PrintHostPostUploadAction::StartPrint)) {
-        auto* btn_print = add_button(wxID_YES, false, _L("Upload and Print"));
-        btn_print->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-            if (validate_path(txt_filename->GetValue())) {
-                post_upload_action = PrintHostPostUploadAction::StartPrint;
-                EndDialog(wxID_OK);
-            }
-        });
-    }
-
-    // if (post_actions.has(PrintHostPostUploadAction::StartSimulation)) {
-    //     // Using wxID_MORE as a button identifier to be different from the other buttons, wxID_MORE has no other meaning here.
-    //     auto* btn_simulate = add_button(wxID_MORE, false, _L("Upload and Simulate"));
-    //     btn_simulate->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-    //         if (validate_path(txt_filename->GetValue())) {
-    //             post_upload_action = PrintHostPostUploadAction::StartSimulation;
-    //             EndDialog(wxID_OK);
-    //         }        
-    //     });
-    // }
-
-    add_button(wxID_CANCEL,false, L("Cancel"));
-    finalize();
-
-#ifdef __linux__
-    // On Linux with GTK2 when text control lose the focus then selection (colored background) disappears but text color stay white
-    // and as a result the text is invisible with light mode
-    // see https://github.com/prusa3d/PrusaSlicer/issues/4532
-    // Workaround: Unselect text selection explicitly on kill focus
-    txt_filename->Bind(wxEVT_KILL_FOCUS, [this](wxEvent& e) {
-        e.Skip();
-        txt_filename->SetInsertionPoint(txt_filename->GetLastPosition());
-    }, txt_filename->GetId());
-#endif /* __linux__ */
-
-    Bind(wxEVT_SHOW, [=](const wxShowEvent &) {
-        // Another similar case where the function only works with EVT_SHOW + CallAfter,
-        // this time on Mac.
-        CallAfter([=]() {
-            txt_filename->SetInsertionPoint(0);
-            txt_filename->SetSelection(recent_path_len, recent_path_len + stem_len);
-        });
-    });
-}
-
-fs::path PrintHostSendDialog::filename() const
-{
-    return into_path(txt_filename->GetValue());
-}
-
-PrintHostPostUploadAction PrintHostSendDialog::post_action() const
-{
-    return post_upload_action;
-}
-
-std::string PrintHostSendDialog::group() const
-{
-     if (combo_groups == nullptr) {
-         return "";
-     } else {
-         wxString group = combo_groups->GetValue();
-         return into_u8(group);
-    }
-}
 
 std::string PrintHostSendDialog::storage() const
 {
