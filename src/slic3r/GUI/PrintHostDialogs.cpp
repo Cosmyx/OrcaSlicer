@@ -78,13 +78,13 @@ void PrintHostSendDialog::init()
 #endif
 
     // 1) Charger l'état des checkbox depuis la config (pas de filename ici)
-    wxConfig config("OrcaSlicer");
+    wxConfig config("OrcaCosmyx");
     const bool saved_c1 = config.ReadBool("WebPopup/Check1", false);
     const bool saved_c2 = config.ReadBool("WebPopup/Check2", false);
 
     // 2) Construire la page HTML (filename affiché mais non persisté)
     const wxString html = wxString::Format(
-        "<!doctype html><meta charset='utf-8'/>"
+        "<!DOCTYPE html><html><head><meta charset='utf-8'/>"
         "<style>"
         "html,body{height:100%%;margin:0;background:#fafafa}"
         "body{display:flex;align-items:center;justify-content:center;"
@@ -124,8 +124,17 @@ void PrintHostSendDialog::init()
         saved_c2 ? "checked" : ""
     );
 
-    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html](wxWebViewEvent&){ web->SetPage(html, ""); });
+    // Charge la page une seule fois (évite le refresh infini)
+    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html](wxWebViewEvent& e){
+        static bool s_injected = false;                 // garde pour ne pas reboucler
+        const wxString url = e.GetURL();
+        if (!s_injected && (url.IsEmpty() || url == "about:blank")) {
+            s_injected = true;
+            web->SetPage(html, "data:text/html;charset=utf-8,");
+        }
+    });
     web->LoadURL("about:blank");
+
 
     // 3) Intercepter le clic 'Valider' → sauvegarder c1/c2 → fermer la popup
     web->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& e){
@@ -151,20 +160,23 @@ void PrintHostSendDialog::init()
             }
 
             // Sauvegarder uniquement les checkbox
-            wxConfig config("OrcaSlicer");
+            wxConfig config("OrcaCosmyx");
             config.Write("WebPopup/Check1", c1 == "1");
             config.Write("WebPopup/Check2", c2 == "1");
             config.Flush();
 
             // Fermer le dialog
-            EndDialog(wxID_OK);
+            CallAfter([this]{
+                if (IsModal()) EndModal(wxID_OK);
+                else Destroy();
+            });
         }
     });
 
     // 4) Layout minimal
     auto* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
-    auto* btn = new wxButton(this, wxID_CANCEL, _L("Fermer"));
+    auto* btn = new wxButton(this, wxID_CANCEL, _L("Cancel"));
     sizer->Add(btn, 0, wxALIGN_RIGHT | wxALL, FromDIP(8));
     btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
 
