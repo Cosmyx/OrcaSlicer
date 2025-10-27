@@ -39,25 +39,5 @@
     "change_filament_gcode": "\n;filament\n",
     "enable_filament_ramming": "0",
     "layer_change_gcode": "G92 E0.0\n",
-    "machine_max_acceleration_extruding": [
-        "5000",
-        "20000"
-    ],
-    "machine_max_acceleration_x": [
-        "5000",
-        "20000"
-    ],
-    "machine_max_acceleration_y": [
-        "5000",
-        "20000"
-    ],
-    "machine_max_speed_x": [
-        "300",
-        "200"
-    ],
-    "machine_max_speed_y": [
-        "300",
-        "200"
-    ],
     "purge_in_prime_tower": "0"
 }
