@@ -16,6 +16,8 @@
 #include <wx/msgdlg.h>
 #include <wx/uri.h>
 #include <wx/webview.h>
+#include <wx/tokenzr.h>
+#include <wx/config.h>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
@@ -58,41 +60,110 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
     txt_filename->OSXDisableAllSmartSubstitutions();
 #endif
 }
-#include <wx/webview.h>
 
 void PrintHostSendDialog::init()
 {
-    // 0) Hard reset : plus aucun widget résiduel
+    // Reset complet
     Freeze();
-    SetSizer(nullptr);       // détache tout ancien sizer
-    DestroyChildren();       // détruit champ texte, icône, etc.
+    SetSizer(nullptr);
+    DestroyChildren();
 
-    // 1) WebView
 #if wxCHECK_VERSION(3,2,0)
     auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
-                               wxDefaultPosition, FromDIP(wxSize(640,420)),
+                               wxDefaultPosition, FromDIP(wxSize(700, 460)),
                                "", wxWEBVIEW_BACKEND_DEFAULT);
 #else
     auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
-                               wxDefaultPosition, FromDIP(wxSize(640,420)));
+                               wxDefaultPosition, FromDIP(wxSize(700, 460)));
 #endif
 
-    const wxString html =
-        "<!doctype html><meta charset=utf-8>"
-        "<style>html,body{height:100%;margin:0;background:#fafafa}"
+    // 1) Charger l'état des checkbox depuis la config (pas de filename ici)
+    wxConfig config("OrcaSlicer");
+    const bool saved_c1 = config.ReadBool("WebPopup/Check1", false);
+    const bool saved_c2 = config.ReadBool("WebPopup/Check2", false);
+
+    // 2) Construire la page HTML (filename affiché mais non persisté)
+    const wxString html = wxString::Format(
+        "<!doctype html><meta charset='utf-8'/>"
+        "<style>"
+        "html,body{height:100%%;margin:0;background:#fafafa}"
         "body{display:flex;align-items:center;justify-content:center;"
         "font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif}"
-        ".card{padding:24px 28px;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,.15);"
-        "background:#fff;font-size:28px;font-weight:600}</style>"
-        "<div class=card>Hello world</div>";
+        ".panel{width:min(560px,90vw);background:#fff;border-radius:16px;"
+        "box-shadow:0 10px 30px rgba(0,0,0,.12);padding:24px 24px 20px}"
+        "h1{margin:0 0 14px;font-size:18px;font-weight:700;opacity:.75}"
+        ".row{display:flex;flex-direction:column;gap:8px;margin:12px 0}"
+        "label{font-size:14px;font-weight:600;opacity:.85}"
+        "input[type=text]{padding:10px 12px;border:1px solid #ddd;border-radius:10px;"
+        "font-size:14px;outline:none;}"
+        ".checks{display:flex;flex-direction:column;gap:8px;margin-top:8px}"
+        ".btnbar{display:flex;justify-content:flex-end;margin-top:18px}"
+        "button{border:0;border-radius:12px;padding:10px 16px;font-weight:700;"
+        "cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.12)}"
+        "</style>"
+        "<div class='panel'>"
+        "  <h1>Envoyer le G-code</h1>"
+        "  <div class='row'>"
+        "    <label for='fname'>File Name</label>"
+        "    <input id='fname' type='text' placeholder='(généré par Orca)'/>"
+        "  </div>"
+        "  <div class='checks'>"
+        "    <label><input id='c1' type='checkbox' %s/> Envoyer et Imprimer</label>"
+        "    <label><input id='c2' type='checkbox' %s/> Supprimer le G-Code après impression</label>"
+        "  </div>"
+        "  <div class='btnbar'>"
+        "    <button id='go' onclick='(function(){"
+        "      const c1=document.getElementById(\"c1\").checked?1:0;"
+        "      const c2=document.getElementById(\"c2\").checked?1:0;"
+        "      const f =document.getElementById(\"fname\").value;"  // ignoré côté C++
+        "      location.href=\"app://submit?c1=\"+c1+\"&c2=\"+c2;"
+        "    })()'>Valider</button>"
+        "  </div>"
+        "</div>",
+        saved_c1 ? "checked" : "",
+        saved_c2 ? "checked" : ""
+    );
 
     web->Bind(wxEVT_WEBVIEW_LOADED, [web, html](wxWebViewEvent&){ web->SetPage(html, ""); });
     web->LoadURL("about:blank");
 
-    // 2) Nouveau layout minimal
+    // 3) Intercepter le clic 'Valider' → sauvegarder c1/c2 → fermer la popup
+    web->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& e){
+        const wxString url = e.GetURL();
+        if (url.StartsWith("app://submit")) {
+            e.Veto(); // empêcher la vraie navigation
+
+            // Lire c1/c2 depuis la query
+            wxURI uri(url);
+            wxString query = uri.GetQuery(); // "c1=...&c2=..."
+            wxString c1="0", c2="0";
+
+            wxStringTokenizer tok(query, "&");
+            while (tok.HasMoreTokens()) {
+                wxString kv = tok.GetNextToken();
+                const int eq = kv.Find('=');
+                if (eq != wxNOT_FOUND) {
+                    const wxString key = kv.Left(eq);
+                    const wxString val = wxURI::Unescape(kv.Mid(eq+1));
+                    if      (key == "c1") c1 = val;
+                    else if (key == "c2") c2 = val;
+                }
+            }
+
+            // Sauvegarder uniquement les checkbox
+            wxConfig config("OrcaSlicer");
+            config.Write("WebPopup/Check1", c1 == "1");
+            config.Write("WebPopup/Check2", c2 == "1");
+            config.Flush();
+
+            // Fermer le dialog
+            EndDialog(wxID_OK);
+        }
+    });
+
+    // 4) Layout minimal
     auto* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
-
     auto* btn = new wxButton(this, wxID_CANCEL, _L("Fermer"));
     sizer->Add(btn, 0, wxALIGN_RIGHT | wxALL, FromDIP(8));
     btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
@@ -101,7 +172,6 @@ void PrintHostSendDialog::init()
     Layout();
     CentreOnParent();
     Thaw();
-    return;
 }
 
 
