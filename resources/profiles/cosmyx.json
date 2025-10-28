@@ -346,7 +346,11 @@
         {
             "name": "FORMFUTURA PVA @Cosmyx Nova",
             "sub_path": "filament/standard/FORMFUTURA PVA @Cosmyx Nova.json"
-        }       
+        },
+        {
+            "name": "Nanoe Zetamix Zycro",
+            "sub_path": "filament/ceramics/Zetamix Zycro.json"
+        }        
 
     ],
     "machine_list": [
