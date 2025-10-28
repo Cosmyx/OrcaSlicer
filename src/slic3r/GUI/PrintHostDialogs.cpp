@@ -63,7 +63,6 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
 
 void PrintHostSendDialog::init()
 {
-    // Reset complet
     Freeze();
     SetSizer(nullptr);
     DestroyChildren();
@@ -77,79 +76,81 @@ void PrintHostSendDialog::init()
                                wxDefaultPosition, FromDIP(wxSize(700, 460)));
 #endif
 
-    // 1) Charger l'état des checkbox depuis la config (pas de filename ici)
     wxConfig config("OrcaCosmyx");
     const bool saved_c1 = config.ReadBool("WebPopup/Check1", false);
     const bool saved_c2 = config.ReadBool("WebPopup/Check2", false);
 
-    // 2) Construire la page HTML (filename affiché mais non persisté)
-    const wxString html = wxString::Format(
-        "<!DOCTYPE html><html><head><meta charset='utf-8'/>"
-        "<style>"
-        "html,body{height:100%%;margin:0;background:#fafafa}"
-        "body{display:flex;align-items:center;justify-content:center;"
-        "font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Ubuntu,sans-serif}"
-        ".panel{width:min(560px,90vw);background:#fff;border-radius:16px;"
-        "box-shadow:0 10px 30px rgba(0,0,0,.12);padding:24px 24px 20px}"
-        "h1{margin:0 0 14px;font-size:18px;font-weight:700;opacity:.75}"
-        ".row{display:flex;flex-direction:column;gap:8px;margin:12px 0}"
-        "label{font-size:14px;font-weight:600;opacity:.85}"
-        "input[type=text]{padding:10px 12px;border:1px solid #ddd;border-radius:10px;"
-        "font-size:14px;outline:none;}"
-        ".checks{display:flex;flex-direction:column;gap:8px;margin-top:8px}"
-        ".btnbar{display:flex;justify-content:flex-end;margin-top:18px}"
-        "button{border:0;border-radius:12px;padding:10px 16px;font-weight:700;"
-        "cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.12)}"
-        "</style>"
-        "<div class='panel'>"
-        "  <h1>Envoyer le G-code</h1>"
-        "  <div class='row'>"
-        "    <label for='fname'>File Name</label>"
-        "    <input id='fname' type='text' placeholder='(généré par Orca)'/>"
-        "  </div>"
-        "  <div class='checks'>"
-        "    <label><input id='c1' type='checkbox' %s/> Envoyer et Imprimer</label>"
-        "    <label><input id='c2' type='checkbox' %s/> Supprimer le G-Code après impression</label>"
-        "  </div>"
-        "  <div class='btnbar'>"
-        "    <button id='go' onclick='(function(){"
-        "      const c1=document.getElementById(\"c1\").checked?1:0;"
-        "      const c2=document.getElementById(\"c2\").checked?1:0;"
-        "      const f =document.getElementById(\"fname\").value;"  // ignoré côté C++
-        "      location.href=\"app://submit?c1=\"+c1+\"&c2=\"+c2;"
-        "    })()'>Valider</button>"
-        "  </div>"
-        "</div>",
-        saved_c1 ? "checked" : "",
-        saved_c2 ? "checked" : ""
-    );
+    // 1) Template HTML en UTF-8 "dur" + conversion explicite
+    const char* tpl_utf8 = u8R"ORCA_HTML(<!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; img-src data:;">
+        <style>
+            html,body{height:100%;margin:0;background:#fafafa}
+            body{display:flex;align-items:center;justify-content:center;
+                font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,sans-serif}
+            .panel{width:min(560px,90vw);background:#fff;border-radius:16px;
+                box-shadow:0 10px 30px rgba(0,0,0,.12);padding:24px 24px 20px}
+            h1{margin:0 0 14px;font-size:18px;font-weight:700;opacity:.75}
+            .row{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+            label{font-size:14px;font-weight:600;opacity:.85}
+            input[type=text]{padding:10px 12px;border:1px solid #ddd;border-radius:10px;
+                            font-size:14px;outline:none;}
+            .checks{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+            .btnbar{display:flex;justify-content:flex-end;margin-top:18px}
+            button{border:0;border-radius:12px;padding:10px 16px;font-weight:700;
+                cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.12)}
+        </style>
+        </head>
+        <body>
+        <div class="panel">
+            <h1>Envoyer le G-code</h1>
+            <div class="row">
+            <label for="fname">Nom du fichier</label>
+            <input id="fname" type="text" placeholder="(généré par Orca)"/>
+            </div>
+            <div class="checks">
+            <label><input id="c1" type="checkbox" {C1}/> Envoyer et imprimer</label>
+            <label><input id="c2" type="checkbox" {C2}/> Supprimer le G-code après impression</label>
+            </div>
+            <div class="btnbar">
+            <button id="go" onclick="(function(){
+                const c1=document.getElementById('c1').checked?1:0;
+                const c2=document.getElementById('c2').checked?1:0;
+                const f =document.getElementById('fname').value;
+                location.href='app://submit?c1='+c1+'&c2='+c2;
+            })()">Valider</button>
+            </div>
+        </div>
+        </body>
+        </html>)ORCA_HTML";
 
-    // Charge la page une seule fois (évite le refresh infini)
+    wxString html = wxString::FromUTF8(tpl_utf8);
+    html.Replace("{C1}", saved_c1 ? "checked" : "");
+    html.Replace("{C2}", saved_c2 ? "checked" : "");
+
+    // 2) Charger 1 seule fois, sans "data:text/html" en baseUrl
     web->Bind(wxEVT_WEBVIEW_LOADED, [web, html](wxWebViewEvent& e){
-        static bool s_injected = false;                 // garde pour ne pas reboucler
-        const wxString url = e.GetURL();
-        if (!s_injected && (url.IsEmpty() || url == "about:blank")) {
-            s_injected = true;
-            web->SetPage(html, "data:text/html;charset=utf-8,");
+        static bool loaded = false;
+        if (!loaded && (e.GetURL().IsEmpty() || e.GetURL() == "about:blank")) {
+            loaded = true;
+            web->SetPage(html, ""); // baseUrl vide -> pas d'ennui d'encodage
         }
     });
     web->LoadURL("about:blank");
 
-
-    // 3) Intercepter le clic 'Valider' → sauvegarder c1/c2 → fermer la popup
+    // 3) Interception app://submit (inchangé)
     web->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& e){
         const wxString url = e.GetURL();
         if (url.StartsWith("app://submit")) {
-            e.Veto(); // empêcher la vraie navigation
-
-            // Lire c1/c2 depuis la query
+            e.Veto();
             wxURI uri(url);
-            wxString query = uri.GetQuery(); // "c1=...&c2=..."
+            wxString query = uri.GetQuery();
             wxString c1="0", c2="0";
-
             wxStringTokenizer tok(query, "&");
             while (tok.HasMoreTokens()) {
-                wxString kv = tok.GetNextToken();
+                const wxString kv = tok.GetNextToken();
                 const int eq = kv.Find('=');
                 if (eq != wxNOT_FOUND) {
                     const wxString key = kv.Left(eq);
@@ -158,14 +159,11 @@ void PrintHostSendDialog::init()
                     else if (key == "c2") c2 = val;
                 }
             }
-
-            // Sauvegarder uniquement les checkbox
             wxConfig config("OrcaCosmyx");
             config.Write("WebPopup/Check1", c1 == "1");
             config.Write("WebPopup/Check2", c2 == "1");
             config.Flush();
 
-            // Fermer le dialog
             CallAfter([this]{
                 if (IsModal()) EndModal(wxID_OK);
                 else Destroy();
@@ -173,7 +171,6 @@ void PrintHostSendDialog::init()
         }
     });
 
-    // 4) Layout minimal
     auto* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
     auto* btn = new wxButton(this, wxID_CANCEL, _L("Cancel"));
@@ -185,6 +182,7 @@ void PrintHostSendDialog::init()
     CentreOnParent();
     Thaw();
 }
+
 
 
 std::string PrintHostSendDialog::storage() const
