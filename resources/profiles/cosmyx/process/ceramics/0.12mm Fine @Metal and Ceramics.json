@@ -1,0 +1,13 @@
+{
+    "type": "process",
+    "setting_id": "GP002",
+    "name": "0.12mm Fine @Metal and Ceramics",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "fdm_process_cosmyx_0.12",
+    "compatible_printers": [
+        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
+        "Cosmyx Nova Metal Ceramique 0.4 nozzle"
+    ],
+    "version": "01.07.00.18"
+}
