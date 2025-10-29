@@ -2,7 +2,7 @@
 
     "type": "filament",
     "filament_id": "MIL08",
-    "name": "Tectonic CPE JAUNE @Cosmyx Nova",
+    "name": "TECTONIC CPE JAUNE @Cosmyx Nova",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
@@ -22,13 +22,13 @@
         "13"
     ],
     "filament_settings_id": [
-        "Tectonic CPE JAUNE @Cosmyx Nova"
+        "TECTONIC CPE JAUNE @Cosmyx Nova"
     ],
     "filament_type": [
         "CPE Jaune"
     ],
     "filament_vendor": [
-        "Tectonic"
+        "TECTONIC"
     ],
     "hot_plate_temp": [
         "90"

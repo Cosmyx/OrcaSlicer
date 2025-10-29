@@ -4,6 +4,9 @@
     "instantiation": "false",
     "from": "system",
     "inherits": "fdm_filament_asa",
+    "filament_vendor": [
+        "Cosmyx"
+    ],
     "filament_density": [
         "1.05"
     ],

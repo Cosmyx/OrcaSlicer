@@ -5,9 +5,9 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PA6-CF @Cosmyx Nova",
-
-
-
+    "filament_vendor": [
+        "TENET"
+    ],
     "setting_id": "TENCF15COS",
 
     "fan_cooling_layer_time": [

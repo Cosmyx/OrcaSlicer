@@ -1,7 +1,7 @@
 {
     "type": "filament",
     "filament_id": "MIL09",
-    "name": "Tectonic CPE ROUGE @Cosmyx Nova",
+    "name": "TECTONIC CPE ROUGE @Cosmyx Nova",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
@@ -18,13 +18,13 @@
         "13"
     ],
     "filament_settings_id": [
-        "Tectonic CPE ROUGE @Cosmyx Nova"
+        "TECTONIC CPE ROUGE @Cosmyx Nova"
     ],
     "filament_type": [
         "CPE Rouge"
     ],
     "filament_vendor": [
-        "Tectonic"
+        "TECTONIC"
     ],
 
     "hot_plate_temp": [
