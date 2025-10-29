@@ -442,7 +442,11 @@
         {
             "name": "Nanoe Zetamix Zycro",
             "sub_path": "filament/ceramics/Zetamix Zycro.json"
-        }      
+        },
+        {
+            "name": "Cosmyx ULTEM @Cosmyx Nova",
+            "sub_path": "filament/ht/Cosmyx ULTEM @Cosmyx Nova.json"
+        }         
 
     ],
     "machine_list": [
