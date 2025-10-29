@@ -34,6 +34,23 @@
 #include "ExtraRenderers.hpp"
 #include "format.hpp"
 
+
+// helpers d’échappement HTML (en haut du fichier si tu veux les réutiliser)
+static wxString html_escape(const wxString& s) {
+    wxString o; o.reserve(s.length()*11/10);
+    for (size_t i=0;i<s.length();++i) {
+        wxChar c = s[i];
+        switch (c) {
+            case '&':  o += "&amp;";  break;
+            case '<':  o += "&lt;";   break;
+            case '>':  o += "&gt;";   break;
+            case '"':  o += "&quot;"; break;
+            default:   o += c;        break;
+        }
+    }
+    return o;
+}
+
 namespace fs = boost::filesystem;
 
 namespace Slic3r {
@@ -65,11 +82,11 @@ void PrintHostSendDialog::init()
 {
     Freeze();
     SetSizer(nullptr);
-    txt_filename->Show(false);                 // ne l’affiche pas
-    txt_filename->Disable();                   // pas de focus/tab
-    txt_filename->SetMinSize(wxSize(0,0));     // pas de prise de place
-    txt_filename->SetSize(wxSize(0,0));        // réduit à 0
-    txt_filename->Move(wxPoint(-10000,-10000));
+
+    if (txt_filename) { txt_filename->Show(false); txt_filename->Disable(); txt_filename->SetMinSize(wxSize(0,0));  txt_filename->SetSize(wxSize(0,0)); txt_filename->Move(wxPoint(-10000,-10000));}
+    if (combo_groups)  { combo_groups->Show(false);  combo_groups->Disable();  combo_groups->Move(wxPoint(-10000,-10000)); }
+    if (combo_storage) { combo_storage->Show(false); combo_storage->Disable(); combo_storage->Move(wxPoint(-10000,-10000)); }
+
 
 #if wxCHECK_VERSION(3,2,0)
     auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
@@ -112,7 +129,7 @@ void PrintHostSendDialog::init()
             <h1>Envoyer le G-code</h1>
             <div class="row">
             <label for="fname">Nom du fichier</label>
-            <input id="fname" type="text" placeholder="(généré par Orca)"/>
+            <input id="fname" type="text" placeholder="(généré par Orca)" value="{FILENAME}"/>
             </div>
             <div class="checks">
             <label><input id="c1" type="checkbox" {C1}/> Envoyer et imprimer</label>
@@ -123,53 +140,103 @@ void PrintHostSendDialog::init()
                 const c1=document.getElementById('c1').checked?1:0;
                 const c2=document.getElementById('c2').checked?1:0;
                 const f =document.getElementById('fname').value;
-                location.href='app://submit?c1='+c1+'&c2='+c2;
+               location.href='app://submit?c1='+c1+'&c2='+c2+'&f='+encodeURIComponent(f);
             })()">Valider</button>
             </div>
         </div>
         </body>
         </html>)ORCA_HTML";
+        
+
+    wxString recent_path = from_u8(wxGetApp().app_config->get("recent", CONFIG_KEY_PATH));
+    if (recent_path.Length() > 0 && recent_path.Last() != '/')
+        recent_path += '/';
+    recent_path += m_path.filename().wstring();
+
+    // garde-le côté C++ (utile pour EndModal si besoin)
+    if (txt_filename && txt_filename->GetValue().IsEmpty())
+        txt_filename->SetValue(recent_path);
 
     wxString html = wxString::FromUTF8(tpl_utf8);
     html.Replace("{C1}", saved_c1 ? "checked" : "");
     html.Replace("{C2}", saved_c2 ? "checked" : "");
+    html.Replace("{FILENAME}", html_escape(recent_path), true);
 
     // 2) Charger 1 seule fois, sans "data:text/html" en baseUrl
-    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html](wxWebViewEvent& e){
-        static bool loaded = false;
-        if (!loaded && (e.GetURL().IsEmpty() || e.GetURL() == "about:blank")) {
-            loaded = true;
-            web->SetPage(html, ""); // baseUrl vide -> pas d'ennui d'encodage
+    auto loaded = std::make_shared<bool>(false);
+    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html, loaded](wxWebViewEvent& e){
+        if (!*loaded && (e.GetURL().IsEmpty() || e.GetURL() == "about:blank")) {
+            *loaded = true;
+            web->SetPage(html, "");
         }
     });
     web->LoadURL("about:blank");
 
+
     // 3) Interception app://submit (inchangé)
-    web->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& e){
+    web->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& e) {
         const wxString url = e.GetURL();
+
+        // Détection de la soumission (bouton "Validate" dans la page)
         if (url.StartsWith("app://submit")) {
-            e.Veto();
+            e.Veto(); // on empêche la vraie navigation
+
+            // Décomposer l'URL et ses paramètres
             wxURI uri(url);
             wxString query = uri.GetQuery();
-            wxString c1="0", c2="0";
+
+            wxString c1 = "0", c2 = "0", f; // f = filename transmis depuis la page
             wxStringTokenizer tok(query, "&");
+
             while (tok.HasMoreTokens()) {
                 const wxString kv = tok.GetNextToken();
                 const int eq = kv.Find('=');
                 if (eq != wxNOT_FOUND) {
                     const wxString key = kv.Left(eq);
-                    const wxString val = wxURI::Unescape(kv.Mid(eq+1));
+                    const wxString val = wxURI::Unescape(kv.Mid(eq + 1));
+
                     if      (key == "c1") c1 = val;
                     else if (key == "c2") c2 = val;
+                    else if (key == "f")  f  = val; // <--- Récupération du filename
                 }
             }
+
+            // Sauvegarde des cases à cocher (config OrcaCosmyx)
             wxConfig config("OrcaCosmyx");
             config.Write("WebPopup/Check1", c1 == "1");
             config.Write("WebPopup/Check2", c2 == "1");
             config.Flush();
 
-            CallAfter([this]{
+            // Injection du filename dans le champ natif caché
+            if (!f.IsEmpty()) {
+                if (txt_filename)
+                    txt_filename->SetValue(f);
+                else
+                    m_web_filename = f; // au cas où tu veux un fallback côté C++
+            }
+
+            // (Optionnel) validation de suffixe .gcode côté C++
+            if (!f.Lower().EndsWith(".gcode")) {
+                MessageDialog msg(this,
+                    wxString::Format(_L("Upload filename doesn't end with \".gcode\".\nContinue anyway?\n\n%s"), f),
+                    wxString(SLIC3R_APP_NAME),
+                    wxYES | wxNO);
+                if (msg.ShowModal() == wxID_NO)
+                    return; // annule la validation
+            }
+
+            // Ferme la popup proprement après traitement
+            CallAfter([this] {
                 if (IsModal()) EndModal(wxID_OK);
+                else Destroy();
+            });
+        }
+
+        // Gestion du bouton Cancel côté page (orcahost://cancel ou app://cancel)
+        else if (url.StartsWith("app://cancel") || url.StartsWith("orcahost://cancel")) {
+            e.Veto();
+            CallAfter([this] {
+                if (IsModal()) EndModal(wxID_CANCEL);
                 else Destroy();
             });
         }
@@ -182,6 +249,8 @@ void PrintHostSendDialog::init()
     btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
 
     SetSizerAndFit(sizer);
+    SetMinSize(FromDIP(wxSize(700, 460)));
+    CentreOnParent();
     Layout();
     CentreOnParent();
     Thaw();
