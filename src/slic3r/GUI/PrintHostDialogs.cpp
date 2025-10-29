@@ -65,7 +65,11 @@ void PrintHostSendDialog::init()
 {
     Freeze();
     SetSizer(nullptr);
-    DestroyChildren();
+    txt_filename->Show(false);                 // ne l’affiche pas
+    txt_filename->Disable();                   // pas de focus/tab
+    txt_filename->SetMinSize(wxSize(0,0));     // pas de prise de place
+    txt_filename->SetSize(wxSize(0,0));        // réduit à 0
+    txt_filename->Move(wxPoint(-10000,-10000));
 
 #if wxCHECK_VERSION(3,2,0)
     auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
