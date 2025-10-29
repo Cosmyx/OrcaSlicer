@@ -1,7 +1,12 @@
 {
     "type": "filament",
-    "setting_id": "ULTEMCOSNOV",
+    "filament_id": "Cosmyx ULTEM @Cosmyx Nova",
+    "name": "Cosmyx ULTEM @Cosmyx Nova",
+    "from": "system",
     "instantiation": "true",
+    "inherits": "fdm_filament_asa",
+    "filament_type": "ULTEM",
+    "filament_vendor": "Cosmyx",
     "chamber_temperature": [
         "100"
     ],
@@ -20,21 +25,12 @@
     "filament_max_volumetric_speed": [
         "5"
     ],
-    "filament_settings_id": [
-        "Cosmyx ULTEM @Cosmyx Nova"
-    ],
-    "filament_type": [
-        "ULTEM"
-    ],
     "hot_plate_temp": [
         "170"
     ],
     "hot_plate_temp_initial_layer": [
         "170"
     ],
-    "inherits": "fdm_filament_asa",
-    "is_custom_defined": "0",
-    "name": "Cosmyx ULTEM @Cosmyx Nova",
     "nozzle_temperature": [
         "380"
     ],
