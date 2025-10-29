@@ -14,6 +14,18 @@
     ],
     "filament_vendor": [
         "ENKY"
+    ], 
+    "hot_plate_temp": [
+        "80"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "80"
+    ],
+    "cool_plate_temp": [
+        "80"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "80"
     ],
 
     "is_custom_defined": "0",
@@ -24,34 +36,10 @@
     "nozzle_temperature_initial_layer": [
         "220"
     ],
-     "compatible_printers": [
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete 0.8 nozzle",
-        "Cosmyx Nova 0.4 nozzle",
-        "Cosmyx Nova 0.2 nozzle",
-        "Cosmyx Nova 0.6 nozzle",
-        "Cosmyx Nova 0.8 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.2 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.6 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.8 nozzle",
-        "Cosmyx Nova Double Tete 0.4 nozzle",
-        "Cosmyx Nova Double Tete 0.2 nozzle",
-        "Cosmyx Nova Double Tete 0.6 nozzle",
-        "Cosmyx Nova Double Tete 0.8 nozzle",
-        "Cosmyx Nova Haute Temperature 0.4 nozzle",
-        "Cosmyx Nova Haute Temperature 0.2 nozzle",
-        "Cosmyx Nova Haute Temperature 0.6 nozzle",
-        "Cosmyx Nova Haute Temperature 0.8 nozzle",
-        "Cosmyx SuperNova 0.4 nozzle",
-        "Cosmyx SuperNova 0.2 nozzle",
-        "Cosmyx SuperNova 0.6 nozzle",
-        "Cosmyx SuperNova 0.8 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle"
+        "Cosmyx SuperNova Double Tete 0.8 nozzle"
     ]
 }

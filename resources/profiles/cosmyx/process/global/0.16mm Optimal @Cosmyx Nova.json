@@ -16,5 +16,6 @@
         "Cosmyx Nova Haute Temperature 0.4 nozzle",
         "Cosmyx Nova Double Tete 0.4 nozzle"
     ],
+    "wall_loops": "4",
     "version": "01.07.00.18"
 }

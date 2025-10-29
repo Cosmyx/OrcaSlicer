@@ -2,7 +2,7 @@
 
     "type": "filament",
     "filament_id": "MIL08",
-    "name": "TECTONIC CPE JAUNE @Cosmyx Nova",
+    "name": "Tectonic CPE JAUNE @Cosmyx Nova",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
@@ -19,21 +19,27 @@
         "0.97"
     ],
     "filament_max_volumetric_speed": [
-        "21"
+        "13"
     ],
     "filament_settings_id": [
-        "TECTONIC CPE JAUNE @Cosmyx Nova"
+        "Tectonic CPE JAUNE @Cosmyx Nova"
     ],
     "filament_type": [
         "CPE Jaune"
     ],
     "filament_vendor": [
-        "TECTONIC"
+        "Tectonic"
     ],
     "hot_plate_temp": [
         "90"
     ],
     "hot_plate_temp_initial_layer": [
+        "90"
+    ],
+    "cool_plate_temp": [
+        "90"
+    ],
+    "cool_plate_temp_initial_layer": [
         "90"
     ],
 
@@ -49,34 +55,10 @@
         "0.046"
     ],
     "version": "1.7.0.18",
-     "compatible_printers": [
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete 0.8 nozzle",
-        "Cosmyx Nova 0.4 nozzle",
-        "Cosmyx Nova 0.2 nozzle",
-        "Cosmyx Nova 0.6 nozzle",
-        "Cosmyx Nova 0.8 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.2 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.6 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.8 nozzle",
-        "Cosmyx Nova Double Tete 0.4 nozzle",
-        "Cosmyx Nova Double Tete 0.2 nozzle",
-        "Cosmyx Nova Double Tete 0.6 nozzle",
-        "Cosmyx Nova Double Tete 0.8 nozzle",
-        "Cosmyx Nova Haute Temperature 0.4 nozzle",
-        "Cosmyx Nova Haute Temperature 0.2 nozzle",
-        "Cosmyx Nova Haute Temperature 0.6 nozzle",
-        "Cosmyx Nova Haute Temperature 0.8 nozzle",
-        "Cosmyx SuperNova 0.4 nozzle",
-        "Cosmyx SuperNova 0.2 nozzle",
-        "Cosmyx SuperNova 0.6 nozzle",
-        "Cosmyx SuperNova 0.8 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle"
+        "Cosmyx SuperNova Double Tete 0.8 nozzle"
     ]
 }
