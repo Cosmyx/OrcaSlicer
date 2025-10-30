@@ -110,8 +110,7 @@ void PrintHostSendDialog::init()
     {
         wxFile file(html_path.wstring());
         if (file.IsOpened()) {
-            wxStringOutputStream sstream(&html);
-            file.ReadAll(sstream);
+            file.ReadAll(&html);
         } else {
             // fallback si le fichier est pas trouvé, pour éviter un crash moche
             html = "<html><body><p>Missing print_host/index.html</p></body></html>";
@@ -127,6 +126,33 @@ void PrintHostSendDialog::init()
     // sync le champ caché C++ avec le filename par défaut
     if (txt_filename && txt_filename->GetValue().IsEmpty())
         txt_filename->SetValue(recent_path);
+
+
+    // Inject CSS
+    {
+        fs::path css_path = base_dir / "style.css";
+        if (fs::exists(css_path)) {
+            wxFile css_file(css_path.wstring());
+            wxString css;
+            if (css_file.IsOpened()) {
+                css_file.ReadAll(&css);
+
+                wxString css_block;
+                css_block << "<style>\n" << css << "\n</style>";
+
+                // On remplace plusieurs variantes possibles du tag <link>
+                html.Replace("<link rel=\"stylesheet\" href=\"style.css\">",  css_block, false);
+                html.Replace("<link rel=\"stylesheet\" href=\"style.css\"/>", css_block, false);
+                html.Replace("<link rel=\"stylesheet\" href='style.css'>",    css_block, false);
+                html.Replace("<link rel=\"stylesheet\" href='style.css'/>",  css_block, false);
+            } else {
+                BOOST_LOG_TRIVIAL(error) << "WebPopup: cannot open style.css";
+            }
+        } else {
+            BOOST_LOG_TRIVIAL(warning) << "WebPopup: style.css not found at " << css_path.string();
+        }
+    }
+
 
     // injecter les valeurs dynamiques dans le HTML chargé
     html.Replace("{C1}", saved_c1 ? "checked" : "");
