@@ -7,16 +7,16 @@
 </head>
 <body>
 <div class="panel">
-  <h1>Envoyer le G-code</h1>
+  <h1>{TITLE}</h1>
 
   <div class="row">
-    <label for="fname">Nom du fichier</label>
-    <input id="fname" type="text" placeholder="(généré par Orca)" value="{FILENAME}"/>
+    <label for="fname">{FILENAME_LABEL}</label>
+    <input id="fname" type="text" placeholder="{PLACEHOLDER}" value="{FILENAME}"/>
   </div>
 
   <div class="checks">
-    <label><input id="c1" type="checkbox" {C1}/> Envoyer et imprimer</label>
-    <label><input id="c2" type="checkbox" {C2}/> Supprimer le G-code après impression</label>
+    <label><input id="c1" type="checkbox" {C1}/>{AUTO_PRINT_LABEL}</label>
+    <label><input id="c2" type="checkbox" {C2}/>{DEL_AFTER_PRINT}</label>
   </div>
 
   <div class="btnbar">
@@ -25,7 +25,7 @@
         const c2=document.getElementById('c2').checked?1:0;
         const f =document.getElementById('fname').value;
         location.href='app://submit?c1='+c1+'&c2='+c2+'&f='+encodeURIComponent(f);
-    })()">Valider</button>
+    })()">{VALIDATE_LABEL}</button>
   </div>
 </div>
 </body>
