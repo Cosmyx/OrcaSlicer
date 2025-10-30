@@ -225,6 +225,14 @@ void PrintHostSendDialog::init()
                     return; // annule la validation
             }
 
+
+            if (c1 == "1")
+                post_upload_action = PrintHostPostUploadAction::StartPrint;
+            else
+                post_upload_action = PrintHostPostUploadAction::None;
+
+
+
             // Ferme la popup proprement après traitement
             CallAfter([this] {
                 if (IsModal()) EndModal(wxID_OK);
