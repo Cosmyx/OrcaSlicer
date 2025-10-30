@@ -101,73 +101,47 @@ void PrintHostSendDialog::init()
     const bool saved_c1 = config.ReadBool("WebPopup/Check1", false);
     const bool saved_c2 = config.ReadBool("WebPopup/Check2", false);
 
-    // 1) Template HTML en UTF-8 "dur" + conversion explicite
-    const char* tpl_utf8 = u8R"ORCA_HTML(<!DOCTYPE html>
-        <html>
-        <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; img-src data:;">
-        <style>
-            html,body{height:100%;margin:0;background:#fafafa}
-            body{display:flex;align-items:center;justify-content:center;
-                font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,sans-serif}
-            .panel{width:min(560px,90vw);background:#fff;border-radius:16px;
-                box-shadow:0 10px 30px rgba(0,0,0,.12);padding:24px 24px 20px}
-            h1{margin:0 0 14px;font-size:18px;font-weight:700;opacity:.75}
-            .row{display:flex;flex-direction:column;gap:8px;margin:12px 0}
-            label{font-size:14px;font-weight:600;opacity:.85}
-            input[type=text]{padding:10px 12px;border:1px solid #ddd;border-radius:10px;
-                            font-size:14px;outline:none;}
-            .checks{display:flex;flex-direction:column;gap:8px;margin-top:8px}
-            .btnbar{display:flex;justify-content:flex-end;margin-top:18px}
-            button{border:0;border-radius:12px;padding:10px 16px;font-weight:700;
-                cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.12)}
-        </style>
-        </head>
-        <body>
-        <div class="panel">
-            <h1>Envoyer le G-code</h1>
-            <div class="row">
-            <label for="fname">Nom du fichier</label>
-            <input id="fname" type="text" placeholder="(généré par Orca)" value="{FILENAME}"/>
-            </div>
-            <div class="checks">
-            <label><input id="c1" type="checkbox" {C1}/> Envoyer et imprimer</label>
-            <label><input id="c2" type="checkbox" {C2}/> Supprimer le G-code après impression</label>
-            </div>
-            <div class="btnbar">
-            <button id="go" onclick="(function(){
-                const c1=document.getElementById('c1').checked?1:0;
-                const c2=document.getElementById('c2').checked?1:0;
-                const f =document.getElementById('fname').value;
-               location.href='app://submit?c1='+c1+'&c2='+c2+'&f='+encodeURIComponent(f);
-            })()">Valider</button>
-            </div>
-        </div>
-        </body>
-        </html>)ORCA_HTML";
-        
+    // Charger le HTML externe depuis resources/web/print_host/index.html
+    fs::path base_dir  = (boost::filesystem::path(resources_dir()) / "web" / "print_host");
+    fs::path html_path = base_dir / "index.html";
 
+    // Lire le contenu de index.html dans une wxString
+    wxString html;
+    {
+        wxFile file(html_path.wstring());
+        if (file.IsOpened()) {
+            wxStringOutputStream sstream(&html);
+            file.ReadAll(sstream);
+        } else {
+            // fallback si le fichier est pas trouvé, pour éviter un crash moche
+            html = "<html><body><p>Missing print_host/index.html</p></body></html>";
+        }
+    }
+
+    // reconstruire recent_path comme avant
     wxString recent_path = from_u8(wxGetApp().app_config->get("recent", CONFIG_KEY_PATH));
     if (recent_path.Length() > 0 && recent_path.Last() != '/')
         recent_path += '/';
     recent_path += m_path.filename().wstring();
 
-    // garde-le côté C++ (utile pour EndModal si besoin)
+    // sync le champ caché C++ avec le filename par défaut
     if (txt_filename && txt_filename->GetValue().IsEmpty())
         txt_filename->SetValue(recent_path);
 
-    wxString html = wxString::FromUTF8(tpl_utf8);
+    // injecter les valeurs dynamiques dans le HTML chargé
     html.Replace("{C1}", saved_c1 ? "checked" : "");
     html.Replace("{C2}", saved_c2 ? "checked" : "");
     html.Replace("{FILENAME}", html_escape(recent_path), true);
 
     // 2) Charger 1 seule fois, sans "data:text/html" en baseUrl
+    wxString base_url = "file://" + wxString(base_dir.wstring());
     auto loaded = std::make_shared<bool>(false);
-    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html, loaded](wxWebViewEvent& e){
+
+    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html, base_url, loaded](wxWebViewEvent& e){
         if (!*loaded && (e.GetURL().IsEmpty() || e.GetURL() == "about:blank")) {
             *loaded = true;
-            web->SetPage(html, "");
+            // base_url => permet au <link rel="stylesheet" href="style.css"> de marcher
+            web->SetPage(html, base_url);
         }
     });
     web->LoadURL("about:blank");
