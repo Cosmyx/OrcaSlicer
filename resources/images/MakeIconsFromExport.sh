@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # ~/Downloads/export ➜ file *
 # OrcaSlicer__1024.png:             PNG image data, 1024 x 1024, 8-bit/color RGBA, non-interlaced
 # OrcaSlicer__128.png:              PNG image data, 128 x 128, 8-bit/color RGBA, non-interlaced
