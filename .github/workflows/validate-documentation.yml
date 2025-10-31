@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: 'Windows'
+    runs-on: 'shadow'
     name: Check Documentation
     
     steps:
