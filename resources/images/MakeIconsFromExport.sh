@@ -59,7 +59,8 @@
 PREFIX=OrcaSlicer
 
 SOURCE=~/Downloads/export
-TARGET=~/Documents/work/OrcaSlicer/resources/images
+BASE=~/Documents/work/OrcaSlicer
+TARGET=$BASE/resources/images
 
 rm ${TARGET}/${PREFIX}*
 cp -f ${SOURCE}/* ${TARGET}/
@@ -67,6 +68,10 @@ cd ${TARGET}
 
 ICO_SIZES=(16 24 32 48 64 128 256)
 ICNS_BASE_SIZES=(16 32 64 128 256 512 1024)
+
+rm ${BASE}/resources/web/image/logo{,2}.png
+cp ${PREFIX}_154.png  ${BASE}/resources/web/image/logo.png
+cp ${PREFIX}__512.png  ${BASE}/resources/web/image/logo2.png
 
 magick $(printf "${PREFIX}__%s.png " "${ICO_SIZES[@]}") -strip -alpha on "${PREFIX}.ico"
 
