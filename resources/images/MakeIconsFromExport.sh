@@ -69,9 +69,8 @@ cd ${TARGET}
 ICO_SIZES=(16 24 32 48 64 128 256)
 ICNS_BASE_SIZES=(16 32 64 128 256 512 1024)
 
-rm ${BASE}/resources/web/image/logo{,2}.png
-cp ${PREFIX}_154.png  ${BASE}/resources/web/image/logo.png
-cp ${PREFIX}__512.png  ${BASE}/resources/web/image/logo2.png
+cp -f ${PREFIX}_154.png   ${BASE}/resources/web/image/logo.png
+cp -f ${PREFIX}__512.png  ${BASE}/resources/web/image/logo2.png
 
 magick $(printf "${PREFIX}__%s.png " "${ICO_SIZES[@]}") -strip -alpha on "${PREFIX}.ico"
 
@@ -87,6 +86,8 @@ for size in "${ICNS_BASE_SIZES[@]}"; do
 done
 iconutil -c icns ${PREFIX}.iconset
 rm -rf ${PREFIX}.iconset
+
+cp -f ${PREFIX}.icns ${BASE}/resources/Icon.icns
 
 for size in "${ICO_SIZES[@]}"; do
   rm -f ${PREFIX}__${size}.png
