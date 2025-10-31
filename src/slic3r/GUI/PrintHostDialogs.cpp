@@ -261,9 +261,6 @@ void PrintHostSendDialog::init()
 
     auto* sizer = new wxBoxSizer(wxVERTICAL);
     sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
-    auto* btn = new wxButton(this, wxID_CANCEL, _L("Cancel"));
-    sizer->Add(btn, 0, wxALIGN_RIGHT | wxALL, FromDIP(8));
-    btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&){ EndDialog(wxID_CANCEL); });
 
     SetSizerAndFit(sizer);
     SetMinSize(FromDIP(wxSize(700, 460)));
@@ -271,6 +268,7 @@ void PrintHostSendDialog::init()
     Layout();
     CentreOnParent();
     Thaw();
+
 }
 
 

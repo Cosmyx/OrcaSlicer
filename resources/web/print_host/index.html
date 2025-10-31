@@ -20,6 +20,11 @@
   </div>
 
   <div class="btnbar">
+
+        <button id="cancel" onclick="(function(){
+        location.href='app://cancel';
+    })()">{CANCEL_LABEL}</button>
+
     <button id="go" onclick="(function(){
         const c1=document.getElementById('c1').checked?1:0;
         const c2=document.getElementById('c2').checked?1:0;
