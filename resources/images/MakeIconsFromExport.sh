@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2046,SC2164,SC2086
 
 # ~/Downloads/export ➜ file *
 # OrcaSlicer__1024.png:             PNG image data, 1024 x 1024, 8-bit/color RGBA, non-interlaced
