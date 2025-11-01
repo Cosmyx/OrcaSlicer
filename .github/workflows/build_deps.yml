@@ -74,7 +74,7 @@ jobs:
             cd ${{ github.workspace }}/deps/build
 
       - name: Build on Mac ${{ inputs.arch }}
-        if: inputs.os == 'macOS'
+        if: inputs.os == 'scaleway'
         working-directory: ${{ github.workspace }}
         run: |
             brew install automake texinfo libtool
@@ -117,7 +117,7 @@ jobs:
 
       # Upload Artifacts
       # - name: Upload Mac ${{ inputs.arch }} artifacts
-      #   if: inputs.os == 'macOS'
+      #   if: inputs.os == 'scaleway'
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: OrcaSlicer_dep_mac_${{ env.date }}

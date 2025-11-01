@@ -86,7 +86,7 @@ jobs:
 
 #   Mac
       - name: Install tools mac
-        if: inputs.os == 'macOS'
+        if: inputs.os == 'scaleway'
         run: |
           brew install libtool
           brew list
@@ -101,14 +101,14 @@ jobs:
           df -hI /dev/disk3s1s1
 
       - name: Build slicer mac
-        if: inputs.os == 'macOS'
+        if: inputs.os == 'scaleway'
         working-directory: ${{ github.workspace }}
         run: |
           ./build_release_macos.sh -s -n -x -a universal -t 10.15 -1
 
  # Thanks to RaySajuuk, it's working now
       - name: Sign app and notary
-        if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) && inputs.os == 'macOS'
+        if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')) && inputs.os == 'scaleway'
         working-directory: ${{ github.workspace }}
         env:
           BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
@@ -161,7 +161,7 @@ jobs:
           fi
 
       - name: Create DMG without notary
-        if: github.ref != 'refs/heads/main' && inputs.os == 'macOS'
+        if: github.ref != 'refs/heads/main' && inputs.os == 'scaleway'
         working-directory: ${{ github.workspace }}
         run: |
           mkdir -p ${{ github.workspace }}/build/universal/OrcaSlicer_dmg
@@ -180,14 +180,14 @@ jobs:
           fi
 
       - name: Upload artifacts mac
-        if: inputs.os == 'macOS'
+        if: inputs.os == 'scaleway'
         uses: actions/upload-artifact@v4
         with:
           name: OrcaSlicer_Mac_universal_${{ env.ver }}
           path: ${{ github.workspace }}/OrcaSlicer_Mac_universal_${{ env.ver }}.dmg
 
       - name: Upload OrcaSlicer_profile_validator DMG mac
-        if: inputs.os == 'macOS'
+        if: inputs.os == 'scaleway'
         uses: actions/upload-artifact@v4
         with:
           name: OrcaSlicer_profile_validator_Mac_universal_DMG_${{ env.ver }}
@@ -195,7 +195,7 @@ jobs:
           if-no-files-found: ignore
 
       - name: Deploy Mac release
-        if: github.ref == 'refs/heads/main' && inputs.os == 'macOS'
+        if: github.ref == 'refs/heads/main' && inputs.os == 'scaleway'
         uses: WebFreak001/deploy-nightly@v3.2.0
         with:
           upload_url: https://uploads.github.com/repos/SoftFever/OrcaSlicer/releases/137995723/assets{?name,label}
@@ -206,7 +206,7 @@ jobs:
           max_releases: 1 # optional, if there are more releases than this matching the asset_name, the oldest ones are going to be deleted
 
       - name: Deploy Mac OrcaSlicer_profile_validator DMG release
-        if: github.ref == 'refs/heads/main' && inputs.os == 'macOS'
+        if: github.ref == 'refs/heads/main' && inputs.os == 'scaleway'
         uses: WebFreak001/deploy-nightly@v3.2.0
         with:
           upload_url: https://uploads.github.com/repos/SoftFever/OrcaSlicer/releases/137995723/assets{?name,label}
