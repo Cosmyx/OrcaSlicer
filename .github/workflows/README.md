@@ -11,6 +11,11 @@ choco feature enable -n allowGlobalConfirmation
 
 choco install visualstudio2022buildtools --force --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.CMake.Project --add Microsoft.VisualStudio.Component.Windows10SDK.19041 --includeRecommended --includeOptional --passive"
 
+# choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional --passive --norestart"
+
+choco install cmake --version=3.31.6 --installargs 'ADD_CMAKE_TO_PATH=System'
+
+
 
 choco install gzip
 
@@ -21,5 +26,10 @@ winget install --id Microsoft.PowerShell --source winget
 ## Macos
 
 ```sh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 brew install git-lfs
+
+git lfs install
+git lfs install --system
 ```
