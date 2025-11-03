@@ -56,7 +56,7 @@
     "machine_start_gcode": "PREHEAT B={max(first_layer_bed_temperature[0],first_layer_bed_temperature[1])} TL={first_layer_temperature[0]} TR={first_layer_temperature[1]}\n\n;; start_print ;;",
     "machine_unload_filament_time": "0.5",
     "machine_load_filament_time": "0.5",
-    "default_print_profile": "0.20mm Standard @Cosmyx Nova",
+    "default_print_profile": "0.20mm Strength @Cosmyx Nova",
     "extruder_offset": [
         "0x0"
     ],
