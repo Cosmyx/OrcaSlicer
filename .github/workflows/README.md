@@ -3,24 +3,32 @@
 ## Windows
 
 ```powershell
+
+winget install --id Microsoft.PowerShell --source winget
+
 Set-ExecutionPolicy RemoteSigned -Scope LocalMachine
 
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
 choco feature enable -n allowGlobalConfirmation
 
-choco install visualstudio2022buildtools --force --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 --add Microsoft.VisualStudio.Component.VC.CMake.Project --add Microsoft.VisualStudio.Component.Windows10SDK.19041 --includeRecommended --includeOptional --passive"
-
-# choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional --passive --norestart"
-
-choco install cmake --version=3.31.6 --installargs 'ADD_CMAKE_TO_PATH=System'
-
-
+choco install visualstudio2022buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional --passive --norestart"
 
 choco install gzip
+choco install libcurl
+choco install openssl
 
-winget search Microsoft.PowerShell
-winget install --id Microsoft.PowerShell --source winget
+Copy-Item "C:\Program Files\OpenSSL-Win64\lib\VC\x64\MD\*" -Destination "C:\Program Files\OpenSSL-Win64\lib\" -Force
+
+git clone https://github.com/microsoft/vcpkg.git
+cd vcpkg
+.\bootstrap-vcpkg.bat
+.\vcpkg integrate install
+
+.\vcpkg install curl[core,ssl]:x64-windows
+
+$env:VCPKG_INSTALLATION_ROOT = "C:\Users\Shadow\Documents\vcpkg"
+
 ```
 
 ## Macos
@@ -28,7 +36,7 @@ winget install --id Microsoft.PowerShell --source winget
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-brew install git-lfs
+brew install git-lfs zstd
 
 git lfs install
 git lfs install --system
