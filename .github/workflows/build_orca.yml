@@ -243,8 +243,9 @@ jobs:
 
       - name: Pack app
         if: inputs.os == 'windows-latest'
+        working-directory: ${{ github.workspace }}/build
         shell: cmd
-        run: 'cd "${{ github.workspace }}/build" && "C:/Program Files/7-Zip/7z.exe" a -tzip OrcaSlicer_Windows_${{ env.ver }}_portable.zip OrcaSlicer'
+        run: '"C:/Program Files/7-Zip/7z.exe" a -tzip OrcaSlicer_Windows_${{ env.ver }}_portable.zip OrcaSlicer'
 
       - name: Pack PDB
         if: inputs.os == 'windows-latest'
