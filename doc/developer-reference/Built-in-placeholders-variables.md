@@ -23,7 +23,7 @@ This section describes the general built-in placeholders variables available for
 
 - **e_position[]**: Current position of the extruder axis. Only used with absolute extruder addressing.
 - **e_restart_extra[]**: Currently planned extra extruder priming after de-retraction.
-- **e_retracted[]**: Retraction state at the beginning of the custom G-code block. If the custom G-code moves the extruder axis, it should write to this variable so OrcaSlicer knows where it travels from when it gets control back.
+- **e_retracted[]**: Retraction state at the beginning of the custom G-code block. If the custom G-code moves the extruder axis, it should write to this variable so OrcaCosmyx knows where it travels from when it gets control back.
 - **position[]**: Current position of the extruder axis. Only used with absolute extruder addressing.
 
 ## Slicing State

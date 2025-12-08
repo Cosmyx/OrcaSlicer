@@ -30,7 +30,7 @@ After a model is sliced this feature will replace straight line segments with ar
 
 This will result in a smaller G-code file for the same model, as arcs are used instead of many short line segments. This can improve print quality and reduce printing time, especially for curved surfaces.
 
-![arc-fitting](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/arc-fitting.svg?raw=true)
+![arc-fitting](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/arc-fitting.svg?raw=true)
 
 > [!IMPORTANT]
 > This option is only available for machines that support G2 and G3 commands and may impact in CPU usage on the printer.
@@ -44,7 +44,7 @@ Klipper does not benefit from arc commands as these are split again into line se
 Used to compensate external dimensions of the model.
 With this option you can compensate material expansion or shrinkage, which can occur due to various factors such as the type of filament used, temperature fluctuations, or printer calibration issues.
 
-Follow the [Calibration Guide](https://github.com/SoftFever/OrcaSlicer/wiki/Calibration) and [Filament Tolerance Calibration](https://github.com/SoftFever/OrcaSlicer/wiki/tolerance-calib) to determine the correct value for your printer and filament combination.
+Follow the [Calibration Guide](https://github.com/SoftFever/OrcaCosmyx/wiki/Calibration) and [Filament Tolerance Calibration](https://github.com/SoftFever/OrcaCosmyx/wiki/tolerance-calib) to determine the correct value for your printer and filament combination.
 
 ## Elephant foot compensation
 
@@ -55,36 +55,36 @@ This feature compensates for the "elephant foot" effect, which occurs when the f
 - Bed temperature being too high.
 - Inaccurate bed height.
 
-![elephant-foot](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/elephant-foot.svg?raw=true)
+![elephant-foot](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/elephant-foot.svg?raw=true)
 
-To mitigate this effect, OrcaSlicer allows you to specify a negative distance that will be applied to the first specified number of layers. This adjustment effectively reduces the width of the first few layers, helping to achieve a more accurate final print size.
+To mitigate this effect, OrcaCosmyx allows you to specify a negative distance that will be applied to the first specified number of layers. This adjustment effectively reduces the width of the first few layers, helping to achieve a more accurate final print size.
 
-![elephant-foot-compensation](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/elephant-foot-compensation.png?raw=true)
+![elephant-foot-compensation](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/elephant-foot-compensation.png?raw=true)
 
 ## Precise wall
 
-The 'Precise Wall' is a distinctive feature introduced by OrcaSlicer, aimed at improving the dimensional accuracy of prints and minimizing layer inconsistencies by slightly increasing the spacing between the outer wall and the inner wall.
+The 'Precise Wall' is a distinctive feature introduced by OrcaCosmyx, aimed at improving the dimensional accuracy of prints and minimizing layer inconsistencies by slightly increasing the spacing between the outer wall and the inner wall.
 
 ### Technical explanation
 
 First, it's important to understand some basic concepts like flow, extrusion width, and space.  
 Slic3r has an excellent document that covers these topics in detail. You can refer to this [article](https://manual.slic3r.org/advanced/flow-math).
 
-Slic3r and its forks, such as PrusaSlicer, SuperSlicer and OrcaSlicer, assume that the extrusion path has an oval shape, which accounts for the overlaps. For example, if we set the wall width to 0.4mm and the layer height to 0.2mm, the combined thickness of two walls laid side by side is 0.714mm instead of 0.8mm due to the overlapping.
+Slic3r and its forks, such as PrusaSlicer, SuperSlicer and OrcaCosmyx, assume that the extrusion path has an oval shape, which accounts for the overlaps. For example, if we set the wall width to 0.4mm and the layer height to 0.2mm, the combined thickness of two walls laid side by side is 0.714mm instead of 0.8mm due to the overlapping.
 
 - **Precise Wall Off**
 
-  ![PreciseWallOff](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/PreciseWallOff.svg?raw=true)
+  ![PreciseWallOff](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/PreciseWallOff.svg?raw=true)
 
 - **Precise Wall On**
 
-  ![PreciseWallOn](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/PreciseWallOn.svg?raw=true)
+  ![PreciseWallOn](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/PreciseWallOn.svg?raw=true)
 
 This approach enhances the strength of 3D-printed parts. However, it does have some side effects. For instance, when the inner-outer wall order is used, the outer wall can be pushed outside, leading to potential size inaccuracy and more layer inconsistency.
 
 It's important to keep in mind that this approach to handling flow is specific to Slic3r and its forks. Other slicing software, such as Cura, assumes that the extrusion path is rectangular and, therefore, does not include overlapping. Two 0.4 mm walls will result in a 0.8 mm shell thickness in Cura.
 
-OrcaSlicer adheres to Slic3r's approach to handling flow. To address the downsides mentioned earlier, OrcaSlicer introduced the 'Precise Wall' feature. When this feature is enabled in OrcaSlicer, the overlap between the outer wall and its adjacent inner wall is set to zero. This ensures that the overall strength of the printed part is unaffected, while the size accuracy and layer consistency are improved.
+OrcaCosmyx adheres to Slic3r's approach to handling flow. To address the downsides mentioned earlier, OrcaCosmyx introduced the 'Precise Wall' feature. When this feature is enabled in OrcaCosmyx, the overlap between the outer wall and its adjacent inner wall is set to zero. This ensures that the overall strength of the printed part is unaffected, while the size accuracy and layer consistency are improved.
 
 ## Precise Z Height
 
@@ -96,17 +96,17 @@ By enabling this parameter, the layer height of the last five layers is adjusted
 
 - **Precise Z Height Off**
 
-  ![PreciseZOff](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/PreciseZOff.png?raw=true)
+  ![PreciseZOff](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/PreciseZOff.png?raw=true)
 
 - **Precise Z Height On**
 
-  ![PreciseZOn](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/PreciseZOn.png?raw=true)
+  ![PreciseZOn](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/PreciseZOn.png?raw=true)
 
 ## Polyholes
 
 A polyhole is a technique used in FFF 3D printing to improve the accuracy of circular holes. Instead of modeling a perfect circle, the hole is represented as a polygon with a reduced number of flat sides. This simplification forces the slicer to treat each segment as a straight line, which prints more reliably. By carefully choosing the number of sides and ensuring the polygon sits on the outer boundary of the hole, you can produce openings that more closely match the intended diameter.
 
-![PolyHoles](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/Precision/PolyHoles.png?raw=true)
+![PolyHoles](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/Precision/PolyHoles.png?raw=true)
 
 - Original implementation: [SuperSlicer Polyholes](https://github.com/supermerill/SuperSlicer/wiki/Polyholes)
 - Idea and mathematics: [Hydraraptor](https://hydraraptor.blogspot.com/2011/02/polyholes.html)

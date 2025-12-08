@@ -2949,7 +2949,7 @@ bool SelectMachineDialog::is_show_timelapse()
                 }
                 break;
             }
-            if (line == "OrcaSlicer")
+            if (line == "OrcaCosmyx")
                 is_version = true;
         }
     }

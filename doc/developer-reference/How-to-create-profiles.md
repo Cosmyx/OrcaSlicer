@@ -1,12 +1,12 @@
-# Guide: Develop Profiles for OrcaSlicer
+# Guide: Develop Profiles for OrcaCosmyx
 
 ## Introduction
 
-This guide will help you develop profiles for OrcaSlicer.
+This guide will help you develop profiles for OrcaCosmyx.
 
 ## High-level Overview
 
-OrcaSlicer uses JSON files to store profiles. There are four types of profiles:
+OrcaCosmyx uses JSON files to store profiles. There are four types of profiles:
 
 1. Printer model (type `machine_model`). Example: `Orca 3D Fuse1.json`
 2. Printer variant (type `machine`). Example: `Orca 3D Fuse1 0.2 nozzle.json`
@@ -36,7 +36,7 @@ Naming conventions:
 
 ## File Structure and Templates
 
-Profiles should be structured in the following way under the OrcaSlicer installation directory:
+Profiles should be structured in the following way under the OrcaCosmyx installation directory:
 
 ```plaintext
 resources\profiles\
@@ -62,14 +62,14 @@ resources\profiles\
 Template files for profiles are available in:
 
 ```shell
-OrcaSlicer\resources\profiles_template\Template
+OrcaCosmyx\resources\profiles_template\Template
 ```
 
 These templates can be used as a starting point for new printer, filament, and process profiles.
 
 ## Filament Profiles
 
-OrcaSlicer features a global filament library called `OrcaFilamentLibrary`, which is automatically available for all printers. It includes generic filaments like `Generic PLA @System` and `Generic ABS @System` etc.
+OrcaCosmyx features a global filament library called `OrcaFilamentLibrary`, which is automatically available for all printers. It includes generic filaments like `Generic PLA @System` and `Generic ABS @System` etc.
 
 Printer vendors can override specific filaments in the global library for certain printer models by creating new filament profiles.
 
@@ -83,7 +83,7 @@ graph TD;
 ```
 
 > [!IMPORTANT]
-> Create new filament profiles only if you have truly specifically tuned the filament for the given printer. Otherwise, use the global library. The global library has a better chance to receive optimizations and updates from OrcaSlicer contributors, which will benefit users of all printers.
+> Create new filament profiles only if you have truly specifically tuned the filament for the given printer. Otherwise, use the global library. The global library has a better chance to receive optimizations and updates from OrcaCosmyx contributors, which will benefit users of all printers.
 
 ### Adding Filament Profiles to the Global Library
 
@@ -136,14 +136,14 @@ The following sample JSON file shows how to create a new generic filament profil
 > [!TIP]
 > **Testing Profile Changes**
 > 
-> When developing profiles, you may notice that changes aren't reflected in OrcaSlicer after editing profile files. This happens because OrcaSlicer caches profiles in the system folder.
-> To force OrcaSlicer to load your updated profiles:
+> When developing profiles, you may notice that changes aren't reflected in OrcaCosmyx after editing profile files. This happens because OrcaCosmyx caches profiles in the system folder.
+> To force OrcaCosmyx to load your updated profiles:
 > 1. **Access the configuration folder**: Go to **Help** → **Show Configuration Folder**
->    ![Help menu](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/develop/go-to-configuration-folder.jpeg?raw=true)
+>    ![Help menu](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/develop/go-to-configuration-folder.jpeg?raw=true)
 > 2. **Clear the cache**: Delete the `system` folder to remove cached profiles
->    ![Delete system folder](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/develop/profile-delete-system-folder.jpeg?raw=true)
-> 3. **Restart OrcaSlicer**: Launch the application to load your updated profiles
-> This process forces OrcaSlicer to update its profile cache from the source files in the `resources/profiles/` directory.
+>    ![Delete system folder](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/develop/profile-delete-system-folder.jpeg?raw=true)
+> 3. **Restart OrcaCosmyx**: Launch the application to load your updated profiles
+> This process forces OrcaCosmyx to update its profile cache from the source files in the `resources/profiles/` directory.
 
 ### Adding Filament Profiles to Printer Vendor Library
 
@@ -353,17 +353,17 @@ Example:
 
 ## Validate Profiles
 
-You can validate your profiles using both the **OrcaSlicer profile validator** and the **Python validation script**. These tools are designed to check different aspects of the profiles, so both should be executed and pass without errors to ensure full compatibility.
+You can validate your profiles using both the **OrcaCosmyx profile validator** and the **Python validation script**. These tools are designed to check different aspects of the profiles, so both should be executed and pass without errors to ensure full compatibility.
 
 > [!NOTE]
-> **✅ Recommendation:** Always run **both** the OrcaSlicer validator and the Python script to ensure all aspects of the profiles are valid.
+> **✅ Recommendation:** Always run **both** the OrcaCosmyx validator and the Python script to ensure all aspects of the profiles are valid.
 
-### 1. OrcaSlicer Profile Validator
+### 1. OrcaCosmyx Profile Validator
 
-You can run OrcaSlicer to verify if the filament you just added is available and usable. You can also use the [Orca profile validator](https://github.com/SoftFever/Orca_tools/releases/tag/1) tool to help debug any errors.
+You can run OrcaCosmyx to verify if the filament you just added is available and usable. You can also use the [Orca profile validator](https://github.com/SoftFever/Orca_tools/releases/tag/1) tool to help debug any errors.
 
 > [!IMPORTANT]
-> You need to delete the `%appdata%/OrcaSlicer/system` folder to force OrcaSlicer to reload your lastest changes.
+> You need to delete the `%appdata%/OrcaCosmyx/system` folder to force OrcaCosmyx to reload your lastest changes.
 
 The process is the same if you want to add a new brand filament profile into the global library. You need to create a new file in the `resources\profiles\OrcaFilamentLibrary\filament\brand_name` folder. The only difference is that you should put the file into the brand's own subfolder.
 
@@ -379,14 +379,14 @@ The process is the same if you want to add a new brand filament profile into the
 #### Example
 
 ```shell
-./OrcaSlicer_profile_validator -p ~/codes/OrcaSlicer/resources/profiles -l 2 -v Custom
+./OrcaCosmyx_profile_validator -p ~/codes/OrcaCosmyx/resources/profiles -l 2 -v Custom
 ```
 
 #### Sample result with errors
 
 ```shell
-PS D:\codes\OrcaSlicer> ."D:/codes/OrcaSlicer/build/src/Release/OrcaSlicer_profile_validator.exe" --path d:\codes\OrcaSlicer\resources\profiles -l 2 -v Custom
-[2024-02-28 21:23:06.102138] [0x0000a4e8] [error]   Slic3r::ConfigBase::load_from_json: parse d:\codes\OrcaSlicer\resources\profiles/Custom/machine/fdm_klipper_common.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 9, column 38: syntax error while parsing object - unexpected string literal; expected '}'
+PS D:\codes\OrcaCosmyx> ."D:/codes/OrcaCosmyx/build/src/Release/OrcaCosmyx_profile_validator.exe" --path d:\codes\OrcaCosmyx\resources\profiles -l 2 -v Custom
+[2024-02-28 21:23:06.102138] [0x0000a4e8] [error]   Slic3r::ConfigBase::load_from_json: parse d:\codes\OrcaCosmyx\resources\profiles/Custom/machine/fdm_klipper_common.json got a nlohmann::detail::parse_error, reason = [json.exception.parse_error.101] parse error at line 9, column 38: syntax error while parsing object - unexpected string literal; expected '}'
 ...
 Validation failed
 ```
@@ -394,12 +394,12 @@ Validation failed
 #### Sample result with success
 
 ```shell
-PS D:\codes\OrcaSlicer\build\src\RelWithDebInfo> ."D:/codes/OrcaSlicer/build/src/Release/OrcaSlicer_profile_validator.exe" --path d:\codes\OrcaSlicer\resources\profiles -l 2 -v Custom
+PS D:\codes\OrcaCosmyx\build\src\RelWithDebInfo> ."D:/codes/OrcaCosmyx/build/src/Release/OrcaCosmyx_profile_validator.exe" --path d:\codes\OrcaCosmyx\resources\profiles -l 2 -v Custom
 Validation completed successfully
 ```
 
 > [!WARNING]
-> Use `OrcaSlicer_profile_validator` on Ubuntu and `OrcaSlicer_profile_validator.exe` on Windows.
+> Use `OrcaCosmyx_profile_validator` on Ubuntu and `OrcaCosmyx_profile_validator.exe` on Windows.
 
 ---
 

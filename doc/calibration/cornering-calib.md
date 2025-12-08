@@ -18,24 +18,24 @@ JD = 0.4 \cdot \frac{\text{Jerk}^2}{\text{Acceleration}}
 
 1. Pre-requisites:
    1. Check if your printer has Junction Deviation enabled. Look for `Junction deviation` in the printer's advanced settings.
-   2. In OrcaSlicer, set:
+   2. In OrcaCosmyx, set:
       1. Acceleration high enough to trigger ringing (e.g., 2000 mm/s²).
       2. Speed high enough to trigger ringing (e.g., 100 mm/s).
    3. Use an opaque, high-gloss filament to make ringing more visible.
 2. You need to print the Junction Deviation test.  
-   ![jd_first_menu](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_first_menu.png?raw=true)
-   1. Measure the X and Y heights and read the frequency set at that point in OrcaSlicer.  
-      ![jd_first_print_measure](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_first_print_measure.jpg?raw=true)  
-      ![jd_first_slicer_measure](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_first_slicer_measure.png?raw=true)
+   ![jd_first_menu](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_first_menu.png?raw=true)
+   1. Measure the X and Y heights and read the frequency set at that point in OrcaCosmyx.  
+      ![jd_first_print_measure](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_first_print_measure.jpg?raw=true)  
+      ![jd_first_slicer_measure](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_first_slicer_measure.png?raw=true)
    2. You will likely need values lower than `0.08mm`, as in the example. To find a better maximum JD value, print a new calibration tower with a maximum set near the point where corners start losing sharpness.
    3. Print the second Junction Deviation test with the new maximum value.  
-      ![jd_second_menu](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_second_menu.png?raw=true)
-   4. Measure the X and Y heights and read the frequency set at that point in OrcaSlicer.  
-      ![jd_second_print_measure](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_second_print_measure.jpg?raw=true)  
-      ![jd_second_slicer_measure](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_second_slicer_measure.png?raw=true)
+      ![jd_second_menu](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_second_menu.png?raw=true)
+   4. Measure the X and Y heights and read the frequency set at that point in OrcaCosmyx.  
+      ![jd_second_print_measure](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_second_print_measure.jpg?raw=true)  
+      ![jd_second_slicer_measure](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_second_slicer_measure.png?raw=true)
 3. Save the settings
    1. Set your Maximum Junction Deviation value in [Printer settings/Motion ability/Jerk limitation].  
-      ![jd_printer_jerk_limitation](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/JunctionDeviation/jd_printer_jerk_limitation.png?raw=true)
+      ![jd_printer_jerk_limitation](https://github.com/SoftFever/OrcaCosmyx/blob/main/doc/images/JunctionDeviation/jd_printer_jerk_limitation.png?raw=true)
    2. Use the following G-code to set the value:
 
    ```gcode
