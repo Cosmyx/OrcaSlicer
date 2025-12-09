@@ -6,7 +6,7 @@
 
 <a href="https://trendshift.io/repositories/952" target="_blank"><img src="https://trendshift.io/api/badge/repositories/952" alt="SoftFever%2FOrcaCosmyx | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-[![GitHub Repo stars](https://img.shields.io/github/stars/SoftFever/OrcaCosmyx)](https://github.com/SoftFever/OrcaCosmyx/stargazers) [![Build all](https://github.com/SoftFever/OrcaCosmyx/actions/workflows/build_all.yml/badge.svg?branch=main)](https://github.com/SoftFever/OrcaCosmyx/actions/workflows/build_all.yml)
+[![GitHub Repo stars](https://img.shields.io/github/stars/SoftFever/OrcaSlicer)](https://github.com/SoftFever/OrcaSlicer/stargazers) [![Build all](https://github.com/SoftFever/OrcaSlicer/actions/workflows/build_all.yml/badge.svg?branch=main)](https://github.com/SoftFever/OrcaSlicer/actions/workflows/build_all.yml)
 
 OrcaCosmyx: an open source Next-Gen Slicing Software for Precision 3D Prints.  
 Optimize your prints with ultra-fast slicing, intelligent support generation, and seamless printer compatibility—engineered for perfection.
@@ -18,7 +18,7 @@ Optimize your prints with ultra-fast slicing, intelligent support generation, an
 <a href="https://www.orcacosmyx.com/" style="font-size:2em;">OrcaCosmyx.com</a>
 
 #### Github Repository:
-<a href="https://github.com/SoftFever/OrcaCosmyx"><img src="https://img.shields.io/badge/OrcaCosmyx-181717?style=flat&logo=github&logoColor=white" width="200" alt="GitHub Logo"/> </a>
+<a href="https://github.com/SoftFever/OrcaSlicer"><img src="https://img.shields.io/badge/OrcaCosmyx-181717?style=flat&logo=github&logoColor=white" width="200" alt="GitHub Logo"/> </a>
 
 #### Follow us:
 <a href="https://twitter.com/real_OrcaCosmyx"><img src="https://img.shields.io/badge/real__OrcaCosmyx-000000?style=flat&logo=x&logoColor=white" width="200" alt="X Logo"/> </a>
@@ -41,27 +41,27 @@ If you come across any of these in search results, please <a href="https://safeb
 
 # Main features
 
-- **[Advanced Calibration Tools](https://github.com/SoftFever/OrcaCosmyx/wiki/Calibration)**  
+- **[Advanced Calibration Tools](https://github.com/SoftFever/OrcaSlicer/wiki/Calibration)**  
   Comprehensive suite: temperature towers, flow rate, retraction & more for optimal performance.
-- **[Precise Wall](https://github.com/SoftFever/OrcaCosmyx/wiki/quality_settings_precision#precise-wall) and [Seam Control](https://github.com/SoftFever/OrcaCosmyx/wiki/quality_settings_seam)**  
+- **[Precise Wall](https://github.com/SoftFever/OrcaSlicer/wiki/quality_settings_precision#precise-wall) and [Seam Control](https://github.com/SoftFever/OrcaSlicer/wiki/quality_settings_seam)**  
   Adjust outer wall spacing and apply scarf seams to enhance print accuracy.
-- **[Sandwich Mode](https://github.com/SoftFever/OrcaCosmyx/wiki/quality_settings_wall_and_surfaces#innerouterinner) and [Polyholes](https://github.com/SoftFever/OrcaCosmyx/wiki/quality_settings_precision#polyholes) Support**  
-  Use varied infill [patterns](https://github.com/SoftFever/OrcaCosmyx/wiki/strength_settings_patterns) and accurate hole shapes for improved clarity.
-- **[Overhang](https://github.com/SoftFever/OrcaCosmyx/wiki/quality_settings_overhangs) and [Support Optimization](https://github.com/SoftFever/OrcaCosmyx/wiki#support-settings)**  
+- **[Sandwich Mode](https://github.com/SoftFever/OrcaSlicer/wiki/quality_settings_wall_and_surfaces#innerouterinner) and [Polyholes](https://github.com/SoftFever/OrcaSlicer/wiki/quality_settings_precision#polyholes) Support**  
+  Use varied infill [patterns](https://github.com/SoftFever/OrcaSlicer/wiki/strength_settings_patterns) and accurate hole shapes for improved clarity.
+- **[Overhang](https://github.com/SoftFever/OrcaSlicer/wiki/quality_settings_overhangs) and [Support Optimization](https://github.com/SoftFever/OrcaSlicer/wiki#support-settings)**  
   Modify geometry for printable overhangs with precise support placement.
-- **[Granular Controls](https://github.com/SoftFever/OrcaCosmyx/wiki#process-settings) and Customization**  
+- **[Granular Controls](https://github.com/SoftFever/OrcaSlicer/wiki#process-settings) and Customization**  
   Fine-tune print speed, layer height, pressure, and temperature with precision.
 - **Network Printer Support**  
   Seamless integration with Klipper, PrusaLink, and OctoPrint for remote control.
-- **[Mouse Ear Brims](https://github.com/SoftFever/OrcaCosmyx/wiki/others_settings_brim) & Adaptive Bed Mesh**  
+- **[Mouse Ear Brims](https://github.com/SoftFever/OrcaSlicer/wiki/others_settings_brim) & Adaptive Bed Mesh**  
   Automatic brims and adaptive mesh calibration ensure consistent adhesion.
 - **User-Friendly Interface**  
   Intuitive drag-and-drop design with pre-made profiles for popular printers.
-- **[Open-Source](https://github.com/SoftFever/OrcaCosmyx) & [Community Driven](https://discord.gg/P4VE9UY9gJ)**  
+- **[Open-Source](https://github.com/SoftFever/OrcaSlicer) & [Community Driven](https://discord.gg/P4VE9UY9gJ)**  
   Regular updates fueled by continuous community contributions.
 - **Wide Printer Compatibility**  
   Supports a broad range of printers: Bambu Lab, Prusa, Creality, Voron, and more.
-- Additional features can be found in the [change notes](https://github.com/SoftFever/OrcaCosmyx/releases/).
+- Additional features can be found in the [change notes](https://github.com/SoftFever/OrcaSlicer/releases/).
 
 # Wiki
 
@@ -69,36 +69,36 @@ The wiki below aims to provide a detailed explanation of the slicer settings, in
 
 Please note that the wiki is a work in progress. We appreciate your patience as we continue to develop and improve it!
 
-- **[Access the wiki here](https://github.com/SoftFever/OrcaCosmyx/wiki)**
-- **[Contribute to the wiki](https://github.com/SoftFever/OrcaCosmyx/wiki/How-to-wiki)**
+- **[Access the wiki here](https://github.com/SoftFever/OrcaSlicer/wiki)**
+- **[Contribute to the wiki](https://github.com/SoftFever/OrcaSlicer/wiki/How-to-wiki)**
 
 # Download
 
 ## Stable Release
 
-📥 **[Download the Latest Stable Release](https://github.com/SoftFever/OrcaCosmyx/releases/latest)**  
+📥 **[Download the Latest Stable Release](https://github.com/SoftFever/OrcaSlicer/releases/latest)**  
 Visit our GitHub Releases page for the latest stable version of OrcaCosmyx, recommended for most users.
 
 ## Nightly Builds
 
-🌙 **[Download the Latest Nightly Build](https://github.com/SoftFever/OrcaCosmyx/releases/tag/nightly-builds)**  
+🌙 **[Download the Latest Nightly Build](https://github.com/SoftFever/OrcaSlicer/releases/tag/nightly-builds)**  
 Explore the latest developments in OrcaCosmyx with our nightly builds. Feedback on these versions is highly appreciated.
 
 # How to install
 
 ## Windows
 
-Download the **Windows Installer exe**  for your preferred version from the [releases page](https://github.com/SoftFever/OrcaCosmyx/releases).
+Download the **Windows Installer exe**  for your preferred version from the [releases page](https://github.com/SoftFever/OrcaSlicer/releases).
 
  - *For convenience there is also a portable build available.*
     <details>
     <summary>Troubleshooting</summary>
 
     - *If you have troubles to run the build, you might need to install following runtimes:*
-    - [MicrosoftEdgeWebView2RuntimeInstallerX64](https://github.com/SoftFever/OrcaCosmyx/releases/download/v1.0.10-sf2/MicrosoftEdgeWebView2RuntimeInstallerX64.exe)
+    - [MicrosoftEdgeWebView2RuntimeInstallerX64](https://github.com/SoftFever/OrcaSlicer/releases/download/v1.0.10-sf2/MicrosoftEdgeWebView2RuntimeInstallerX64.exe)
         - [Details of this runtime](https://aka.ms/webview2)
         - [Alternative Download Link Hosted by Microsoft](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
-    - [vcredist2019_x64](https://github.com/SoftFever/OrcaCosmyx/releases/download/v1.0.10-sf2/vcredist2019_x64.exe)
+    - [vcredist2019_x64](https://github.com/SoftFever/OrcaSlicer/releases/download/v1.0.10-sf2/vcredist2019_x64.exe)
         -  [Alternative Download Link Hosted by Microsoft](https://aka.ms/vs/17/release/vc_redist.x64.exe)
         -  This file may already be available on your computer if you've installed visual studio.  Check the following location: `%VCINSTALLDIR%Redist\MSVC\v142`
     </details>
@@ -143,7 +143,7 @@ winget install --id=SoftFever.OrcaCosmyx -e
 
 # How to Compile
 
-All updated build instructions for Windows, macOS, and Linux are now available on the official [OrcaCosmyx Wiki - How to build](https://github.com/SoftFever/OrcaCosmyx/wiki/How-to-build) page.
+All updated build instructions for Windows, macOS, and Linux are now available on the official [OrcaCosmyx Wiki - How to build](https://github.com/SoftFever/OrcaSlicer/wiki/How-to-build) page.
 
 Please refer to the wiki to ensure you're following the latest and most accurate steps for your platform.
 
