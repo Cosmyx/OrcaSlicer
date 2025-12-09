@@ -7,9 +7,9 @@ flatpak install flathub org.gnome.Platform//46 org.gnome.Sdk//46
 
 
 ##
-# in OrcaSlicer folder, run following command to build Orca
+# in OrcaCosmyx folder, run following command to build Orca
 # # First time build
-# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/io.github.softfever.OrcaSlicer.yml
+# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user --force-clean build-dir scripts/flatpak/io.github.softfever.OrcaCosmyx.yml
 
-# # Subsequent builds (only rebuilding OrcaSlicer)
-# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/io.github.softfever.OrcaSlicer.yml --build-only=OrcaSlicer
+# # Subsequent builds (only rebuilding OrcaCosmyx)
+# flatpak-builder --state-dir=.flatpak-builder --keep-build-dirs --user build-dir scripts/flatpak/io.github.softfever.OrcaCosmyx.yml --build-only=OrcaCosmyx

@@ -18,13 +18,13 @@ The Wall Generator defines how the outer and inner walls (perimeters) of the mod
 The Classic wall generator is a simple and reliable method used in many slicers. It creates as many walls as possible (limited by [Wall Loops](strength_settings_walls#wall-loops)) by extruding along the model’s perimeter using the defined [Line Width](quality_settings_line_width).
 This method does not vary extrusion width and is ideal for fast, predictable slicing.
 
-![wallgenerator-classic](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/WallGenerator/wallgenerator-classic.png?raw=true)
+![wallgenerator-classic](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/WallGenerator/wallgenerator-classic.png?raw=true)
 
 ## Arachne
 
 The Arachne wall generator dynamically adjusts extrusion width to follow the shape of the model more closely. This allows better handling of thin features and smooth transitions between wall counts.
 
-![wallgenerator-arachne](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/WallGenerator/wallgenerator-arachne.png?raw=true)
+![wallgenerator-arachne](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/WallGenerator/wallgenerator-arachne.png?raw=true)
 
 > [!NOTE]
 > [A Framework for Adaptive Width Control of Dense Contour-Parallel Toolpaths in Fused Deposition Modeling](https://www.sciencedirect.com/science/article/pii/S0010448520301007?via%3Dihub)
@@ -70,4 +70,4 @@ Increasing this value removes short unconnected walls, **improving efficiency**.
 
 > [!NOTE]
 > Top and bottom surfaces are not affected by this setting to avoid visual artifacts.
-> Use the One Wall Threshold (in Advanced settings) to adjust how aggressively OrcaSlicer considers a region a top surface. This option only appears when this setting exceeds 0.5, or if single-wall top surfaces are enabled.
+> Use the One Wall Threshold (in Advanced settings) to adjust how aggressively OrcaCosmyx considers a region a top surface. This option only appears when this setting exceeds 0.5, or if single-wall top surfaces are enabled.

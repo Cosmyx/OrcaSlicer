@@ -1,5 +1,5 @@
 {
-	"name": "OrcaSlicer",
+	"name": "OrcaCosmyx",
 	"build": {
 		"dockerfile": "Dockerfile",
 			"args": {

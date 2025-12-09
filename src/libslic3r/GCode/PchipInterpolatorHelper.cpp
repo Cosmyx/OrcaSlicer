@@ -1,5 +1,5 @@
 // PchipInterpolatorHelper.cpp
-// OrcaSlicer
+// OrcaCosmyx
 //
 // Implementation file for the PchipInterpolatorHelper class
 
