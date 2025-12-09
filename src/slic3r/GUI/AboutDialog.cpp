@@ -332,7 +332,7 @@ AboutDialog::AboutDialog()
               (boost::format(
               "<html>"
               "<body>"
-              "<p style=\"text-align:left\"><a style=\"color:#009789\" href=\"https://github.com/SoftFever/OrcaSlicer\">https://github.com/SoftFever/OrcaSlicer</ a></p>"
+              "<p style=\"text-align:left\"><a style=\"color:#009789\" href=\"https://github.com/Cosmyx/OrcaSlicer\">https://github.com/Cosmyx/OrcaSlicer</ a></p>"
               "</body>"
               "</html>")
             ).str());
