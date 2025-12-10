@@ -975,7 +975,7 @@ wxBoxSizer* PreferencesDialog::create_item_downloads(wxString title, wxString to
 wxBoxSizer* PreferencesDialog::create_item_link_association( wxString url_prefix, wxString website_name)
 {
     wxString title = _L("Associate") + (boost::format(" %1%://") % url_prefix.c_str()).str();
-    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with OrcaSlicer so that Orca can open models from") + " " + website_name;
+    wxString tooltip = _L("Associate") + " " + url_prefix + ":// " + _L("with CosmoSlice so that Orca can open models from") + " " + website_name;
 
     std::wstring registered_bin; // not used, just here to provide a ref to check fn
     bool reg_to_current_instance = wxGetApp().check_url_association(url_prefix.ToStdWstring(), registered_bin);
@@ -1187,12 +1187,12 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_darkmode);
 #endif
 
-    auto item_single_instance  = create_item_checkbox(_L("Allow only one OrcaSlicer instance"),
+    auto item_single_instance  = create_item_checkbox(_L("Allow only one CosmoSlice instance"),
     #if __APPLE__
             _L("On OSX there is always only one instance of app running by default. However it is allowed to run multiple instances "
                 "of same app from the command line. In such case this settings will allow only one instance."),
     #else
-            _L("If this is enabled, when starting OrcaSlicer and another instance of the same OrcaSlicer is already running, that instance will be reactivated instead."),
+            _L("If this is enabled, when starting CosmoSlice and another instance of the same CosmoSlice is already running, that instance will be reactivated instead."),
     #endif
             "single_instance");
     g_sizer->Add(item_single_instance);
@@ -1360,19 +1360,19 @@ void PreferencesDialog::create_items()
     g_sizer->AddGrowableCol(0, 1);
 
     //// ASSOCIATE > Extensions
-    g_sizer->Add(create_item_title(_L("Associate files to OrcaSlicer")), 1, wxEXPAND);
+    g_sizer->Add(create_item_title(_L("Associate files to CosmoSlice")), 1, wxEXPAND);
 
-    auto item_associate_3mf    = create_item_checkbox(_L("Associate .3mf files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open .3mf files") , "associate_3mf");
+    auto item_associate_3mf    = create_item_checkbox(_L("Associate .3mf files to CosmoSlice"), _L("If enabled, sets CosmoSlice as default application to open .3mf files") , "associate_3mf");
     g_sizer->Add(item_associate_3mf);
 
-    auto item_associate_stl    = create_item_checkbox(_L("Associate .stl files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open .stl files") , "associate_stl");
+    auto item_associate_stl    = create_item_checkbox(_L("Associate .stl files to CosmoSlice"), _L("If enabled, sets CosmoSlice as default application to open .stl files") , "associate_stl");
     g_sizer->Add(item_associate_stl);
 
-    auto item_associate_step   = create_item_checkbox(_L("Associate .step/.stp files to OrcaSlicer"), _L("If enabled, sets OrcaSlicer as default application to open .step files"), "associate_step");
+    auto item_associate_step   = create_item_checkbox(_L("Associate .step/.stp files to CosmoSlice"), _L("If enabled, sets CosmoSlice as default application to open .step files"), "associate_step");
     g_sizer->Add(item_associate_step);
 
     //// ASSOCIATE > WebLinks
-    g_sizer->Add(create_item_title(_L("Associate web links to OrcaSlicer")), 1, wxEXPAND);
+    g_sizer->Add(create_item_title(_L("Associate web links to CosmoSlice")), 1, wxEXPAND);
 
     auto associate_url_prusa   = create_item_link_association(L"prusaslicer", "Printables.com");
     g_sizer->Add(associate_url_prusa);

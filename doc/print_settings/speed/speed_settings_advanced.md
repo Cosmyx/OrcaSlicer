@@ -7,7 +7,7 @@ This happens by reducing the stresses put on the extrusion system as well as red
 
 This feature is especially helpful when printing at high accelerations and large flow rates as the deviations are larger in these cases.
 
-![ers-intro](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/ERS/ers-intro.png?raw=true)
+![ers-intro](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/ERS/ers-intro.png?raw=true)
 
 - [Theory](#theory)
   - [Acceleration vs. Extrusion rate smoothing](#acceleration-vs-extrusion-rate-smoothing)
@@ -28,7 +28,7 @@ In summary, **it takes the "edge" off rapid extrusion changes caused by accelera
 
 **The example below shows the artifact that is mitigated by ERS.**
 
-![ers-artefact](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/ERS/ers-artefact.jpg?raw=true)
+![ers-artefact](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/ERS/ers-artefact.jpg?raw=true)
 
 The bulging visible above is due to the extruder not being able to respond fast enough to the required speed change when printing with high accelerations and high speeds and being requested to slow down for an overhang.
 
@@ -43,7 +43,7 @@ This parameter interacts with the below printer kinematic settings and physical 
 
 ### Acceleration vs. Extrusion rate smoothing
 
-A printer's motion system does not exactly follow the speed changes seen in the G-code preview screen of OrcaSlicer.
+A printer's motion system does not exactly follow the speed changes seen in the G-code preview screen of CosmoSlice.
 
 When a speed change is requested, the firmware look-ahead planner calculates the slowdown needed to achieve the target speed. The rate of slowdown is limited by the move's acceleration value.
 
@@ -70,7 +70,7 @@ t = \frac{v_f - v_i}{a}
 
 A printer printing at 200mm/sec with a 0.42 line width and 0.16 layer height would be extruding plastic at approx. 12.16mm³/sec, as can also be seen from the below visual.
 
-![ers-printspeed](https://github.com/SoftFever/OrcaSlicer/blob/main/doc/images/ERS/ers-printspeed.png?raw=true)
+![ers-printspeed](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/ERS/ers-printspeed.png?raw=true)
 
 When the printer is extruding at 40mm/sec with the same line width and layer height as above, the flow rate is 2.43mm³/sec.
 
@@ -168,7 +168,7 @@ In this special case, ERS will be doing all the heavy lifting that pressure adva
 
 ## A note on ERS Segment length
 
-Ideally, you want this value set to 1 to allow for the largest number of steps between each speed transition. However, this may result in G-code that is too large, with too many commands sent to your MCU per second and it may not be able to keep up. It will also slow down the OrcaSlicer front end as the sliced model is more complex to render.
+Ideally, you want this value set to 1 to allow for the largest number of steps between each speed transition. However, this may result in G-code that is too large, with too many commands sent to your MCU per second and it may not be able to keep up. It will also slow down the CosmoSlice front end as the sliced model is more complex to render.
 
 For Klipper printers, a segment length of 1 works OK as the RPI or similar have enough computational power to handle the G-code command volume.
 

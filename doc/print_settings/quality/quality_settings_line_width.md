@@ -22,7 +22,7 @@ However, slightly wider lines generally improve **layer bonding** and **print st
 
 ## Line Types
 
-In OrcaSlicer, you can assign different line widths to specific parts of the print. Each type can be customized:
+In CosmoSlice, you can assign different line widths to specific parts of the print. Each type can be customized:
 
 ### Default
 
