@@ -4,8 +4,8 @@ CosmoSlice use `M141/M191` command to control active chamber heater.
 
 If your Filament's `Activate temperature control` and your printer `Support control chamber temperature` option are checked , CosmoSlice will insert `M191` command at the beginning of the gcode (before `Machine G-code`).
 
-![Chamber-Temperature-Control-Printer](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/Chamber/Chamber-Temperature-Control-Printer.png?raw=true)
-![Chamber-Temperature-Control-Material](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/Chamber/Chamber-Temperature-Control-Material.png?raw=true)
+![Chamber-Temperature-Control-Printer](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/Chamber/Chamber-Temperature-Control-Printer.png?raw=true)
+![Chamber-Temperature-Control-Material](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/Chamber/Chamber-Temperature-Control-Material.png?raw=true)
 
 
 > [!NOTE]

@@ -65,7 +65,7 @@ How to building with Visual Studio 2022 on Windows 64-bit.
    - If using the command line:
      1. Clone the repository:
      ```shell
-     git clone https://github.com/SoftFever/CosmoSlice
+     git clone https://github.com/Cosmyx/OrcaSlicer
      ```
      2. Run lfs to download tools on Windows:
      ```shell
@@ -145,7 +145,7 @@ cmake --version
 
 1. Clone the repository:
    ```shell
-   git clone https://github.com/SoftFever/CosmoSlice
+   git clone https://github.com/Cosmyx/OrcaSlicer
    cd CosmoSlice
    ```
 2. Build the application:
@@ -188,7 +188,7 @@ How to build and run CosmoSlice using Docker.
 #### Docker Instructions
 
 ```shell
-git clone https://github.com/SoftFever/CosmoSlice && cd CosmoSlice && ./scripts/DockerBuild.sh && ./scripts/DockerRun.sh
+git clone https://github.com/Cosmyx/OrcaSlicer && cd CosmoSlice && ./scripts/DockerBuild.sh && ./scripts/DockerRun.sh
 ```
 
 ### Troubleshooting

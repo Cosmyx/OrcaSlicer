@@ -139,9 +139,9 @@ The following sample JSON file shows how to create a new generic filament profil
 > When developing profiles, you may notice that changes aren't reflected in CosmoSlice after editing profile files. This happens because CosmoSlice caches profiles in the system folder.
 > To force CosmoSlice to load your updated profiles:
 > 1. **Access the configuration folder**: Go to **Help** → **Show Configuration Folder**
->    ![Help menu](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/develop/go-to-configuration-folder.jpeg?raw=true)
+>    ![Help menu](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/develop/go-to-configuration-folder.jpeg?raw=true)
 > 2. **Clear the cache**: Delete the `system` folder to remove cached profiles
->    ![Delete system folder](https://github.com/SoftFever/CosmoSlice/blob/main/doc/images/develop/profile-delete-system-folder.jpeg?raw=true)
+>    ![Delete system folder](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/develop/profile-delete-system-folder.jpeg?raw=true)
 > 3. **Restart CosmoSlice**: Launch the application to load your updated profiles
 > This process forces CosmoSlice to update its profile cache from the source files in the `resources/profiles/` directory.
 
