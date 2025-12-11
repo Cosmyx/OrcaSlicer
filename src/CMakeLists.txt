@@ -120,8 +120,8 @@ endif (MINGW)
 
 if (NOT WIN32 AND NOT APPLE)
     # Binary name on unix like systems (Linux, Unix)
-    set_target_properties(CosmoSlice PROPERTIES OUTPUT_NAME "orca-cosmyx")
-    set(SLIC3R_APP_CMD "orca-cosmyx")
+    set_target_properties(CosmoSlice PROPERTIES OUTPUT_NAME "cosmoslice")
+    set(SLIC3R_APP_CMD "cosmoslice")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/dev-utils/platform/unix/build_linux_image.sh.in ${CMAKE_CURRENT_BINARY_DIR}/build_linux_image.sh USE_SOURCE_PERMISSIONS @ONLY)
 endif ()
 
@@ -175,7 +175,7 @@ if (WIN32)
     endif()
     target_compile_definitions(CosmoSlice_app_gui PRIVATE -DSLIC3R_WRAPPER_NOCONSOLE)
     add_dependencies(CosmoSlice_app_gui CosmoSlice)
-    set_target_properties(CosmoSlice_app_gui PROPERTIES OUTPUT_NAME "orca-cosmyx")
+    set_target_properties(CosmoSlice_app_gui PROPERTIES OUTPUT_NAME "cosmoslice")
     target_link_libraries(CosmoSlice_app_gui PRIVATE boost_headeronly)
 endif ()
 
@@ -223,7 +223,7 @@ else ()
     if (APPLE AND NOT CMAKE_MACOSX_BUNDLE)
         # On OSX, the name of the binary matches the name of the Application.
         add_custom_command(TARGET CosmoSlice POST_BUILD
-            COMMAND ln -sf CosmoSlice orca-cosmyx
+            COMMAND ln -sf CosmoSlice cosmoslice
             WORKING_DIRECTORY "$<TARGET_FILE_DIR:CosmoSlice>"
             VERBATIM)
     else ()

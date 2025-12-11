@@ -30,7 +30,7 @@ Optimize your prints with ultra-fast slicing, intelligent support generation, an
 <tr>
 <td>
 <strong>⚠️ CAUTION:</strong><br><br>
-Several clickbait and malicious websites, such as orca-cosmyx.com and orcacosmyx.net, are pretending to be the official CosmoSlice site. These sites may redirect you to dangerous downloads or contain misleading information. Our only official website is www.orcacosmyx.com.
+Several clickbait and malicious websites, such as cosmoslice.com and orcacosmyx.net, are pretending to be the official CosmoSlice site. These sites may redirect you to dangerous downloads or contain misleading information. Our only official website is www.orcacosmyx.com.
 <br><br>
 If you come across any of these in search results, please <a href="https://safebrowsing.google.com/safebrowsing/report_phish/?">report them as unsafe or phishing</a>  to help keep the community secure.
 </td>

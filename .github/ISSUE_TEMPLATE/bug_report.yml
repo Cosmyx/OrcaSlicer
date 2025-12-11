@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        **Thank you for using Orca Cosmyx and wanting to report a bug.**
+        **Thank you for using CosmoSlice and wanting to report a bug.**
         
         Please note that this is not the place to make feature requests or ask for help.
         For this, please use the [Feature request](https://github.com/Cosmyx/OrcaSlicer/issues/new?assignees=&labels=&projects=&template=feature_request.yml) issue type or you can discuss your idea on our [Discord server](https://discord.gg/P4VE9UY9gJ) with others.
@@ -22,7 +22,7 @@ body:
     id: version
     attributes:
       label: CosmoSlice Version
-      description: Which version of Orca Cosmyx are you running? You can see the full version in `Help` -> `About Orca Cosmyx`.
+      description: Which version of CosmoSlice are you running? You can see the full version in `Help` -> `About CosmoSlice`.
       placeholder: e.g. 1.9.0
     validations:
       required: true
@@ -103,7 +103,7 @@ body:
             Windows: `%APPDATA%\CosmoSlice\log` or usually `C:\Users\<your username>\AppData\Roaming\CosmoSlice\log`
             MacOS: `$HOME/Library/Application Support/CosmoSlice/log`
             Linux: `$HOME/.config/CosmoSlice/log`
-            If Orca Cosmyx still starts, you can also reach this directory from the application menu in `Help` -> `Show Configuration Folder`
+            If CosmoSlice still starts, you can also reach this directory from the application menu in `Help` -> `Show Configuration Folder`
             You can zip the log directory, or just select the newest logs when this issue happens, and zip them
   - type: textarea
     id: file_uploads

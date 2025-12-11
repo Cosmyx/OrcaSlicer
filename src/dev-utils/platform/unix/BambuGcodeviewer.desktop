@@ -1,6 +1,6 @@
 [Desktop Entry]
 Name=Bambu GCode viewer
-Exec=orca-cosmyx --gcodeviewer %F
+Exec=cosmoslice --gcodeviewer %F
 Icon=CosmoSlice-gcodeviewer
 Terminal=false
 Type=Application

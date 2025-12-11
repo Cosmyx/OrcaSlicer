@@ -17,4 +17,4 @@ In the dialog, you can select the start and end retraction length, as well as th
 > On the other hand, if there is still a lot of stringing at the top of the tower, it is recommended to dry your filament and ensure that your nozzle is properly installed without any leaks.
 
 > [!TIP]
-> @ItsDeidara has made a html to help with the calculation. Check it out if those equations give you a headache [here](https://github.com/ItsDeidara/Orca-Cosmyx-Assistant).
+> @ItsDeidara has made a html to help with the calculation. Check it out if those equations give you a headache [here](https://github.com/ItsDeidara/cosmoslice-Assistant).

@@ -2,7 +2,7 @@
 #define _libslic3r_h_
 
 #include "libslic3r_version.h"
-#define SLIC3R_APP_FULL_NAME "Orca Cosmyx"
+#define SLIC3R_APP_FULL_NAME "CosmoSlice"
 #define GCODEVIEWER_APP_NAME "CosmoSlice G-code Viewer"
 #define GCODEVIEWER_APP_KEY  "CosmoSliceGcodeViewer"
 #define GCODEVIEWER_BUILD_ID std::string("CosmoSlice G-code Viewer-") + std::string(SLIC3R_VERSION) + std::string("-RC")

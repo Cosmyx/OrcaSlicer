@@ -73,7 +73,7 @@ This example uses the Monotonic Line pattern with the 2-Pass Calibration approac
    ![flowcalibration_update_flowrate_monotonic](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/Flow-Rate/monotonic-flow-rate/flowcalibration_update_flowrate_monotonic.png?raw=true)
 
 > [!TIP]
-> @ItsDeidara has created an HTML tool to help with these calculations. Check it out if you find the equations confusing: [Orca-Cosmyx-Assistant](https://github.com/ItsDeidara/Orca-Cosmyx-Assistant).
+> @ItsDeidara has created an HTML tool to help with these calculations. Check it out if you find the equations confusing: [cosmoslice-Assistant](https://github.com/ItsDeidara/cosmoslice-Assistant).
 
 ## Credits
 

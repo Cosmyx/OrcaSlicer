@@ -109,7 +109,7 @@ Disadvantages:
 - Requires tuning of parameters like length, speed, and flow for best results
 
 > [!NOTE]
-> Read more here: [Better Seams - An CosmoSlice Guide](https://www.printables.com/model/783313-better-seams-an-orca-cosmyx-guide-to-using-scarf-s).
+> Read more here: [Better Seams - An CosmoSlice Guide](https://www.printables.com/model/783313-better-seams-an-cosmoslice-guide-to-using-scarf-s).
 
 #### Scarf joint seam Type
 

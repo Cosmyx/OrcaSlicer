@@ -39,7 +39,7 @@ The tower method may take a bit more time to complete, but it does not rely on t
    ![pa-tower-measure](https://github.com/Cosmyx/OrcaSlicer/blob/main/doc/images/pa/pa-tower-measure.jpg?raw=true)
 
 > [!TIP]
-> @ItsDeidara has made an HTML tool to help with the calculation. Check it out if those equations give you a headache [here](https://github.com/ItsDeidara/Orca-Cosmyx-Assistant).
+> @ItsDeidara has made an HTML tool to help with the calculation. Check it out if those equations give you a headache [here](https://github.com/ItsDeidara/cosmoslice-Assistant).
 
 ### Pattern method
 
