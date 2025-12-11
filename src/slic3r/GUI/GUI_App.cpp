@@ -59,6 +59,10 @@
 #include <openssl/hmac.h>
 #include <openssl/evp.h>
 
+#ifdef __APPLE__
+#include <CoreFoundation/CoreFoundation.h>
+#endif
+
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/I18N.hpp"
@@ -5519,6 +5523,42 @@ bool GUI_App::load_language(wxString language, bool initial)
                 lang.Replace('-', '_');
                 if (auto info = wxLocale::FindLanguageInfo(lang))
                     m_language_info_system = info;
+#endif
+#ifdef __APPLE__
+                // Use CoreFoundation to get the actual system language on macOS
+                // wxLocale::GetSystemLanguage() doesn't work reliably on macOS
+                CFLocaleRef cflocale = CFLocaleCopyCurrent();
+                CFStringRef cfLangCode = (CFStringRef)CFLocaleGetValue(cflocale, kCFLocaleLanguageCode);
+                CFStringRef cfCountryCode = (CFStringRef)CFLocaleGetValue(cflocale, kCFLocaleCountryCode);
+
+                char langCode[10] = "";
+                char countryCode[10] = "";
+                CFStringGetCString(cfLangCode, langCode, 10, kCFStringEncodingUTF8);
+                if (cfCountryCode != nullptr) {
+                    CFStringGetCString(cfCountryCode, countryCode, 10, kCFStringEncodingUTF8);
+                }
+                CFRelease(cflocale);
+
+                // Build language string in format "lang_COUNTRY" (e.g., "en_US", "zh_CN")
+                wxString lang(langCode);
+                if (strlen(countryCode) > 0) {
+                    lang += "_";
+                    lang += countryCode;
+                }
+
+                BOOST_LOG_TRIVIAL(info) << boost::format("macOS system language from CoreFoundation: %1%") % lang.ToUTF8().data();
+
+                // Try to find the language info for the full locale first
+                if (auto info = wxLocale::FindLanguageInfo(lang)) {
+                    m_language_info_system = info;
+                    BOOST_LOG_TRIVIAL(info) << boost::format("Found exact match for macOS locale: %1%") % info->CanonicalName.ToUTF8().data();
+                } else {
+                    // If not found, try just the language code without country
+                    if (auto info = wxLocale::FindLanguageInfo(wxString(langCode))) {
+                        m_language_info_system = info;
+                        BOOST_LOG_TRIVIAL(info) << boost::format("Found language match for macOS locale: %1%") % info->CanonicalName.ToUTF8().data();
+                    }
+                }
 #endif
                 BOOST_LOG_TRIVIAL(info) << boost::format("System language detected (user locales and such): %1%") % m_language_info_system->CanonicalName.ToUTF8().data();
                 // BBS set language to app config
