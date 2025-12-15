@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "TPC91COSN_NOVA",
-    "name": "KIMYA TPC 91A @Nova",
+    "setting_id": "TPC91COSN_SNV2",
+    "name": "KIMYA TPC 91A @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "KIMYA TPC 91A @Cosmyx Nova",

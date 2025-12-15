@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "GFSU00_NOVA",
-    "name": "Cosmyx TPU 95A @Nova",
+    "setting_id": "GFSU00_SNV2",
+    "name": "Cosmyx TPU 95A @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx TPU 95A @Cosmyx Nova",

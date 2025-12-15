@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL03_NOVA",
-    "name": "CAPIFIL PLA NOIR @Nova",
+    "filament_id": "MIL03_SNV2",
+    "name": "CAPIFIL PLA NOIR @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "CAPIFIL PLA NOIR @Cosmyx Nova",

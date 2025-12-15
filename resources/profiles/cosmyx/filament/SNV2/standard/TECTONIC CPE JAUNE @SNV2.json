@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL08_NOVA",
-    "name": "TECTONIC CPE JAUNE @Nova",
+    "filament_id": "MIL08_SNV2",
+    "name": "TECTONIC CPE JAUNE @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "TECTONIC CPE JAUNE @Cosmyx Nova",

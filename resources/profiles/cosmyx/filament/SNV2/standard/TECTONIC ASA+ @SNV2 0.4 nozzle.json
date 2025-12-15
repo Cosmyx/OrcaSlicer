@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL06_NOVA",
-    "name": "TECTONIC ASA+ @Nova 0.4 nozzle",
+    "filament_id": "MIL06_SNV2",
+    "name": "TECTONIC ASA+ @SNV2 0.4 nozzle",
     "from": "system",
     "instantiation": "true",
     "inherits": "TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle",

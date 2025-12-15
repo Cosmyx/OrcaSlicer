@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL05_NOVA",
-    "name": "FILKEMP PLN @Nova",
+    "filament_id": "MIL05_SNV2",
+    "name": "FILKEMP PLN @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "FILKEMP PLN @Cosmyx Nova",

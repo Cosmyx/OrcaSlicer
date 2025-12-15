@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "GFSG00_01_NOVA",
-    "name": "Cosmyx PETG Basic @Nova",
+    "setting_id": "GFSG00_01_SNV2",
+    "name": "Cosmyx PETG Basic @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PETG Basic @Cosmyx Nova",

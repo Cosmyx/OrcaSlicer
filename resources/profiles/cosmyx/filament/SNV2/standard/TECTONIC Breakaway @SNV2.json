@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL07_NOVA",
-    "name": "TECTONIC Breakaway @Nova",
+    "filament_id": "MIL07_SNV2",
+    "name": "TECTONIC Breakaway @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "TECTONIC Breakaway @Cosmyx Nova",

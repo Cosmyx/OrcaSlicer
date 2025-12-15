@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL12_NOVA",
-    "name": "ENKY PETG CF @Nova",
+    "filament_id": "MIL12_SNV2",
+    "name": "ENKY PETG CF @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "ENKY PETG CF @Cosmyx Nova",

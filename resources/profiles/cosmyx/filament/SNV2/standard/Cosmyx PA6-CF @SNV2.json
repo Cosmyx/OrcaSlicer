@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "GFSN05_02_NOVA",
-    "name": "Cosmyx PA6-CF @Nova",
+    "setting_id": "GFSN05_02_SNV2",
+    "name": "Cosmyx PA6-CF @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PA6-CF @Cosmyx Nova",

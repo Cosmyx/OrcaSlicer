@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "Cosmyx ULTEM @Cosmyx Nova_NOVA",
-    "name": "Cosmyx ULTEM @Nova",
+    "filament_id": "Cosmyx ULTEM @Cosmyx Nova_SNV2",
+    "name": "Cosmyx ULTEM @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx ULTEM @Cosmyx Nova",

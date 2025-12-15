@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "GFSA00_NOVA",
-    "name": "Cosmyx PLA Basic @Nova",
+    "setting_id": "GFSA00_SNV2",
+    "name": "Cosmyx PLA Basic @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PLA Basic @Cosmyx Nova",

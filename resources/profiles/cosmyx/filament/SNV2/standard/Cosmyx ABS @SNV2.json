@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "GFSB00_NOVA",
-    "name": "Cosmyx ABS @Nova",
+    "setting_id": "GFSB00_SNV2",
+    "name": "Cosmyx ABS @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx ABS @Cosmyx Nova",

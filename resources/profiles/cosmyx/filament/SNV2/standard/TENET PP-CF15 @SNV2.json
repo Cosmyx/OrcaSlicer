@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "setting_id": "TENCF15COS_NOVA",
-    "name": "TENET PP-CF15 @Nova",
+    "setting_id": "TENCF15COS_SNV2",
+    "name": "TENET PP-CF15 @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "TENET PP-CF15 @Cosmyx Nova",

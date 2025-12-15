@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL09_NOVA",
-    "name": "TECTONIC CPE ROUGE @Nova",
+    "filament_id": "MIL09_SNV2",
+    "name": "TECTONIC CPE ROUGE @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "TECTONIC CPE ROUGE @Cosmyx Nova",

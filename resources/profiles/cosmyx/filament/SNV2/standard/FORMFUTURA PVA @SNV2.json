@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL12_NOVA",
-    "name": "FORMFUTURA PVA @Nova",
+    "filament_id": "MIL12_SNV2",
+    "name": "FORMFUTURA PVA @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "FORMFUTURA PVA @Cosmyx Nova",

@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL10_NOVA",
-    "name": "TECTONIC PP-CF15 @Nova",
+    "filament_id": "MIL10_SNV2",
+    "name": "TECTONIC PP-CF15 @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "TECTONIC PP-CF15 @Cosmyx Nova",

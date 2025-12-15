@@ -1,7 +1,7 @@
 {
     "type": "filament",
-    "filament_id": "MIL04_NOVA",
-    "name": "ENKY TPU 95A @Nova",
+    "filament_id": "MIL04_SNV2",
+    "name": "ENKY TPU 95A @SNV2",
     "from": "system",
     "instantiation": "true",
     "inherits": "ENKY TPU 95A @Cosmyx Nova",
