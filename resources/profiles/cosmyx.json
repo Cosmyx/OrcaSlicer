@@ -558,8 +558,99 @@
         {
             "name": "TENET PP-CF15 @Nova",
             "sub_path": "filament/Nova/standard/TENET PP-CF15 @Nova.json"
+        },
+         {
+            "name": "CAPIFIL PLA BLANC @SNV2",
+            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLANC @SNV2.json"
+        },
+        {
+            "name": "CAPIFIL PLA BLEU @SNV2",
+            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLEU @SNV2.json"
+        },
+        {
+            "name": "CAPIFIL PLA NOIR @SNV2",
+            "sub_path": "filament/Nova/standard/CAPIFIL PLA NOIR @SNV2.json"
+        },
+        {
+            "name": "Cosmyx ABS @SNV2 0.2 nozzle",
+            "sub_path": "filament/Nova/standard/Cosmyx ABS @SNV2 0.2 nozzle.json"
+        },
+        {
+            "name": "Cosmyx ABS @SNV2 0.8 nozzle",
+            "sub_path": "filament/Nova/standard/Cosmyx ABS @SNV2 0.8 nozzle.json"
+        },
+        {
+            "name": "Cosmyx ABS @SNV2",
+            "sub_path": "filament/Nova/standard/Cosmyx ABS @SNV2.json"
+        },
+        {
+            "name": "Cosmyx ASA @SNV2 0.4 nozzle",
+            "sub_path": "filament/Nova/standard/Cosmyx ASA @SNV2 0.4 nozzle.json"
+        },
+        {
+            "name": "Cosmyx PA6-CF @SNV2",
+            "sub_path": "filament/Nova/standard/Cosmyx PA6-CF @SNV2.json"
+        },
+        {
+            "name": "Cosmyx PETG Basic @SNV2",
+            "sub_path": "filament/Nova/standard/Cosmyx PETG Basic @SNV2.json"
+        },
+        {
+            "name": "Cosmyx PLA Basic @SNV2",
+            "sub_path": "filament/Nova/standard/Cosmyx PLA Basic @SNV2.json"
+        },
+        {
+            "name": "Cosmyx TPU 95A @SNV2",
+            "sub_path": "filament/Nova/standard/Cosmyx TPU 95A @SNV2.json"
+        },
+        {
+            "name": "Cosmyx ULTEM @SNV2",
+            "sub_path": "filament/Nova/standard/Cosmyx ULTEM @SNV2.json"
+        },
+        {
+            "name": "ENKY PETG CF @SNV2",
+            "sub_path": "filament/Nova/standard/ENKY PETG CF @SNV2.json"
+        },
+        {
+            "name": "ENKY TPU 95A @SNV2",
+            "sub_path": "filament/Nova/standard/ENKY TPU 95A @SNV2.json"
+        },
+        {
+            "name": "FILKEMP PLN @SNV2",
+            "sub_path": "filament/Nova/standard/FILKEMP PLN @SNV2.json"
+        },
+        {
+            "name": "FORMFUTURA PVA @SNV2",
+            "sub_path": "filament/Nova/standard/FORMFUTURA PVA @SNV2.json"
+        },
+        {
+            "name": "KIMYA TPC 91A @SNV2",
+            "sub_path": "filament/Nova/standard/KIMYA TPC 91A @SNV2.json"
+        },
+        {
+            "name": "TECTONIC ASA+ @SNV2 0.4 nozzle",
+            "sub_path": "filament/Nova/standard/TECTONIC ASA+ @SNV2 0.4 nozzle.json"
+        },
+        {
+            "name": "TECTONIC Breakaway @SNV2",
+            "sub_path": "filament/Nova/standard/TECTONIC Breakaway @SNV2.json"
+        },
+        {
+            "name": "TECTONIC CPE JAUNE @SNV2",
+            "sub_path": "filament/Nova/standard/TECTONIC CPE JAUNE @SNV2.json"
+        },
+        {
+            "name": "TECTONIC CPE ROUGE @SNV2",
+            "sub_path": "filament/Nova/standard/TECTONIC CPE ROUGE @SNV2.json"
+        },
+        {
+            "name": "TECTONIC PP-CF15 @SNV2",
+            "sub_path": "filament/Nova/standard/TECTONIC PP-CF15 @SNV2.json"
+        },
+        {
+            "name": "TENET PP-CF15 @SNV2",
+            "sub_path": "filament/Nova/standard/TENET PP-CF15 @SNV2.json"
         }
-
     ],
     "machine_list": [
         {
