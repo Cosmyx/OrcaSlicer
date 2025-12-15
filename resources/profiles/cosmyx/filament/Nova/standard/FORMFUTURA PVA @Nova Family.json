@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "setting_id": "GFSG00_01_NOVA",
-    "name": "Cosmyx PETG Basic @Cosmyx Nova",
+    "filament_id": "MIL12_NOVA",
+    "name": "FORMFUTURA PVA @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
+    "inherits": "FORMFUTURA PVA @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

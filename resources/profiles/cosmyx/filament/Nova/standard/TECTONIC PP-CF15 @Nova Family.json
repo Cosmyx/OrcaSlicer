@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "filament_id": "MIL01_NOVA",
-    "name": "CAPIFIL PLA BLANC @Cosmyx Nova",
+    "filament_id": "MIL10_NOVA",
+    "name": "TECTONIC PP-CF15 @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "CAPIFIL PLA BLANC @Cosmyx Nova",
+    "inherits": "TECTONIC PP-CF15 @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

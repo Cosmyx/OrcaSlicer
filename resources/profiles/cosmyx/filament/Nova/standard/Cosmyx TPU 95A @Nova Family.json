@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "filament_id": "MIL03_NOVA",
-    "name": "CAPIFIL PLA NOIR @Cosmyx Nova",
+    "setting_id": "GFSU00_NOVA",
+    "name": "Cosmyx TPU 95A @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "CAPIFIL PLA NOIR @Cosmyx Nova",
+    "inherits": "Cosmyx TPU 95A @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

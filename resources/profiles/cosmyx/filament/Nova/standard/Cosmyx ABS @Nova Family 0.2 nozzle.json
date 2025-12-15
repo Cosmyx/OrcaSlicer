@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "setting_id": "GFSU00_NOVA",
-    "name": "Cosmyx TPU 95A @Cosmyx Nova",
+    "setting_id": "GFSB00_00_NOVA",
+    "name": "Cosmyx ABS @Nova Family 0.2 nozzle",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx TPU 95A @Cosmyx Nova",
+    "inherits": "Cosmyx ABS @Cosmyx Nova 0.2 nozzle",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "filament_id": "MIL09_NOVA",
-    "name": "TECTONIC CPE ROUGE @Cosmyx Nova",
+    "setting_id": "GFSG00_01_NOVA",
+    "name": "Cosmyx PETG Basic @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "TECTONIC CPE ROUGE @Cosmyx Nova",
+    "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "setting_id": "GFSB01_02_NOVA",
-    "name": "Cosmyx ASA @Cosmyx Nova 0.4 nozzle",
+    "filament_id": "MIL01_NOVA",
+    "name": "CAPIFIL PLA BLANC @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx ASA @Cosmyx Nova 0.4 nozzle",
+    "inherits": "CAPIFIL PLA BLANC @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

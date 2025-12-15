@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "setting_id": "GFSB00_00_NOVA",
-    "name": "Cosmyx ABS @Cosmyx Nova 0.2 nozzle",
+    "filament_id": "MIL12_NOVA",
+    "name": "ENKY PETG CF @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx ABS @Cosmyx Nova 0.2 nozzle",
+    "inherits": "ENKY PETG CF @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

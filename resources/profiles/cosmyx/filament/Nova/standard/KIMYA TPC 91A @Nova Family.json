@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "filament_id": "Cosmyx ULTEM @Cosmyx Nova_NOVA",
-    "name": "Cosmyx ULTEM @Cosmyx Nova",
+    "setting_id": "TPC91COSN_NOVA",
+    "name": "KIMYA TPC 91A @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx ULTEM @Cosmyx Nova",
+    "inherits": "KIMYA TPC 91A @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

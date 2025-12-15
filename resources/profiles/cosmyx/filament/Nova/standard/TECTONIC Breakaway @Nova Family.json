@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "filament_id": "MIL04_NOVA",
-    "name": "ENKY TPU 95A @Cosmyx Nova",
+    "filament_id": "MIL07_NOVA",
+    "name": "TECTONIC Breakaway @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "ENKY TPU 95A @Cosmyx Nova",
+    "inherits": "TECTONIC Breakaway @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],

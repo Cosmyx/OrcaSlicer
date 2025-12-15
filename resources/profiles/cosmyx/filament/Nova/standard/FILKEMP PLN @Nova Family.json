@@ -1,10 +1,10 @@
 {
     "type": "filament",
-    "setting_id": "GFSB00_NOVA",
-    "name": "Cosmyx ABS @Cosmyx Nova",
+    "filament_id": "MIL05_NOVA",
+    "name": "FILKEMP PLN @Nova Family",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx ABS @Cosmyx Nova",
+    "inherits": "FILKEMP PLN @Cosmyx Nova",
     "nozzle_temperature": ["220"],
     "nozzle_temperature_initial_layer": ["220"],
     "cool_plate_temp": ["60"],
