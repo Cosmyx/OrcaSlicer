@@ -456,6 +456,10 @@
             "sub_path": "filament/Common/standard/FORMFUTURA PVA @Cosmyx Nova.json"
         },
         {
+            "name": "TENET PP-CF15 @Cosmyx Nova",
+            "sub_path": "filament/Common/standard/TENET PP-CF15 @Cosmyx Nova.json"
+        },
+        {
             "name": "Nanoe Zetamix Zycro",
             "sub_path": "filament/Common/ceramics/Zetamix Zycro.json"
         },
