@@ -316,245 +316,137 @@
     "filament_list": [
         {
             "name": "fdm_filament_common",
-            "sub_path": "filament/Common/standard/fdm_filament_common.json"
+            "sub_path": "filament/standard/fdm_filament_common.json"
         },
         {
             "name": "fdm_filament_asa",
-            "sub_path": "filament/Common/standard/fdm_filament_asa.json"
+            "sub_path": "filament/standard/fdm_filament_asa.json"
         },
         {
             "name": "fdm_filament_pa",
-            "sub_path": "filament/Common/standard/fdm_filament_pa.json"
+            "sub_path": "filament/standard/fdm_filament_pa.json"
         },
         {
             "name": "fdm_filament_pet",
-            "sub_path": "filament/Common/standard/fdm_filament_pet.json"
+            "sub_path": "filament/standard/fdm_filament_pet.json"
         },
         {
             "name": "fdm_filament_pla",
-            "sub_path": "filament/Common/standard/fdm_filament_pla.json"
+            "sub_path": "filament/standard/fdm_filament_pla.json"
         },
         {
             "name": "fdm_filament_tpu",
-            "sub_path": "filament/Common/standard/fdm_filament_tpu.json"
+            "sub_path": "filament/standard/fdm_filament_tpu.json"
         },
         {
             "name": "Cosmyx PLA Basic @base",
-            "sub_path": "filament/Common/standard/Cosmyx PLA Basic @base.json"
+            "sub_path": "filament/standard/Cosmyx PLA Basic @base.json"
         },
         {
             "name": "Cosmyx PLA Basic @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/Cosmyx PLA Basic @Cosmyx Nova.json"
+            "sub_path": "filament/standard/Cosmyx PLA Basic @Cosmyx Nova.json"
         },
         {
             "name": "Cosmyx TPU 95A @base",
-            "sub_path": "filament/Common/standard/Cosmyx TPU 95A @base.json"
+            "sub_path": "filament/standard/Cosmyx TPU 95A @base.json"
         },
         {
             "name": "Cosmyx TPU 95A @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/Cosmyx TPU 95A @Cosmyx Nova.json"
+            "sub_path": "filament/standard/Cosmyx TPU 95A @Cosmyx Nova.json"
         },
         {
             "name": "Cosmyx ASA @base",
-            "sub_path": "filament/Common/standard/Cosmyx ASA @base.json"
+            "sub_path": "filament/standard/Cosmyx ASA @base.json"
         },
         {
             "name": "Cosmyx ASA @Cosmyx Nova 0.4 nozzle",
-            "sub_path": "filament/Common/standard/Cosmyx ASA @Cosmyx Nova 0.4 nozzle.json"
+            "sub_path": "filament/standard/Cosmyx ASA @Cosmyx Nova 0.4 nozzle.json"
         },
         {
             "name": "Cosmyx PA6-CF @base",
-            "sub_path": "filament/Common/standard/Cosmyx PA6-CF @base.json"
+            "sub_path": "filament/standard/Cosmyx PA6-CF @base.json"
         },
         {
             "name": "Cosmyx PA6-CF @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/Cosmyx PA6-CF @Cosmyx Nova.json"
+            "sub_path": "filament/standard/Cosmyx PA6-CF @Cosmyx Nova.json"
         },
         {
             "name": "Cosmyx PETG Basic @base",
-            "sub_path": "filament/Common/standard/Cosmyx PETG Basic @base.json"
+            "sub_path": "filament/standard/Cosmyx PETG Basic @base.json"
         },
         {
             "name": "Cosmyx PETG Basic @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/Cosmyx PETG Basic @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx ABS @base",
-            "sub_path": "filament/Common/standard/Cosmyx ABS @base.json"
-        },
-        {
-            "name": "Cosmyx ABS @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/Cosmyx ABS @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx ABS @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "filament/Common/standard/Cosmyx ABS @Cosmyx Nova 0.2 nozzle.json"
-        },
-        {
-            "name": "Cosmyx ABS @Cosmyx Nova 0.8 nozzle",
-            "sub_path": "filament/Common/standard/Cosmyx ABS @Cosmyx Nova 0.8 nozzle.json"
+            "sub_path": "filament/standard/Cosmyx PETG Basic @Cosmyx Nova.json"
         },
         {
             "name": "KIMYA TPC 91A @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/KIMYA TPC 91A @Cosmyx Nova.json"
+            "sub_path": "filament/standard/KIMYA TPC 91A @Cosmyx Nova.json"
         },
         {
             "name": "CAPIFIL PLA BLANC @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/CAPIFIL PLA BLANC @Cosmyx Nova.json"
+            "sub_path": "filament/standard/CAPIFIL PLA BLANC @Cosmyx Nova.json"
         },
         {
             "name": "CAPIFIL PLA BLEU @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/CAPIFIL PLA BLEU @Cosmyx Nova.json"
+            "sub_path": "filament/standard/CAPIFIL PLA BLEU @Cosmyx Nova.json"
         },
         {
             "name": "CAPIFIL PLA NOIR @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/CAPIFIL PLA NOIR @Cosmyx Nova.json"
+            "sub_path": "filament/standard/CAPIFIL PLA NOIR @Cosmyx Nova.json"
         },
 
         {
             "name": "ENKY TPU 95A @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/ENKY TPU 95A @Cosmyx Nova.json"
+            "sub_path": "filament/standard/ENKY TPU 95A @Cosmyx Nova.json"
         },
 
         {
             "name": "FILKEMP PLN @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/FILKEMP PLN @Cosmyx Nova.json"
+            "sub_path": "filament/standard/FILKEMP PLN @Cosmyx Nova.json"
         },
 
         {
             "name": "TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle",
-            "sub_path": "filament/Common/standard/TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle.json"
+            "sub_path": "filament/standard/TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle.json"
         },
 
         {
             "name": "TECTONIC Breakaway @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/TECTONIC Breakaway @Cosmyx Nova.json"
+            "sub_path": "filament/standard/TECTONIC Breakaway @Cosmyx Nova.json"
         },
 
         {
             "name": "TECTONIC CPE JAUNE @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/TECTONIC CPE JAUNE @Cosmyx Nova.json"
+            "sub_path": "filament/standard/TECTONIC CPE JAUNE @Cosmyx Nova.json"
         },
 
         {
             "name": "TECTONIC CPE ROUGE @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/TECTONIC CPE ROUGE @Cosmyx Nova.json"
+            "sub_path": "filament/standard/TECTONIC CPE ROUGE @Cosmyx Nova.json"
         },
 
         {
             "name": "TECTONIC PP-CF15 @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/TECTONIC PP-CF15 @Cosmyx Nova.json"
+            "sub_path": "filament/standard/TECTONIC PP-CF15 @Cosmyx Nova.json"
         },
 
         {
             "name": "ENKY PETG CF @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/ENKY PETG CF @Cosmyx Nova.json"
+            "sub_path": "filament/standard/ENKY PETG CF @Cosmyx Nova.json"
         },
 
         {
             "name": "FORMFUTURA PVA @Cosmyx Nova",
-            "sub_path": "filament/Common/standard/FORMFUTURA PVA @Cosmyx Nova.json"
+            "sub_path": "filament/standard/FORMFUTURA PVA @Cosmyx Nova.json"
         },
         {
             "name": "Nanoe Zetamix Zycro",
-            "sub_path": "filament/Common/ceramics/Zetamix Zycro.json"
+            "sub_path": "filament/ceramics/Zetamix Zycro.json"
         },
         {
             "name": "Cosmyx ULTEM @Cosmyx Nova",
-            "sub_path": "filament/Common/ht/Cosmyx ULTEM @Cosmyx Nova.json"
-        },
-        {
-            "name": "CAPIFIL PLA BLANC @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLANC @Cosmyx Nova.json"
-        },
-        {
-            "name": "CAPIFIL PLA BLEU @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLEU @Cosmyx Nova.json"
-        },
-        {
-            "name": "CAPIFIL PLA NOIR @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/CAPIFIL PLA NOIR @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx ABS @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "filament/Nova/standard/Cosmyx ABS @Cosmyx Nova 0.2 nozzle.json"
-        },
-        {
-            "name": "Cosmyx ABS @Cosmyx Nova 0.8 nozzle",
-            "sub_path": "filament/Nova/standard/Cosmyx ABS @Cosmyx Nova 0.8 nozzle.json"
-        },
-        {
-            "name": "Cosmyx ABS @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/Cosmyx ABS @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx ASA @Cosmyx Nova 0.4 nozzle",
-            "sub_path": "filament/Nova/standard/Cosmyx ASA @Cosmyx Nova 0.4 nozzle.json"
-        },
-        {
-            "name": "Cosmyx PA6-CF @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/Cosmyx PA6-CF @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx PETG Basic @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/Cosmyx PETG Basic @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx PLA Basic @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/Cosmyx PLA Basic @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx TPU 95A @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/Cosmyx TPU 95A @Cosmyx Nova.json"
-        },
-        {
-            "name": "Cosmyx ULTEM @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/Cosmyx ULTEM @Cosmyx Nova.json"
-        },
-        {
-            "name": "ENKY PETG CF @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/ENKY PETG CF @Cosmyx Nova.json"
-        },
-        {
-            "name": "ENKY TPU 95A @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/ENKY TPU 95A @Cosmyx Nova.json"
-        },
-        {
-            "name": "FILKEMP PLN @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/FILKEMP PLN @Cosmyx Nova.json"
-        },
-        {
-            "name": "FORMFUTURA PVA @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/FORMFUTURA PVA @Cosmyx Nova.json"
-        },
-        {
-            "name": "KIMYA TPC 91A @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/KIMYA TPC 91A @Cosmyx Nova.json"
-        },
-        {
-            "name": "TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle",
-            "sub_path": "filament/Nova/standard/TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle.json"
-        },
-        {
-            "name": "TECTONIC Breakaway @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/TECTONIC Breakaway @Cosmyx Nova.json"
-        },
-        {
-            "name": "TECTONIC CPE JAUNE @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/TECTONIC CPE JAUNE @Cosmyx Nova.json"
-        },
-        {
-            "name": "TECTONIC CPE ROUGE @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/TECTONIC CPE ROUGE @Cosmyx Nova.json"
-        },
-        {
-            "name": "TECTONIC PP-CF15 @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/TECTONIC PP-CF15 @Cosmyx Nova.json"
-        },
-        {
-            "name": "TENET PP-CF15 @Cosmyx Nova",
-            "sub_path": "filament/Nova/standard/TENET PP-CF15 @Cosmyx Nova.json"
-        }
+            "sub_path": "filament/ht/Cosmyx ULTEM @Cosmyx Nova.json"
+        }         
 
     ],
     "machine_list": [
