@@ -468,96 +468,96 @@
             "sub_path": "filament/Common/ht/Cosmyx ULTEM @Cosmyx Nova.json"
         },
         {
-            "name": "CAPIFIL PLA BLANC @Nova Family",
-            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLANC @Nova Family.json"
+            "name": "CAPIFIL PLA BLANC @Nova",
+            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLANC @Nova.json"
         },
         {
-            "name": "CAPIFIL PLA BLEU @Nova Family",
-            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLEU @Nova Family.json"
+            "name": "CAPIFIL PLA BLEU @Nova",
+            "sub_path": "filament/Nova/standard/CAPIFIL PLA BLEU @Nova.json"
         },
         {
-            "name": "CAPIFIL PLA NOIR @Nova Family",
-            "sub_path": "filament/Nova/standard/CAPIFIL PLA NOIR @Nova Family.json"
+            "name": "CAPIFIL PLA NOIR @Nova",
+            "sub_path": "filament/Nova/standard/CAPIFIL PLA NOIR @Nova.json"
         },
         {
-            "name": "Cosmyx ABS @Nova Family 0.2 nozzle",
-            "sub_path": "filament/Nova/standard/Cosmyx ABS @Nova Family 0.2 nozzle.json"
+            "name": "Cosmyx ABS @Nova 0.2 nozzle",
+            "sub_path": "filament/Nova/standard/Cosmyx ABS @Nova 0.2 nozzle.json"
         },
         {
-            "name": "Cosmyx ABS @Nova Family 0.8 nozzle",
-            "sub_path": "filament/Nova/standard/Cosmyx ABS @Nova Family 0.8 nozzle.json"
+            "name": "Cosmyx ABS @Nova 0.8 nozzle",
+            "sub_path": "filament/Nova/standard/Cosmyx ABS @Nova 0.8 nozzle.json"
         },
         {
-            "name": "Cosmyx ABS @Nova Family",
-            "sub_path": "filament/Nova/standard/Cosmyx ABS @Nova Family.json"
+            "name": "Cosmyx ABS @Nova",
+            "sub_path": "filament/Nova/standard/Cosmyx ABS @Nova.json"
         },
         {
-            "name": "Cosmyx ASA @Nova Family 0.4 nozzle",
-            "sub_path": "filament/Nova/standard/Cosmyx ASA @Nova Family 0.4 nozzle.json"
+            "name": "Cosmyx ASA @Nova 0.4 nozzle",
+            "sub_path": "filament/Nova/standard/Cosmyx ASA @Nova 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx PA6-CF @Nova Family",
-            "sub_path": "filament/Nova/standard/Cosmyx PA6-CF @Nova Family.json"
+            "name": "Cosmyx PA6-CF @Nova",
+            "sub_path": "filament/Nova/standard/Cosmyx PA6-CF @Nova.json"
         },
         {
-            "name": "Cosmyx PETG Basic @Nova Family",
-            "sub_path": "filament/Nova/standard/Cosmyx PETG Basic @Nova Family.json"
+            "name": "Cosmyx PETG Basic @Nova",
+            "sub_path": "filament/Nova/standard/Cosmyx PETG Basic @Nova.json"
         },
         {
-            "name": "Cosmyx PLA Basic @Nova Family",
-            "sub_path": "filament/Nova/standard/Cosmyx PLA Basic @Nova Family.json"
+            "name": "Cosmyx PLA Basic @Nova",
+            "sub_path": "filament/Nova/standard/Cosmyx PLA Basic @Nova.json"
         },
         {
-            "name": "Cosmyx TPU 95A @Nova Family",
-            "sub_path": "filament/Nova/standard/Cosmyx TPU 95A @Nova Family.json"
+            "name": "Cosmyx TPU 95A @Nova",
+            "sub_path": "filament/Nova/standard/Cosmyx TPU 95A @Nova.json"
         },
         {
-            "name": "Cosmyx ULTEM @Nova Family",
-            "sub_path": "filament/Nova/standard/Cosmyx ULTEM @Nova Family.json"
+            "name": "Cosmyx ULTEM @Nova",
+            "sub_path": "filament/Nova/standard/Cosmyx ULTEM @Nova.json"
         },
         {
-            "name": "ENKY PETG CF @Nova Family",
-            "sub_path": "filament/Nova/standard/ENKY PETG CF @Nova Family.json"
+            "name": "ENKY PETG CF @Nova",
+            "sub_path": "filament/Nova/standard/ENKY PETG CF @Nova.json"
         },
         {
-            "name": "ENKY TPU 95A @Nova Family",
-            "sub_path": "filament/Nova/standard/ENKY TPU 95A @Nova Family.json"
+            "name": "ENKY TPU 95A @Nova",
+            "sub_path": "filament/Nova/standard/ENKY TPU 95A @Nova.json"
         },
         {
-            "name": "FILKEMP PLN @Nova Family",
-            "sub_path": "filament/Nova/standard/FILKEMP PLN @Nova Family.json"
+            "name": "FILKEMP PLN @Nova",
+            "sub_path": "filament/Nova/standard/FILKEMP PLN @Nova.json"
         },
         {
-            "name": "FORMFUTURA PVA @Nova Family",
-            "sub_path": "filament/Nova/standard/FORMFUTURA PVA @Nova Family.json"
+            "name": "FORMFUTURA PVA @Nova",
+            "sub_path": "filament/Nova/standard/FORMFUTURA PVA @Nova.json"
         },
         {
-            "name": "KIMYA TPC 91A @Nova Family",
-            "sub_path": "filament/Nova/standard/KIMYA TPC 91A @Nova Family.json"
+            "name": "KIMYA TPC 91A @Nova",
+            "sub_path": "filament/Nova/standard/KIMYA TPC 91A @Nova.json"
         },
         {
-            "name": "TECTONIC ASA+ @Nova Family 0.4 nozzle",
-            "sub_path": "filament/Nova/standard/TECTONIC ASA+ @Nova Family 0.4 nozzle.json"
+            "name": "TECTONIC ASA+ @Nova 0.4 nozzle",
+            "sub_path": "filament/Nova/standard/TECTONIC ASA+ @Nova 0.4 nozzle.json"
         },
         {
-            "name": "TECTONIC Breakaway @Nova Family",
-            "sub_path": "filament/Nova/standard/TECTONIC Breakaway @Nova Family.json"
+            "name": "TECTONIC Breakaway @Nova",
+            "sub_path": "filament/Nova/standard/TECTONIC Breakaway @Nova.json"
         },
         {
-            "name": "TECTONIC CPE JAUNE @Nova Family",
-            "sub_path": "filament/Nova/standard/TECTONIC CPE JAUNE @Nova Family.json"
+            "name": "TECTONIC CPE JAUNE @Nova",
+            "sub_path": "filament/Nova/standard/TECTONIC CPE JAUNE @Nova.json"
         },
         {
-            "name": "TECTONIC CPE ROUGE @Nova Family",
-            "sub_path": "filament/Nova/standard/TECTONIC CPE ROUGE @Nova Family.json"
+            "name": "TECTONIC CPE ROUGE @Nova",
+            "sub_path": "filament/Nova/standard/TECTONIC CPE ROUGE @Nova.json"
         },
         {
-            "name": "TECTONIC PP-CF15 @Nova Family",
-            "sub_path": "filament/Nova/standard/TECTONIC PP-CF15 @Nova Family.json"
+            "name": "TECTONIC PP-CF15 @Nova",
+            "sub_path": "filament/Nova/standard/TECTONIC PP-CF15 @Nova.json"
         },
         {
-            "name": "TENET PP-CF15 @Nova Family",
-            "sub_path": "filament/Nova/standard/TENET PP-CF15 @Nova Family.json"
+            "name": "TENET PP-CF15 @Nova",
+            "sub_path": "filament/Nova/standard/TENET PP-CF15 @Nova.json"
         }
 
     ],
