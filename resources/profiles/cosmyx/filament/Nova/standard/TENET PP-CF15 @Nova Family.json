@@ -5,16 +5,7 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "TENET PP-CF15 @Cosmyx Nova",
-    "nozzle_temperature": ["220"],
-    "nozzle_temperature_initial_layer": ["220"],
-    "cool_plate_temp": ["60"],
-    "eng_plate_temp": ["60"],
-    "hot_plate_temp": ["60"],
-    "textured_plate_temp": ["60"],
-    "cool_plate_temp_initial_layer": ["60"],
-    "eng_plate_temp_initial_layer": ["60"],
-    "hot_plate_temp_initial_layer": ["60"],
-    "textured_plate_temp_initial_layer": ["60"],
+
     "compatible_printers": [
         "Cosmyx Nova 0.4 nozzle",
         "Cosmyx Nova 0.2 nozzle",
