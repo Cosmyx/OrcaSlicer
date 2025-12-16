@@ -1,0 +1,12 @@
+{
+    "type": "filament",
+    "setting_id": "GFSN05_02",
+    "name": "Cosmyx PA6-CF @Cosmyx Common",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "Cosmyx PA6-CF @base",
+     "compatible_printer": [
+        "Cosmyx Machines"
+    ],
+    "version": "01.07.00.18"
+}

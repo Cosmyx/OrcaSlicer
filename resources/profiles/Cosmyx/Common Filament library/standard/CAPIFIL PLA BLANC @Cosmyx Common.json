@@ -1,0 +1,35 @@
+{
+    "type": "filament",
+    "filament_id": "MIL01",
+    "name": "CAPIFIL PLA BLANC @Cosmyx Common",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "Cosmyx PLA Basic @Cosmyx Common",
+    "filament_vendor": [
+        "CAPIFIL"
+    ],
+    "default_filament_colour": [
+        "#FFFFFF"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "hot_plate_temp": [
+        "65"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "65"
+    ],
+    "nozzle_temperature": [
+        "215"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "220"
+    ],
+    "pressure_advance": [
+        "0.04"
+    ],
+     "compatible_printer": [
+        "Cosmyx Machines"
+    ]
+}

@@ -1,0 +1,49 @@
+name: Regenerate cosmyx.json
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  regenerate-json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Delete existing cosmyx.json
+        run: |
+          if [ -f cosmyx.json ]; then
+            echo "Deleting cosmyx.json..."
+            rm cosmyx.json
+          else
+            echo "No cosmyx.json found to delete"
+          fi
+
+      - name: Generate new cosmyx.json
+        run: |
+          echo "Running generation script..."
+          python ztool_generate_cosmyx_json.py
+
+      - name: Check for changes
+        id: verify_diff
+        run: |
+          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push changes
+        if: steps.verify_diff.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add cosmyx.json
+          git commit -m "chore: regenerate cosmyx.json [skip ci]"
+          git push
