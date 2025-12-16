@@ -1,7 +1,7 @@
 {
     "type": "filament",
     "filament_id": "GFA00",
-    "name": "Nanoe Zetamix Zycro",
+    "name": "Nanoe Zetamix Zycro @Cosmyx Common",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PLA Basic @Cosmyx Nova",
