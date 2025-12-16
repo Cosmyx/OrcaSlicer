@@ -1,13 +1,20 @@
-name: Auto Version Bump
+name: Cosmyx Auto Version Bump
 
 on:
   push:
     branches:
+      - cosmyx
       - main
+    paths:
+      - 'resources/profiles/Cosmyx/**'
+      - '.github/workflows/cosmyx_auto_version_bump.yml'
 
 jobs:
   version-bump:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: resources/profiles/Cosmyx
 
     steps:
       - name: Checkout repository
@@ -43,7 +50,7 @@ jobs:
           YEAR=$(date +%Y)
 
           # Get the last version increment from git history
-          LAST_VERSION=$(git log --all --grep="chore: bump version to" --format=%B -n 1 | grep -oP 'version to \K\d+\.\d+\.\d+\.\d+' || echo "")
+          LAST_VERSION=$(git log --all --grep="chore(cosmyx): bump version to" --format=%B -n 1 | grep -oP 'version to \K\d+\.\d+\.\d+\.\d+' || echo "")
 
           if [ -z "$LAST_VERSION" ]; then
             # No previous version found, start with increment 1
@@ -68,13 +75,13 @@ jobs:
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "New version: $NEW_VERSION"
 
-      - name: Update version in all JSON files
+      - name: Update version in Cosmyx JSON files
         if: steps.check_merge.outputs.is_merge == 'true'
         run: |
           NEW_VERSION="${{ steps.version.outputs.new_version }}"
           echo "Updating version to: $NEW_VERSION"
 
-          # Find all JSON files and update version field
+          # Find all JSON files in Cosmyx directory only (using current working dir)
           find . -name "*.json" -type f ! -path "./.git/*" -exec sed -i "s/\"version\": \"[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}\.[0-9]\{2\}\"/\"version\": \"$NEW_VERSION\"/g" {} +
 
           # Also update the version in Python scripts if they have VERSION constant
@@ -86,21 +93,24 @@ jobs:
         if: steps.check_merge.outputs.is_merge == 'true'
         id: verify_diff
         run: |
-          if git diff --quiet .; then
+          # Check git status from repository root
+          cd ../../..
+          if git diff --quiet resources/profiles/Cosmyx/; then
             echo "changed=false" >> $GITHUB_OUTPUT
             echo "No version changes detected"
           else
             echo "changed=true" >> $GITHUB_OUTPUT
             echo "Version changes detected"
-            git diff --stat
+            git diff --stat resources/profiles/Cosmyx/
           fi
 
       - name: Commit and push version changes
         if: steps.check_merge.outputs.is_merge == 'true' && steps.verify_diff.outputs.changed == 'true'
         run: |
           NEW_VERSION="${{ steps.version.outputs.new_version }}"
+          cd ../../..
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "chore: bump version to $NEW_VERSION [skip ci]"
+          git add resources/profiles/Cosmyx/
+          git commit -m "chore(cosmyx): bump version to $NEW_VERSION [skip ci]"
           git push

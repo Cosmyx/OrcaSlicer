@@ -1,0 +1,58 @@
+name: Cosmyx Generate Filament Variants
+
+on:
+  push:
+    branches:
+      - cosmyx
+      - main
+    paths:
+      - 'resources/profiles/Cosmyx/Common Filament library/**'
+      - 'resources/profiles/Cosmyx/ztool_generate_filament_variants.py'
+      - '.github/workflows/cosmyx_generate_filament_variants.yml'
+
+jobs:
+  generate-variants:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: resources/profiles/Cosmyx
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate filament variants
+        run: |
+          echo "Running filament variant generation script..."
+          python ztool_generate_filament_variants.py
+
+      - name: Check for changes
+        id: verify_diff
+        run: |
+          # Check git status from repository root for Cosmyx Machine directory only
+          cd ../../..
+          if git diff --quiet resources/profiles/Cosmyx/Machine/; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in Machine directory"
+            git diff --stat resources/profiles/Cosmyx/Machine/
+          fi
+
+      - name: Commit and push changes
+        if: steps.verify_diff.outputs.changed == 'true'
+        run: |
+          cd ../../..
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add resources/profiles/Cosmyx/Machine/
+          git commit -m "chore(cosmyx): regenerate filament variants from Common Filament library [skip ci]"
+          git push

@@ -1,13 +1,21 @@
-name: Regenerate cosmyx.json
+name: Cosmyx Regenerate JSON
 
 on:
   push:
     branches:
+      - cosmyx
       - main
+    paths:
+      - 'resources/profiles/Cosmyx/**/*.json'
+      - 'resources/profiles/Cosmyx/ztool_generate_cosmyx_json.py'
+      - '.github/workflows/cosmyx_regenerate_json.yml'
 
 jobs:
   regenerate-json:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: resources/profiles/Cosmyx
 
     steps:
       - name: Checkout repository
@@ -37,13 +45,23 @@ jobs:
       - name: Check for changes
         id: verify_diff
         run: |
-          git diff --quiet . || echo "changed=true" >> $GITHUB_OUTPUT
+          # Check git status from repository root for cosmyx.json only
+          cd ../../..
+          if git diff --quiet resources/profiles/Cosmyx/cosmyx.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected in cosmyx.json"
+            git diff --stat resources/profiles/Cosmyx/cosmyx.json
+          fi
 
       - name: Commit and push changes
         if: steps.verify_diff.outputs.changed == 'true'
         run: |
+          cd ../../..
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add cosmyx.json
-          git commit -m "chore: regenerate cosmyx.json [skip ci]"
+          git add resources/profiles/Cosmyx/cosmyx.json
+          git commit -m "chore(cosmyx): regenerate cosmyx.json [skip ci]"
           git push
