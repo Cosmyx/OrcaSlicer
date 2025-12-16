@@ -8,6 +8,7 @@ on:
     paths:
       - 'resources/profiles/Cosmyx/**'
       - '.github/workflows/cosmyx_auto_version_bump.yml'
+  workflow_dispatch:
 
 jobs:
   version-bump:

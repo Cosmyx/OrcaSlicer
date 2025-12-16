@@ -9,6 +9,7 @@ on:
       - 'resources/profiles/Cosmyx/Common Filament library/**'
       - 'resources/profiles/Cosmyx/ztool_generate_filament_variants.py'
       - '.github/workflows/cosmyx_generate_filament_variants.yml'
+  workflow_dispatch:
 
 jobs:
   generate-variants:

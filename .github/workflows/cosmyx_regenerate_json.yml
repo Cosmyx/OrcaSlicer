@@ -9,6 +9,7 @@ on:
       - 'resources/profiles/Cosmyx/**/*.json'
       - 'resources/profiles/Cosmyx/ztool_generate_cosmyx_json.py'
       - '.github/workflows/cosmyx_regenerate_json.yml'
+  workflow_dispatch:
 
 jobs:
   regenerate-json:
