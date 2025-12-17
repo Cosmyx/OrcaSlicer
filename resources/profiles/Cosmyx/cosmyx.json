@@ -1,7 +1,7 @@
 {
     "name": "Cosmyx",
     "url": "http://www.cosmyx.com/Parameters/vendor/Cosmyx.json",
-    "version": "01.07.00.18",
+    "version": "17.12.2025.03",
     "force_update": "0",
     "description": "Auto-generated Cosmyx configuration file",
     "machine_model_list": [

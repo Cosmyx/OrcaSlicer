@@ -8,7 +8,7 @@
     "compatible_printers": [
         "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle"
     ],
-    "version": "17.12.2025.02",
+    "version": "17.12.2025.03",
     "overhang_reverse": "1",
     "overhang_reverse_threshold": "0%",
     "sparse_infill_density": "92%",
