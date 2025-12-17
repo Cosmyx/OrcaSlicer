@@ -82,7 +82,8 @@
     ],
     "overhang_fan_threshold": [
         "10%"
-    ],    
+    ],
+    "version": "17.12.2025.01",    
      "compatible_printers": [
         "Cosmyx Nova Metal Ceramique 0.4 nozzle",
         "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle"
