@@ -24,7 +24,7 @@
     "nozzle_temperature_initial_layer": [
         "220"
     ],
-     "compatible_printer": [
+     "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

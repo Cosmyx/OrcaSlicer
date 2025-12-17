@@ -41,7 +41,7 @@
     "temperature_vitrification": [
         "170"
     ],
-     "compatible_printer": [
+     "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

@@ -14,7 +14,7 @@
     "slow_down_min_speed": [
         "10"
     ],
-    "compatible_printer": [
+    "compatible_printers": [
         "Cosmyx Machines"
     ],
     "version": "17.12.2025.02"

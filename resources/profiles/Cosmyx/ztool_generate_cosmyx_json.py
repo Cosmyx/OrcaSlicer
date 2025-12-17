@@ -58,10 +58,12 @@ def scan_json_files(base_dir: Path) -> List[Dict]:
                     # Extract metadata
                     file_type = data.get('type', 'unknown')
                     file_name = data.get('name', file.replace('.json', ''))
+                    inherits = data.get('inherits', '')
 
                     json_files.append({
                         'name': file_name,
                         'type': file_type,
+                        'inherits': inherits,
                         'sub_path': str(relative_path).replace('\\', '/'),
                         'file_path': str(file_path),
                         'relative_path': str(relative_path)
@@ -77,6 +79,70 @@ def scan_json_files(base_dir: Path) -> List[Dict]:
     return json_files
 
 
+def topological_sort_profiles(items: List[Dict], json_files_data: Dict[str, Dict]) -> List[Dict]:
+    """
+    Sort profiles based on their inheritance dependencies using topological sort.
+    Profiles that are inherited from must come before profiles that inherit from them.
+
+    Args:
+        items: List of profile entries with 'name' and 'sub_path'
+        json_files_data: Dict mapping name to full JSON data (including 'inherits')
+
+    Returns:
+        Sorted list of profile entries
+    """
+    # Build dependency graph
+    dependencies = {}  # name -> list of names it depends on (inherits from)
+    name_to_item = {item['name']: item for item in items}
+
+    for item in items:
+        name = item['name']
+        data = json_files_data.get(name, {})
+        inherits = data.get('inherits', '')
+
+        if inherits:
+            dependencies[name] = [inherits]
+        else:
+            dependencies[name] = []
+
+    # Perform topological sort using Kahn's algorithm
+    sorted_items = []
+
+    # Calculate in-degrees: only count parents that exist in the current list
+    in_degree = {}
+    for name in name_to_item.keys():
+        count = 0
+        for parent in dependencies[name]:
+            if parent in name_to_item:  # Only count if parent is in the same list
+                count += 1
+        in_degree[name] = count
+
+    # Queue of items with no dependencies (or dependencies outside this list)
+    queue = [name for name, degree in in_degree.items() if degree == 0]
+
+    while queue:
+        # Sort queue alphabetically for consistent ordering when there are no dependencies
+        queue.sort()
+        current = queue.pop(0)
+        sorted_items.append(name_to_item[current])
+
+        # Find all items that depend on current
+        for name in dependencies:
+            if current in dependencies[name]:
+                in_degree[name] -= 1
+                if in_degree[name] == 0:
+                    queue.append(name)
+
+    # Check for circular dependencies
+    if len(sorted_items) != len(items):
+        print(f"Warning: Possible circular dependencies detected in profiles")
+        # Add remaining items that weren't sorted
+        remaining = [item for item in items if item not in sorted_items]
+        sorted_items.extend(remaining)
+
+    return sorted_items
+
+
 def organize_by_type(json_files: List[Dict]) -> Tuple[List[Dict], List[Dict], List[Dict], List[Dict]]:
     """
     Organize JSON files by their type into separate lists.
@@ -88,6 +154,11 @@ def organize_by_type(json_files: List[Dict]) -> Tuple[List[Dict], List[Dict], Li
     machines = []
     processes = []
     filaments = []
+
+    # Create a dict to store full JSON data for dependency resolution
+    json_files_data = {}
+    for item in json_files:
+        json_files_data[item['name']] = item
 
     for item in json_files:
         file_type = item['type']
@@ -107,7 +178,7 @@ def organize_by_type(json_files: List[Dict]) -> Tuple[List[Dict], List[Dict], Li
         else:
             print(f"Warning: Unknown type '{file_type}' for {item['sub_path']}")
 
-    return machine_models, machines, processes, filaments
+    return machine_models, machines, processes, filaments, json_files_data
 
 
 def generate_cosmyx_json(base_dir: Path, output_file: str = 'cosmyx.json'):
@@ -124,7 +195,7 @@ def generate_cosmyx_json(base_dir: Path, output_file: str = 'cosmyx.json'):
     print(f"\nTotal JSON files found: {len(json_files)}")
 
     # Organize by type
-    machine_models, machines, processes, filaments = organize_by_type(json_files)
+    machine_models, machines, processes, filaments, json_files_data = organize_by_type(json_files)
 
     print(f"\nOrganized files:")
     print(f"  - Machine Models: {len(machine_models)}")
@@ -132,11 +203,12 @@ def generate_cosmyx_json(base_dir: Path, output_file: str = 'cosmyx.json'):
     print(f"  - Processes: {len(processes)}")
     print(f"  - Filaments: {len(filaments)}")
 
-    # Sort lists by name for consistency
-    machine_models.sort(key=lambda x: x['name'])
-    machines.sort(key=lambda x: x['name'])
-    processes.sort(key=lambda x: x['name'])
-    filaments.sort(key=lambda x: x['name'])
+    # Sort lists by dependency order (topological sort)
+    print("\nSorting profiles by dependency order...")
+    machine_models.sort(key=lambda x: x['name'])  # Machine models don't usually have inherits
+    machines = topological_sort_profiles(machines, json_files_data)
+    processes = topological_sort_profiles(processes, json_files_data)
+    filaments = topological_sort_profiles(filaments, json_files_data)
 
     # Create the cosmyx.json structure
     cosmyx_data = {

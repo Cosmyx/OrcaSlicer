@@ -58,7 +58,7 @@
         "80"
     ],
     "version": "17.12.2025.02",
-    "compatible_printer": [
+    "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

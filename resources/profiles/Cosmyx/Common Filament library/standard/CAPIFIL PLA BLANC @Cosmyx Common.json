@@ -29,7 +29,7 @@
     "pressure_advance": [
         "0.04"
     ],
-     "compatible_printer": [
+     "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

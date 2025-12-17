@@ -20,7 +20,7 @@
     "nozzle_temperature": [
         "230"
     ],
-     "compatible_printer": [
+     "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

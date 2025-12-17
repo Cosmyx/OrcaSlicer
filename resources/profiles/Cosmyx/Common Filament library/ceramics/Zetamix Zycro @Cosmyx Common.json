@@ -4,7 +4,7 @@
     "name": "Nanoe Zetamix Zycro @Cosmyx Common",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx PLA Basic @Cosmyx Nova",
+    "inherits": "Cosmyx PLA Basic @Cosmyx Common",
     "filament_vendor": [
         "Nanoe Zetamix"
     ],

@@ -29,7 +29,7 @@
     "filament_max_volumetric_speed": [
         "18"
     ],
-     "compatible_printer": [
+     "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

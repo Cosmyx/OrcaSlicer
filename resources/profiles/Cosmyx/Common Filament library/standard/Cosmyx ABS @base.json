@@ -14,7 +14,7 @@
     "filament_vendor": [
         "Cosmyx"
     ],
-    "compatible_printer": [
+    "compatible_printers": [
         "Cosmyx Machines"
     ]
 }

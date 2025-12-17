@@ -5,7 +5,7 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PA6-CF @base",
-    "compatible_printer": [
+    "compatible_printers": [
         "Cosmyx Machines"
     ],
     "version": "17.12.2025.02"
