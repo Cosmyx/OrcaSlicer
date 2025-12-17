@@ -5,11 +5,6 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PETG Basic @Cosmyx Common",
-
-
-
-
-
     "default_filament_colour": [
         "#000000"
     ],
@@ -34,16 +29,13 @@
     "filament_vendor": [
         "ENKY"
     ],
-
     "hot_plate_temp": [
         "90"
     ],
     "hot_plate_temp_initial_layer": [
         "90"
     ],
-
     "is_custom_defined": "0",
-
     "nozzle_temperature": [
         "250"
     ],
@@ -59,8 +51,8 @@
     "slow_down_layer_time": [
         "2"
     ],
-    "version": "1.7.0.18",
-     "compatible_printer": [
+    "version": "17.12.2025.02",
+    "compatible_printer": [
         "Cosmyx Machines"
     ]
 }

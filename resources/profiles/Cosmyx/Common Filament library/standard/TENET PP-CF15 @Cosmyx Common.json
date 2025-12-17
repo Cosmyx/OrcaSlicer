@@ -5,11 +5,7 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PA6-CF @Cosmyx Common",
-
-
-
     "setting_id": "TENCF15COS",
-
     "fan_cooling_layer_time": [
         "80"
     ],
@@ -43,9 +39,7 @@
     "cool_plate_temp": [
         "80"
     ],
-
     "is_custom_defined": "0",
-
     "nozzle_temperature": [
         "275"
     ],
@@ -55,7 +49,7 @@
     "overhang_fan_speed": [
         "0"
     ],
-    "version": "1.7.0.18",
+    "version": "17.12.2025.02",
     "compatible_printer": [
         "Cosmyx Machines"
     ]

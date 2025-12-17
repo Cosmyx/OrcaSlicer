@@ -1,12 +1,10 @@
 {
-
     "type": "filament",
     "filament_id": "MIL12",
     "name": "FORMFUTURA PVA @Cosmyx Common",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PLA Basic @Cosmyx Common",
-
     "default_filament_colour": [
         "#FFFFFF"
     ],
@@ -37,17 +35,15 @@
     "hot_plate_temp_initial_layer": [
         "65"
     ],
-
     "is_custom_defined": "0",
-
     "nozzle_temperature_range_high": [
         "220"
     ],
     "overhang_fan_speed": [
         "0"
     ],
-    "version": "1.7.0.18",
-     "compatible_printer": [
+    "version": "17.12.2025.02",
+    "compatible_printer": [
         "Cosmyx Machines"
     ]
 }

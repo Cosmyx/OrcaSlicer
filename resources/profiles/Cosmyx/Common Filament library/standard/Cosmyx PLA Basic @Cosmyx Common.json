@@ -8,8 +8,8 @@
     "filament_max_volumetric_speed": [
         "21"
     ],
-     "compatible_printer": [
+    "compatible_printer": [
         "Cosmyx Machines"
     ],
-    "version": "01.07.00.18"
+    "version": "17.12.2025.02"
 }

@@ -113,5 +113,6 @@
     "infill_jerk": "3",
     "top_surface_jerk": "3",
     "initial_layer_jerk": "3",
-    "travel_jerk": "3"
+    "travel_jerk": "3",
+    "version": "17.12.2025.01"
 }

@@ -60,8 +60,8 @@
     "pressure_advance": [
         "0.096"
     ],
-    "version": "1.7.0.18",
-     "compatible_printer": [
+    "version": "17.12.2025.02",
+    "compatible_printer": [
         "Cosmyx Machines"
     ]
 }

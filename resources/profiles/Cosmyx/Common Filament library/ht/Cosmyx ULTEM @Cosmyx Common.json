@@ -5,16 +5,16 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "fdm_filament_asa",
-
     "filament_settings_id": [
         "Cosmyx ULTEM @Cosmyx Common"
     ],
-    "filament_type": ["ULTEM"],
-
-    "filament_vendor": ["Cosmyx"],
-    
+    "filament_type": [
+        "ULTEM"
+    ],
+    "filament_vendor": [
+        "Cosmyx"
+    ],
     "is_custom_defined": "0",
-
     "chamber_temperature": [
         "100"
     ],
@@ -66,7 +66,7 @@
     "temperature_vitrification": [
         "360"
     ],
-    "version": "1.7.0.18",
+    "version": "17.12.2025.02",
     "compatible_printers": [
         "Cosmyx Machines"
     ]

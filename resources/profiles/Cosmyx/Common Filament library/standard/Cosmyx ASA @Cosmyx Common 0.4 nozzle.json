@@ -5,8 +5,8 @@
     "from": "system",
     "inherits": "Cosmyx ASA @base",
     "setting_id": "GFSB01_02",
-     "compatible_printer": [
+    "compatible_printer": [
         "Cosmyx Machines"
     ],
-    "version": "01.07.00.18"
+    "version": "17.12.2025.02"
 }
