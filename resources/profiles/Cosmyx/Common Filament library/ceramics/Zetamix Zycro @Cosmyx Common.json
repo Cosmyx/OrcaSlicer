@@ -85,7 +85,6 @@
     ],
     "version": "17.12.2025.02",
     "compatible_printers": [
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle"
+        "Cosmyx Machines"
     ]
 }

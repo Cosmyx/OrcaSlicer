@@ -7,8 +7,7 @@
     "inherits": "fdm_process_cosmyx_0.20",
     "outer_wall_speed": "60",
     "compatible_printers": [
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle"
+        "Cosmyx Machines"
     ],
     "version": "17.12.2025.02",
     "overhang_reverse": "1",
