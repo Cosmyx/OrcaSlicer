@@ -124,7 +124,7 @@
         "30"
     ],
     "z_hop_types": [
-        "Slope Lift"
+        "slope"
     ],
     "nozzle_type": "brass",
     "silent_mode": "0",
@@ -136,6 +136,5 @@
     "machine_start_gcode": "PREHEAT B={max(first_layer_bed_temperature[0],first_layer_bed_temperature[1])} TL={first_layer_temperature[0]} TR={first_layer_temperature[1]}\n\n;; start_print ;;",
     "wipe": [
         "1"
-    ],
-    "version": "17.12.2025.03"
+    ]
 }
