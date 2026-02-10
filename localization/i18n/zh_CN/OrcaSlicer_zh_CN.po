@@ -1817,6 +1817,15 @@ msgstr "环面"
 msgid "Cosmyx Cube"
 msgstr ""
 
+msgid "Cosmyx Calage 1 SNDT"
+msgstr ""
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr ""
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr ""
+
 msgid "Orca Tolerance Test"
 msgstr "Orca误差测试"
 
