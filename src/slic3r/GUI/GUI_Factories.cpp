@@ -630,6 +630,75 @@ wxMenu* MenuFactory::append_submenu_add_calibration_model(wxMenu* menu, ModelVol
     return sub_menu;
 }
 
+// Cosmyx: unified submenu combining all Cosmyx 3D models with nested categories
+wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType type) {
+    auto cosmyx_main_menu = new wxMenu;
+
+    // Create nested submenu for Dual Head Calibration Models
+    auto dual_head_menu = new wxMenu;
+    for (auto &item : {L("Calage 2 SNDT"), L("Calage 3 SNDT")}) {
+        append_menu_item(
+            dual_head_menu, wxID_ANY, _(item), "",
+            [type, item](wxCommandEvent&) {
+                std::string file_name = item;
+
+                if (file_name == L("Calage 2 SNDT"))
+                    file_name = "Calage_2_SNDT.3mf";
+                else if (file_name == L("Calage 3 SNDT"))
+                    file_name = "calage_3_SNDT.3mf";
+                else
+                    return;
+
+                boost::filesystem::path project_path =
+                    boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / file_name;
+                plater()->load_project(wxString::FromUTF8(project_path.string().c_str()));
+            },
+            "", menu);
+    }
+
+    // Create nested submenu for Single Head Calibration Models
+    auto single_head_menu = new wxMenu;
+    append_menu_item(
+        single_head_menu, wxID_ANY, _L("Calage 1 SNDT"), "",
+        [type](wxCommandEvent&) {
+            boost::filesystem::path project_path =
+                boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / "calage_1_SNDT.3mf";
+            plater()->load_project(wxString::FromUTF8(project_path.string().c_str()));
+        },
+        "", menu);
+
+    // Create nested submenu for Handy Models
+    auto handy_models_menu = new wxMenu;
+    append_menu_item(
+        handy_models_menu, wxID_ANY, _L("Cosmyx Cube"), "",
+        [type](wxCommandEvent&) {
+            std::vector<boost::filesystem::path> input_files;
+            input_files.push_back(
+                boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / "cosmyx_cube.3mf");
+            plater()->load_files(input_files, LoadStrategy::LoadModel);
+        },
+        "", menu);
+
+    // Append nested submenus to the main Cosmyx menu
+#ifdef __WINDOWS__
+    append_submenu(cosmyx_main_menu, dual_head_menu, wxID_ANY, _L("Calibrations Models Dual Head"), "",
+                   "menu_add_part", []() {return true; }, m_parent);
+    append_submenu(cosmyx_main_menu, single_head_menu, wxID_ANY, _L("Calibration Models Single Head"), "",
+                   "menu_add_part", []() {return true; }, m_parent);
+    append_submenu(cosmyx_main_menu, handy_models_menu, wxID_ANY, _L("Handy Models"), "",
+                   "menu_add_part", []() {return true; }, m_parent);
+#else
+    append_submenu(cosmyx_main_menu, dual_head_menu, wxID_ANY, _L("Calibrations Models Dual Head"), "",
+                   "", []() {return true; }, m_parent);
+    append_submenu(cosmyx_main_menu, single_head_menu, wxID_ANY, _L("Calibration Models Single Head"), "",
+                   "", []() {return true; }, m_parent);
+    append_submenu(cosmyx_main_menu, handy_models_menu, wxID_ANY, _L("Handy Models"), "",
+                   "", []() {return true; }, m_parent);
+#endif
+
+    return cosmyx_main_menu;
+}
+
 static void append_menu_itemm_add_(const wxString& name, GLGizmosManager::EType gizmo_type, wxMenu *menu, ModelVolumeType type, bool is_submenu_item) {
     auto add_ = [type, gizmo_type](const wxCommandEvent & /*unnamed*/) {
         const GLCanvas3D *canvas = plater()->canvas3D();
@@ -1267,14 +1336,11 @@ MenuFactory::MenuFactory()
 void MenuFactory::create_default_menu()
 {
     wxMenu* sub_menu_primitives = append_submenu_add_generic(&m_default_menu, ModelVolumeType::INVALID);
-    wxMenu* sub_menu_handy = append_submenu_add_handy_model(&m_default_menu, ModelVolumeType::INVALID);
-    wxMenu* sub_menu_calibration = append_submenu_add_calibration_model(&m_default_menu, ModelVolumeType::INVALID);
+    wxMenu* sub_menu_cosmyx = append_submenu_cosmyx_models(&m_default_menu, ModelVolumeType::INVALID);
 #ifdef __WINDOWS__
     append_submenu(&m_default_menu, sub_menu_primitives, wxID_ANY, _L("Add Primitive"), "", "menu_add_part",
         []() {return true; }, m_parent);
-    append_submenu(&m_default_menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "menu_add_part",
-        []() {return true; }, m_parent);
-    append_submenu(&m_default_menu, sub_menu_calibration, wxID_ANY, _L("Cosmyx Calibration Models"), "", "menu_add_part",
+    append_submenu(&m_default_menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "menu_add_part",
         []() {return true; }, m_parent);
     append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "menu_add_part", &m_default_menu,
@@ -1282,9 +1348,7 @@ void MenuFactory::create_default_menu()
 #else
     append_submenu(&m_default_menu, sub_menu_primitives, wxID_ANY, _L("Add Primitive"), "", "",
         []() {return true; }, m_parent);
-    append_submenu(&m_default_menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "",
-        []() {return true; }, m_parent);
-    append_submenu(&m_default_menu, sub_menu_calibration, wxID_ANY, _L("Cosmyx Calibration Models"), "", "",
+    append_submenu(&m_default_menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "",
         []() {return true; }, m_parent);
     append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "", &m_default_menu,
@@ -1586,15 +1650,12 @@ void MenuFactory::create_plate_menu()
     // add shapes
     menu->AppendSeparator();
     wxMenu* sub_menu_primitives = append_submenu_add_generic(menu, ModelVolumeType::INVALID);
-    wxMenu* sub_menu_handy = append_submenu_add_handy_model(menu, ModelVolumeType::INVALID);
-    wxMenu* sub_menu_calibration = append_submenu_add_calibration_model(menu, ModelVolumeType::INVALID);
+    wxMenu* sub_menu_cosmyx = append_submenu_cosmyx_models(menu, ModelVolumeType::INVALID);
 
 #ifdef __WINDOWS__
     append_submenu(menu, sub_menu_primitives, wxID_ANY, _L("Add Primitive"), "", "menu_add_part",
         []() {return true; }, m_parent);
-    append_submenu(menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "menu_add_part",
-        []() {return true; }, m_parent);
-    append_submenu(menu, sub_menu_calibration, wxID_ANY, _L("Cosmyx Calibration Models"), "", "menu_add_part",
+    append_submenu(menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "menu_add_part",
         []() {return true; }, m_parent);
     append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "menu_add_part", menu,
@@ -1602,9 +1663,7 @@ void MenuFactory::create_plate_menu()
 #else
     append_submenu(menu, sub_menu_primitives, wxID_ANY, _L("Add Primitive"), "", "",
         []() {return true; }, m_parent);
-    append_submenu(menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "",
-        []() {return true; }, m_parent);
-    append_submenu(menu, sub_menu_calibration, wxID_ANY, _L("Cosmyx Calibration Models"), "", "",
+    append_submenu(menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "",
         []() {return true; }, m_parent);
     append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "", menu,
@@ -2117,7 +2176,7 @@ void MenuFactory::update_object_menu()
 
 void MenuFactory::update_default_menu()
 {
-    for (auto& name : { _L("Add Primitive"), _L("Add Handy models"), _L("Cosmyx Calibration Models"), _L("Show Labels") }) {
+    for (auto& name : { _L("Add Primitive"), _L("Cosmyx 3D Models"), _L("Show Labels") }) {
         const auto menu_item_id = m_default_menu.FindItem(name);
         if (menu_item_id != wxNOT_FOUND)
             m_default_menu.Destroy(menu_item_id);
