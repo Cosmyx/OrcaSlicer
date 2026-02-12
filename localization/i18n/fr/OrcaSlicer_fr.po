@@ -1891,6 +1891,12 @@ msgstr "Tore"
 msgid "Cosmyx Cube"
 msgstr "Cube Cosmyx"
 
+msgid "Control Tension Belt"
+msgstr ""
+
+msgid "Support Bobine"
+msgstr ""
+
 msgid "Cosmyx Calage 1 SNDT"
 msgstr ""
 
@@ -1898,6 +1904,9 @@ msgid "Cosmyx Calage 2 SNDT"
 msgstr ""
 
 msgid "Cosmyx Calage 3 SNDT"
+msgstr ""
+
+msgid "Orca Cube"
 msgstr ""
 
 msgid "Orca Tolerance Test"
