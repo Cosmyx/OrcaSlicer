@@ -601,7 +601,7 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
 
     // Create nested submenu for Dual Head Calibration Models
     auto dual_head_menu = new wxMenu;
-    for (auto &item : {L("Calage 1 SNDT"), L("Calage 2 SNDT"), L("Calage 3 SNDT")}) {
+    for (auto &item : {L("Calage 1 SNDT"), L("Calage 2 SNDT"), L("Calage 3 SNDT"), L("Cube Bicolore")}) {
         append_menu_item(
             dual_head_menu, wxID_ANY, _(item), "",
             [type, item](wxCommandEvent&) {
@@ -617,6 +617,8 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                     file_name = "cosmyx/calibration/Calage_2_SNDT.3mf";
                 else if (file_name == L("Calage 3 SNDT"))
                     file_name = "cosmyx/calibration/calage_3_SNDT.3mf";
+                else if (file_name == L("Cube Bicolore"))
+                    file_name = "cosmyx/Cube_bicolore.3mf";
                 else
                     return;
 
@@ -657,57 +659,68 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
 
     // Create nested submenu for Single Head Calibration Models
     auto single_head_menu = new wxMenu;
-    append_menu_item(
-        single_head_menu, wxID_ANY, _L("Calage 1 Nova"), "",
-        [type](wxCommandEvent&) {
-            std::vector<boost::filesystem::path> input_files;
-            input_files.push_back(
-                boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / "cosmyx/calibration/Calage_1_Nova.3mf");
-            plater()->load_files(input_files, LoadStrategy::LoadModel);
+    for (auto &item : {L("Calage 1 Nova"), L("Cosmyx Cube")}) {
+        append_menu_item(
+            single_head_menu, wxID_ANY, _(item), "",
+            [type, item](wxCommandEvent&) {
+                std::vector<boost::filesystem::path> input_files;
+                bool is_zerodegree = false;
+                std::string file_name = item;
 
-            // Suggest to change infill directions to 0 degrees for Calage 1 Nova
-            // This serves as calibration assistance
-            wxGetApp().CallAfter([=] {
-                DynamicPrintConfig* m_config = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
-
-                auto infill_direction = m_config->opt_float("infill_direction");
-                auto solid_infill_direction = m_config->opt_float("solid_infill_direction");
-
-                // Only suggest if directions are not already at 0
-                if (infill_direction != 0 || solid_infill_direction != 0) {
-                    wxString msg_text = _L("This calibration model works best with infill directions set to 0 degrees. "
-                                           "For optimal calibration results, it is advisable to set both 'Infill direction' "
-                                           "and 'Solid infill direction' to 0.\n"
-                                           "Yes - Change these settings automatically\n"
-                                           "No  - Do not change these settings for me");
-
-                    MessageDialog dialog(wxGetApp().plater(), msg_text, "Calibration Suggestion", wxICON_WARNING | wxYES | wxNO);
-                    if (dialog.ShowModal() == wxID_YES) {
-                        m_config->set_key_value("infill_direction", new ConfigOptionFloat(0));
-                        m_config->set_key_value("solid_infill_direction", new ConfigOptionFloat(0));
-                        wxGetApp().get_tab(Preset::TYPE_PRINT)->update_dirty();
-                        wxGetApp().get_tab(Preset::TYPE_PRINT)->reload_config();
-                    }
-                    wxGetApp().plater()->update();
+                if (file_name == L("Calage 1 Nova")) {
+                    file_name = "cosmyx/calibration/Calage_1_Nova.3mf";
+                    is_zerodegree = true;
                 }
-            });
-        },
-        "", menu);
+                else if (file_name == L("Cosmyx Cube"))
+                    file_name = "cosmyx/cosmyx_cube.3mf";
+                else
+                    return;
+
+                input_files.push_back(
+                    boost::filesystem::path(Slic3r::resources_dir()) / "handy_models" / file_name);
+                plater()->load_files(input_files, LoadStrategy::LoadModel);
+
+                // Suggest to change infill directions to 0 degrees for Calage 1 Nova
+                if (is_zerodegree) {
+                    wxGetApp().CallAfter([=] {
+                        DynamicPrintConfig* m_config = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
+
+                        auto infill_direction = m_config->opt_float("infill_direction");
+                        auto solid_infill_direction = m_config->opt_float("solid_infill_direction");
+
+                        // Only suggest if directions are not already at 0
+                        if (infill_direction != 0 || solid_infill_direction != 0) {
+                            wxString msg_text = _L("This calibration model works best with infill directions set to 0 degrees. "
+                                                   "For optimal calibration results, it is advisable to set both 'Infill direction' "
+                                                   "and 'Solid infill direction' to 0.\n"
+                                                   "Yes - Change these settings automatically\n"
+                                                   "No  - Do not change these settings for me");
+
+                            MessageDialog dialog(wxGetApp().plater(), msg_text, "Calibration Suggestion", wxICON_WARNING | wxYES | wxNO);
+                            if (dialog.ShowModal() == wxID_YES) {
+                                m_config->set_key_value("infill_direction", new ConfigOptionFloat(0));
+                                m_config->set_key_value("solid_infill_direction", new ConfigOptionFloat(0));
+                                wxGetApp().get_tab(Preset::TYPE_PRINT)->update_dirty();
+                                wxGetApp().get_tab(Preset::TYPE_PRINT)->reload_config();
+                            }
+                            wxGetApp().plater()->update();
+                        }
+                    });
+                }
+            },
+            "", menu);
+    }
 
     // Create nested submenu for Cosmyx Handy Models
     auto cosmyx_handy_models_menu = new wxMenu;
-    for (auto &item : {L("Cosmyx Cube"), L("Cube Bicolore"), L("Control Tension Belt"), L("Support Bobine")}) {
+    for (auto &item : {L("Control Tension Belt"), L("Support Bobine")}) {
         append_menu_item(
             cosmyx_handy_models_menu, wxID_ANY, _(item), "",
             [type, item](wxCommandEvent&) {
                 std::vector<boost::filesystem::path> input_files;
                 std::string file_name = item;
 
-                if (file_name == L("Cosmyx Cube"))
-                    file_name = "cosmyx/cosmyx_cube.3mf";
-                else if (file_name == L("Cube Bicolore"))
-                    file_name = "cosmyx/Cube_bicolore.3mf";
-                else if (file_name == L("Control Tension Belt"))
+                if (file_name == L("Control Tension Belt"))
                     file_name = "cosmyx/control_tension_Belt.stl";
                 else if (file_name == L("Support Bobine"))
                     file_name = "cosmyx/Support bobine droit.3mf";
