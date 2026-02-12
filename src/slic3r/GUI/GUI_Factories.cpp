@@ -644,7 +644,7 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                     apply_calage3_modifiers = true;
                 }
                 else if (file_name == L("Cube Bicolore"))
-                    file_name = "cosmyx/Cube_bicolore.3mf";
+                    file_name = "cosmyx/Cube_bi_couleur.3mf";
                 else
                     return;
 
