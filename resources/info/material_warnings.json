@@ -3,12 +3,25 @@
   "warnings": [
     {
       "material_types": ["PA", "PA-CF", "PA-GF", "PA6-CF", "PA11-CF"],
-      "title": "Nylon Material Reminder",
-      "message": "You are printing with Nylon. Important reminders:\n\n• Dry filament for 6-8 hours at 70-80°C before use\n• Use an enclosed chamber (60°C recommended)\n• Apply strong bed adhesion (glue stick on PEI)\n• Nylon is highly hygroscopic - keep it sealed when not in use\n\nProceed with slicing?",
+      "title": "Nylon Material Settings",
+      "message": "Printing with Nylon requires specific settings to prevent stringing:\n\nWould you like to apply the recommended settings?\n• Reduce crossing wall: Enabled\n• Max travel detour distance: 0mm\n\nYes - Apply settings and slice\nNo  - Slice without changes",
       "icon": "warning",
-      "show_every_time": true,
-      "verify_settings": false,
-      "recommended_settings": []
+      "show_every_time": false,
+      "verify_settings": true,
+      "recommended_settings": [
+        {
+          "key": "reduce_crossing_wall",
+          "value": "1",
+          "label": "Reduce crossing wall",
+          "verify": true
+        },
+        {
+          "key": "max_travel_detour_distance",
+          "value": "0",
+          "label": "Max travel detour distance",
+          "verify": false
+        }
+      ]
     }
   ]
 }

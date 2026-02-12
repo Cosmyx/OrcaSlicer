@@ -23,6 +23,7 @@ struct RecommendedSetting {
     std::string key;   // Config key (e.g., "chamber_temperature")
     std::string value; // Value to set (e.g., "60")
     std::string label; // User-friendly label (e.g., "Set chamber to 60°C")
+    bool verify = true; // If true, check this setting before showing popup
 };
 
 // Configuration for a material warning

@@ -6985,9 +6985,51 @@ bool Plater::priv::check_and_show_material_warnings()
         return true; // No warnings configured for these materials
     }
 
+    // Get current print config for checking and applying settings
+    DynamicPrintConfig* print_config = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
+
     // Show dialog for each warning
     for (const auto& warning : warnings) {
-        BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: showing warning - " << warning.title;
+        BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: processing warning - " << warning.title;
+
+        // Check if settings verification is enabled and settings already match
+        if (warning.verify_settings && !warning.recommended_settings.empty()) {
+            bool settings_match = true;
+            bool has_verify_settings = false;
+
+            // Only check settings that have verify=true
+            for (const auto& setting : warning.recommended_settings) {
+                if (!setting.verify) {
+                    continue; // Skip settings that don't need verification
+                }
+
+                has_verify_settings = true;
+
+                // Get current value from config
+                const ConfigOption* opt = print_config->option(setting.key);
+                if (opt) {
+                    std::string current_value = opt->serialize();
+                    if (current_value != setting.value) {
+                        settings_match = false;
+                        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: setting " << setting.key
+                                                << " = " << current_value << " (expected: " << setting.value << ")";
+                        break;
+                    }
+                } else {
+                    BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: setting " << setting.key
+                                              << " not found in config";
+                    settings_match = false;
+                    break;
+                }
+            }
+
+            // If all settings with verify=true match, skip the popup
+            if (has_verify_settings && settings_match) {
+                BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: verified settings already correct, skipping popup for "
+                                       << warning.title;
+                continue; // Skip this warning, verified settings are already correct
+            }
+        }
 
         // Determine icon style based on warning.icon field
         long icon_style = wxICON_WARNING;
@@ -6997,23 +7039,61 @@ bool Plater::priv::check_and_show_material_warnings()
             icon_style = wxICON_ERROR;
         }
 
+        // Determine button style based on whether we have recommended settings
+        long button_style = warning.recommended_settings.empty() ?
+                           (wxOK | wxCANCEL) : (wxYES | wxNO);
+
         // Create and show dialog
         MessageDialog dialog(
             q,
             wxString::FromUTF8(warning.message),
             wxString::FromUTF8(warning.title),
-            icon_style | wxOK | wxCANCEL
+            icon_style | button_style
         );
 
         int result = dialog.ShowModal();
-        if (result != wxID_OK) {
+
+        // Handle user response
+        if (result == wxID_YES && !warning.recommended_settings.empty()) {
+            // Apply recommended settings
+            BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: applying "
+                                   << warning.recommended_settings.size() << " recommended settings";
+
+            for (const auto& setting : warning.recommended_settings) {
+                try {
+                    ConfigOptionDef* def = print_config->def()->get(setting.key);
+                    if (def) {
+                        print_config->set_deserialize(setting.key, setting.value);
+                        BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: set " << setting.key
+                                               << " = " << setting.value;
+                    } else {
+                        BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: setting " << setting.key
+                                                  << " definition not found";
+                    }
+                } catch (const std::exception& e) {
+                    BOOST_LOG_TRIVIAL(error) << "check_and_show_material_warnings: failed to set " << setting.key
+                                            << ": " << e.what();
+                }
+            }
+
+            // Mark preset as dirty and reload UI
+            wxGetApp().get_tab(Preset::TYPE_PRINT)->update_dirty();
+            wxGetApp().get_tab(Preset::TYPE_PRINT)->reload_config();
+            BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: settings applied, proceeding with slicing";
+
+        } else if (result == wxID_NO || result == wxID_OK) {
+            // User chose to proceed without applying settings
+            BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: user declined settings, proceeding with slicing";
+
+        } else {
+            // User cancelled (wxID_CANCEL or closed dialog)
             BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: user cancelled slicing";
-            return false; // User cancelled
+            return false;
         }
     }
 
-    BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: user acknowledged, proceeding with slicing";
-    return true; // User acknowledged, proceed with slicing
+    BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: all warnings processed, proceeding with slicing";
+    return true;
 }
 
 //BBS: add project slice logic

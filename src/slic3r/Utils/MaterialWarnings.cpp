@@ -123,6 +123,11 @@ bool MaterialWarningManager::load_warnings_config()
                                 setting.label = setting_json["label"].get<std::string>();
                             }
 
+                            // Parse verify flag (defaults to true if not specified)
+                            if (setting_json.contains("verify") && setting_json["verify"].is_boolean()) {
+                                setting.verify = setting_json["verify"].get<bool>();
+                            }
+
                             config.recommended_settings.push_back(setting);
                         }
                     }
