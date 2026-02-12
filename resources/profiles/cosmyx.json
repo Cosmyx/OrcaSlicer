@@ -33,6 +33,10 @@
         {
             "name": "Cosmyx Nova Double Tete",
             "sub_path": "machine/nova_dt/Cosmyx Nova Double Tete.json"
+        },
+        {
+            "name": "Cosmyx Nova can-out",
+            "sub_path": "machine/nova_can_out/Cosmyx Nova can-out.json"
         }
     ],
     "process_list": [
@@ -574,6 +578,22 @@
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle",
             "sub_path": "machine/SuperNova_DT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle.json"
+        },
+        {
+            "name": "Cosmyx Nova 0.4 nozzle can-out",
+            "sub_path": "machine/nova_can_out/Cosmyx Nova 0.4 nozzle can-out.json"
+        },
+        {
+            "name": "Cosmyx Nova 0.2 nozzle can-out",
+            "sub_path": "machine/nova_can_out/Cosmyx Nova 0.2 nozzle can-out.json"
+        },
+        {
+            "name": "Cosmyx Nova 0.6 nozzle can-out",
+            "sub_path": "machine/nova_can_out/Cosmyx Nova 0.6 nozzle can-out.json"
+        },
+        {
+            "name": "Cosmyx Nova 0.8 nozzle can-out",
+            "sub_path": "machine/nova_can_out/Cosmyx Nova 0.8 nozzle can-out.json"
         }
     ]
 }
