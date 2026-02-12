@@ -543,6 +543,8 @@ set(SLIC3R_GUI_SOURCES
     Utils/json_diff.hpp
     Utils/minilzo_extension.cpp
     Utils/minilzo_extension.hpp
+    Utils/MaterialWarnings.cpp
+    Utils/MaterialWarnings.hpp
     Utils/MKS.cpp
     Utils/MKS.hpp
     Utils/NetworkAgent.cpp

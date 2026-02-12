@@ -108,6 +108,7 @@
 #include "../Utils/UndoRedo.hpp"
 #include "../Utils/PresetUpdater.hpp"
 #include "../Utils/Process.hpp"
+#include "../Utils/MaterialWarnings.hpp"
 #include "RemovableDriveManager.hpp"
 #include "InstanceCheck.hpp"
 #include "NotificationManager.hpp"
@@ -2582,6 +2583,11 @@ struct Plater::priv
     // Returns true if user clicks OK.
     // Returns true if current_warnings vector is empty without showning the dialog
     bool warnings_dialog();
+    // Check and show material warnings before slicing
+    // Returns true if user acknowledges or no warnings apply, false if user cancels
+    bool check_and_show_material_warnings();
+    // Internal reslice implementation (refactored to support material warnings)
+    void perform_reslice_internal();
 
     void on_action_add(SimpleEvent&);
     void on_action_add_plate(SimpleEvent&);
@@ -6928,6 +6934,80 @@ bool Plater::priv::warnings_dialog()
     const auto    res = msg_window.ShowModal();
     return res == wxID_OK;
 
+}
+
+bool Plater::priv::check_and_show_material_warnings()
+{
+    BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: checking filament types";
+
+    // Collect material types from all used extruders
+    std::vector<std::string> detected_materials;
+    auto& filament_presets = wxGetApp().preset_bundle->filament_presets;
+
+    for (size_t i = 0; i < filament_presets.size(); ++i) {
+        const std::string& preset_name = filament_presets[i];
+        if (preset_name.empty()) {
+            continue; // Skip empty preset slots
+        }
+
+        auto* preset = wxGetApp().preset_bundle->filaments.find_preset(preset_name, false);
+        if (preset && !preset->is_default) {
+            std::string display_type;
+            std::string mat_type = preset->get_filament_type(display_type);
+            if (!mat_type.empty()) {
+                // Check if we already have this material type
+                if (std::find(detected_materials.begin(), detected_materials.end(), mat_type) == detected_materials.end()) {
+                    detected_materials.push_back(mat_type);
+                    BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: detected material " << mat_type
+                                            << " in extruder " << i;
+                }
+            }
+        }
+    }
+
+    if (detected_materials.empty()) {
+        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: no materials detected, proceeding";
+        return true; // No materials detected, proceed
+    }
+
+    // Get warnings for detected materials
+    auto& manager = MaterialWarningManager::get_instance();
+    auto warnings = manager.get_warnings_for_materials(detected_materials);
+
+    if (warnings.empty()) {
+        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: no warnings configured for these materials";
+        return true; // No warnings configured for these materials
+    }
+
+    // Show dialog for each warning
+    for (const auto& warning : warnings) {
+        BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: showing warning - " << warning.title;
+
+        // Determine icon style based on warning.icon field
+        long icon_style = wxICON_WARNING;
+        if (warning.icon == "info") {
+            icon_style = wxICON_INFORMATION;
+        } else if (warning.icon == "error") {
+            icon_style = wxICON_ERROR;
+        }
+
+        // Create and show dialog
+        MessageDialog dialog(
+            q,
+            wxString::FromUTF8(warning.message),
+            wxString::FromUTF8(warning.title),
+            icon_style | wxOK | wxCANCEL
+        );
+
+        int result = dialog.ShowModal();
+        if (result != wxID_OK) {
+            BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: user cancelled slicing";
+            return false; // User cancelled
+        }
+    }
+
+    BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: user acknowledged, proceeding with slicing";
+    return true; // User acknowledged, proceed with slicing
 }
 
 //BBS: add project slice logic
@@ -12561,81 +12641,100 @@ void Plater::reslice()
     // and notify user that he should leave it first.
     if (get_view3D_canvas3D()->get_gizmos_manager().is_in_editing_mode(true))
         return;
-    
+
+    // Check material warnings before proceeding with slicing
+    // Use CallAfter to ensure UI is ready and dialog can be shown properly
+    wxGetApp().CallAfter([this]() {
+        // Check and show material warnings
+        if (!p->check_and_show_material_warnings()) {
+            BOOST_LOG_TRIVIAL(info) << "Plater::reslice: slicing cancelled by user after material warning";
+            return; // User cancelled after seeing material warning
+        }
+
+        // Continue with slicing
+        p->perform_reslice_internal();
+    });
+}
+
+// BBS: Internal reslice implementation (refactored from reslice() to support material warnings)
+void Plater::priv::perform_reslice_internal()
+{
+    BOOST_LOG_TRIVIAL(info) << "perform_reslice_internal: starting slicing process";
+
     // Stop the running (and queued) UI jobs and only proceed if they actually
     // get stopped.
     unsigned timeout_ms = 10000;
-    if (!stop_queue(this->get_ui_job_worker(), timeout_ms)) {
+    if (!stop_queue(q->get_ui_job_worker(), timeout_ms)) {
         BOOST_LOG_TRIVIAL(error) << "Could not stop UI job within "
                                  << timeout_ms << " milliseconds timeout!";
         return;
     }
 
     // Orca: regenerate CalibPressureAdvancePattern custom G-code to apply changes
-    if (model().calib_pa_pattern) {
-        _calib_pa_pattern_gen_gcode();
+    if (q->model().calib_pa_pattern) {
+        q->_calib_pa_pattern_gen_gcode();
     }
 
-    if (printer_technology() == ptSLA) {
-        for (auto& object : model().objects)
+    if (q->printer_technology() == ptSLA) {
+        for (auto& object : q->model().objects)
             if (object->sla_points_status == sla::PointsStatus::NoPoints)
                 object->sla_points_status = sla::PointsStatus::Generating;
     }
 
     //FIXME Don't reslice if export of G-code or sending to OctoPrint is running.
     // bitmask of UpdateBackgroundProcessReturnState
-    unsigned int state = this->p->update_background_process(true);
+    unsigned int state = update_background_process(true);
     if (state & priv::UPDATE_BACKGROUND_PROCESS_REFRESH_SCENE)
-        this->p->view3D->reload_scene(false);
+        view3D->reload_scene(false);
     // If the SLA processing of just a single object's supports is running, restart slicing for the whole object.
-    this->p->background_process.set_task(PrintBase::TaskParams());
+    background_process.set_task(PrintBase::TaskParams());
     // Only restarts if the state is valid.
     //BBS: jusdge the result
-    bool result = this->p->restart_background_process(state | priv::UPDATE_BACKGROUND_PROCESS_FORCE_RESTART);
+    bool result = restart_background_process(state | priv::UPDATE_BACKGROUND_PROCESS_FORCE_RESTART);
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(", Line %1%: restart background,state=%2%, result=%3%")%__LINE__%state %result;
     if ((state & priv::UPDATE_BACKGROUND_PROCESS_INVALID) != 0)
     {
         //BBS: add logs
         BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << boost::format(": state %1% is UPDATE_BACKGROUND_PROCESS_INVALID, can not slice") % state;
-        p->update_fff_scene_only_shells();
+        update_fff_scene_only_shells();
         return;
     }
 
-    if ((!result) && p->m_slice_all && (p->m_cur_slice_plate < (p->partplate_list.get_plate_count() - 1)))
+    if ((!result) && m_slice_all && (m_cur_slice_plate < (partplate_list.get_plate_count() - 1)))
     {
         //slice next
-        BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << boost::format(": in slicing all, current plate %1% already sliced, skip to next") % p->m_cur_slice_plate ;
+        BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << boost::format(": in slicing all, current plate %1% already sliced, skip to next") % m_cur_slice_plate ;
         SlicingProcessCompletedEvent evt(EVT_PROCESS_COMPLETED, 0,
             SlicingProcessCompletedEvent::Finished, nullptr);
         // Post the "complete" callback message, so that it will slice the next plate soon
-        wxQueueEvent(this, evt.Clone());
-        p->m_is_slicing = true;
-        if (p->m_cur_slice_plate == 0)
-            reset_gcode_toolpaths();
+        wxQueueEvent(q, evt.Clone());
+        m_is_slicing = true;
+        if (m_cur_slice_plate == 0)
+            q->reset_gcode_toolpaths();
         return;
     }
 
     if (result) {
-        p->m_is_slicing = true;
+        m_is_slicing = true;
     }
 
     bool clean_gcode_toolpaths = true;
     // BBS
-    if (p->background_process.running())
+    if (background_process.running())
     {
-        //p->ready_to_slice = false;
-        p->main_frame->update_slice_print_status(MainFrame::eEventSliceUpdate, false);
+        //ready_to_slice = false;
+        main_frame->update_slice_print_status(MainFrame::eEventSliceUpdate, false);
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": background process is running, m_is_slicing is true");
     }
-    else if (!p->background_process.empty() && !p->background_process.idle()) {
-        //p->show_action_buttons(true);
-        //p->ready_to_slice = true;
-        p->main_frame->update_slice_print_status(MainFrame::eEventSliceUpdate, true);
+    else if (!background_process.empty() && !background_process.idle()) {
+        //show_action_buttons(true);
+        //ready_to_slice = true;
+        main_frame->update_slice_print_status(MainFrame::eEventSliceUpdate, true);
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": background process changes to not_idle, set ready_to_slice back to true");
     }
     else {
         //BBS: add reset logic for empty plate
-        PartPlate * current_plate = p->background_process.get_current_plate();
+        PartPlate * current_plate = background_process.get_current_plate();
 
         if (!current_plate->has_printable_instances()) {
             clean_gcode_toolpaths = true;
@@ -12645,18 +12744,18 @@ void Plater::reslice()
             clean_gcode_toolpaths = false;
             current_plate->update_slice_result_valid_state(true);
         }
-        p->main_frame->update_slice_print_status(MainFrame::eEventSliceUpdate, false);
+        main_frame->update_slice_print_status(MainFrame::eEventSliceUpdate, false);
         BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": background process in idle state, use previous result, clean_gcode_toolpaths=%1%")%clean_gcode_toolpaths;
     }
 
     if (clean_gcode_toolpaths)
-        reset_gcode_toolpaths();
+        q->reset_gcode_toolpaths();
 
-    p->preview->reload_print(!clean_gcode_toolpaths);
+    preview->reload_print(!clean_gcode_toolpaths);
 
-    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": finished, started slicing for plate %1%") % p->partplate_list.get_curr_plate_index();
+    BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << boost::format(": finished, started slicing for plate %1%") % partplate_list.get_curr_plate_index();
 
-    record_slice_preset("slicing");
+    q->record_slice_preset("slicing");
 }
 
 void Plater::record_slice_preset(std::string action)
