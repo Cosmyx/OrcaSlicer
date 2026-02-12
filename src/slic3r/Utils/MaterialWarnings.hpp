@@ -4,6 +4,17 @@
 #include <vector>
 #include <memory>
 
+// Material Warning System
+//
+// This system shows warning popups when slicing with specific filament types (e.g., Nylon)
+// to remind users of important preparation steps (drying, chamber heating, bed adhesion).
+//
+// Global Flag: ignore_filament_check
+//   - AppConfig key: [material_warnings] ignore_filament_check
+//   - Default: "0" (warnings enabled)
+//   - Set to "1" to bypass all material warnings
+//   - Will be exposed in GUI settings in the future
+
 namespace Slic3r {
 namespace GUI {
 

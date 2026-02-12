@@ -6940,6 +6940,12 @@ bool Plater::priv::check_and_show_material_warnings()
 {
     BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: checking filament types";
 
+    // Check if filament warnings are disabled globally
+    if (wxGetApp().app_config->get("material_warnings", "ignore_filament_check") == "1") {
+        BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: filament checks disabled by user setting";
+        return true; // Bypass all material warnings
+    }
+
     // Collect material types from all used extruders
     std::vector<std::string> detected_materials;
     auto& filament_presets = wxGetApp().preset_bundle->filament_presets;

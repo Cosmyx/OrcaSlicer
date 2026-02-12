@@ -256,6 +256,10 @@ void AppConfig::set_defaults()
     if (get("stealth_mode").empty()) {
         set_bool("stealth_mode", false);
     }
+    // Material warning system - enabled by default
+    if (get("material_warnings", "ignore_filament_check").empty()) {
+        set("material_warnings", "ignore_filament_check", "0");
+    }
     if (get("legacy_networking").empty()) {
         set_bool("legacy_networking", true);
     }
