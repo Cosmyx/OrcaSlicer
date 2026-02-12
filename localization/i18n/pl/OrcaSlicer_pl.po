@@ -1862,6 +1862,9 @@ msgstr "Torus"
 msgid "Cosmyx Cube"
 msgstr ""
 
+msgid "Cube Bicolore"
+msgstr ""
+
 msgid "Control Tension Belt"
 msgstr ""
 
@@ -1869,6 +1872,9 @@ msgid "Support Bobine"
 msgstr ""
 
 msgid "Cosmyx Calage 1 Nova"
+msgstr ""
+
+msgid "Calage 1 SNDT"
 msgstr ""
 
 msgid "Cosmyx Calage 2 SNDT"
