@@ -818,11 +818,11 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
     // Append nested submenus to the main Cosmyx menu
 #ifdef __WINDOWS__
     append_submenu(cosmyx_main_menu, dual_head_menu, wxID_ANY, _L("Calibrations Models Dual Head"), "",
-                   "menu_add_part", []() {return true; }, m_parent);
+                   "menu_add_part_cosmyx", []() {return true; }, m_parent);
     append_submenu(cosmyx_main_menu, single_head_menu, wxID_ANY, _L("Calibration Models Single Head"), "",
-                   "menu_add_part", []() {return true; }, m_parent);
+                   "menu_add_part_cosmyx", []() {return true; }, m_parent);
     append_submenu(cosmyx_main_menu, cosmyx_handy_models_menu, wxID_ANY, _L("Cosmyx Handy Models"), "",
-                   "menu_add_part", []() {return true; }, m_parent);
+                   "menu_add_part_cosmyx", []() {return true; }, m_parent);
 #else
     append_submenu(cosmyx_main_menu, dual_head_menu, wxID_ANY, _L("Calibrations Models Dual Head"), "",
                    "", []() {return true; }, m_parent);
@@ -1479,7 +1479,7 @@ void MenuFactory::create_default_menu()
         []() {return true; }, m_parent);
     append_submenu(&m_default_menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "menu_add_part",
         []() {return true; }, m_parent);
-    append_submenu(&m_default_menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "menu_add_part",
+    append_submenu(&m_default_menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "menu_add_part_cosmyx",
         []() {return true; }, m_parent);
     append_menu_item(&m_default_menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "menu_add_part", &m_default_menu,
@@ -1799,7 +1799,7 @@ void MenuFactory::create_plate_menu()
         []() {return true; }, m_parent);
     append_submenu(menu, sub_menu_handy, wxID_ANY, _L("Add Handy models"), "", "menu_add_part",
         []() {return true; }, m_parent);
-    append_submenu(menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "menu_add_part",
+    append_submenu(menu, sub_menu_cosmyx, wxID_ANY, _L("Cosmyx 3D Models"), "", "menu_add_part_cosmyx",
         []() {return true; }, m_parent);
     append_menu_item(menu, wxID_ANY, _L("Add Models"), "", // ORCA: Add Models
         [](wxCommandEvent&) { plater()->add_file(); }, "menu_add_part", menu,
