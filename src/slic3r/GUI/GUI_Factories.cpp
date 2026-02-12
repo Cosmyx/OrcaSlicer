@@ -730,7 +730,7 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
 
                         // Update UI
                         obj->invalidate_bounding_box();
-                        wxGetApp().plater()->changed_objects({obj->id()});
+                        wxGetApp().plater()->changed_object(*obj);
                         wxGetApp().obj_list()->update_selections();
                     });
                 }
