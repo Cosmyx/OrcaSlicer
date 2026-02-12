@@ -2,6 +2,7 @@
 #include "libslic3r/libslic3r.h"
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/Model.hpp"
+#include "libslic3r/TriangleMesh.hpp"
 
 #include "GUI_Factories.hpp"
 #include "GUI_ObjectList.hpp"
@@ -48,6 +49,28 @@ static bool is_improper_category(const std::string& category, const int filament
         (!is_object_settings && category == "Support material");
 }
 
+// Helper to create a positioned and rotated box modifier for Calage 3 SNDT
+static TriangleMesh create_modifier_box(const Vec3d &size, const Vec3d &position, const Vec3d &rotation_deg)
+{
+    // Create cube with specified size
+    TriangleMesh mesh = make_cube(size.x(), size.y(), size.z());
+
+    // Build transformation matrix
+    Transform3d transform = Transform3d::Identity();
+
+    // Apply rotation (convert degrees to radians)
+    transform.rotate(Eigen::AngleAxisd(rotation_deg.x() * M_PI / 180.0, Vec3d::UnitX()));
+    transform.rotate(Eigen::AngleAxisd(rotation_deg.y() * M_PI / 180.0, Vec3d::UnitY()));
+    transform.rotate(Eigen::AngleAxisd(rotation_deg.z() * M_PI / 180.0, Vec3d::UnitZ()));
+
+    // Apply translation
+    transform.translate(position);
+
+    // Apply transformation to mesh
+    mesh.transform(transform);
+
+    return mesh;
+}
 
 //-------------------------------------
 //            SettingsFactory
@@ -607,6 +630,7 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
             [type, item](wxCommandEvent&) {
                 std::vector<boost::filesystem::path> input_files;
                 bool is_zerodegree = false;
+                bool apply_calage3_modifiers = false;
                 std::string file_name = item;
 
                 if (file_name == L("Calage 1 SNDT")) {
@@ -615,8 +639,10 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                 }
                 else if (file_name == L("Calage 2 SNDT"))
                     file_name = "cosmyx/calibration/Calage_2_SNDT.3mf";
-                else if (file_name == L("Calage 3 SNDT"))
+                else if (file_name == L("Calage 3 SNDT")) {
                     file_name = "cosmyx/calibration/calage_3_SNDT.3mf";
+                    apply_calage3_modifiers = true;
+                }
                 else if (file_name == L("Cube Bicolore"))
                     file_name = "cosmyx/Cube_bicolore.3mf";
                 else
@@ -651,6 +677,61 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                             }
                             wxGetApp().plater()->update();
                         }
+                    });
+                }
+
+                // Apply volume modifiers for Calage 3 SNDT
+                if (apply_calage3_modifiers) {
+                    wxGetApp().CallAfter([=] {
+                        // Calage 3 SNDT modifier configuration - exact coordinates from calibration model
+                        const bool ENABLE_AUTO_MODIFIERS = true;
+
+                        if (!ENABLE_AUTO_MODIFIERS) return;
+
+                        // Region 1: 0° infill direction
+                        const Vec3d REGION1_POS(-49.88, -43.58, 0.0);      // Position in mm
+                        const Vec3d REGION1_SIZE(139.68, 58.76, 0.67);     // Size in mm
+                        const Vec3d REGION1_ROT(180.0, 180.0, 17.31);      // Rotation in degrees
+                        const double REGION1_INFILL_DIR = 0.0;
+
+                        // Region 2: 90° infill direction
+                        const Vec3d REGION2_POS(-4.25, 57.48, 0.0);        // Position in mm
+                        const Vec3d REGION2_SIZE(139.68, 58.76, 0.20);     // Size in mm
+                        const Vec3d REGION2_ROT(0.0, 0.0, 0.0);            // Rotation in degrees
+                        const double REGION2_INFILL_DIR = 90.0;
+
+                        // Get the loaded model
+                        Model& model = wxGetApp().plater()->model();
+                        if (model.objects.empty()) return;
+
+                        ModelObject* obj = model.objects.back(); // Last loaded object
+
+                        // Create modifier 1 (0° region) with exact coordinates
+                        TriangleMesh mesh1 = create_modifier_box(REGION1_SIZE, REGION1_POS, REGION1_ROT);
+                        ModelVolume* mod1 = obj->add_volume(
+                            std::move(mesh1),
+                            ModelVolumeType::PARAMETER_MODIFIER,
+                            false  // Don't center - we positioned it already
+                        );
+                        mod1->name = "Infill 0° Region";
+                        mod1->config.set_key_value("infill_direction", new ConfigOptionFloat(REGION1_INFILL_DIR));
+                        mod1->config.set_key_value("solid_infill_direction", new ConfigOptionFloat(REGION1_INFILL_DIR));
+
+                        // Create modifier 2 (90° region) with exact coordinates
+                        TriangleMesh mesh2 = create_modifier_box(REGION2_SIZE, REGION2_POS, REGION2_ROT);
+                        ModelVolume* mod2 = obj->add_volume(
+                            std::move(mesh2),
+                            ModelVolumeType::PARAMETER_MODIFIER,
+                            false
+                        );
+                        mod2->name = "Infill 90° Region";
+                        mod2->config.set_key_value("infill_direction", new ConfigOptionFloat(REGION2_INFILL_DIR));
+                        mod2->config.set_key_value("solid_infill_direction", new ConfigOptionFloat(REGION2_INFILL_DIR));
+
+                        // Update UI
+                        obj->invalidate_bounding_box();
+                        wxGetApp().plater()->changed_objects({obj->id()});
+                        wxGetApp().obj_list()->update_selections();
                     });
                 }
             },
