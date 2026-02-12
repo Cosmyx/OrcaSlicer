@@ -1883,7 +1883,7 @@ msgstr ""
 msgid "Support Bobine"
 msgstr ""
 
-msgid "Cosmyx Calage 1 SNDT"
+msgid "Cosmyx Calage 1 Nova"
 msgstr ""
 
 msgid "Cosmyx Calage 2 SNDT"
@@ -1926,6 +1926,17 @@ msgstr ""
 "erreichen.\n"
 "Ja - Ändern Sie diese Einstellungen automatisch\n"
 "Nein - Ändern Sie diese Einstellungen nicht für mich"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill direction' "
+"and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+
+msgid "Calibration Suggestion"
+msgstr ""
 
 msgid "Text"
 msgstr "T"
