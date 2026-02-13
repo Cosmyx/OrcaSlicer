@@ -18239,3 +18239,7 @@ msgstr ""
 
 #~ msgid ", ver: "
 #~ msgstr "，版本"
+
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Patch for OrcaSlicer Version %s"
+msgstr "Cosmyx OrcaSlicer 修补程式版本 %s"
