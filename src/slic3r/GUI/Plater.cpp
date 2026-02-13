@@ -2279,6 +2279,11 @@ struct Plater::priv
     //BBS: m_slice_all in .gcode.3mf file case, set true when slice all
     bool m_slice_all_only_has_gcode{ false };
 
+    // Export-all-gcode state
+    bool     m_export_all_gcode { false };
+    int      m_cur_export_plate { 0 };
+    fs::path m_export_all_dir;
+
     bool m_need_update{false};
     //BBS: add popup object table logic
     //ObjectTableDialog* m_popup_table{ nullptr };
@@ -2621,6 +2626,8 @@ struct Plater::priv
     void on_action_send_gcode(SimpleEvent&);
     void on_action_export_sliced_file(SimpleEvent&);
     void on_action_export_all_sliced_file(SimpleEvent&);
+    void on_action_export_all_gcode(SimpleEvent&);
+    void start_next_export_gcode();
     void on_action_select_sliced_plate(wxCommandEvent& evt);
     //BBS: change dark/light mode
     void on_change_color_mode(SimpleEvent& evt);
@@ -3140,6 +3147,7 @@ Plater::priv::priv(Plater *q, MainFrame *main_frame)
         q->Bind(EVT_GLTOOLBAR_SEND_GCODE, &priv::on_action_send_gcode, this);
         q->Bind(EVT_GLTOOLBAR_EXPORT_SLICED_FILE, &priv::on_action_export_sliced_file, this);
         q->Bind(EVT_GLTOOLBAR_EXPORT_ALL_SLICED_FILE, &priv::on_action_export_all_sliced_file, this);
+        q->Bind(EVT_GLTOOLBAR_EXPORT_ALL_GCODE, &priv::on_action_export_all_gcode, this);
         q->Bind(EVT_GLTOOLBAR_SEND_TO_PRINTER, &priv::on_action_export_to_sdcard, this);
         q->Bind(EVT_GLTOOLBAR_SEND_TO_PRINTER_ALL, &priv::on_action_export_to_sdcard_all, this);
         q->Bind(EVT_GLTOOLBAR_PRINT_MULTI_MACHINE, &priv::on_action_send_to_multi_machine, this);
@@ -7068,7 +7076,7 @@ void Plater::priv::on_process_completed(SlicingProcessCompletedEvent &evt)
                 platform_flavor() != PlatformFlavor::LinuxOnChromium);
             wxGetApp().removable_drive_manager()->set_exporting_finished(true);
         }else
-        if (exporting_status == ExportingStatus::EXPORTING_TO_LOCAL && !has_error)
+        if (exporting_status == ExportingStatus::EXPORTING_TO_LOCAL && !has_error && !m_export_all_gcode)
             notification_manager->push_exporting_finished_notification(last_output_path, last_output_dir_path, false);
 
         // BBS, Generate calibration thumbnail for current plate
@@ -7087,8 +7095,23 @@ void Plater::priv::on_process_completed(SlicingProcessCompletedEvent &evt)
         }
     }
 
+    bool was_exporting = (exporting_status != ExportingStatus::NOT_EXPORTING);
     exporting_status = ExportingStatus::NOT_EXPORTING;
 
+    // Export-all-gcode chaining: trigger next plate export or finish
+    if (m_export_all_gcode && was_exporting && !has_error) {
+        if (m_cur_export_plate < partplate_list.get_plate_count() - 1) {
+            m_cur_export_plate++;
+            start_next_export_gcode();
+            return;
+        } else {
+            m_export_all_gcode = false;
+            notification_manager->push_exporting_finished_notification(
+                m_export_all_dir.string(), m_export_all_dir.string(), false);
+        }
+    } else if (m_export_all_gcode && has_error) {
+        m_export_all_gcode = false;
+    }
 
     // BBS stop publishing if error occur
     //if (m_is_publishing) {
@@ -7412,6 +7435,58 @@ void Plater::priv::on_action_export_all_sliced_file(SimpleEvent &)
         BOOST_LOG_TRIVIAL(debug) << __FUNCTION__ << ":received export all sliced file event\n";
         q->export_gcode_3mf(true);
     }
+}
+
+void Plater::priv::on_action_export_all_gcode(SimpleEvent&)
+{
+    if (!q) return;
+
+    wxDirDialog dlg(q, _L("Choose a directory to export all G-code files"),
+        wxGetApp().app_config->get_last_output_dir("", false),
+        wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+    if (dlg.ShowModal() != wxID_OK) return;
+
+    m_export_all_dir = fs::path(dlg.GetPath().ToUTF8().data());
+    m_export_all_gcode = true;
+    m_cur_export_plate = 0;
+    start_next_export_gcode();
+}
+
+void Plater::priv::start_next_export_gcode()
+{
+    // Find next plate with a valid slice result
+    while (m_cur_export_plate < partplate_list.get_plate_count()) {
+        PartPlate* plate = partplate_list.get_plate(m_cur_export_plate);
+        if (plate && plate->is_slice_result_valid())
+            break;
+        m_cur_export_plate++;
+    }
+
+    if (m_cur_export_plate >= partplate_list.get_plate_count()) {
+        m_export_all_gcode = false;
+        notification_manager->push_exporting_finished_notification(
+            m_export_all_dir.string(), m_export_all_dir.string(), false);
+        return;
+    }
+
+    // Build output filename for this plate
+    PartPlate* plate = partplate_list.get_plate(m_cur_export_plate);
+    std::string plate_suffix;
+    std::string plate_name = plate->get_plate_name();
+    if (!plate_name.empty())
+        plate_suffix = "_" + plate_name;
+    else
+        plate_suffix = "_plate_" + std::to_string(m_cur_export_plate + 1);
+
+    std::string filename = std::string(m_project_name.mb_str(wxConvUTF8)) + plate_suffix + ".gcode";
+    fs::path output_path = m_export_all_dir / filename;
+
+    // Switch to this plate and trigger export via existing infrastructure
+    q->select_plate(m_cur_export_plate);
+    last_output_path = output_path.string();
+    last_output_dir_path = m_export_all_dir.string();
+    exporting_status = ExportingStatus::EXPORTING_TO_LOCAL;
+    export_gcode(output_path, false);
 }
 
 void Plater::priv::on_action_export_to_sdcard(SimpleEvent&)
@@ -11837,6 +11912,11 @@ void Plater::export_gcode_3mf(bool export_all)
         appconfig.update_last_output_dir(output_path.parent_path().string(), false);
         p->notification_manager->push_exporting_finished_notification(output_path.string(), p->last_output_dir_path, on_removable);
     }
+}
+
+void Plater::export_gcode_all()
+{
+    wxPostEvent(this, SimpleEvent(EVT_GLTOOLBAR_EXPORT_ALL_GCODE));
 }
 
 void Plater::send_gcode_finish(wxString name)
