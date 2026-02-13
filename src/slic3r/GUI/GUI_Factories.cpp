@@ -689,13 +689,13 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                         if (!ENABLE_AUTO_MODIFIERS) return;
 
                         // Region 1: 0° infill direction
-                        const Vec3d REGION1_POS(-49.88, -43.58, 0.0);      // Position in mm
+                        const Vec3d REGION1_POS(-49.88, -40.0, 0.0);       // Position in mm
                         const Vec3d REGION1_SIZE(139.68, 58.76, 0.67);     // Size in mm
-                        const Vec3d REGION1_ROT(180.0, 180.0, 17.31);      // Rotation in degrees
+                        const Vec3d REGION1_ROT(0.0, 0.0, 90.0);           // Rotation in degrees
                         const double REGION1_INFILL_DIR = 0.0;
 
                         // Region 2: 90° infill direction
-                        const Vec3d REGION2_POS(-4.25, 57.48, 0.0);        // Position in mm
+                        const Vec3d REGION2_POS(-54.25, 27.48, 0.0);        // Position in mm
                         const Vec3d REGION2_SIZE(139.68, 58.76, 0.20);     // Size in mm
                         const Vec3d REGION2_ROT(0.0, 0.0, 0.0);            // Rotation in degrees
                         const double REGION2_INFILL_DIR = 90.0;
