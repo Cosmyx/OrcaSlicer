@@ -1187,6 +1187,9 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_darkmode);
 #endif
 
+    auto item_filament_check   = create_item_checkbox(_L("Ignore filament warnings"), _L("When enabled, material-specific warnings will not appear before slicing."), "ignore_filament_check");
+    g_sizer->Add(item_filament_check);
+
     auto item_single_instance  = create_item_checkbox(_L("Allow only one OrcaSlicer instance"),
     #if __APPLE__
             _L("On OSX there is always only one instance of app running by default. However it is allowed to run multiple instances "

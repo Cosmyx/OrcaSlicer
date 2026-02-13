@@ -10,10 +10,10 @@
 // to remind users of important preparation steps (drying, chamber heating, bed adhesion).
 //
 // Global Flag: ignore_filament_check
-//   - AppConfig key: [material_warnings] ignore_filament_check
-//   - Default: "0" (warnings enabled)
-//   - Set to "1" to bypass all material warnings
-//   - Will be exposed in GUI settings in the future
+//   - AppConfig key: ignore_filament_check (default [app] section)
+//   - Default: false (warnings enabled, checkbox unchecked)
+//   - Set to true to bypass all material warnings
+//   - Exposed in Preferences > General > "Ignore filament warnings" checkbox
 
 namespace Slic3r {
 namespace GUI {

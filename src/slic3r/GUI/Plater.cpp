@@ -6941,7 +6941,7 @@ bool Plater::priv::check_and_show_material_warnings()
     BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: checking filament types";
 
     // Check if filament warnings are disabled globally
-    if (wxGetApp().app_config->get("material_warnings", "ignore_filament_check") == "1") {
+    if (wxGetApp().app_config->get_bool("ignore_filament_check")) {
         BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: filament checks disabled by user setting";
         return true; // Bypass all material warnings
     }
