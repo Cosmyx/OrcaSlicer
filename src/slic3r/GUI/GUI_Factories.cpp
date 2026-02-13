@@ -706,6 +706,13 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
 
                         ModelObject* obj = model.objects.back(); // Last loaded object
 
+                        // Remove any existing parameter modifiers (e.g. baked into the .3mf)
+                        obj->volumes.erase(
+                            std::remove_if(obj->volumes.begin(), obj->volumes.end(),
+                                [](const ModelVolume* v) { return v->type() == ModelVolumeType::PARAMETER_MODIFIER; }),
+                            obj->volumes.end()
+                        );
+
                         // Create modifier 1 (0° region) with exact coordinates
                         TriangleMesh mesh1 = create_modifier_box(REGION1_SIZE, REGION1_POS, REGION1_ROT);
                         ModelVolume* mod1 = obj->add_volume(
@@ -732,6 +739,7 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                         obj->invalidate_bounding_box();
                         wxGetApp().plater()->changed_object(*obj);
                         wxGetApp().obj_list()->update_selections();
+                        wxGetApp().plater()->update();
                     });
                 }
             },
