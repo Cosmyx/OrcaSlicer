@@ -9,28 +9,10 @@
     "required_nozzle_HRC": [
         "3"
     ],
-    "cool_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "60"
     ],
-    "eng_plate_temp": [
-        "60"
-    ],
-    "hot_plate_temp": [
-        "60"
-    ],
-    "textured_plate_temp": [
-        "60"
-    ],
-    "cool_plate_temp_initial_layer": [
-        "60"
-    ],
-    "eng_plate_temp_initial_layer": [
-        "60"
-    ],
-    "hot_plate_temp_initial_layer": [
-        "60"
-    ],
-    "textured_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "60"
     ],
     "overhang_fan_threshold": [

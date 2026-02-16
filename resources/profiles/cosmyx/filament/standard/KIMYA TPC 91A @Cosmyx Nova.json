@@ -36,10 +36,10 @@
         "0"
     ],
     "from": "User",
-    "hot_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "80"
     ],
-    "hot_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "80"
     ],
     "inherits": "Cosmyx TPU 95A @Cosmyx Nova",
