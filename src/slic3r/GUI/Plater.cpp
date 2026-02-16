@@ -7377,10 +7377,10 @@ bool Plater::priv::check_and_show_material_warnings()
                 // Apply to every config in scope (uses user selection for filament scope)
                 for (DynamicPrintConfig* cfg : apply_cfgs_for(setting)) {
                     try {
-                        ConfigOptionDef* def = cfg->def()->get(setting.key);
+                        const ConfigOptionDef* def = cfg->def()->get(setting.key);
                         if (def) {
                             std::string resolved_value = resolve_setting_expression(setting.value, cfg);
-                            cfg->set_deserialize(setting.key, resolved_value);
+                            cfg->set_deserialize_strict(setting.key, resolved_value);
                             BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: set " << setting.key
                                                    << " = " << resolved_value
                                                    << " (scope: " << setting.config_scope << ")"
