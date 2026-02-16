@@ -16,10 +16,10 @@
     "filament_settings_id": [
         "FILKEMP PLN @Cosmyx Nova"
     ],
-    "hot_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "65"
     ],
-    "hot_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "65"
     ],
     "nozzle_temperature": [

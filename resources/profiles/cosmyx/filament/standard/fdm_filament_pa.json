@@ -7,28 +7,10 @@
     "required_nozzle_HRC": [
         "40"
     ],
-    "cool_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "100"
     ],
-    "eng_plate_temp": [
-        "100"
-    ],
-    "hot_plate_temp": [
-        "100"
-    ],
-    "textured_plate_temp": [
-        "100"
-    ],
-    "cool_plate_temp_initial_layer": [
-        "100"
-    ],
-    "eng_plate_temp_initial_layer": [
-        "100"
-    ],
-    "hot_plate_temp_initial_layer": [
-        "100"
-    ],
-    "textured_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "100"
     ],
     "fan_cooling_layer_time": [
