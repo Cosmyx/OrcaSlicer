@@ -1709,8 +1709,20 @@ wxBoxSizer* MainFrame::create_side_tools()
                     p->Dismiss();
                     });
 
+                SideButton* export_all_gcode_btn2 = new SideButton(p, _L("Export all G-code files"), "");
+                export_all_gcode_btn2->SetCornerRadius(0);
+                export_all_gcode_btn2->Bind(wxEVT_BUTTON, [this, p](wxCommandEvent&) {
+                    m_print_btn->SetLabel(_L("Export all G-code files"));
+                    m_print_select = eExportAllGcode;
+                    m_print_enable = get_enable_print_status();
+                    m_print_btn->Enable(m_print_enable);
+                    this->Layout();
+                    p->Dismiss();
+                });
+
                 p->append_button(send_gcode_btn);
                 p->append_button(export_gcode_btn);
+                p->append_button(export_all_gcode_btn2);
             }
             else {
                 //Orca Slicer Buttons
