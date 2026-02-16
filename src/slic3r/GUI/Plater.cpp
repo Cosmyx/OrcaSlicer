@@ -6936,6 +6936,182 @@ bool Plater::priv::warnings_dialog()
 
 }
 
+// Resolves a value expression for a recommended setting.
+// Supports:
+//   "42"          -> returns "42" as-is (plain value, backward compatible)
+//   "[key]"       -> returns current serialized value of "key" from config
+//   "[key] + N"   -> current value of "key" plus N  (e.g. "[nozzle_temperature] + 20")
+//   "[key] - N"   -> current value minus N
+//   "[key] * N"   -> current value multiplied by N
+//   "[key] / N"   -> current value divided by N
+// If the referenced key is not found or the expression can't be parsed, returns the raw string.
+static std::string resolve_setting_expression(const std::string& expression, DynamicPrintConfig* config)
+{
+    size_t bracket_open  = expression.find('[');
+    size_t bracket_close = expression.find(']');
+
+    if (bracket_open == std::string::npos || bracket_close == std::string::npos || bracket_close <= bracket_open)
+        return expression; // Plain value — no reference
+
+    // Extract the referenced config key
+    std::string ref_key = expression.substr(bracket_open + 1, bracket_close - bracket_open - 1);
+
+    const ConfigOption* ref_opt = config->option(ref_key);
+    if (!ref_opt) {
+        BOOST_LOG_TRIVIAL(warning) << "resolve_setting_expression: referenced key '" << ref_key << "' not found in config";
+        return expression;
+    }
+
+    double ref_value = 0.0;
+    try {
+        ref_value = std::stod(ref_opt->serialize());
+    } catch (...) {
+        BOOST_LOG_TRIVIAL(warning) << "resolve_setting_expression: cannot parse numeric value for key '" << ref_key << "'";
+        return ref_opt->serialize();
+    }
+
+    // Check for an optional operator + operand after ']'
+    std::string remainder = expression.substr(bracket_close + 1);
+    size_t first_char = remainder.find_first_not_of(" \t");
+    if (first_char == std::string::npos)
+        return ref_opt->serialize(); // Just "[key]" with no operator
+
+    remainder = remainder.substr(first_char);
+    char op = remainder[0];
+    if (op != '+' && op != '-' && op != '*' && op != '/')
+        return ref_opt->serialize(); // Unrecognized — return raw value
+
+    std::string operand_str = remainder.substr(1);
+    size_t op_start = operand_str.find_first_not_of(" \t");
+    if (op_start == std::string::npos)
+        return ref_opt->serialize();
+    operand_str = operand_str.substr(op_start);
+
+    double operand = 0.0;
+    try {
+        operand = std::stod(operand_str);
+    } catch (...) {
+        BOOST_LOG_TRIVIAL(warning) << "resolve_setting_expression: cannot parse operand '" << operand_str << "'";
+        return ref_opt->serialize();
+    }
+
+    double result = ref_value;
+    switch (op) {
+        case '+': result = ref_value + operand; break;
+        case '-': result = ref_value - operand; break;
+        case '*': result = ref_value * operand; break;
+        case '/':
+            if (operand != 0.0)
+                result = ref_value / operand;
+            else {
+                BOOST_LOG_TRIVIAL(warning) << "resolve_setting_expression: division by zero in expression '" << expression << "'";
+                return ref_opt->serialize();
+            }
+            break;
+    }
+
+    // Return as integer string if the result is a whole number, otherwise float
+    if (result == std::floor(result))
+        return std::to_string(static_cast<long long>(result));
+    return std::to_string(result);
+}
+
+// Evaluates a SettingCondition against the given config.
+// Returns true when the condition is satisfied, false otherwise.
+// Comparison is numeric when both sides parse as numbers, otherwise string.
+// Supported operators: "==" (default), "!=", ">", "<", ">=", "<="
+static bool evaluate_condition(const SettingCondition& cond, DynamicPrintConfig* config)
+{
+    const ConfigOption* opt = config->option(cond.key);
+    if (!opt) {
+        BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: key '" << cond.key << "' not found in config — condition treated as false";
+        return false;
+    }
+
+    std::string current = opt->serialize();
+    std::string expected = cond.value;
+
+    // Try numeric comparison first
+    bool numeric = false;
+    double lhs = 0.0, rhs = 0.0;
+    try {
+        lhs = std::stod(current);
+        rhs = std::stod(expected);
+        numeric = true;
+    } catch (...) {}
+
+    const std::string& op = cond.op;
+
+    if (numeric) {
+        if (op == "==" || op.empty()) return lhs == rhs;
+        if (op == "!=")              return lhs != rhs;
+        if (op == ">")               return lhs >  rhs;
+        if (op == "<")               return lhs <  rhs;
+        if (op == ">=")              return lhs >= rhs;
+        if (op == "<=")              return lhs <= rhs;
+    } else {
+        if (op == "==" || op.empty()) return current == expected;
+        if (op == "!=")               return current != expected;
+        // Ordered operators on strings use lexicographic order
+        if (op == ">")                return current >  expected;
+        if (op == "<")                return current <  expected;
+        if (op == ">=")               return current >= expected;
+        if (op == "<=")               return current <= expected;
+    }
+
+    BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: unknown operator '" << op << "' — condition treated as false";
+    return false;
+}
+
+// Replaces {setting_key} placeholders in a message string with their current values.
+// Looks up each key in print_config first, then filament_config, then printer_config.
+// Unknown keys are left as-is so the raw placeholder is visible rather than silently dropped.
+//
+// Example:  "Nozzle: {nozzle_diameter}mm"  →  "Nozzle: 0.4mm"
+static std::string resolve_message_placeholders(
+    const std::string&  message,
+    DynamicPrintConfig* print_config,
+    DynamicPrintConfig* filament_config,
+    DynamicPrintConfig* printer_config = nullptr)
+{
+    std::string result;
+    result.reserve(message.size());
+
+    size_t pos = 0;
+    while (pos < message.size()) {
+        size_t open = message.find('{', pos);
+        if (open == std::string::npos) {
+            result += message.substr(pos);
+            break;
+        }
+        result += message.substr(pos, open - pos); // text before '{'
+
+        size_t close = message.find('}', open + 1);
+        if (close == std::string::npos) {
+            // Unclosed brace — append as-is and stop
+            result += message.substr(open);
+            break;
+        }
+
+        std::string key = message.substr(open + 1, close - open - 1);
+
+        // Try print config first, then filament config, then printer config
+        const ConfigOption* opt = print_config->option(key);
+        if (!opt && filament_config)
+            opt = filament_config->option(key);
+        if (!opt && printer_config)
+            opt = printer_config->option(key);
+
+        if (opt)
+            result += opt->serialize();
+        else
+            result += '{' + key + '}'; // leave unknown keys visible
+
+        pos = close + 1;
+    }
+    return result;
+}
+
 bool Plater::priv::check_and_show_material_warnings()
 {
     BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: checking filament types";
@@ -6946,27 +7122,35 @@ bool Plater::priv::check_and_show_material_warnings()
         return true; // Bypass all material warnings
     }
 
-    // Collect material types from all used extruders
+    // Collect material types from all used extruders.
+    // Also build material_to_preset_slots so filament-scoped settings can target the
+    // correct preset(s) on multi-tool printers and show the right extruder label in dialogs.
+    // Value: unique (preset_name, 1-based slot) pairs per material type.
     std::vector<std::string> detected_materials;
+    std::map<std::string, std::vector<std::pair<std::string, int>>> material_to_preset_slots;
     auto& filament_presets = wxGetApp().preset_bundle->filament_presets;
 
     for (size_t i = 0; i < filament_presets.size(); ++i) {
         const std::string& preset_name = filament_presets[i];
-        if (preset_name.empty()) {
-            continue; // Skip empty preset slots
-        }
+        if (preset_name.empty())
+            continue;
 
         auto* preset = wxGetApp().preset_bundle->filaments.find_preset(preset_name, false);
         if (preset && !preset->is_default) {
             std::string display_type;
             std::string mat_type = preset->get_filament_type(display_type);
             if (!mat_type.empty()) {
-                // Check if we already have this material type
                 if (std::find(detected_materials.begin(), detected_materials.end(), mat_type) == detected_materials.end()) {
                     detected_materials.push_back(mat_type);
                     BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: detected material " << mat_type
-                                            << " in extruder " << i;
+                                            << " in extruder " << (i + 1);
                 }
+                // Track unique preset names per material type (deduplicate by name)
+                auto& slots = material_to_preset_slots[mat_type];
+                bool already_tracked = std::any_of(slots.begin(), slots.end(),
+                    [&](const std::pair<std::string, int>& p) { return p.first == preset_name; });
+                if (!already_tracked)
+                    slots.emplace_back(preset_name, static_cast<int>(i + 1));
             }
         }
     }
@@ -6986,48 +7170,117 @@ bool Plater::priv::check_and_show_material_warnings()
     }
 
     // Get current print config for checking and applying settings
-    DynamicPrintConfig* print_config = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
+    DynamicPrintConfig* print_config    = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
+    // Fallback filament config (used for condition evaluation and when no matching preset is found)
+    DynamicPrintConfig* filament_config = &wxGetApp().preset_bundle->filaments.get_edited_preset().config;
+    // Printer config (for hardware capability checks, e.g. nozzle type, enclosure)
+    DynamicPrintConfig* printer_config  = &wxGetApp().preset_bundle->printers.get_edited_preset().config;
 
     // Show dialog for each warning
     for (const auto& warning : warnings) {
         BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: processing warning - " << warning.title;
+
+        // Check per-classification ignore flag (e.g. "ignore_warnings_filament")
+        // The global ignore_filament_check was already checked above and short-circuits the whole function.
+        // This check skips individual warnings based on their classification.
+        if (!warning.classification.empty()) {
+            std::string cls_key = "ignore_warnings_" + warning.classification;
+            if (wxGetApp().app_config->get_bool(cls_key)) {
+                BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: classification '"
+                                        << warning.classification << "' is ignored by user preference — skipping";
+                continue;
+            }
+        }
+
+        // Build the list of unique filament preset configs that triggered this warning,
+        // with a matching display name per entry ("Preset Name (Extruder N)").
+        // On multi-tool printers this may be several presets (e.g. two PA extruders).
+        // Falls back to the UI-active filament if none are found (single-material case).
+        std::vector<DynamicPrintConfig*> filament_cfgs;
+        std::vector<std::string>         filament_display_names;
+        {
+            std::set<std::string> seen;
+            for (const auto& mat_type : warning.material_types) {
+                auto it = material_to_preset_slots.find(mat_type);
+                if (it == material_to_preset_slots.end()) continue;
+                for (const auto& [pname, slot] : it->second) {
+                    if (!seen.insert(pname).second) continue;
+                    Preset* p = wxGetApp().preset_bundle->filaments.find_preset(pname, false);
+                    if (p) {
+                        filament_cfgs.push_back(&p->config);
+                        filament_display_names.push_back(pname + " (Extruder " + std::to_string(slot) + ")");
+                    }
+                }
+            }
+            if (filament_cfgs.empty()) {
+                filament_cfgs.push_back(filament_config);
+                filament_display_names.push_back("Active filament");
+            }
+        }
+
+        // Helper: pick the right config(s) for a recommended setting.
+        // "filament" -> all matched filament preset configs (multi-tool aware)
+        // "printer"  -> the active printer preset config
+        // default    -> print preset config
+        auto configs_for = [&](const RecommendedSetting& s) -> std::vector<DynamicPrintConfig*> {
+            if (s.config_scope == "filament") return filament_cfgs;
+            if (s.config_scope == "printer")  return {printer_config};
+            return {print_config};
+        };
+
+        // Helper: config to evaluate a condition against (single config, not a list).
+        // "filament" -> fallback filament config, "printer" -> printer config, else print config.
+        auto cond_cfg = [&](const SettingCondition& c) -> DynamicPrintConfig* {
+            if (c.config_scope == "filament") return filament_config;
+            if (c.config_scope == "printer")  return printer_config;
+            return print_config;
+        };
 
         // Check if settings verification is enabled and settings already match
         if (warning.verify_settings && !warning.recommended_settings.empty()) {
             bool settings_match = true;
             bool has_verify_settings = false;
 
-            // Only check settings that have verify=true
             for (const auto& setting : warning.recommended_settings) {
-                if (!setting.verify) {
-                    continue; // Skip settings that don't need verification
-                }
+                if (!setting.verify)
+                    continue;
 
+                // Count every verify=true setting as "present".
+                // A condition-not-met setting is treated as already satisfied so it doesn't
+                // force the popup to appear when ironing (or whatever gate) is off.
                 has_verify_settings = true;
 
-                // Get current value from config
-                const ConfigOption* opt = print_config->option(setting.key);
-                if (opt) {
-                    std::string current_value = opt->serialize();
-                    if (current_value != setting.value) {
-                        settings_match = false;
-                        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: setting " << setting.key
-                                                << " = " << current_value << " (expected: " << setting.value << ")";
-                        break;
-                    }
-                } else {
-                    BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: setting " << setting.key
-                                              << " not found in config";
-                    settings_match = false;
-                    break;
+                if (setting.has_condition && !evaluate_condition(setting.condition, cond_cfg(setting.condition))) {
+                    BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: condition not met for '"
+                                             << setting.key << "' — treating as satisfied";
+                    continue;
                 }
+
+                // For filament scope, ALL matched preset configs must match
+                for (DynamicPrintConfig* cfg : configs_for(setting)) {
+                    const ConfigOption* opt = cfg->option(setting.key);
+                    if (opt) {
+                        std::string current_value  = opt->serialize();
+                        std::string resolved_value = resolve_setting_expression(setting.value, cfg);
+                        if (current_value != resolved_value) {
+                            settings_match = false;
+                            BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: setting " << setting.key
+                                                    << " = " << current_value << " (expected: " << resolved_value << ")";
+                        }
+                    } else {
+                        BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: setting " << setting.key
+                                                  << " not found in config";
+                        settings_match = false;
+                    }
+                    if (!settings_match) break;
+                }
+                if (!settings_match) break;
             }
 
-            // If all settings with verify=true match, skip the popup
             if (has_verify_settings && settings_match) {
                 BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: verified settings already correct, skipping popup for "
                                        << warning.title;
-                continue; // Skip this warning, verified settings are already correct
+                continue;
             }
         }
 
@@ -7039,14 +7292,26 @@ bool Plater::priv::check_and_show_material_warnings()
             icon_style = wxICON_ERROR;
         }
 
-        // Determine button style based on whether we have recommended settings
-        long button_style = warning.recommended_settings.empty() ?
-                           (wxOK | wxCANCEL) : (wxYES | wxNO);
+        // Determine button style:
+        //   No recommended settings          → OK / Cancel
+        //   is_skippable (default)           → Yes / No   (No = skip, proceed to slicing)
+        //   !is_skippable                    → Yes / Cancel (must apply or cancel slicing)
+        long button_style;
+        if (warning.recommended_settings.empty())
+            button_style = wxOK | wxCANCEL;
+        else if (!warning.is_skippable)
+            button_style = wxYES | wxCANCEL;
+        else
+            button_style = wxYES | wxNO;
+
+        // Resolve {setting_key} placeholders in the message before showing it
+        std::string resolved_message = resolve_message_placeholders(
+            warning.message, print_config, filament_config, printer_config);
 
         // Create and show dialog
         MessageDialog dialog(
             q,
-            wxString::FromUTF8(warning.message),
+            wxString::FromUTF8(resolved_message),
             wxString::FromUTF8(warning.title),
             icon_style | button_style
         );
@@ -7055,30 +7320,95 @@ bool Plater::priv::check_and_show_material_warnings()
 
         // Handle user response
         if (result == wxID_YES && !warning.recommended_settings.empty()) {
-            // Apply recommended settings
             BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: applying "
                                    << warning.recommended_settings.size() << " recommended settings";
 
-            for (const auto& setting : warning.recommended_settings) {
-                try {
-                    ConfigOptionDef* def = print_config->def()->get(setting.key);
-                    if (def) {
-                        print_config->set_deserialize(setting.key, setting.value);
-                        BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: set " << setting.key
-                                               << " = " << setting.value;
-                    } else {
-                        BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: setting " << setting.key
-                                                  << " definition not found";
-                    }
-                } catch (const std::exception& e) {
-                    BOOST_LOG_TRIVIAL(error) << "check_and_show_material_warnings: failed to set " << setting.key
-                                            << ": " << e.what();
+            // For multi-filament: let the user choose which presets receive the change.
+            // Single-filament (or no filament-scoped settings): skip the selection dialog.
+            std::vector<DynamicPrintConfig*> filament_apply_cfgs = filament_cfgs;
+            bool has_filament_scoped = std::any_of(
+                warning.recommended_settings.begin(), warning.recommended_settings.end(),
+                [](const RecommendedSetting& s) { return s.config_scope == "filament"; });
+
+            if (filament_cfgs.size() > 1 && has_filament_scoped) {
+                wxArrayString choices;
+                for (const auto& name : filament_display_names)
+                    choices.Add(wxString::FromUTF8(name));
+
+                wxMultiChoiceDialog choice_dlg(
+                    q,
+                    _L("Select which filaments to apply the changes to:"),
+                    _L("Apply to Filaments"),
+                    choices
+                );
+                // Pre-select all filaments by default
+                wxArrayInt default_sel;
+                for (int k = 0; k < static_cast<int>(filament_cfgs.size()); ++k)
+                    default_sel.Add(k);
+                choice_dlg.SetSelections(default_sel);
+
+                if (choice_dlg.ShowModal() == wxID_OK) {
+                    wxArrayInt sel = choice_dlg.GetSelections();
+                    filament_apply_cfgs.clear();
+                    for (int idx : sel)
+                        if (idx >= 0 && idx < static_cast<int>(filament_cfgs.size()))
+                            filament_apply_cfgs.push_back(filament_cfgs[idx]);
+                } else {
+                    filament_apply_cfgs.clear(); // cancelled → apply to none
                 }
             }
 
-            // Mark preset as dirty and reload UI
-            wxGetApp().get_tab(Preset::TYPE_PRINT)->update_dirty();
-            wxGetApp().get_tab(Preset::TYPE_PRINT)->reload_config();
+            // Like configs_for but uses the user-selected filament targets
+            auto apply_cfgs_for = [&](const RecommendedSetting& s) -> std::vector<DynamicPrintConfig*> {
+                if (s.config_scope == "filament") return filament_apply_cfgs;
+                return {print_config};
+            };
+
+            bool print_settings_changed    = false;
+            bool filament_settings_changed = false;
+
+            for (const auto& setting : warning.recommended_settings) {
+                if (setting.has_condition && !evaluate_condition(setting.condition, cond_cfg(setting.condition))) {
+                    BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: condition not met for '"
+                                             << setting.key << "' — skipping apply";
+                    continue;
+                }
+
+                // Apply to every config in scope (uses user selection for filament scope)
+                for (DynamicPrintConfig* cfg : apply_cfgs_for(setting)) {
+                    try {
+                        ConfigOptionDef* def = cfg->def()->get(setting.key);
+                        if (def) {
+                            std::string resolved_value = resolve_setting_expression(setting.value, cfg);
+                            cfg->set_deserialize(setting.key, resolved_value);
+                            BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: set " << setting.key
+                                                   << " = " << resolved_value
+                                                   << " (scope: " << setting.config_scope << ")"
+                                                   << (resolved_value != setting.value ? " (resolved from: " + setting.value + ")" : "");
+                            if (setting.config_scope == "filament")
+                                filament_settings_changed = true;
+                            else
+                                print_settings_changed = true;
+                        } else {
+                            BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: setting " << setting.key
+                                                      << " definition not found in " << setting.config_scope << " config";
+                        }
+                    } catch (const std::exception& e) {
+                        BOOST_LOG_TRIVIAL(error) << "check_and_show_material_warnings: failed to set " << setting.key
+                                                << ": " << e.what();
+                    }
+                }
+            }
+
+            // Reload only the tabs that had changes
+            if (print_settings_changed) {
+                wxGetApp().get_tab(Preset::TYPE_PRINT)->update_dirty();
+                wxGetApp().get_tab(Preset::TYPE_PRINT)->reload_config();
+            }
+            if (filament_settings_changed) {
+                wxGetApp().get_tab(Preset::TYPE_FILAMENT)->update_dirty();
+                wxGetApp().get_tab(Preset::TYPE_FILAMENT)->reload_config();
+            }
             BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: settings applied, proceeding with slicing";
 
         } else if (result == wxID_NO || result == wxID_OK) {

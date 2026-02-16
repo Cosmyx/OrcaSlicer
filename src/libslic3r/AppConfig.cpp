@@ -256,10 +256,15 @@ void AppConfig::set_defaults()
     if (get("stealth_mode").empty()) {
         set_bool("stealth_mode", false);
     }
-    // Material warning system - enabled by default (warnings shown, checkbox unchecked)
+    // Material warning system - global flag (disables ALL warnings when true)
     if (get("ignore_filament_check").empty()) {
         set_bool("ignore_filament_check", false);
     }
+    // Per-classification warning flags (each defaults to false = warnings shown)
+    if (get("ignore_warnings_process").empty())  set_bool("ignore_warnings_process",  false);
+    if (get("ignore_warnings_filament").empty()) set_bool("ignore_warnings_filament", false);
+    if (get("ignore_warnings_nozzle").empty())   set_bool("ignore_warnings_nozzle",   false);
+    if (get("ignore_warnings_general").empty())  set_bool("ignore_warnings_general",  false);
     if (get("legacy_networking").empty()) {
         set_bool("legacy_networking", true);
     }

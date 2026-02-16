@@ -1187,8 +1187,17 @@ void PreferencesDialog::create_items()
     g_sizer->Add(item_darkmode);
 #endif
 
-    auto item_filament_check   = create_item_checkbox(_L("Ignore filament warnings"), _L("When enabled, material-specific warnings will not appear before slicing."), "ignore_filament_check");
+    auto item_filament_check   = create_item_checkbox(_L("Ignore all material warnings"), _L("When enabled, no material-specific warnings will appear before slicing (overrides the per-category settings below)."), "ignore_filament_check");
     g_sizer->Add(item_filament_check);
+
+    auto item_warn_process   = create_item_checkbox(_L("  Ignore process warnings"),  _L("Suppress material warnings classified as 'process' (e.g. crossing wall, travel detour)."),  "ignore_warnings_process");
+    g_sizer->Add(item_warn_process);
+    auto item_warn_filament  = create_item_checkbox(_L("  Ignore filament warnings"), _L("Suppress material warnings classified as 'filament' (e.g. temperature adjustments)."), "ignore_warnings_filament");
+    g_sizer->Add(item_warn_filament);
+    auto item_warn_nozzle    = create_item_checkbox(_L("  Ignore nozzle warnings"),   _L("Suppress material warnings classified as 'nozzle' (e.g. nozzle temperature, wear)."),   "ignore_warnings_nozzle");
+    g_sizer->Add(item_warn_nozzle);
+    auto item_warn_general   = create_item_checkbox(_L("  Ignore general warnings"),  _L("Suppress material warnings with no specific classification."),  "ignore_warnings_general");
+    g_sizer->Add(item_warn_general);
 
     auto item_single_instance  = create_item_checkbox(_L("Allow only one OrcaSlicer instance"),
     #if __APPLE__

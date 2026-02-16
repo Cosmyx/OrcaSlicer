@@ -107,6 +107,15 @@ bool MaterialWarningManager::load_warnings_config()
                     config.verify_settings = warning_json["verify_settings"].get<bool>();
                 }
 
+                if (warning_json.contains("is_skippable") && warning_json["is_skippable"].is_boolean()) {
+                    config.is_skippable = warning_json["is_skippable"].get<bool>();
+                }
+
+                // Parse classification ("process", "filament", "nozzle", "general")
+                if (warning_json.contains("classification") && warning_json["classification"].is_string()) {
+                    config.classification = warning_json["classification"].get<std::string>();
+                }
+
                 if (warning_json.contains("documentation_url") && warning_json["documentation_url"].is_string()) {
                     config.documentation_url = warning_json["documentation_url"].get<std::string>();
                 }
@@ -126,6 +135,29 @@ bool MaterialWarningManager::load_warnings_config()
                             // Parse verify flag (defaults to true if not specified)
                             if (setting_json.contains("verify") && setting_json["verify"].is_boolean()) {
                                 setting.verify = setting_json["verify"].get<bool>();
+                            }
+
+                            // Parse config_scope ("print" or "filament", defaults to "print")
+                            if (setting_json.contains("config_scope") && setting_json["config_scope"].is_string()) {
+                                setting.config_scope = setting_json["config_scope"].get<std::string>();
+                            }
+
+                            // Parse optional condition block
+                            if (setting_json.contains("condition") && setting_json["condition"].is_object()) {
+                                const auto& cond_json = setting_json["condition"];
+                                if (cond_json.contains("key") && cond_json["key"].is_string() &&
+                                    cond_json.contains("value") && cond_json["value"].is_string()) {
+                                    setting.has_condition        = true;
+                                    setting.condition.key        = cond_json["key"].get<std::string>();
+                                    setting.condition.value      = cond_json["value"].get<std::string>();
+                                    if (cond_json.contains("operator") && cond_json["operator"].is_string())
+                                        setting.condition.op     = cond_json["operator"].get<std::string>();
+                                    if (cond_json.contains("config_scope") && cond_json["config_scope"].is_string())
+                                        setting.condition.config_scope = cond_json["config_scope"].get<std::string>();
+                                } else {
+                                    BOOST_LOG_TRIVIAL(warning) << "MaterialWarningManager: 'condition' block for key '"
+                                                               << setting.key << "' is missing 'key' or 'value' — ignored";
+                                }
                             }
 
                             config.recommended_settings.push_back(setting);
@@ -168,8 +200,18 @@ std::vector<MaterialWarningConfig> MaterialWarningManager::get_warnings_for_mate
         }
     }
 
-    // Find all warnings that match any of the detected material types
+    // Find all warnings that match any of the detected material types.
+    // A warning whose material_types contains "*" matches every material.
     for (const auto& warning : m_warnings) {
+        // Wildcard: always include this warning regardless of which materials are loaded
+        bool is_wildcard = std::find(warning.material_types.begin(), warning.material_types.end(), "*")
+                           != warning.material_types.end();
+        if (is_wildcard && !material_types.empty()) {
+            matching_warnings.push_back(warning);
+            BOOST_LOG_TRIVIAL(debug) << "MaterialWarningManager: Wildcard warning added: " << warning.title;
+            goto next_warning;
+        }
+
         for (const auto& detected_material : material_types) {
             // Check if this warning applies to the detected material
             for (const auto& warning_material : warning.material_types) {
