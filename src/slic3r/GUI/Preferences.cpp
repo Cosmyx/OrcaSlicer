@@ -802,6 +802,30 @@ wxBoxSizer *PreferencesDialog::create_item_checkbox(wxString title, wxString too
 
      //// save config
     checkbox->Bind(wxEVT_TOGGLEBUTTON, [this, checkbox, param](wxCommandEvent &e) {
+        // When enabling an "ignore warnings" checkbox, ask the user to confirm.
+        // The warning is only relevant when turning ON (true), not when unchecking.
+        bool is_ignore_warnings_param = (param == "ignore_filament_check"    ||
+                                         param == "ignore_warnings_process"  ||
+                                         param == "ignore_warnings_filament" ||
+                                         param == "ignore_warnings_nozzle"   ||
+                                         param == "ignore_warnings_general");
+        if (is_ignore_warnings_param && checkbox->GetValue()) {
+            MessageDialog confirm(
+                this,
+                _L("You are about to disable these warnings.\n\n"
+                   "Some warnings also apply automatic setting corrections before slicing. "
+                   "Disabling them means those corrections will no longer be applied.\n\n"
+                   "Are you sure you want to proceed?"),
+                _L("Disable Material Warnings"),
+                wxYES_NO | wxNO_DEFAULT | wxICON_WARNING);
+            if (confirm.ShowModal() != wxID_YES) {
+                // User cancelled — revert the checkbox without saving
+                checkbox->SetValue(false);
+                e.Skip();
+                return;
+            }
+        }
+
         app_config->set_bool(param, checkbox->GetValue());
         app_config->save();
 

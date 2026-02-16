@@ -16157,3 +16157,51 @@ msgstr ""
 #: resources/data/hints.ini: [hint:Avoid warping]
 msgid "Avoid warping\nDid you know that when printing materials that are prone to warping such as ABS, appropriately increasing the heatbed temperature can reduce the probability of warping?"
 msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1214
+msgid "Ignore all material warnings"
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1214
+msgid "When enabled, no material-specific warnings will appear before slicing (overrides the per-category settings below)."
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1217
+msgid "  Ignore process warnings"
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1217
+msgid "Suppress material warnings classified as 'process' (e.g. crossing wall, travel detour)."
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1219
+msgid "  Ignore filament warnings"
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1219
+msgid "Suppress material warnings classified as 'filament' (e.g. temperature adjustments)."
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1221
+msgid "  Ignore nozzle warnings"
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1221
+msgid "Suppress material warnings classified as 'nozzle' (e.g. nozzle temperature, wear)."
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1223
+msgid "  Ignore general warnings"
+msgstr ""
+
+#: src/slic3r/GUI/Preferences.cpp:1223
+msgid "Suppress material warnings with no specific classification."
+msgstr ""
+
+#: src/slic3r/GUI/Plater.cpp:7340
+msgid "Select which filaments to apply the changes to:"
+msgstr ""
+
+#: src/slic3r/GUI/Plater.cpp:7341
+msgid "Apply to Filaments"
+msgstr ""
