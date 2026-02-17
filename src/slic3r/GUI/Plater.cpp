@@ -9,6 +9,7 @@
 #include <string>
 #include <regex>
 #include <future>
+#include <sstream>
 #include <boost/algorithm/string.hpp>
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/optional.hpp>
@@ -7020,8 +7021,116 @@ static std::string resolve_setting_expression(const std::string& expression, Dyn
 // Returns true when the condition is satisfied, false otherwise.
 // Comparison is numeric when both sides parse as numbers, otherwise string.
 // Supported operators: "==" (default), "!=", ">", "<", ">=", "<="
-static bool evaluate_condition(const SettingCondition& cond, DynamicPrintConfig* config)
+// Special operators for "internal" scope: "contains_all", "contains_any", "contains_only", "not_contains"
+static bool evaluate_condition(const SettingCondition& cond, DynamicPrintConfig* config,
+                                const std::vector<std::string>* used_materials = nullptr)
 {
+    // Handle "internal" config scope for runtime state checking
+    if (cond.config_scope == "internal") {
+        if (cond.key == "UsedExtruders") {
+            if (!used_materials) {
+                BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: UsedExtruders requested but no materials list provided";
+                return false;
+            }
+
+            // Parse expected materials from comma-separated value
+            std::vector<std::string> expected_materials;
+            std::istringstream stream(cond.value);
+            std::string material;
+            while (std::getline(stream, material, ',')) {
+                // Trim whitespace
+                material.erase(0, material.find_first_not_of(" \t"));
+                material.erase(material.find_last_not_of(" \t") + 1);
+                if (!material.empty())
+                    expected_materials.push_back(material);
+            }
+
+            const std::string& op = cond.op;
+
+            // contains_all: ALL expected materials must be in used_materials (AND logic)
+            if (op == "contains_all" || op == "==") {
+                for (const auto& exp_mat : expected_materials) {
+                    if (std::find(used_materials->begin(), used_materials->end(), exp_mat) == used_materials->end()) {
+                        return false; // Missing at least one expected material
+                    }
+                }
+                return true; // All expected materials are present
+            }
+
+            // contains_any: At least ONE expected material must be in used_materials (OR logic)
+            if (op == "contains_any") {
+                for (const auto& exp_mat : expected_materials) {
+                    if (std::find(used_materials->begin(), used_materials->end(), exp_mat) != used_materials->end()) {
+                        return true; // Found at least one
+                    }
+                }
+                return false; // None found
+            }
+
+            // contains_only: used_materials contains ONLY the expected materials (exact match, order independent)
+            if (op == "contains_only") {
+                if (used_materials->size() != expected_materials.size())
+                    return false;
+                for (const auto& used_mat : *used_materials) {
+                    if (std::find(expected_materials.begin(), expected_materials.end(), used_mat) == expected_materials.end()) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // not_contains: NONE of the expected materials are in used_materials
+            if (op == "not_contains" || op == "!=") {
+                for (const auto& exp_mat : expected_materials) {
+                    if (std::find(used_materials->begin(), used_materials->end(), exp_mat) != used_materials->end()) {
+                        return false; // Found at least one (violation)
+                    }
+                }
+                return true; // None found (success)
+            }
+
+            BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: unknown operator '" << op << "' for UsedExtruders — condition treated as false";
+            return false;
+        }
+
+        // ExtruderCount: Number of extruders being used in the print
+        if (cond.key == "ExtruderCount") {
+            if (!used_materials) {
+                BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: ExtruderCount requested but no materials list provided";
+                return false;
+            }
+
+            // The count is the number of distinct materials being used
+            int used_count = static_cast<int>(used_materials->size());
+            std::string current = std::to_string(used_count);
+            std::string expected = cond.value;
+
+            // Try numeric comparison
+            try {
+                double lhs = std::stod(current);
+                double rhs = std::stod(expected);
+                const std::string& op = cond.op;
+
+                if (op == "==" || op.empty()) return lhs == rhs;
+                if (op == "!=")               return lhs != rhs;
+                if (op == ">")                return lhs >  rhs;
+                if (op == "<")                return lhs <  rhs;
+                if (op == ">=")               return lhs >= rhs;
+                if (op == "<=")               return lhs <= rhs;
+
+                BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: unknown operator '" << op << "' for ExtruderCount — condition treated as false";
+                return false;
+            } catch (...) {
+                BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: ExtruderCount value '" << expected << "' is not a number — condition treated as false";
+                return false;
+            }
+        }
+
+        BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: unknown internal key '" << cond.key << "' — condition treated as false";
+        return false;
+    }
+
+    // Standard config-based evaluation (existing logic)
     const ConfigOption* opt = config->option(cond.key);
     if (!opt) {
         BOOST_LOG_TRIVIAL(warning) << "evaluate_condition: key '" << cond.key << "' not found in config — condition treated as false";
@@ -7135,7 +7244,34 @@ bool Plater::priv::check_and_show_material_warnings()
         return true; // Bypass all material warnings
     }
 
-    // Collect material types from all used extruders.
+    // Step 1: Collect which extruders are ACTUALLY USED in the print
+    // (have objects or volumes assigned to them)
+    std::set<int> used_extruder_ids;
+    for (ModelObject* obj : this->model.objects) {
+        // Check object-level extruder assignment
+        if (obj->config.option("extruder")) {
+            int extruder_id = obj->config.extruder();
+            used_extruder_ids.insert(extruder_id);
+        }
+
+        // Check volume-level extruder assignments
+        for (auto volume : obj->volumes) {
+            if (volume->config.option("extruder")) {
+                int extruder_id = volume->config.extruder();
+                used_extruder_ids.insert(extruder_id);
+            }
+
+            // Check multi-material painting (per-triangle extruder assignments)
+            for (int extruder_id : volume->get_extruders()) {
+                used_extruder_ids.insert(extruder_id);
+            }
+        }
+    }
+
+    BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: found " << used_extruder_ids.size()
+                            << " extruders in use";
+
+    // Step 2: Collect material types from ONLY the used extruders.
     // Also build material_to_preset_slots so filament-scoped settings can target the
     // correct preset(s) on multi-tool printers and show the right extruder label in dialogs.
     // Value: unique (preset_name, 1-based slot) pairs per material type.
@@ -7143,7 +7279,15 @@ bool Plater::priv::check_and_show_material_warnings()
     std::map<std::string, std::vector<std::pair<std::string, int>>> material_to_preset_slots;
     auto& filament_presets = wxGetApp().preset_bundle->filament_presets;
 
-    for (size_t i = 0; i < filament_presets.size(); ++i) {
+    for (int extruder_id : used_extruder_ids) {
+        // Extruder IDs are 1-based, filament_presets is 0-based
+        size_t i = static_cast<size_t>(extruder_id - 1);
+        if (i >= filament_presets.size()) {
+            BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: extruder " << extruder_id
+                                      << " out of range (only " << filament_presets.size() << " filaments configured)";
+            continue;
+        }
+
         const std::string& preset_name = filament_presets[i];
         if (preset_name.empty())
             continue;
@@ -7156,14 +7300,14 @@ bool Plater::priv::check_and_show_material_warnings()
                 if (std::find(detected_materials.begin(), detected_materials.end(), mat_type) == detected_materials.end()) {
                     detected_materials.push_back(mat_type);
                     BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: detected material " << mat_type
-                                            << " in extruder " << (i + 1);
+                                            << " in used extruder " << extruder_id;
                 }
                 // Track unique preset names per material type (deduplicate by name)
                 auto& slots = material_to_preset_slots[mat_type];
                 bool already_tracked = std::any_of(slots.begin(), slots.end(),
                     [&](const std::pair<std::string, int>& p) { return p.first == preset_name; });
                 if (!already_tracked)
-                    slots.emplace_back(preset_name, static_cast<int>(i + 1));
+                    slots.emplace_back(preset_name, extruder_id);
             }
         }
     }
@@ -7213,7 +7357,7 @@ bool Plater::priv::check_and_show_material_warnings()
         if (warning.has_condition) {
             auto cfg = (warning.condition.config_scope == "filament") ? filament_config :
                        (warning.condition.config_scope == "printer")  ? printer_config : print_config;
-            if (!evaluate_condition(warning.condition, cfg)) {
+            if (!evaluate_condition(warning.condition, cfg, &detected_materials)) {
                 BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: warning-level condition failed — skipping";
                 conditions_pass = false;
             }
@@ -7225,7 +7369,7 @@ bool Plater::priv::check_and_show_material_warnings()
             for (const auto& cond : warning.conditions_OR) {
                 auto cfg = (cond.config_scope == "filament") ? filament_config :
                            (cond.config_scope == "printer")  ? printer_config : print_config;
-                if (evaluate_condition(cond, cfg)) {
+                if (evaluate_condition(cond, cfg, &detected_materials)) {
                     any_true = true;
                     break;
                 }
@@ -7241,7 +7385,7 @@ bool Plater::priv::check_and_show_material_warnings()
             for (const auto& cond : warning.conditions_AND) {
                 auto cfg = (cond.config_scope == "filament") ? filament_config :
                            (cond.config_scope == "printer")  ? printer_config : print_config;
-                if (!evaluate_condition(cond, cfg)) {
+                if (!evaluate_condition(cond, cfg, &detected_materials)) {
                     BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: conditions_AND failed on key '"
                                              << cond.key << "' — skipping";
                     conditions_pass = false;
@@ -7332,7 +7476,7 @@ bool Plater::priv::check_and_show_material_warnings()
                 // force the popup to appear when ironing (or whatever gate) is off.
                 has_verify_settings = true;
 
-                if (setting.has_condition && !evaluate_condition(setting.condition, cond_cfg(setting.condition))) {
+                if (setting.has_condition && !evaluate_condition(setting.condition, cond_cfg(setting.condition), &detected_materials)) {
                     BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: condition not met for '"
                                              << setting.key << "' — treating as satisfied";
                     continue;
@@ -7450,7 +7594,7 @@ bool Plater::priv::check_and_show_material_warnings()
             bool filament_settings_changed = false;
 
             for (const auto& setting : warning.recommended_settings) {
-                if (setting.has_condition && !evaluate_condition(setting.condition, cond_cfg(setting.condition))) {
+                if (setting.has_condition && !evaluate_condition(setting.condition, cond_cfg(setting.condition), &detected_materials)) {
                     BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: condition not met for '"
                                              << setting.key << "' — skipping apply";
                     continue;

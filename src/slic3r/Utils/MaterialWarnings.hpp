@@ -21,16 +21,45 @@ namespace GUI {
 // Condition that must be true for a RecommendedSetting to be applied or verified.
 // Both the value expression syntax ("[key] + N") and the config_scope field work here too.
 //
-// Operators: "==" (default), "!=", ">", "<", ">=", "<="
-// Comparison is numeric when both sides parse as numbers, otherwise string.
+// Config Scopes:
+//   "print"    -> reads from the print preset config (default)
+//   "filament" -> reads from the active filament preset config
+//   "printer"  -> reads from the printer preset config
+//   "internal" -> checks runtime state (e.g., which materials are actually being used)
 //
-// Example (apply +20°C only when ironing is active):
-//   "condition": { "key": "ironing_type", "operator": "!=", "value": "0" }
+// Standard Operators (for "print", "filament", "printer" scopes):
+//   "==" (default), "!=", ">", "<", ">=", "<="
+//   Comparison is numeric when both sides parse as numbers, otherwise string.
+//
+// Internal Scope Keys (runtime state checking):
+//   "UsedExtruders"        -> Which material types are actively used in the print
+//     Special operators: "contains_all" / "==", "contains_any", "contains_only", "not_contains" / "!="
+//     Value format: comma-separated material types, e.g., "PLA, PETG"
+//     Example: { "key": "UsedExtruders", "operator": "contains_all", "value": "PLA, PETG", "config_scope": "internal" }
+//
+//   "ExtruderCount"        -> Number of extruders being used in the print (count of distinct materials)
+//     Standard operators: "==", "!=", ">", "<", ">=", "<="
+//     Value: numeric, e.g., "2"
+//     Example: { "key": "ExtruderCount", "operator": ">", "value": "1", "config_scope": "internal" }
+//
+// Note: To check the number of extruders the machine has, use printer config scope:
+//   { "key": "extruders_count", "operator": "==", "value": "2", "config_scope": "printer" }
+//
+// Examples:
+//   Apply +20°C only when ironing is active:
+//     { "key": "ironing_type", "operator": "!=", "value": "no ironing", "config_scope": "print" }
+//   Warn only when both PLA and PETG are being used together:
+//     { "key": "UsedExtruders", "operator": "contains_all", "value": "PLA, PETG", "config_scope": "internal" }
+//   Warn when using more extruders than machine supports (dual-extruder example):
+//     "conditions_AND": [
+//       { "key": "ExtruderCount", "operator": ">", "value": "1", "config_scope": "internal" },
+//       { "key": "extruders_count", "operator": "==", "value": "1", "config_scope": "printer" }
+//     ]
 struct SettingCondition {
     std::string key;
     std::string value;
-    std::string op           = "==";    // "==", "!=", ">", "<", ">=", "<="
-    std::string config_scope = "print"; // which config to read the key from: "print", "filament", "printer"
+    std::string op           = "==";    // See documentation above for supported operators
+    std::string config_scope = "print"; // "print", "filament", "printer", or "internal"
 };
 
 // Structure to hold recommended settings for future auto-apply functionality
