@@ -3,6 +3,7 @@
 #include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/Model.hpp"
 #include "libslic3r/TriangleMesh.hpp"
+#include "libslic3r/Format/bbs_3mf.hpp"
 
 #include "GUI_Factories.hpp"
 #include "GUI_ObjectList.hpp"
@@ -740,7 +741,22 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                                     new ConfigOptionFloat(region["infill_direction"]));
                                 mod->config.set_key_value("solid_infill_direction",
                                     new ConfigOptionFloat(region["solid_infill_direction"]));
+
+                                // Apply only_one_wall_first_layer if present in config
+                                if (region.contains("only_one_wall_first_layer")) {
+                                    mod->config.set_key_value("only_one_wall_first_layer",
+                                        new ConfigOptionBool(region["only_one_wall_first_layer"]));
+                                }
+
+                                // Set extruder config (required for proper initialization)
+                                mod->config.set_key_value("extruder", new ConfigOptionInt(0));
+
+                                // Mark as built-in object
+                                mod->source.is_from_builtin_objects = true;
                             }
+
+                            // Backup object mesh (required by OrcaSlicer)
+                            Slic3r::save_object_mesh(*obj);
 
                             obj->invalidate_bounding_box();
                             wxGetApp().plater()->changed_object(*obj);
