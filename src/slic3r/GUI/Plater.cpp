@@ -7259,19 +7259,41 @@ bool Plater::priv::check_and_show_material_warnings()
         std::vector<DynamicPrintConfig*> filament_cfgs;
         std::vector<std::string>         filament_display_names;
         {
-            std::set<std::string> seen;
-            for (const auto& mat_type : warning.material_types) {
-                auto it = material_to_preset_slots.find(mat_type);
-                if (it == material_to_preset_slots.end()) continue;
-                for (const auto& [pname, slot] : it->second) {
-                    if (!seen.insert(pname).second) continue;
-                    Preset* p = wxGetApp().preset_bundle->filaments.find_preset(pname, false);
-                    if (p) {
+            // Check if this warning uses wildcard matching (applies to all materials)
+            bool is_wildcard = std::find(warning.material_types.begin(), warning.material_types.end(), "*")
+                              != warning.material_types.end();
+
+            if (is_wildcard) {
+                // Wildcard warning: include ALL active filament presets from all extruders
+                std::set<std::string> seen;
+                for (size_t i = 0; i < filament_presets.size(); ++i) {
+                    const std::string& preset_name = filament_presets[i];
+                    if (preset_name.empty()) continue;
+                    if (!seen.insert(preset_name).second) continue;  // already added this preset
+
+                    Preset* p = wxGetApp().preset_bundle->filaments.find_preset(preset_name, false);
+                    if (p && !p->is_default) {
                         filament_cfgs.push_back(&p->config);
-                        filament_display_names.push_back(pname + " (Extruder " + std::to_string(slot) + ")");
+                        filament_display_names.push_back(preset_name + " (Extruder " + std::to_string(i + 1) + ")");
+                    }
+                }
+            } else {
+                // Material-specific warning: only include presets matching the material types
+                std::set<std::string> seen;
+                for (const auto& mat_type : warning.material_types) {
+                    auto it = material_to_preset_slots.find(mat_type);
+                    if (it == material_to_preset_slots.end()) continue;
+                    for (const auto& [pname, slot] : it->second) {
+                        if (!seen.insert(pname).second) continue;
+                        Preset* p = wxGetApp().preset_bundle->filaments.find_preset(pname, false);
+                        if (p) {
+                            filament_cfgs.push_back(&p->config);
+                            filament_display_names.push_back(pname + " (Extruder " + std::to_string(slot) + ")");
+                        }
                     }
                 }
             }
+
             if (filament_cfgs.empty()) {
                 filament_cfgs.push_back(filament_config);
                 filament_display_names.push_back("Active filament");
