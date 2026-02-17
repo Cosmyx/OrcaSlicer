@@ -683,7 +683,7 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                     });
                 }
 
-                // Apply volume modifiers for Calage 3 SNDT
+                // Suggest print settings for Calage 3 SNDT
                 if (apply_calage3_modifiers) {
                     wxGetApp().CallAfter([=] {
                         // Load modifier configuration from JSON
@@ -703,19 +703,51 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                             return;
                         }
 
-                        // Get the loaded model
+                        // Suggest base print settings (like Calage 1)
+                        if (config.contains("base_settings")) {
+                            const auto& base = config["base_settings"];
+                            DynamicPrintConfig* m_config = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
+
+                            auto infill_direction = m_config->opt_float("infill_direction");
+                            auto solid_infill_direction = m_config->opt_float("solid_infill_direction");
+                            auto only_one_wall = m_config->opt_bool("only_one_wall_first_layer");
+
+                            float target_infill = base.value("infill_direction", 0.0);
+                            float target_solid = base.value("solid_infill_direction", 0.0);
+                            bool target_one_wall = base.value("only_one_wall_first_layer", false);
+
+                            // Only suggest if settings don't match
+                            if (infill_direction != target_infill ||
+                                solid_infill_direction != target_solid ||
+                                only_one_wall != target_one_wall) {
+
+                                wxString msg_text = wxString::Format(
+                                    _L("This calibration model works best with specific infill settings.\n"
+                                       "For optimal calibration results, it is advisable to set:\n"
+                                       "- Infill direction: %.0f°\n"
+                                       "- Solid infill direction: %.0f°\n"
+                                       "- Only one wall on first layer: %s\n\n"
+                                       "Yes - Change these settings automatically\n"
+                                       "No  - Do not change these settings for me"),
+                                    target_infill, target_solid, target_one_wall ? "true" : "false");
+
+                                MessageDialog dialog(wxGetApp().plater(), msg_text, "Calibration Suggestion", wxICON_WARNING | wxYES | wxNO);
+                                if (dialog.ShowModal() == wxID_YES) {
+                                    m_config->set_key_value("infill_direction", new ConfigOptionFloat(target_infill));
+                                    m_config->set_key_value("solid_infill_direction", new ConfigOptionFloat(target_solid));
+                                    m_config->set_key_value("only_one_wall_first_layer", new ConfigOptionBool(target_one_wall));
+                                    wxGetApp().get_tab(Preset::TYPE_PRINT)->update_dirty();
+                                    wxGetApp().get_tab(Preset::TYPE_PRINT)->reload_config();
+                                }
+                            }
+                        }
+
+                        // Get the loaded model and apply modifiers
                         Model& model = wxGetApp().plater()->model();
                         if (model.objects.empty()) return;
 
-                        // Apply to the last 3 loaded objects (Calage 3 loads T0 Body, T1x, T1y)
-                        const size_t num_calage3_objects = 3;
-                        size_t start_idx = model.objects.size() >= num_calage3_objects
-                            ? model.objects.size() - num_calage3_objects
-                            : 0;
-
-                        for (size_t i = start_idx; i < model.objects.size(); ++i) {
-                            ModelObject* obj = model.objects[i];
-
+                        // Apply modifiers to all objects in the loaded 3MF
+                        for (ModelObject* obj : model.objects) {
                             // Remove any existing parameter modifiers (e.g. baked into the .3mf)
                             obj->volumes.erase(
                                 std::remove_if(obj->volumes.begin(), obj->volumes.end(),
