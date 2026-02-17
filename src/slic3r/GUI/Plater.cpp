@@ -7114,6 +7114,19 @@ static std::string resolve_message_placeholders(
 
 bool Plater::priv::check_and_show_material_warnings()
 {
+    // Re-entry guard: prevent duplicate warnings if function is called multiple times
+    static bool is_showing_warnings = false;
+    if (is_showing_warnings) {
+        BOOST_LOG_TRIVIAL(warning) << "check_and_show_material_warnings: already showing warnings, ignoring duplicate call";
+        return true;
+    }
+
+    // RAII guard to ensure flag is reset even if function exits early
+    struct Guard {
+        Guard() { is_showing_warnings = true; }
+        ~Guard() { is_showing_warnings = false; }
+    } guard;
+
     BOOST_LOG_TRIVIAL(info) << "check_and_show_material_warnings: checking filament types";
 
     // Check if filament warnings are disabled globally
