@@ -7192,6 +7192,53 @@ bool Plater::priv::check_and_show_material_warnings()
             }
         }
 
+        // Check warning-level conditions (if any are present, ALL must pass)
+        // This allows exact range checks and complex gating logic.
+        bool conditions_pass = true;
+
+        // Single condition
+        if (warning.has_condition) {
+            auto cfg = (warning.condition.config_scope == "filament") ? filament_config :
+                       (warning.condition.config_scope == "printer")  ? printer_config : print_config;
+            if (!evaluate_condition(warning.condition, cfg)) {
+                BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: warning-level condition failed — skipping";
+                conditions_pass = false;
+            }
+        }
+
+        // OR conditions (at least one must be true)
+        if (conditions_pass && warning.has_conditions_OR) {
+            bool any_true = false;
+            for (const auto& cond : warning.conditions_OR) {
+                auto cfg = (cond.config_scope == "filament") ? filament_config :
+                           (cond.config_scope == "printer")  ? printer_config : print_config;
+                if (evaluate_condition(cond, cfg)) {
+                    any_true = true;
+                    break;
+                }
+            }
+            if (!any_true) {
+                BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: conditions_OR all failed — skipping";
+                conditions_pass = false;
+            }
+        }
+
+        // AND conditions (all must be true)
+        if (conditions_pass && warning.has_conditions_AND) {
+            for (const auto& cond : warning.conditions_AND) {
+                auto cfg = (cond.config_scope == "filament") ? filament_config :
+                           (cond.config_scope == "printer")  ? printer_config : print_config;
+                if (!evaluate_condition(cond, cfg)) {
+                    BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: conditions_AND failed on key '"
+                                             << cond.key << "' — skipping";
+                    conditions_pass = false;
+                    break;
+                }
+            }
+        }
+
+        if (!conditions_pass) continue;  // Skip this warning entirely
+
         // Build the list of unique filament preset configs that triggered this warning,
         // with a matching display name per entry ("Preset Name (Extruder N)").
         // On multi-tool printers this may be several presets (e.g. two PA extruders).

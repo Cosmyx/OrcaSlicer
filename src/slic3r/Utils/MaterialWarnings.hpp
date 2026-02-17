@@ -69,6 +69,16 @@ struct MaterialWarningConfig {
     // If false:          dialog shows Apply / Cancel — user must either apply settings or cancel slicing
     bool is_skippable    = true;
     std::string documentation_url;            // Optional link to material guide
+
+    // Warning-level conditions: gate whether the entire warning is evaluated/shown.
+    // If any condition fields are present, ALL must pass for the warning to show.
+    // If none are present, the warning always evaluates (backward compatible).
+    SettingCondition condition;                       // Single condition
+    std::vector<SettingCondition> conditions_OR;      // At least one must be true (OR logic)
+    std::vector<SettingCondition> conditions_AND;     // All must be true (AND logic)
+    bool has_condition      = false;
+    bool has_conditions_OR  = false;
+    bool has_conditions_AND = false;
 };
 
 // Singleton manager for material warnings

@@ -22,6 +22,103 @@
           "verify": false
         }
       ]
+    },
+    {
+      "material_types": ["*"],
+      "title": "Nozzle Type Check — Brass Required",
+      "message": "Your filament has an HRC hardness value of {required_nozzle_HRC}.\n\nFor filaments with HRC ≤ 2, a BRASS nozzle is required.\n\nPlease verify you have the correct nozzle type installed before printing.",
+      "icon": "info",
+      "classification": "nozzle",
+      "is_skippable": true,
+      "show_every_time": true,
+      "condition": { "key": "required_nozzle_HRC", "operator": "<=", "value": "2", "config_scope": "filament" }
+    },
+    {
+      "material_types": ["*"],
+      "title": "Nozzle Type Check — Stainless Steel Required",
+      "message": "Your filament has an HRC hardness value of {required_nozzle_HRC}.\n\nFor filaments with 2 < HRC ≤ 20, a STAINLESS STEEL nozzle is required.\n\nPlease verify you have the correct nozzle type installed before printing.",
+      "icon": "info",
+      "classification": "nozzle",
+      "is_skippable": true,
+      "show_every_time": true,
+      "conditions_AND": [
+        { "key": "required_nozzle_HRC", "operator": ">", "value": "2", "config_scope": "filament" },
+        { "key": "required_nozzle_HRC", "operator": "<=", "value": "20", "config_scope": "filament" }
+      ]
+    },
+    {
+      "material_types": ["*"],
+      "title": "Nozzle Type Check — Hardened Steel Required",
+      "message": "Your filament has an HRC hardness value of {required_nozzle_HRC}.\n\nFor filaments with 20 < HRC ≤ 55, a HARDENED STEEL nozzle is required.\n\nPlease verify you have the correct nozzle type installed before printing.",
+      "icon": "warning",
+      "classification": "nozzle",
+      "is_skippable": true,
+      "show_every_time": true,
+      "conditions_AND": [
+        { "key": "required_nozzle_HRC", "operator": ">", "value": "20", "config_scope": "filament" },
+        { "key": "required_nozzle_HRC", "operator": "<=", "value": "55", "config_scope": "filament" }
+      ]
+    },
+    {
+      "material_types": ["*"],
+      "title": "Nozzle Type Check — CHT Nozzle Required",
+      "message": "Your filament has an HRC hardness value of {required_nozzle_HRC}.\n\nFor filaments with 55 < HRC ≤ 65, a CHT (high-flow hardened) nozzle is required.\n\nPlease verify you have the correct nozzle type installed before printing.",
+      "icon": "warning",
+      "classification": "nozzle",
+      "is_skippable": true,
+      "show_every_time": true,
+      "conditions_AND": [
+        { "key": "required_nozzle_HRC", "operator": ">", "value": "55", "config_scope": "filament" },
+        { "key": "required_nozzle_HRC", "operator": "<=", "value": "65", "config_scope": "filament" }
+      ]
+    },
+    {
+      "material_types": ["*"],
+      "title": "Nozzle Type Check — Tungsten Carbide Required",
+      "message": "Your filament has an HRC hardness value of {required_nozzle_HRC}.\n\nFor filaments with 65 < HRC ≤ 90, a TUNGSTEN CARBIDE nozzle is required.\n\nPlease verify you have the correct nozzle type installed before printing.",
+      "icon": "error",
+      "classification": "nozzle",
+      "is_skippable": true,
+      "show_every_time": true,
+      "conditions_AND": [
+        { "key": "required_nozzle_HRC", "operator": ">", "value": "65", "config_scope": "filament" },
+        { "key": "required_nozzle_HRC", "operator": "<=", "value": "90", "config_scope": "filament" }
+      ]
+    },
+    {
+      "material_types": ["*"],
+      "title": "Nozzle Type Check — Tungsten Carbide Required (Extreme Hardness)",
+      "message": "Your filament has an HRC hardness value of {required_nozzle_HRC}.\n\nFor filaments with HRC > 90, a TUNGSTEN CARBIDE nozzle is required.\n\nPlease verify you have the correct nozzle type installed before printing.",
+      "icon": "error",
+      "classification": "nozzle",
+      "is_skippable": true,
+      "show_every_time": true,
+      "condition": { "key": "required_nozzle_HRC", "operator": ">", "value": "90", "config_scope": "filament" }
+    },
+    {
+      "material_types": ["*"],
+      "title": "Ironing — Temperature Adjustment Required",
+      "message": "Ironing is enabled for this print.\n\nThe filament temperature will be increased by +20°C to ensure proper surface finish.\n\nCurrent temperature: {nozzle_temperature}°C\nAdjusted temperature: [nozzle_temperature] + 20°C",
+      "icon": "info",
+      "classification": "process",
+      "is_skippable": false,
+      "show_every_time": true,
+      "verify_settings": true,
+      "recommended_settings": [
+        {
+          "key": "nozzle_temperature",
+          "value": "[nozzle_temperature] + 20",
+          "label": "Nozzle temperature (+20°C for ironing)",
+          "verify": true,
+          "config_scope": "filament",
+          "condition": {
+            "key": "ironing_type",
+            "operator": "!=",
+            "value": "no ironing",
+            "config_scope": "print"
+          }
+        }
+      ]
     }
   ]
 }

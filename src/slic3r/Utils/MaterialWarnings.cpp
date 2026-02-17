@@ -120,6 +120,42 @@ bool MaterialWarningManager::load_warnings_config()
                     config.documentation_url = warning_json["documentation_url"].get<std::string>();
                 }
 
+                // Helper to parse a single condition from JSON
+                auto parse_condition = [](const nlohmann::json& cond_json) -> SettingCondition {
+                    SettingCondition cond;
+                    if (cond_json.contains("key") && cond_json["key"].is_string())
+                        cond.key = cond_json["key"].get<std::string>();
+                    if (cond_json.contains("value") && cond_json["value"].is_string())
+                        cond.value = cond_json["value"].get<std::string>();
+                    if (cond_json.contains("operator") && cond_json["operator"].is_string())
+                        cond.op = cond_json["operator"].get<std::string>();
+                    if (cond_json.contains("config_scope") && cond_json["config_scope"].is_string())
+                        cond.config_scope = cond_json["config_scope"].get<std::string>();
+                    return cond;
+                };
+
+                // Parse warning-level conditions (gate whether entire warning shows)
+                if (warning_json.contains("condition") && warning_json["condition"].is_object()) {
+                    config.has_condition = true;
+                    config.condition = parse_condition(warning_json["condition"]);
+                }
+
+                if (warning_json.contains("conditions_OR") && warning_json["conditions_OR"].is_array()) {
+                    config.has_conditions_OR = true;
+                    for (const auto& cond_json : warning_json["conditions_OR"]) {
+                        if (cond_json.is_object())
+                            config.conditions_OR.push_back(parse_condition(cond_json));
+                    }
+                }
+
+                if (warning_json.contains("conditions_AND") && warning_json["conditions_AND"].is_array()) {
+                    config.has_conditions_AND = true;
+                    for (const auto& cond_json : warning_json["conditions_AND"]) {
+                        if (cond_json.is_object())
+                            config.conditions_AND.push_back(parse_condition(cond_json));
+                    }
+                }
+
                 // Parse recommended_settings array (for future auto-apply functionality)
                 if (warning_json.contains("recommended_settings") && warning_json["recommended_settings"].is_array()) {
                     for (const auto& setting_json : warning_json["recommended_settings"]) {
@@ -219,7 +255,7 @@ std::vector<MaterialWarningConfig> MaterialWarningManager::get_warnings_for_mate
                     // Found a match - add this warning if not already added
                     bool already_added = false;
                     for (const auto& existing : matching_warnings) {
-                        if (&existing == &warning) {
+                        if (existing.title == warning.title) {
                             already_added = true;
                             break;
                         }
