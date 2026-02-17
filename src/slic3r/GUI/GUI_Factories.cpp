@@ -26,6 +26,8 @@
 #include "ParamsPanel.hpp"
 #include "MsgDialog.hpp"
 #include "wx/utils.h"
+#include "nlohmann/json.hpp"
+#include <fstream>
 
 namespace Slic3r
 {
@@ -683,62 +685,71 @@ wxMenu* MenuFactory::append_submenu_cosmyx_models(wxMenu* menu, ModelVolumeType 
                 // Apply volume modifiers for Calage 3 SNDT
                 if (apply_calage3_modifiers) {
                     wxGetApp().CallAfter([=] {
-                        // Calage 3 SNDT modifier configuration - exact coordinates from calibration model
-                        const bool ENABLE_AUTO_MODIFIERS = true;
+                        // Load modifier configuration from JSON
+                        boost::filesystem::path config_path =
+                            boost::filesystem::path(Slic3r::resources_dir()) / "calibration" / "calage_3_modifiers.json";
 
-                        if (!ENABLE_AUTO_MODIFIERS) return;
-
-                        // Region 1: 0° infill direction
-                        const Vec3d REGION1_POS(-109.88, -2.74, 0.0);      // Position in mm
-                        const Vec3d REGION1_SIZE(139.68, 58.76, 0.67);     // Size in mm
-                        const Vec3d REGION1_ROT(0.0, 0.0, 90.0);           // Rotation in degrees
-                        const double REGION1_INFILL_DIR = 0.0;
-
-                        // Region 2: 90° infill direction
-                        const Vec3d REGION2_POS(-54.25, 27.48, 0.0);        // Position in mm
-                        const Vec3d REGION2_SIZE(139.68, 58.76, 0.67);     // Size in mm
-                        const Vec3d REGION2_ROT(0.0, 0.0, 0.0);            // Rotation in degrees
-                        const double REGION2_INFILL_DIR = 90.0;
+                        nlohmann::json config;
+                        try {
+                            std::ifstream config_file(config_path.string());
+                            if (!config_file.is_open()) {
+                                BOOST_LOG_TRIVIAL(error) << "Failed to open Calage 3 modifiers config: " << config_path;
+                                return;
+                            }
+                            config_file >> config;
+                        } catch (const std::exception& e) {
+                            BOOST_LOG_TRIVIAL(error) << "Failed to parse Calage 3 modifiers JSON: " << e.what();
+                            return;
+                        }
 
                         // Get the loaded model
                         Model& model = wxGetApp().plater()->model();
                         if (model.objects.empty()) return;
 
-                        ModelObject* obj = model.objects.back(); // Last loaded object
+                        // Apply to the last 3 loaded objects (Calage 3 loads T0 Body, T1x, T1y)
+                        const size_t num_calage3_objects = 3;
+                        size_t start_idx = model.objects.size() >= num_calage3_objects
+                            ? model.objects.size() - num_calage3_objects
+                            : 0;
 
-                        // Remove any existing parameter modifiers (e.g. baked into the .3mf)
-                        obj->volumes.erase(
-                            std::remove_if(obj->volumes.begin(), obj->volumes.end(),
-                                [](const ModelVolume* v) { return v->type() == ModelVolumeType::PARAMETER_MODIFIER; }),
-                            obj->volumes.end()
-                        );
+                        for (size_t i = start_idx; i < model.objects.size(); ++i) {
+                            ModelObject* obj = model.objects[i];
 
-                        // Create modifier 1 (0° region) with exact coordinates
-                        TriangleMesh mesh1 = create_modifier_box(REGION1_SIZE, REGION1_POS, REGION1_ROT);
-                        ModelVolume* mod1 = obj->add_volume(
-                            std::move(mesh1),
-                            ModelVolumeType::PARAMETER_MODIFIER,
-                            false  // Don't center - we positioned it already
-                        );
-                        mod1->name = "Infill 0° Region";
-                        mod1->config.set_key_value("infill_direction", new ConfigOptionFloat(REGION1_INFILL_DIR));
-                        mod1->config.set_key_value("solid_infill_direction", new ConfigOptionFloat(REGION1_INFILL_DIR));
+                            // Remove any existing parameter modifiers (e.g. baked into the .3mf)
+                            obj->volumes.erase(
+                                std::remove_if(obj->volumes.begin(), obj->volumes.end(),
+                                    [](const ModelVolume* v) { return v->type() == ModelVolumeType::PARAMETER_MODIFIER; }),
+                                obj->volumes.end()
+                            );
 
-                        // Create modifier 2 (90° region) with exact coordinates
-                        TriangleMesh mesh2 = create_modifier_box(REGION2_SIZE, REGION2_POS, REGION2_ROT);
-                        ModelVolume* mod2 = obj->add_volume(
-                            std::move(mesh2),
-                            ModelVolumeType::PARAMETER_MODIFIER,
-                            false
-                        );
-                        mod2->name = "Infill 90° Region";
-                        mod2->config.set_key_value("infill_direction", new ConfigOptionFloat(REGION2_INFILL_DIR));
-                        mod2->config.set_key_value("solid_infill_direction", new ConfigOptionFloat(REGION2_INFILL_DIR));
+                            // Create modifiers from JSON config
+                            for (const auto& region : config["regions"]) {
+                                Vec3d pos(region["position"][0], region["position"][1], region["position"][2]);
+                                Vec3d size(region["size"][0], region["size"][1], region["size"][2]);
+                                Vec3d rot(region["rotation"][0], region["rotation"][1], region["rotation"][2]);
 
-                        // Update UI
-                        obj->invalidate_bounding_box();
-                        wxGetApp().plater()->changed_object(*obj);
+                                TriangleMesh mesh = create_modifier_box(size, pos, rot);
+                                ModelVolume* mod = obj->add_volume(
+                                    std::move(mesh),
+                                    ModelVolumeType::PARAMETER_MODIFIER,
+                                    false  // Don't center - we positioned it already
+                                );
+
+                                mod->name = region["name"];
+                                mod->config.set_key_value("infill_direction",
+                                    new ConfigOptionFloat(region["infill_direction"]));
+                                mod->config.set_key_value("solid_infill_direction",
+                                    new ConfigOptionFloat(region["solid_infill_direction"]));
+                            }
+
+                            obj->invalidate_bounding_box();
+                            wxGetApp().plater()->changed_object(*obj);
+                        }
+
+                        // Force UI refresh to show modifiers in object list
+                        wxGetApp().obj_list()->selection_changed();
                         wxGetApp().obj_list()->update_selections();
+                        wxGetApp().plater()->get_view3D_canvas3D()->reload_scene(true);
                         wxGetApp().plater()->update();
                     });
                 }
