@@ -373,7 +373,7 @@ void Preset::normalize(DynamicPrintConfig &config)
                             default_ironing_temp->values[i] : 0;
 
                         // If ironing_temperature is at default value (0 or 200), copy from nozzle_temperature
-                        if (ironing_temp->values[i] == default_value || ironing_temp->values[i] == 0) {
+                        if (ironing_temp->values[i] == default_value || ironing_temp->values[i] == 0 || ironing_temp->values[i] == 200) {
                             ironing_temp->values[i] = nozzle_temp->values[i];
                         }
                     }
