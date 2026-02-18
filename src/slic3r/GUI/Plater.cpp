@@ -7268,8 +7268,40 @@ bool Plater::priv::check_and_show_material_warnings()
         }
     }
 
+    // Also check if support material is enabled and add those extruders
+    DynamicPrintConfig* print_config    = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
+    const ConfigOption* support_enable_opt = print_config->option("support_enable");
+    if (support_enable_opt) {
+        std::string support_enabled = support_enable_opt->serialize();
+        if (support_enabled == "1" || support_enabled == "true") {
+            // Support is enabled - check which extruders are used for support
+            const ConfigOption* support_extruder_opt = print_config->option("support_material_extruder");
+            if (support_extruder_opt) {
+                try {
+                    int support_extruder = std::stoi(support_extruder_opt->serialize());
+                    if (support_extruder > 0) {
+                        used_extruder_ids.insert(support_extruder);
+                        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: support material uses extruder " << support_extruder;
+                    }
+                } catch (...) {}
+            }
+
+            // Check support interface extruder
+            const ConfigOption* support_interface_opt = print_config->option("support_material_interface_extruder");
+            if (support_interface_opt) {
+                try {
+                    int interface_extruder = std::stoi(support_interface_opt->serialize());
+                    if (interface_extruder > 0) {
+                        used_extruder_ids.insert(interface_extruder);
+                        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: support interface uses extruder " << interface_extruder;
+                    }
+                } catch (...) {}
+            }
+        }
+    }
+
     BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: found " << used_extruder_ids.size()
-                            << " extruders in use";
+                            << " extruders in use (including support)";
 
     // Step 2: Collect material types from ONLY the used extruders.
     // Also build material_to_preset_slots so filament-scoped settings can target the
@@ -7326,11 +7358,9 @@ bool Plater::priv::check_and_show_material_warnings()
         return true; // No warnings configured for these materials
     }
 
-    // Get current print config for checking and applying settings
-    DynamicPrintConfig* print_config    = &wxGetApp().preset_bundle->prints.get_edited_preset().config;
-    // Fallback filament config (used for condition evaluation and when no matching preset is found)
+    // Get filament and printer configs for checking and applying settings
+    // (print_config was already declared earlier for support extruder detection)
     DynamicPrintConfig* filament_config = &wxGetApp().preset_bundle->filaments.get_edited_preset().config;
-    // Printer config (for hardware capability checks, e.g. nozzle type, enclosure)
     DynamicPrintConfig* printer_config  = &wxGetApp().preset_bundle->printers.get_edited_preset().config;
 
     // Show dialog for each warning
@@ -7523,12 +7553,18 @@ bool Plater::priv::check_and_show_material_warnings()
         //   is_skippable (default)           → Yes / No   (No = skip, proceed to slicing)
         //   !is_skippable                    → Yes / Cancel (must apply or cancel slicing)
         long button_style;
-        if (warning.recommended_settings.empty())
+        if (warning.recommended_settings.empty()) {
             button_style = wxOK | wxCANCEL;
-        else if (!warning.is_skippable)
+            BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: no recommended settings → OK/Cancel buttons";
+        } else if (!warning.is_skippable) {
             button_style = wxYES | wxCANCEL;
-        else
+            BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: not skippable (is_skippable="
+                                    << warning.is_skippable << ") → Yes/Cancel buttons";
+        } else {
             button_style = wxYES | wxNO;
+            BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: skippable (is_skippable="
+                                    << warning.is_skippable << ") → Yes/No buttons";
+        }
 
         // Resolve {setting_key} placeholders in the message before showing it
         std::string resolved_message = resolve_message_placeholders(
@@ -7543,6 +7579,16 @@ bool Plater::priv::check_and_show_material_warnings()
         );
 
         int result = dialog.ShowModal();
+
+        // Log the result for debugging
+        std::string result_str;
+        if (result == wxID_YES) result_str = "wxID_YES";
+        else if (result == wxID_NO) result_str = "wxID_NO";
+        else if (result == wxID_OK) result_str = "wxID_OK";
+        else if (result == wxID_CANCEL) result_str = "wxID_CANCEL";
+        else result_str = "UNKNOWN(" + std::to_string(result) + ")";
+        BOOST_LOG_TRIVIAL(debug) << "check_and_show_material_warnings: dialog result = " << result_str
+                                << " (is_skippable=" << warning.is_skippable << ")";
 
         // Handle user response
         if (result == wxID_YES && !warning.recommended_settings.empty()) {
