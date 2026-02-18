@@ -32,7 +32,10 @@
     "required_nozzle_HRC": [
         "1"
     ],
-    "compatible_printers": [
+    "filament_type": [
+        "PLN"
+    ],
+     "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",
