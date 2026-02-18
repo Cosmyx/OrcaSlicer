@@ -8,6 +8,9 @@
     "filament_max_volumetric_speed": [
         "2"
     ],
+    "required_nozzle_HRC": [
+        "1"
+    ],
     "compatible_printers": [
         "Cosmyx Nova 0.2 nozzle",
         "Cosmyx X1 0.2 nozzle",
