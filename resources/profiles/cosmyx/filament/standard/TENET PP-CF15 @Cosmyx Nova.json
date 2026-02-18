@@ -5,11 +5,7 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PA6-CF @Cosmyx Nova",
-
-
-
     "setting_id": "TENCF15COS",
-
     "fan_cooling_layer_time": [
         "80"
     ],
@@ -37,9 +33,7 @@
     "cosmyx_textured_bed_temp_initial_layer": [
         "80"
     ],
-
     "is_custom_defined": "0",
-
     "nozzle_temperature": [
         "275"
     ],
@@ -50,6 +44,9 @@
         "0"
     ],
     "version": "1.7.0.18",
+    "required_nozzle_HRC": [
+        "91"
+    ],
     "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",

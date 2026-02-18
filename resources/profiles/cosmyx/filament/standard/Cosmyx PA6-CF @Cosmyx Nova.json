@@ -5,7 +5,10 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PA6-CF @base",
-     "compatible_printers": [
+    "required_nozzle_HRC": [
+        "91"
+    ],
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",

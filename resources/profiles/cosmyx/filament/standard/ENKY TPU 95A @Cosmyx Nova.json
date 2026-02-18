@@ -5,7 +5,6 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "KIMYA TPC 91A @Cosmyx Nova",
-
     "filament_settings_id": [
         "ENKY TPU 95A @Cosmyx Nova"
     ],
@@ -15,16 +14,17 @@
     "filament_vendor": [
         "ENKY"
     ],
-
     "is_custom_defined": "0",
-
     "nozzle_temperature": [
         "210"
     ],
     "nozzle_temperature_initial_layer": [
         "220"
     ],
-     "compatible_printers": [
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",

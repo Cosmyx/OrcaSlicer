@@ -5,7 +5,10 @@
     "from": "system",
     "inherits": "Cosmyx ASA @base",
     "setting_id": "GFSB01_02",
-     "compatible_printers": [
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",
