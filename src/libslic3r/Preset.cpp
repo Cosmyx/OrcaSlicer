@@ -356,17 +356,26 @@ void Preset::normalize(DynamicPrintConfig &config)
                 static_cast<ConfigOptionStrings*>(opt)->values.resize(n, std::string());
         }
 
-        // Initialize ironing_temperature from nozzle_temperature if not set (value is 0)
+        // Initialize ironing_temperature from nozzle_temperature if not explicitly set in preset
         if (config.option("nozzle_temperature") != nullptr &&
             config.option("ironing_temperature") != nullptr) {
             auto* nozzle_temp = dynamic_cast<const ConfigOptionInts*>(config.option("nozzle_temperature"));
             auto* ironing_temp = dynamic_cast<ConfigOptionInts*>(config.option("ironing_temperature"));
 
             if (nozzle_temp != nullptr && ironing_temp != nullptr) {
+                // Get the default value to check against (0 or default from FullPrintConfig)
+                const auto &defaults_config = FullPrintConfig::defaults();
+                auto* default_ironing_temp = dynamic_cast<const ConfigOptionInts*>(defaults_config.option("ironing_temperature"));
+
                 for (size_t i = 0; i < ironing_temp->values.size(); ++i) {
-                    // If ironing_temperature is 0 (not set), copy from nozzle_temperature
-                    if (ironing_temp->values[i] == 0 && i < nozzle_temp->values.size()) {
-                        ironing_temp->values[i] = nozzle_temp->values[i];
+                    if (i < nozzle_temp->values.size()) {
+                        int default_value = (default_ironing_temp != nullptr && i < default_ironing_temp->values.size()) ?
+                            default_ironing_temp->values[i] : 0;
+
+                        // If ironing_temperature is at default value (0 or 200), copy from nozzle_temperature
+                        if (ironing_temp->values[i] == default_value || ironing_temp->values[i] == 0) {
+                            ironing_temp->values[i] = nozzle_temp->values[i];
+                        }
                     }
                 }
             }
