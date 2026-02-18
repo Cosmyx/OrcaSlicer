@@ -5506,8 +5506,7 @@ void PrintConfigDef::init_fff_params()
 
     def = this->add("ironing_temperature", coInts);
     def->label = L("Ironing temperature");
-    def->tooltip = L("Nozzle temperature to use for ironing. Set to 0 to use the current printing temperature. "
-                     "A slightly lower temperature (5-10°C below normal) can improve surface finish.");
+    def->tooltip = L("Sets the extrusion temperature for the ironing pass. If unset in the filament profile, the global printing temperature is used by default.");
     def->sidetext = u8"\u2103" /* °C */;	// degrees Celsius
     def->min = 0;
     def->max = max_temp;

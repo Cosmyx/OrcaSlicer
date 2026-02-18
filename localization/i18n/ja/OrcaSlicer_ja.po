@@ -17770,3 +17770,11 @@ msgstr ""
 #, possible-c-format, possible-boost-format
 msgid "Cosmyx Bundle version %s"
 msgstr ""
+
+msgid "Ironing temperature"
+msgstr "アイロン温度"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "アイロンパスの押出温度を設定します。フィラメントプロファイルで設定されていない場合は、デフォルトでグローバル印刷温度が使用されます。"
