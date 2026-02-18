@@ -5,9 +5,6 @@
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
-
-
-
     "default_filament_colour": [
         "#FF0000"
     ],
@@ -26,18 +23,13 @@
     "filament_vendor": [
         "TECTONIC"
     ],
-
     "hot_plate_temp": [
         "90"
     ],
-
-
     "hot_plate_temp_initial_layer": [
         "90"
     ],
-
     "is_custom_defined": "0",
-
     "nozzle_temperature": [
         "245"
     ],
@@ -48,6 +40,9 @@
         "0.046"
     ],
     "version": "1.7.0.18",
+    "required_nozzle_HRC": [
+        "1"
+    ],
     "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",

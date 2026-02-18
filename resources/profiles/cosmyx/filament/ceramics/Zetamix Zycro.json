@@ -82,8 +82,11 @@
     ],
     "overhang_fan_threshold": [
         "10%"
-    ],    
-     "compatible_printers": [
+    ],
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
         "Cosmyx Nova Metal Ceramique 0.4 nozzle",
         "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle"
     ]

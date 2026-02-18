@@ -29,6 +29,9 @@
     "pressure_advance": [
         "0.04"
     ],
+    "required_nozzle_HRC": [
+        "1"
+    ],
      "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",

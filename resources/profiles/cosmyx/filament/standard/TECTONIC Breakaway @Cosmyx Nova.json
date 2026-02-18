@@ -1,12 +1,10 @@
 {
-
     "type": "filament",
     "filament_id": "MIL07",
     "name": "TECTONIC Breakaway @Cosmyx Nova",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx PLA Basic @Cosmyx Nova",
-
     "default_filament_colour": [
         "#FFFFFF"
     ],
@@ -34,9 +32,7 @@
     "hot_plate_temp_initial_layer": [
         "65"
     ],
-
     "is_custom_defined": "0",
-    
     "nozzle_temperature": [
         "230"
     ],
@@ -47,7 +43,10 @@
         "20"
     ],
     "version": "1.7.0.18",
-     "compatible_printers": [
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",

@@ -13,5 +13,8 @@
     ],
     "filament_vendor": [
         "Cosmyx"
+    ],
+    "required_nozzle_HRC": [
+        "1"
     ]
 }

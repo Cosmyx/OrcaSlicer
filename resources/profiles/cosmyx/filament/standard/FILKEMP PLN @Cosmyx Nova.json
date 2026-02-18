@@ -1,5 +1,4 @@
 {
-
     "type": "filament",
     "filament_id": "MIL05",
     "name": "FILKEMP PLN @Cosmyx Nova",
@@ -9,7 +8,6 @@
     "filament_vendor": [
         "FILKEMP"
     ],
-
     "default_filament_colour": [
         "#808080"
     ],
@@ -28,11 +26,13 @@
     "nozzle_temperature_initial_layer": [
         "215"
     ],
-    "pressure_advance": [ 
+    "pressure_advance": [
         "0.04"
     ],
-   
-     "compatible_printers": [
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
         "Cosmyx SuperNova Double Tete 0.4 nozzle",
         "Cosmyx SuperNova Double Tete 0.2 nozzle",
         "Cosmyx SuperNova Double Tete 0.6 nozzle",
