@@ -356,6 +356,22 @@ void Preset::normalize(DynamicPrintConfig &config)
             if (opt != nullptr && opt->type() == coStrings)
                 static_cast<ConfigOptionStrings*>(opt)->values.resize(n, std::string());
         }
+
+        // Initialize ironing_temperature from nozzle_temperature if not set (value is 0)
+        if (config.option("nozzle_temperature") != nullptr &&
+            config.option("ironing_temperature") != nullptr) {
+            auto* nozzle_temp = dynamic_cast<const ConfigOptionInts*>(config.option("nozzle_temperature"));
+            auto* ironing_temp = dynamic_cast<ConfigOptionInts*>(config.option("ironing_temperature"));
+
+            if (nozzle_temp != nullptr && ironing_temp != nullptr) {
+                for (size_t i = 0; i < ironing_temp->values.size(); ++i) {
+                    // If ironing_temperature is 0 (not set), copy from nozzle_temperature
+                    if (ironing_temp->values[i] == 0 && i < nozzle_temp->values.size()) {
+                        ironing_temp->values[i] = nozzle_temp->values[i];
+                    }
+                }
+            }
+        }
     }
 
     handle_legacy_sla(config);
