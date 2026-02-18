@@ -11641,6 +11641,13 @@ msgid ""
 "uses the default method."
 msgstr ""
 
+msgid "Ironing temperature"
+msgstr ""
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the filament profile, the global printing temperature is used by default."
+msgstr ""
+
 msgid "This G-code is inserted at every layer change after the Z lift."
 msgstr ""
 

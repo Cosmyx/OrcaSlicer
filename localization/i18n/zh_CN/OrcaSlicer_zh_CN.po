@@ -17373,3 +17373,11 @@ msgstr ""
 #~ "填充图案通常被设计为自动处理旋转以确保正确打印并达到预期效果（例如，螺旋"
 #~ "体、立方体）。旋转当前的稀疏填充图案可能导致支撑不足。请谨慎操作并彻底检查"
 #~ "任何潜在的打印问题。您确定要启用此选项吗？"
+
+msgid "Ironing temperature"
+msgstr "熨平温度"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "设置熨平过程的挤出温度。如果在耗材配置中未设置，则默认使用全局打印温度。"

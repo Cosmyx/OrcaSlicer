@@ -20162,3 +20162,11 @@ msgstr ""
 #~ "유효한 값을 입력하십시오:\n"
 #~ "시작 > 10 단계 >= 0\n"
 #~ "끝 > 시작 + 단계)"
+
+msgid "Ironing temperature"
+msgstr "다림질 온도"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "다림질 패스의 압출 온도를 설정합니다. 필라멘트 프로필에서 설정되지 않은 경우 기본적으로 전역 인쇄 온도가 사용됩니다."

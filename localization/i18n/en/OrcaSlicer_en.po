@@ -17204,3 +17204,11 @@ msgstr ""
 #~ "It is not recommend for bed temperature of other layers to be lower than "
 #~ "the first layer by more than this threshold. Too low bed temperature of "
 #~ "other layer may cause the model to break free from the build plate."
+
+msgid "Ironing temperature"
+msgstr "Ironing temperature"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Sets the extrusion temperature for the ironing pass. If unset in the filament profile, the global printing temperature is used by default."
