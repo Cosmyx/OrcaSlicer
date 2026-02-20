@@ -5,7 +5,6 @@ Creates filament configurations for each machine/nozzle combination in Machine/*
 """
 
 import json
-import os
 import re
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -21,15 +20,16 @@ MACHINE_DISPLAY_MAP = {
     'SNV2_DT': 'SuperNova DT',
     'HT': 'Haute Temperature',
     'NOVA_CERAM': 'Nova Metal Ceramique',
-    'SNV2_DT_CERAM': 'SuperNova DT Metal Ceramique'
+    'SNV2_DT_CERAM': 'SuperNova DT Metal Ceramique',
+    'NOVA_CAN_OUT': 'Nova can-out'
 }
 
-STANDARD_MACHINES = ['NOVA', 'SNV2', 'NOVA_DT', 'SNV2_DT', 'HT', 'NOVA_CERAM', 'SNV2_DT_CERAM']
+STANDARD_MACHINES = ['NOVA', 'SNV2', 'NOVA_DT', 'SNV2_DT', 'HT', 'NOVA_CERAM', 'SNV2_DT_CERAM', 'NOVA_CAN_OUT']
 NOZZLE_SIZES = ['0.2', '0.4', '0.6', '0.8']
 VERSION = "01.07.00.18"
 
 BASE_DIR = Path(__file__).parent
-COMMON_FILAMENT_DIR = BASE_DIR / 'Common Filament library' / 'standard'
+COMMON_FILAMENT_DIR = BASE_DIR / 'Common Filament library'
 MACHINE_DIR = BASE_DIR / 'Machine'
 
 
@@ -78,7 +78,7 @@ def scan_common_filaments() -> List[FilamentInfo]:
         print(f"Error: Common filament directory not found: {COMMON_FILAMENT_DIR}")
         return filaments
 
-    for file_path in COMMON_FILAMENT_DIR.glob('*.json'):
+    for file_path in COMMON_FILAMENT_DIR.rglob('*.json'):
         filename = file_path.name
 
         # Filter: must contain @Cosmyx Common
