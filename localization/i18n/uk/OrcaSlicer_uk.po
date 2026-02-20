@@ -13263,10 +13263,10 @@ msgid "All solid layer"
 msgstr "Весь суцільний шар"
 
 msgid "Ironing Pattern"
-msgstr "Шаблон прасування"
+msgstr "Шаблон розгладжування"
 
 msgid "The pattern that will be used when ironing."
-msgstr "Шаблон, який буде використовуватися під час прасування"
+msgstr "Шаблон, який буде використовуватися під час розгладжування"
 
 msgid "Ironing flow"
 msgstr "Плавний потік"
@@ -13286,7 +13286,7 @@ msgid "The distance between the lines of ironing."
 msgstr "Відстань між лініями розглажування"
 
 msgid "Ironing inset"
-msgstr "Вставка прасування"
+msgstr "Вставка розгладжування"
 
 msgid ""
 "The distance to keep from the edges. A value of 0 sets this to half of the "
@@ -13302,7 +13302,7 @@ msgid "Print speed of ironing lines."
 msgstr "Швидкість друку прасувальних ліній"
 
 msgid "Ironing angle"
-msgstr "Кут прасування"
+msgstr "Кут розгладжування"
 
 msgid ""
 "The angle ironing is done at. A negative number disables this function and "
@@ -19386,3 +19386,11 @@ msgstr ""
 #, possible-c-format, possible-boost-format
 msgid "Cosmyx Bundle version %s"
 msgstr ""
+
+msgid "Ironing temperature"
+msgstr "Температура розгладжування"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Встановлює температуру екструзії для проходу розгладжування. Якщо не встановлено в профілі філаменту, за замовчуванням використовується глобальна температура друку."
