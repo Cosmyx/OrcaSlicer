@@ -21,7 +21,8 @@ MACHINE_DISPLAY_MAP = {
     'SNV2_DT': 'SuperNova DT',
     'HT': 'Haute Temperature',
     'NOVA_CERAM': 'Nova Metal Ceramique',
-    'SNV2_DT_CERAM': 'SuperNova DT Metal Ceramique'
+    'SNV2_DT_CERAM': 'SuperNova DT Metal Ceramique',
+    'NOVA_CAN_OUT': 'Cosmyx Nova can-out'
 }
 
 # Machine name patterns in process compatible_printers
