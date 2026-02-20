@@ -39,5 +39,19 @@
     "change_filament_gcode": "\n;filament\n",
     "enable_filament_ramming": "0",
     "layer_change_gcode": "G92 E0.0\n",
-    "purge_in_prime_tower": "0"
+    "purge_in_prime_tower": "0",
+    "z_hop": [
+        "0.4"
+    ],
+    "z_hop_types": [
+        "Slope Lift"
+    ],
+    "retract_lift_above": [
+        "1",
+        "1"
+    ],
+    "retract_lift_below": [
+        "600",
+        "600"
+    ]
 }

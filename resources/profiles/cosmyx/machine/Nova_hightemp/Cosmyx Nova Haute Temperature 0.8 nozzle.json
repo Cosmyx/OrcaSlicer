@@ -9,5 +9,19 @@
     ],
     "printer_model": "Cosmyx Nova Haute Temperature",
     "printer_variant": "0.8",
-    "nozzle_type": "tungsten_carbide"
+    "nozzle_type": "tungsten_carbide",
+    "z_hop": [
+        "0.4"
+    ],
+    "z_hop_types": [
+        "Slope Lift"
+    ],
+    "retract_lift_above": [
+        "1",
+        "1"
+    ],
+    "retract_lift_below": [
+        "600",
+        "600"
+    ]
 }

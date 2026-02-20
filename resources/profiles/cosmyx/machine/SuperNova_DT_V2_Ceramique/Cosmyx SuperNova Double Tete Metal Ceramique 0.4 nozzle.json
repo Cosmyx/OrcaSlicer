@@ -7,7 +7,7 @@
     "nozzle_diameter": [
         "0.4",
         "0.4"
-    ],    
+    ],
     "printable_area": [
         "0x0",
         "300x0",
@@ -62,7 +62,19 @@
         "0x0"
     ],
     "single_extruder_multi_material": "1",
-    "extruders_count": "2"    
-
-
+    "extruders_count": "2",
+    "z_hop": [
+        "0.4"
+    ],
+    "z_hop_types": [
+        "Slope Lift"
+    ],
+    "retract_lift_above": [
+        "1",
+        "1"
+    ],
+    "retract_lift_below": [
+        "600",
+        "600"
+    ]
 }
