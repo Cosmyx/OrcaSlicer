@@ -32,5 +32,19 @@
         "Cosmyx P1S 0.8 nozzle",
         "Cosmyx X1 0.8 nozzle"
     ],
-    "version": "01.07.00.18"
+    "version": "01.07.00.18",
+    "z_hop": [
+        "0.4"
+    ],
+    "z_hop_types": [
+        "Slope Lift"
+    ],
+    "retract_lift_above": [
+        "1",
+        "1"
+    ],
+    "retract_lift_below": [
+        "600",
+        "600"
+    ]
 }
