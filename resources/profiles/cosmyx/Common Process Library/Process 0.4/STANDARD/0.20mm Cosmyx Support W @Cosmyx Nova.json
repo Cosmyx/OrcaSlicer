@@ -15,14 +15,6 @@
     "support_interface_filament": "0",
     "enable_prime_tower": "1",
     "compatible_printers": [
-        "Cosmyx Nova 0.4 nozzle",
-        "Cosmyx Nova 0.4 nozzle can-out",
-        "Cosmyx X1 0.4 nozzle",
-        "Cosmyx SuperNova 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete 0.4 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
-        "Cosmyx Nova Haute Temperature 0.4 nozzle",
-        "Cosmyx Nova Double Tete 0.4 nozzle"
+        "Cosmyx Machines"
     ]
 }

@@ -4,7 +4,7 @@
     "name": "Zetamix Zirconia",
     "from": "system",
     "instantiation": "true",
-    "inherits": "Cosmyx PLA Basic @Cosmyx Nova",
+    "inherits": "Cosmyx PLA Basic @Cosmyx Common",
     "filament_vendor": [
         "Zetamix"
     ],
@@ -81,7 +81,6 @@
         "1"
     ],
     "compatible_printers": [
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle"
+        "Cosmyx Machines"
     ]
 }
