@@ -32,10 +32,11 @@ MACHINE_PRINTER_NAMES = {
     'SNV2_DT': 'Cosmyx SuperNova Double Tete',
     'HT': 'Cosmyx Nova Haute Temperature',
     'NOVA_CERAM': 'Cosmyx Nova Metal Ceramique',
-    'SNV2_DT_CERAM': 'Cosmyx SuperNova Double Tete Metal Ceramique'
+    'SNV2_DT_CERAM': 'Cosmyx SuperNova Double Tete Metal Ceramique',
+    'NOVA_CAN_OUT': 'Cosmyx Nova can-out'
 }
 
-STANDARD_MACHINES = ['NOVA', 'SNV2', 'NOVA_DT', 'SNV2_DT', 'HT', 'NOVA_CERAM', 'SNV2_DT_CERAM']
+STANDARD_MACHINES = ['NOVA', 'SNV2', 'NOVA_DT', 'SNV2_DT', 'HT', 'NOVA_CERAM', 'SNV2_DT_CERAM', 'NOVA_CAN_OUT']
 NOZZLE_SIZES = ['0.2', '0.4', '0.6', '0.8']
 VERSION = "01.07.00.18"
 

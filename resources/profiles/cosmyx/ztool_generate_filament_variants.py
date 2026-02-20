@@ -21,7 +21,7 @@ MACHINE_DISPLAY_MAP = {
     'HT': 'Haute Temperature',
     'NOVA_CERAM': 'Nova Metal Ceramique',
     'SNV2_DT_CERAM': 'SuperNova DT Metal Ceramique',
-    'NOVA_CAN_OUT': 'Nova can-out'
+    'NOVA_CAN_OUT': 'Cosmyx Nova can-out'
 }
 
 STANDARD_MACHINES = ['NOVA', 'SNV2', 'NOVA_DT', 'SNV2_DT', 'HT', 'NOVA_CERAM', 'SNV2_DT_CERAM', 'NOVA_CAN_OUT']
