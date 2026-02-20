@@ -12,6 +12,7 @@ Machine Type:
 4 -> Nova Ceramic
 5 -> Nova High Temp
 6 -> Nova Dual head
+7 -> Nova Can Less
 
 
 MODEL ID : 
@@ -23,3 +24,4 @@ BL-P004 -> Metal Ceramique
 BL-P005 -> High Temp
 BL-P006 -> SuperNova Dual Head v2
 BL-P101 -> High Temp
+BL-P701 -> Nova Can Less

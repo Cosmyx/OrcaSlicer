@@ -14,8 +14,12 @@
     "slow_down_min_speed": [
         "10"
     ],
+    "required_nozzle_HRC": [
+        "1"
+    ],
     "compatible_printers": [
         "Cosmyx Nova 0.8 nozzle",
+        "Cosmyx Nova 0.8 nozzle can-out",
         "Cosmyx X1 0.8 nozzle",
         "Cosmyx P1S 0.8 nozzle",
         "Cosmyx SuperNova 0.8 nozzle",
