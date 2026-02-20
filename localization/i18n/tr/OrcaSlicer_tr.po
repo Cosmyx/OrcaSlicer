@@ -21126,3 +21126,11 @@ msgstr ""
 #~ "Lütfen geçerli değerleri girin:\n"
 #~ "başlangıç > 10 adım >= 0\n"
 #~ "bitiş > başlangıç + adım)"
+
+msgid "Ironing temperature"
+msgstr "Ütüleme sıcaklığı"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Ütüleme geçişi için ekstrüzyon sıcaklığını ayarlar. Filament profilinde ayarlanmamışsa, varsayılan olarak genel yazdırma sıcaklığı kullanılır."

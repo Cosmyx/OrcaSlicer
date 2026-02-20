@@ -19843,3 +19843,11 @@ msgstr ""
 
 #~ msgid "Printer local connection failed, please try again."
 #~ msgstr "Falha na conexão local da impressora, por favor tente novamente."
+
+msgid "Ironing temperature"
+msgstr "Temperatura de passar a ferro"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Define a temperatura de extrusão para a passagem de passar a ferro. Se não for definida no perfil do filamento, a temperatura de impressão global é usada por padrão."

@@ -18239,3 +18239,11 @@ msgstr ""
 
 #~ msgid ", ver: "
 #~ msgstr "，版本"
+
+msgid "Ironing temperature"
+msgstr "熨平溫度"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "設定熨平過程的擠出溫度。如果在耗材設定檔中未設定，則預設使用全域列印溫度。"

@@ -19764,3 +19764,11 @@ msgstr ""
 #, c-format, boost-format
 #~ msgid "Support: propagate branches at layer %d"
 #~ msgstr "Atramos: skleisti šakas sluoksnyje %d"
+
+msgid "Ironing temperature"
+msgstr "Lyginimo temperatūra"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Nustato ekstruzijos temperatūrą lyginimo perėjimui. Jei nenustatyta filamento profilyje, pagal nutylėjimą naudojama bendra spausdinimo temperatūra."

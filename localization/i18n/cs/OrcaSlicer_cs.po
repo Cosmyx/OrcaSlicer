@@ -18988,3 +18988,11 @@ msgstr ""
 #~ "Zadejte prosím platné hodnoty:\n"
 #~ "start > 10 kroků >= 0\n"
 #~ "konec > začátek + krok)"
+
+msgid "Ironing temperature"
+msgstr "Teplota žehlení"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Nastaví teplotu extruze pro průchod žehlení. Pokud není nastavena v profilu filamentu, ve výchozím nastavení se použije globální teplota tisku."

@@ -21721,3 +21721,11 @@ msgstr ""
 #~ "Zusammenführung der Äste und spart viel Material (Standard), während der "
 #~ "Hybridmodus bei großen überhängenden Flächen eine ähnliche Struktur wie "
 #~ "bei normalen Stützstrukturen erzeugt."
+
+msgid "Ironing temperature"
+msgstr "Glättungstemperatur"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Legt die Extrusionstemperatur für den Glättungsdurchgang fest. Wenn sie im Filamentprofil nicht festgelegt ist, wird standardmäßig die globale Drucktemperatur verwendet."
