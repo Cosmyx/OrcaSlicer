@@ -4,7 +4,11 @@
     {"source": "Cosmyx Nova Metal Ceramique", "translation": "Cosmyx Nova Metall Keramik"},
     {"source": "Cosmyx Nova Haute Temperature", "translation": "Cosmyx Nova Hochtemperatur"},
     {"source": "Cosmyx Nova Double Tete", "translation": "Cosmyx Nova Doppelkopf"},
-    {"source": "Cosmyx Nova Non-CAN", "translation": "Cosmyx Nova Nicht-CAN"},
+    {"source": "Cosmyx Nova can-out", "translation": "Cosmyx Nova Nicht-CAN"},
+    {"source": "Cosmyx Nova 0.2 nozzle can-out", "translation": "Cosmyx Nova 0.2 Düse Nicht-CAN"},
+    {"source": "Cosmyx Nova 0.4 nozzle can-out", "translation": "Cosmyx Nova 0.4 Düse Nicht-CAN"},
+    {"source": "Cosmyx Nova 0.6 nozzle can-out", "translation": "Cosmyx Nova 0.6 Düse Nicht-CAN"},
+    {"source": "Cosmyx Nova 0.8 nozzle can-out", "translation": "Cosmyx Nova 0.8 Düse Nicht-CAN"},
 
     {"source": "Cosmyx SuperNova Double Tete 0.2 nozzle", "translation": "Cosmyx SuperNova Doppelkopf 0.2 D\u00fcse"},
     {"source": "Cosmyx SuperNova Double Tete 0.4 nozzle", "translation": "Cosmyx SuperNova Doppelkopf 0.4 D\u00fcse"},

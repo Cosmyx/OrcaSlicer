@@ -4,7 +4,11 @@
     {"source": "Cosmyx Nova Metal Ceramique", "translation": "Cosmyx Nova Fém Kerámia"},
     {"source": "Cosmyx Nova Haute Temperature", "translation": "Cosmyx Nova Magas Hőmérséklet"},
     {"source": "Cosmyx Nova Double Tete", "translation": "Cosmyx Nova Dupla Fej"},
-    {"source": "Cosmyx Nova Non-CAN", "translation": "Cosmyx Nova Non-CAN"},
+    {"source": "Cosmyx Nova can-out", "translation": "Cosmyx Nova Non-CAN"},
+    {"source": "Cosmyx Nova 0.2 nozzle can-out", "translation": "Cosmyx Nova 0.2 fúvóka Non-CAN"},
+    {"source": "Cosmyx Nova 0.4 nozzle can-out", "translation": "Cosmyx Nova 0.4 fúvóka Non-CAN"},
+    {"source": "Cosmyx Nova 0.6 nozzle can-out", "translation": "Cosmyx Nova 0.6 fúvóka Non-CAN"},
+    {"source": "Cosmyx Nova 0.8 nozzle can-out", "translation": "Cosmyx Nova 0.8 fúvóka Non-CAN"},
 
     {"source": "Cosmyx SuperNova Double Tete 0.2 nozzle", "translation": "Cosmyx SuperNova Dupla Fej 0.2 fúvóka"},
     {"source": "Cosmyx SuperNova Double Tete 0.4 nozzle", "translation": "Cosmyx SuperNova Dupla Fej 0.4 fúvóka"},
@@ -93,5 +97,11 @@
     {"source": "0.32mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.32mm Szabványos @Fém és Kerámia 0.8 fúvóka"},
     {"source": "0.48mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.48mm Szabványos @Fém és Kerámia 0.8 fúvóka"},
     {"source": "0.56mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.56mm Szabványos @Fém és Kerámia 0.8 fúvóka"},
-    {"source": "0.40mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.40mm Szabványos @Fém és Kerámia 0.8 fúvóka"}
+    {"source": "0.40mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.40mm Szabványos @Fém és Kerámia 0.8 fúvóka"},
+
+    {"source": "CAPIFIL PLA BLANC @Cosmyx Nova", "translation": "CAPIFIL PLA FEHÉR @Cosmyx Nova"},
+    {"source": "CAPIFIL PLA BLEU @Cosmyx Nova", "translation": "CAPIFIL PLA KÉK @Cosmyx Nova"},
+    {"source": "CAPIFIL PLA NOIR @Cosmyx Nova", "translation": "CAPIFIL PLA FEKETE @Cosmyx Nova"},
+    {"source": "TECTONIC CPE JAUNE @Cosmyx Nova", "translation": "TECTONIC CPE SÁRGA @Cosmyx Nova"},
+    {"source": "TECTONIC CPE ROUGE @Cosmyx Nova", "translation": "TECTONIC CPE PIROS @Cosmyx Nova"}
 ]
