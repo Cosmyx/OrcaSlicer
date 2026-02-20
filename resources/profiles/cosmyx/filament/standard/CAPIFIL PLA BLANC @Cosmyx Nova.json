@@ -1,0 +1,41 @@
+{
+    "type": "filament",
+    "filament_id": "MIL01",
+    "name": "CAPIFIL PLA BLANC @Cosmyx Nova",
+    "from": "system",
+    "instantiation": "true",
+    "inherits": "Cosmyx PLA Basic @Cosmyx Nova",
+    "filament_vendor": [
+        "CAPIFIL"
+    ],
+    "default_filament_colour": [
+        "#FFFFFF"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "cosmyx_textured_bed_temp": [
+        "65"
+    ],
+    "cosmyx_textured_bed_temp_initial_layer": [
+        "65"
+    ],
+    "nozzle_temperature": [
+        "215"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "220"
+    ],
+    "pressure_advance": [
+        "0.04"
+    ],
+    "filament_max_volumetric_speed": [
+        "13"
+    ],
+    "compatible_printers": [
+        "Cosmyx SuperNova Double Tete 0.4 nozzle",
+        "Cosmyx SuperNova Double Tete 0.2 nozzle",
+        "Cosmyx SuperNova Double Tete 0.6 nozzle",
+        "Cosmyx SuperNova Double Tete 0.8 nozzle"
+    ]
+}

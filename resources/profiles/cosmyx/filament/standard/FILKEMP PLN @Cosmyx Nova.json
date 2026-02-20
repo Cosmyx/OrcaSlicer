@@ -1,0 +1,43 @@
+{
+    "type": "filament",
+    "setting_id": "FKPPLNCOS",
+    "instantiation": "true",
+    "filament_type": [
+        "PLN"
+    ],
+    "default_filament_colour": [
+        "#004080"
+    ],
+    "filament_max_volumetric_speed": [
+        "17"
+    ],
+    "filament_settings_id": [
+        "FILKEMP PLN @Cosmyx Nova"
+    ],
+    "filament_vendor": [
+        "FILKEMP"
+    ],
+    "from": "User",
+    "cosmyx_textured_bed_temp": [
+        "65"
+    ],
+    "cosmyx_textured_bed_temp_initial_layer": [
+        "65"
+    ],
+    "inherits": "Cosmyx PLA Basic @Cosmyx Nova",
+    "is_custom_defined": "0",
+    "name": "FILKEMP PLN @Cosmyx Nova",
+    "nozzle_temperature": [
+        "216"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "216"
+    ],
+    "nozzle_temperature_range_high": [
+        "250"
+    ],
+    "version": "1.7.0.18",
+    "compatible_printers": [
+        "Cosmyx SuperNova Double Tete 0.4 nozzle"
+    ]
+}

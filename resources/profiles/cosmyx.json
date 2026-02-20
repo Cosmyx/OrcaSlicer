@@ -1,0 +1,194 @@
+{
+    "name": "Cosmyx",
+    "url": "http://www.cosmyx.com/Parameters/vendor/Cosmyx.json",
+    "version": "01.07.00.18",
+    "force_update": "0",
+    "description": "the initial version of Cosmyx configurations",
+    "machine_model_list": [
+        {
+            "name": "Cosmyx SuperNova Double Tete",
+            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete.json"
+        }
+    ],
+    "process_list": [
+        {
+            "name": "fdm_process_common",
+            "sub_path": "process/global/fdm_process_common.json"
+        },
+        {
+            "name": "fdm_process_cosmyx_common",
+            "sub_path": "process/global/fdm_process_cosmyx_common.json"
+        },
+        {
+            "name": "fdm_process_cosmyx_0.12",
+            "sub_path": "process/global/fdm_process_cosmyx_0.12.json"
+        },
+        {
+            "name": "fdm_process_cosmyx_0.16",
+            "sub_path": "process/global/fdm_process_cosmyx_0.16.json"
+        },
+        {
+            "name": "fdm_process_cosmyx_0.20",
+            "sub_path": "process/global/fdm_process_cosmyx_0.20.json"
+        },
+        {
+            "name": "0.12mm Fine @Cosmyx Nova",
+            "sub_path": "process/global/0.12mm Fine @Cosmyx Nova.json"
+        },
+        {
+            "name": "0.16mm Optimal @Cosmyx Nova",
+            "sub_path": "process/global/0.16mm Optimal @Cosmyx Nova.json"
+        },
+        {
+            "name": "0.20mm Strength @Cosmyx Nova",
+            "sub_path": "process/global/0.20mm Strength @Cosmyx Nova.json"
+        }
+    ],
+    "filament_list": [
+{
+            "name": "fdm_filament_common",
+            "sub_path": "filament/standard/fdm_filament_common.json"
+        },
+        {
+            "name": "fdm_filament_asa",
+            "sub_path": "filament/standard/fdm_filament_asa.json"
+        },
+        {
+            "name": "fdm_filament_pa",
+            "sub_path": "filament/standard/fdm_filament_pa.json"
+        },
+        {
+            "name": "fdm_filament_pet",
+            "sub_path": "filament/standard/fdm_filament_pet.json"
+        },
+        {
+            "name": "fdm_filament_pla",
+            "sub_path": "filament/standard/fdm_filament_pla.json"
+        },
+        {
+            "name": "fdm_filament_tpu",
+            "sub_path": "filament/standard/fdm_filament_tpu.json"
+        },
+        {
+            "name": "Cosmyx PLA Basic @base",
+            "sub_path": "filament/standard/Cosmyx PLA Basic @base.json"
+        },
+        {
+            "name": "Cosmyx PLA Basic @Cosmyx Nova",
+            "sub_path": "filament/standard/Cosmyx PLA Basic @Cosmyx Nova.json"
+        },
+        {
+            "name": "Cosmyx TPU 95A @base",
+            "sub_path": "filament/standard/Cosmyx TPU 95A @base.json"
+        },
+        {
+            "name": "Cosmyx TPU 95A @Cosmyx Nova",
+            "sub_path": "filament/standard/Cosmyx TPU 95A @Cosmyx Nova.json"
+        },
+        {
+            "name": "Cosmyx ASA @base",
+            "sub_path": "filament/standard/Cosmyx ASA @base.json"
+        },
+        {
+            "name": "Cosmyx ASA @Cosmyx Nova 0.4 nozzle",
+            "sub_path": "filament/standard/Cosmyx ASA @Cosmyx Nova 0.4 nozzle.json"
+        },
+        {
+            "name": "Cosmyx PA6-CF @base",
+            "sub_path": "filament/standard/Cosmyx PA6-CF @base.json"
+        },
+        {
+            "name": "Cosmyx PA6-CF @Cosmyx Nova",
+            "sub_path": "filament/standard/Cosmyx PA6-CF @Cosmyx Nova.json"
+        },
+        {
+            "name": "Cosmyx PETG Basic @base",
+            "sub_path": "filament/standard/Cosmyx PETG Basic @base.json"
+        },
+        {
+            "name": "Cosmyx PETG Basic @Cosmyx Nova",
+            "sub_path": "filament/standard/Cosmyx PETG Basic @Cosmyx Nova.json"
+        },
+        {
+            "name": "KIMYA TPC 91A @Cosmyx Nova",
+            "sub_path": "filament/standard/KIMYA TPC 91A @Cosmyx Nova.json"
+        },
+        {
+            "name": "FILKEMP PLN @Cosmyx Nova",
+            "sub_path": "filament/standard/FILKEMP PLN @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "CAPIFIL PLA BLANC @Cosmyx Nova",
+            "sub_path": "filament/standard/CAPIFIL PLA BLANC @Cosmyx Nova.json"
+        },
+        {
+            "name": "CAPIFIL PLA BLEU @Cosmyx Nova",
+            "sub_path": "filament/standard/CAPIFIL PLA BLEU @Cosmyx Nova.json"
+        },
+        {
+            "name": "CAPIFIL PLA NOIR @Cosmyx Nova",
+            "sub_path": "filament/standard/CAPIFIL PLA NOIR @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "ENKY TPU 95A @Cosmyx Nova",
+            "sub_path": "filament/standard/ENKY TPU 95A @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle",
+            "sub_path": "filament/standard/TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle.json"
+        },
+
+        {
+            "name": "TECTONIC Breakaway @Cosmyx Nova",
+            "sub_path": "filament/standard/TECTONIC Breakaway @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "TECTONIC CPE JAUNE @Cosmyx Nova",
+            "sub_path": "filament/standard/Tectonic CPE JAUNE @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "TECTONIC CPE ROUGE @Cosmyx Nova",
+            "sub_path": "filament/standard/Tectonic CPE ROUGE @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "TECTONIC PP-CF15 @Cosmyx Nova",
+            "sub_path": "filament/standard/TECTONIC PP-CF15 @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "ENKY PETG CF @Cosmyx Nova",
+            "sub_path": "filament/standard/ENKY PETG CF @Cosmyx Nova.json"
+        },
+
+        {
+            "name": "FORMFUTURA PVA @Cosmyx Nova",
+            "sub_path": "filament/standard/FORMFUTURA PVA @Cosmyx Nova.json"
+        },
+        
+        {
+            "name": "TENET PP-CF15 @Cosmyx Nova",
+            "sub_path": "filament/standard/TENET PP-CF15 @Cosmyx Nova.json"
+        } 
+
+    ],
+    "machine_list": [
+        {
+            "name": "fdm_machine_common",
+            "sub_path": "machine/fdm_machine_common.json"
+        },
+        {
+            "name": "fdm_cosmyx_3dp_001_common",
+            "sub_path": "machine/Nova/fdm_cosmyx_3dp_001_common.json"
+        },
+        {
+            "name": "Cosmyx SuperNova Double Tete 0.4 nozzle",
+            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete 0.4 nozzle.json"
+        }
+    ]
+}
