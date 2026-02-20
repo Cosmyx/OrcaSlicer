@@ -4,7 +4,11 @@
     {"source": "Cosmyx Nova Metal Ceramique", "translation": "Cosmyx Nova Metal Ceramiczny"},
     {"source": "Cosmyx Nova Haute Temperature", "translation": "Cosmyx Nova Wysoka Temperatura"},
     {"source": "Cosmyx Nova Double Tete", "translation": "Cosmyx Nova Podwójna Głowica"},
-    {"source": "Cosmyx Nova Non-CAN", "translation": "Cosmyx Nova Bez CAN"},
+    {"source": "Cosmyx Nova can-out", "translation": "Cosmyx Nova Bez CAN"},
+    {"source": "Cosmyx Nova 0.2 nozzle can-out", "translation": "Cosmyx Nova 0.2 dysza Bez CAN"},
+    {"source": "Cosmyx Nova 0.4 nozzle can-out", "translation": "Cosmyx Nova 0.4 dysza Bez CAN"},
+    {"source": "Cosmyx Nova 0.6 nozzle can-out", "translation": "Cosmyx Nova 0.6 dysza Bez CAN"},
+    {"source": "Cosmyx Nova 0.8 nozzle can-out", "translation": "Cosmyx Nova 0.8 dysza Bez CAN"},
 
     {"source": "Cosmyx SuperNova Double Tete 0.2 nozzle", "translation": "Cosmyx SuperNova Podwójna Głowica 0.2 dysza"},
     {"source": "Cosmyx SuperNova Double Tete 0.4 nozzle", "translation": "Cosmyx SuperNova Podwójna Głowica 0.4 dysza"},
@@ -93,5 +97,11 @@
     {"source": "0.32mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.32mm Standardowy @Metal i Ceramika 0.8 dysza"},
     {"source": "0.48mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.48mm Standardowy @Metal i Ceramika 0.8 dysza"},
     {"source": "0.56mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.56mm Standardowy @Metal i Ceramika 0.8 dysza"},
-    {"source": "0.40mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.40mm Standardowy @Metal i Ceramika 0.8 dysza"}
+    {"source": "0.40mm Standard @Metal and Ceramics 0.8 nozzle", "translation": "0.40mm Standardowy @Metal i Ceramika 0.8 dysza"},
+
+    {"source": "CAPIFIL PLA BLANC @Cosmyx Nova", "translation": "CAPIFIL PLA BIAŁY @Cosmyx Nova"},
+    {"source": "CAPIFIL PLA BLEU @Cosmyx Nova", "translation": "CAPIFIL PLA NIEBIESKI @Cosmyx Nova"},
+    {"source": "CAPIFIL PLA NOIR @Cosmyx Nova", "translation": "CAPIFIL PLA CZARNY @Cosmyx Nova"},
+    {"source": "TECTONIC CPE JAUNE @Cosmyx Nova", "translation": "TECTONIC CPE ŻÓŁTY @Cosmyx Nova"},
+    {"source": "TECTONIC CPE ROUGE @Cosmyx Nova", "translation": "TECTONIC CPE CZERWONY @Cosmyx Nova"}
 ]

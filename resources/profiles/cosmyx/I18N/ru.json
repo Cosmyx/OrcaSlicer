@@ -4,7 +4,11 @@
     {"source": "Cosmyx Nova Metal Ceramique", "translation": "Cosmyx Nova Металл Керамика"},
     {"source": "Cosmyx Nova Haute Temperature", "translation": "Cosmyx Nova Высокая температура"},
     {"source": "Cosmyx Nova Double Tete", "translation": "Cosmyx Nova Двойная головка"},
-    {"source": "Cosmyx Nova Non-CAN", "translation": "Cosmyx Nova Без CAN"},
+    {"source": "Cosmyx Nova can-out", "translation": "Cosmyx Nova Без CAN"},
+    {"source": "Cosmyx Nova 0.2 nozzle can-out", "translation": "Cosmyx Nova 0.2 сопло Без CAN"},
+    {"source": "Cosmyx Nova 0.4 nozzle can-out", "translation": "Cosmyx Nova 0.4 сопло Без CAN"},
+    {"source": "Cosmyx Nova 0.6 nozzle can-out", "translation": "Cosmyx Nova 0.6 сопло Без CAN"},
+    {"source": "Cosmyx Nova 0.8 nozzle can-out", "translation": "Cosmyx Nova 0.8 сопло Без CAN"},
 
     {"source": "Cosmyx SuperNova Double Tete 0.2 nozzle", "translation": "Cosmyx SuperNova Двойная головка 0.2 сопло"},
     {"source": "Cosmyx SuperNova Double Tete 0.4 nozzle", "translation": "Cosmyx SuperNova Двойная головка 0.4 сопло"},
