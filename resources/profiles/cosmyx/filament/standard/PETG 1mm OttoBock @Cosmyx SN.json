@@ -260,7 +260,7 @@
     "temperature_vitrification": [
         "70"
     ],
-    "version": "0.0.0.0",
+    "version": "01.07.00.18",
     "compatible_printers": [
         "Cosmyx SuperNova 1.0 nozzle",
         "Cosmyx SuperNova Double Tete 1.0 nozzle"
