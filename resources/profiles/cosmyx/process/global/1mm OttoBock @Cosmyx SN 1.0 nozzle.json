@@ -46,6 +46,7 @@
     "version": "1.7.0.18",
     "wall_loops": "5",
     "compatible_printers": [
-        "Cosmyx SuperNova 0.8 nozzle"
+        "Cosmyx SuperNova 0.8 nozzle",
+         "Cosmyx SuperNova Double Tete 1.0 nozzle"
     ]
 }

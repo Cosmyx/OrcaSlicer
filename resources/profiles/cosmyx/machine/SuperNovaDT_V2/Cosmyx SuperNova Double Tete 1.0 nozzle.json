@@ -17,9 +17,9 @@
     "gcode_flavor": "klipper",
     "default_bed_type": "7",
     "default_filament_profile": [
-        "Cosmyx PLA Basic @Cosmyx Nova 1.0 nozzle"
+        "PETG 1mm OttoBock @Cosmyx SN"
     ],
-    "default_print_profile": "0.40mm Standard @Cosmyx Nova 0.8 nozzle",
+    "default_print_profile": "1mm OttoBock @Cosmyx SN 1.0 nozzle",
     "printable_area": [
         "0x0",
         "300x0",
