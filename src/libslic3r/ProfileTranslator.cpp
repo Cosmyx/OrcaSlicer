@@ -61,7 +61,20 @@ bool ProfileTranslator::try_load_file(const std::string& filepath)
                 std::string src = entry["source"].get<std::string>();
                 std::string trl = entry["translation"].get<std::string>();
                 if (!src.empty() && !trl.empty()) {
-                    m_reverse_translations[trl] = src;
+                    // Also register alias-based mapping for filament-style names ("X @Machine" -> "X' @Machine'").
+                    // Filament presets have their @machine suffix stripped when the alias is set, so
+                    // Preset::label(false) looks up just "X" rather than the full "X @Machine" key.
+                    size_t at_src = src.find('@');
+                    size_t at_trl = trl.find('@');
+                    if (at_src != std::string::npos && at_trl != std::string::npos) {
+                        std::string src_alias = src.substr(0, at_src);
+                        std::string trl_alias = trl.substr(0, at_trl);
+                        while (!src_alias.empty() && src_alias.back() == ' ') src_alias.pop_back();
+                        while (!trl_alias.empty() && trl_alias.back() == ' ') trl_alias.pop_back();
+                        if (!src_alias.empty() && !trl_alias.empty() &&
+                            m_translations.find(src_alias) == m_translations.end())
+                            m_translations[src_alias] = trl_alias;
+                    }
                     m_translations[std::move(src)] = std::move(trl);
                 }
             }
