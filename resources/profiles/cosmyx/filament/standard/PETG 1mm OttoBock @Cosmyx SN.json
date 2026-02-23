@@ -1,4 +1,8 @@
 {
+    "type": "filament",
+    "setting_id": "GFSG00_OB01",
+    "from": "system",
+    "instantiation": "true",
     "activate_air_filtration": [
         "0"
     ],
@@ -200,7 +204,7 @@
     "idle_temperature": [
         "0"
     ],
-    "inherits": "Cosmyx PETG Basic @Cosmyx Nova 0.8 nozzle",
+    "inherits": "Cosmyx PETG Basic @Cosmyx Nova",
     "internal_bridge_fan_speed": [
         "-1"
     ],
@@ -258,7 +262,7 @@
     ],
     "version": "0.0.0.0",
     "compatible_printers": [
-        "Cosmyx SuperNova 0.8 nozzle",
-         "Cosmyx SuperNova Double Tete 1.0 nozzle"
+        "Cosmyx SuperNova 1.0 nozzle",
+        "Cosmyx SuperNova Double Tete 1.0 nozzle"
     ]
 }
