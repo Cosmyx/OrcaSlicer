@@ -7472,12 +7472,13 @@ void Plater::priv::start_next_export_gcode()
     // Switch to this plate so the background process has the correct plate context
     q->select_plate(m_cur_export_plate);
 
-    // Evaluate filename_format (e.g. {input_filename_base}_{filament_type}_{print_time})
-    // then suffix _plate{N} before the extension → {filename_format}_plate{plate_number}.gcode
+    // Expose {plate_count} to the filename_format placeholder parser
+    if (background_process.fff_print())
+        background_process.fff_print()->set_plate_count(partplate_list.get_plate_count());
+
+    // Let filename_format resolve naturally — users can use {plate_number} / {plate_count}
     fs::path project_path = m_export_all_dir / (std::string(m_project_name.mb_str(wxConvUTF8)) + ".3mf");
-    fs::path base_path    = fs::path(background_process.output_filepath_for_project(project_path));
-    fs::path output_path  = base_path.parent_path() /
-        (base_path.stem().string() + "_plate" + std::to_string(m_cur_export_plate + 1) + base_path.extension().string());
+    fs::path output_path  = fs::path(background_process.output_filepath_for_project(project_path));
 
     last_output_path = output_path.string();
     last_output_dir_path = m_export_all_dir.string();
