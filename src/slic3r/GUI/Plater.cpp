@@ -7469,20 +7469,16 @@ void Plater::priv::start_next_export_gcode()
         return;
     }
 
-    // Build output filename for this plate
-    PartPlate* plate = partplate_list.get_plate(m_cur_export_plate);
-    std::string plate_suffix;
-    std::string plate_name = plate->get_plate_name();
-    if (!plate_name.empty())
-        plate_suffix = "_" + plate_name;
-    else
-        plate_suffix = "_plate_" + std::to_string(m_cur_export_plate + 1);
-
-    std::string filename = std::string(m_project_name.mb_str(wxConvUTF8)) + plate_suffix + ".gcode";
-    fs::path output_path = m_export_all_dir / filename;
-
-    // Switch to this plate and trigger export via existing infrastructure
+    // Switch to this plate so the background process has the correct plate context
     q->select_plate(m_cur_export_plate);
+
+    // Evaluate filename_format (e.g. {input_filename_base}_{filament_type}_{print_time})
+    // then suffix _plate{N} before the extension → {filename_format}_plate{plate_number}.gcode
+    fs::path project_path = m_export_all_dir / (std::string(m_project_name.mb_str(wxConvUTF8)) + ".3mf");
+    fs::path base_path    = fs::path(background_process.output_filepath_for_project(project_path));
+    fs::path output_path  = base_path.parent_path() /
+        (base_path.stem().string() + "_plate" + std::to_string(m_cur_export_plate + 1) + base_path.extension().string());
+
     last_output_path = output_path.string();
     last_output_dir_path = m_export_all_dir.string();
     exporting_status = ExportingStatus::EXPORTING_TO_LOCAL;
