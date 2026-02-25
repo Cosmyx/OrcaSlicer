@@ -11749,6 +11749,8 @@ void Plater::export_gcode(bool prefer_removable)
         unsigned int state = this->p->update_restart_background_process(false, false);
         if (state & priv::UPDATE_BACKGROUND_PROCESS_INVALID)
             return;
+        if (this->p->background_process.fff_print())
+            this->p->background_process.fff_print()->set_plate_count(this->p->partplate_list.get_plate_count());
         default_output_file = this->p->background_process.output_filepath_for_project("");
     } catch (const Slic3r::PlaceholderParserError &ex) {
         // Show the error with monospaced font.
