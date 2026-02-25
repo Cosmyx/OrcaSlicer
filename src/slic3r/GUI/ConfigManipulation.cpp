@@ -794,11 +794,18 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     bool have_avoid_crossing_perimeters = config->opt_bool("reduce_crossing_wall");
     toggle_line("max_travel_detour_distance", have_avoid_crossing_perimeters);
 
-    bool has_overhang_speed = config->opt_bool("enable_overhang_speed");
+    const auto* overhang_speed_opt = config->option<ConfigOptionBool>("enable_overhang_speed");
+    bool has_overhang_speed = overhang_speed_opt && overhang_speed_opt->value;
     for (auto el : {"overhang_1_4_speed", "overhang_2_4_speed", "overhang_3_4_speed", "overhang_4_4_speed"})
         toggle_line(el, has_overhang_speed);
 
     toggle_line("slowdown_for_curled_perimeters", has_overhang_speed);
+
+    const auto* height_slowdown_opt = config->option<ConfigOptionBool>("enable_height_slowdown");
+    bool has_height_slowdown = height_slowdown_opt && height_slowdown_opt->value;
+    for (auto el : {"slowdown_start_height", "slowdown_start_speed", "slowdown_start_acc",
+                    "slowdown_end_height",   "slowdown_end_speed",   "slowdown_end_acc"})
+        toggle_line(el, has_height_slowdown);
 
     toggle_line("flush_into_objects", !is_global_config);
 
@@ -816,7 +823,8 @@ void ConfigManipulation::toggle_print_fff_options(DynamicPrintConfig *config, co
     toggle_field("detect_thin_wall", !have_arachne);
 
     // Orca
-    auto is_role_based_wipe_speed = config->opt_bool("role_based_wipe_speed");
+    const auto* role_wipe_opt = config->option<ConfigOptionBool>("role_based_wipe_speed");
+    bool is_role_based_wipe_speed = role_wipe_opt && role_wipe_opt->value;
     toggle_field("wipe_speed",!is_role_based_wipe_speed);
 
     for (auto el : {"accel_to_decel_enable", "accel_to_decel_factor"})
