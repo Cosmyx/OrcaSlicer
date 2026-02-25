@@ -30,7 +30,7 @@
     "interface_shells": "0",
     "detect_overhang_wall": "0",
     "reduce_infill_retraction": "0",
-    "filename_format": "{input_filename_base}.gcode",
+    "filename_format": "{if plate_count == 1}{input_filename_base}-{filament_type[0]}{if filament_type[1] != \"\"}-{filament_type[1]}{endif}-{print_time}.gcode{else}{input_filename_base}-Plate_{plate_number}-{filament_type[0]}{if filament_type[1] != \"\"}-{filament_type[1]}{endif}-{print_time}.gcode{endif}",
     "wall_loops": "2",
     "inner_wall_line_width": "0.41",
     "inner_wall_speed": "40",
