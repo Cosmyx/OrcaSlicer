@@ -52,16 +52,16 @@
         "1"
     ],
     "enable_pressure_advance": [
-        "0"
+        "1"
     ],
     "fan_cooling_layer_time": [
         "30"
     ],
     "fan_max_speed": [
-        "60"
+        "20"
     ],
     "fan_min_speed": [
-        "20"
+        "10"
     ],
     "filament_cooling_final_speed": [
         "3.4"
@@ -103,7 +103,7 @@
         "nil"
     ],
     "filament_max_volumetric_speed": [
-        "18"
+        "30"
     ],
     "filament_minimal_purge_on_wipe_tower": [
         "15"
@@ -216,10 +216,10 @@
     ],
     "name": "PETG 1mm OttoBock @Cosmyx SN",
     "nozzle_temperature": [
-        "240"
+        "260"
     ],
     "nozzle_temperature_initial_layer": [
-        "245"
+        "275"
     ],
     "nozzle_temperature_range_high": [
         "270"
@@ -237,7 +237,7 @@
         "0.4157"
     ],
     "pressure_advance": [
-        "0.02"
+        "0.035"
     ],
     "reduce_fan_stop_start_freq": [
         "1"
@@ -246,13 +246,13 @@
         "3"
     ],
     "slow_down_for_layer_cooling": [
-        "1"
+        "0"
     ],
     "slow_down_layer_time": [
         "8"
     ],
     "slow_down_min_speed": [
-        "10"
+        "30"
     ],
     "support_material_interface_fan_speed": [
         "-1"

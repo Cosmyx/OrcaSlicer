@@ -45,7 +45,8 @@
     "extruder_clearance_height_to_rod": "9.8",
     "extruder_clearance_height_to_lid": "240",
     "max_layer_height": [
-        "0.56"
+        "0.75",
+        "0.75"
     ],
     "min_layer_height": [
         "0.16"
@@ -72,8 +73,8 @@
         "400"
     ],
     "machine_max_speed_e": [
-        "30",
-        "30"
+        "50",
+        "50"
     ],
     "machine_max_speed_x": [
         "500"
@@ -121,13 +122,16 @@
         "3"
     ],
     "retraction_speed": [
-        "30"
+        "50",
+        "50"
     ],
     "deretraction_speed": [
-        "30"
+        "50",
+        "50"
     ],
     "retract_restart_extra": [
-        "0"
+        "1",
+        "1"
     ],
     "retract_restart_extra_toolchange": [
         "0"
@@ -139,12 +143,12 @@
         "Slope Lift"
     ],
     "retract_lift_above": [
-        "1",
-        "1"
+        "3",
+        "3"
     ],
     "retract_lift_below": [
-        "600",
-        "600"
+        "0",
+        "0"
     ],
     "wipe": [
         "1"
