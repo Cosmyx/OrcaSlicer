@@ -912,6 +912,7 @@ void EditDevNameDialog::on_edit_name(wxCommandEvent &e)
     auto     m_valid_type = Valid;
     wxString info_line;
     auto     new_dev_name = m_textCtr->GetTextCtrl()->GetValue();
+    new_dev_name.Trim(true); // Auto-trim trailing spaces
 
     const char *      unusable_symbols = "<>[]:/\\|?*\"";
     const std::string unusable_suffix  = PresetCollection::get_suffix_modified();
@@ -936,11 +937,6 @@ void EditDevNameDialog::on_edit_name(wxCommandEvent &e)
 
     if (m_valid_type == Valid && new_dev_name.find_first_of(' ') == 0) {
         info_line    = _L("The name is not allowed to start with space character.");
-        m_valid_type = NoValid;
-    }
-
-    if (m_valid_type == Valid && new_dev_name.find_last_of(' ') == new_dev_name.length() - 1) {
-        info_line    = _L("The name is not allowed to end with space character.");
         m_valid_type = NoValid;
     }
 
