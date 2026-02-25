@@ -122,6 +122,7 @@ void SendToPrinterDialog::on_rename_enter()
         }
     }
     new_file_name = temp;
+    new_file_name.Trim(true); // Auto-trim trailing spaces
 
     auto     m_valid_type = Valid;
     wxString info_line;
@@ -149,11 +150,6 @@ void SendToPrinterDialog::on_rename_enter()
 
     if (m_valid_type == Valid && new_file_name.find_first_of(' ') == 0) {
         info_line = _L("The name is not allowed to start with space character.");
-        m_valid_type = NoValid;
-    }
-
-    if (m_valid_type == Valid && new_file_name.find_last_of(' ') == new_file_name.length() - 1) {
-        info_line = _L("The name is not allowed to end with space character.");
         m_valid_type = NoValid;
     }
 

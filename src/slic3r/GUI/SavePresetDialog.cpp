@@ -127,6 +127,10 @@ void SavePresetDialog::Item::update()
 {
     m_preset_name = into_u8(m_input_ctrl->GetTextCtrl()->GetValue());
 
+    // Auto-trim trailing spaces
+    while (!m_preset_name.empty() && m_preset_name.back() == ' ')
+        m_preset_name.pop_back();
+
     m_valid_type = Valid;
     wxString info_line;
 
@@ -174,11 +178,6 @@ void SavePresetDialog::Item::update()
 
     if (m_valid_type == Valid && m_preset_name.find_first_of(' ') == 0) {
         info_line    = _L("The name is not allowed to start with space character.");
-        m_valid_type = NoValid;
-    }
-
-    if (m_valid_type == Valid && m_preset_name.find_last_of(' ') == m_preset_name.length() - 1) {
-        info_line    = _L("The name is not allowed to end with space character.");
         m_valid_type = NoValid;
     }
 
