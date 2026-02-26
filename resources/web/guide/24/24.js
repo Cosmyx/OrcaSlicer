@@ -1,13 +1,14 @@
 function OnInit()
 {
-	//let strInput=JSON.stringify(cData);
-	//HandleStudio(strInput);
-	
+	$("#vendorFilterBtn").on("click", function(){
+		$("#VendorFilterList").slideToggle(300);
+		$(this).find(".CArrow").toggleClass("active");
+	});
+
 	TranslatePage();
-	
+
 	RequestProfile();
 }
-
 
 
 function RequestProfile()
@@ -15,25 +16,14 @@ function RequestProfile()
 	var tSend={};
 	tSend['sequence_id']=Math.round(new Date() / 1000);
 	tSend['command']="request_userguide_profile";
-	
+
 	SendWXMessage( JSON.stringify(tSend) );
 }
 
 function HandleStudio( pVal )
 {
-//	alert(strInput);
-//	alert(JSON.stringify(strInput));
-//	
-//	let pVal=IsJson(strInput);
-//	if(pVal==null)
-//	{
-//		alert("Msg Format Error is not Json");
-//		return;
-//	}
-	
 	let strCmd=pVal['command'];
-	//alert(strCmd);
-	
+
 	if(strCmd=='response_userguide_profile')
 	{
 		HandleModelList(pVal['response']);
@@ -52,27 +42,27 @@ function HandleModelList( pVal )
 		return;
 
     pModel=pVal['model'];
-	
+
 	let nTotal=pModel.length;
 	let ModelHtml={};
 	for(let n=0;n<nTotal;n++)
 	{
 		let OneModel=pModel[n];
-		
+
 		let strVendor=OneModel['vendor'];
-		
-		//Add Vendor Html Node
+
+		//Add Vendor section in PrinterGrid
 		if($(".OneVendorBlock[vendor='"+strVendor+"']").length==0)
 		{
 			let sVV=strVendor;
 			if( sVV=="BBL" )
-				sVV="Bambu Lab";			
+				sVV="Bambu Lab";
 			if( sVV=="Custom")
 				sVV="Custom Printer";
 			if( sVV=="Other")
 				sVV="Orca colosseum";
 
-			let HtmlNewVendor='<div class="OneVendorBlock" Vendor="'+strVendor+'">'+
+			let HtmlNewVendor='<div class="OneVendorBlock" vendor="'+strVendor+'">'+
 '<div class="BlockBanner">'+
 '	<div class="BannerBtns">'+
 '		<div class="SmallBtn_Green trans" tid="t11" onClick="SelectPrinterAll('+"\'"+strVendor+"\'"+')">all</div>'+
@@ -80,43 +70,47 @@ function HandleModelList( pVal )
 '	</div>'+
 '	<a>'+sVV+'</a>'+
 '</div>'+
-'<div class="PrinterArea">	'+
+'<div class="PrinterArea">'+
 '</div>'+
 '</div>';
-			
-			$('#Content').append(HtmlNewVendor);
+
+			$('#PrinterGrid').append(HtmlNewVendor);
+
+			// Add corresponding vendor checkbox to left filter panel
+			let HtmlVendorFilter='<div class="checkboxText"><input class="inputIndent" type="checkbox" vendorfilter="'+strVendor+'" onChange="VendorFilterClick()" />'+sVV+'</div>';
+			$('#VendorFilterList').append(HtmlVendorFilter);
 		}
-		
-		let ModelName=OneModel['model'];
-		
-		//Collect Html Node Nozzel Html
+
+		//Collect Html Node Nozzle Html
 		if( !ModelHtml.hasOwnProperty(strVendor))
 			ModelHtml[strVendor]='';
-			
+
 		let NozzleArray=OneModel['nozzle_diameter'].split(';');
 		let HtmlNozzel='';
 		for(let m=0;m<NozzleArray.length;m++)
 		{
 			let nNozzel=NozzleArray[m];
-			/* ORCA use label tag to allow checkbox to toggle when user ckicked to text */
 			HtmlNozzel += '<label class="pNozzel TextS2"><input type="checkbox" model="' + OneModel['model'] + '" nozzel="' + nNozzel + '" vendor="' + strVendor +'" onclick="CheckBoxOnclick(this)" /><span>'+nNozzel+'</span><span class="trans" tid="t13">mm nozzle</span></label>';
 		}
-		
+
 		let CoverImage=OneModel['cover'];
 		ModelHtml[strVendor]+='<div class="PrinterBlock">'+
 '	<div class="PImg"><img src="'+CoverImage+'"  /></div>'+
 '    <div class="PName">'+OneModel['name']+'</div>'+ HtmlNozzel +'</div>';
 	}
-	
-	//Update Nozzel Html Append
+
+	//Update Nozzle Html Append
 	for( let key in ModelHtml )
 	{
 		$(".OneVendorBlock[vendor='"+key+"'] .PrinterArea").append( ModelHtml[key] );
 	}
-	
-	
-	//Update Checkbox
-	$('input').prop("checked", false);
+
+	// Check all vendors in left filter
+	$('#VendorFilterList input').prop("checked", true);
+	$('#VendorAll').prop("checked", true);
+
+	//Update Checkbox state
+	$('input[type=checkbox][model]').prop("checked", false);
 	for(let m=0;m<nTotal;m++)
 	{
 		let OneModel=pModel[m];
@@ -139,27 +133,54 @@ function HandleModelList( pVal )
 		{
 			$("input[vendor='"+OneModel['vendor']+"'][model='"+OneModel['model']+"']").prop("checked", false);
 		}
-	}	
+	}
 
-	// let AlreadySelect=$("input:checked");
-	// let nSelect=AlreadySelect.length;
-	// if(nSelect==0)
-	// {
-	// 	$("input[nozzel='0.4'][vendor='Custom']").prop("checked", true);
-	// }
-	
 	TranslatePage();
 }
 
+function ChooseAllVendor()
+{
+	let bCheck=$('#VendorAll').prop("checked");
+	$("#VendorFilterList input").prop("checked", bCheck);
+
+	$(".OneVendorBlock").each(function(){
+		if(bCheck)
+			$(this).show();
+		else
+			$(this).hide();
+	});
+}
+
+function VendorFilterClick()
+{
+	// Sync "all" checkbox
+	let nChecked=$("#VendorFilterList input:not(#VendorAll):checked").length;
+	let nAll    =$("#VendorFilterList input:not(#VendorAll)").length;
+
+	if(nAll==nChecked)
+		$('#VendorAll').prop("checked",true);
+	else
+		$('#VendorAll').prop("checked",false);
+
+	// Show/hide vendor sections
+	let pVendor=$("#VendorFilterList input:not(#VendorAll)");
+	for(let n=0;n<pVendor.length;n++)
+	{
+		let oneV=pVendor[n];
+		let vName=oneV.getAttribute("vendorfilter");
+		if(oneV.checked)
+			$(".OneVendorBlock[vendor='"+vName+"']").show();
+		else
+			$(".OneVendorBlock[vendor='"+vName+"']").hide();
+	}
+}
+
 function CheckBoxOnclick(obj) {
-
 	let strModel = obj.getAttribute("model");
-
 	let strVendor = obj.getAttribute("vendor");
 	let strNozzel = obj.getAttribute("nozzel");
 
 	SetModelSelect(strVendor, strModel, strNozzel, obj.checked);
-
 }
 
 function SetModelSelect(vendor, model, nozzel, checked) {
@@ -203,23 +224,17 @@ function GetModelSelect(vendor, model, nozzel) {
 function FilterModelList(keyword) {
 
 	//Save checkbox state
-	let ModelSelect = $('input[type=checkbox]');
+	let ModelSelect = $('input[type=checkbox][model]');
 	for (let n = 0; n < ModelSelect.length; n++) {
 		let OneItem = ModelSelect[n];
-
-		let strModel = OneItem.getAttribute("model");
-
-		let strVendor = OneItem.getAttribute("vendor");
-		let strNozzel = OneItem.getAttribute("nozzel");
-
-		SetModelSelect(strVendor, strModel, strNozzel, OneItem.checked);
+		SetModelSelect(OneItem.getAttribute("vendor"), OneItem.getAttribute("model"), OneItem.getAttribute("nozzel"), OneItem.checked);
 	}
 
 	let nTotal = pModel.length;
 	let ModelHtml = {};
 	let kwSplit = keyword.toLowerCase().match(/\S+/g) || [];
 
-	$('#Content').empty();
+	$('#PrinterGrid').empty();
 	for (let n = 0; n < nTotal; n++) {
 		let OneModel = pModel[n];
 
@@ -232,14 +247,11 @@ function FilterModelList(keyword) {
 		//Add Vendor Html Node
 		if ($(".OneVendorBlock[vendor='" + strVendor + "']").length == 0) {
 			let sVV = strVendor;
-			if (sVV == "BBL")
-				sVV = "Bambu Lab";
-			if (sVV == "Custom")
-				sVV = "Custom Printer";
-			if (sVV == "Other")
-				sVV = "Orca colosseum";
+			if (sVV == "BBL") sVV = "Bambu Lab";
+			if (sVV == "Custom") sVV = "Custom Printer";
+			if (sVV == "Other") sVV = "Orca colosseum";
 
-			let HtmlNewVendor = '<div class="OneVendorBlock" Vendor="' + strVendor + '">' +
+			let HtmlNewVendor = '<div class="OneVendorBlock" vendor="' + strVendor + '">' +
 				'<div class="BlockBanner">' +
 				'	<div class="BannerBtns">' +
 				'		<div class="SmallBtn_Green trans" tid="t11" onClick="SelectPrinterAll(' + "\'" + strVendor + "\'" + ')">all</div>' +
@@ -247,14 +259,12 @@ function FilterModelList(keyword) {
 				'	</div>' +
 				'	<a>' + sVV + '</a>' +
 				'</div>' +
-				'<div class="PrinterArea">	' +
-				'</div>' +
+				'<div class="PrinterArea"></div>' +
 				'</div>';
 
-			$('#Content').append(HtmlNewVendor);
+			$('#PrinterGrid').append(HtmlNewVendor);
 		}
 
-		//Collect Html Node Nozzel Html
 		if (!ModelHtml.hasOwnProperty(strVendor))
 			ModelHtml[strVendor] = '';
 
@@ -262,7 +272,6 @@ function FilterModelList(keyword) {
 		let HtmlNozzel = '';
 		for (let m = 0; m < NozzleArray.length; m++) {
 			let nNozzel = NozzleArray[m];
-			/* ORCA use label tag to allow checkbox to toggle when user ckicked to text */
 			HtmlNozzel += '<label class="pNozzel TextS2"><input type="checkbox" model="' + OneModel['model'] + '" nozzel="' + nNozzel + '" vendor="' + strVendor + '" onclick="CheckBoxOnclick(this)" /><span>' + nNozzel + '</span><span class="trans" tid="t13">mm nozzle</span></label>';
 		}
 
@@ -272,81 +281,74 @@ function FilterModelList(keyword) {
 			'    <div class="PName">' + OneModel['name'] + '</div>' + HtmlNozzel + '</div>';
 	}
 
-	//Update Nozzel Html Append
+	//Update Nozzle Html Append
 	for (let key in ModelHtml) {
-		let obj = $(".OneVendorBlock[vendor='" + key + "'] .PrinterArea");
-		obj.empty();
-		obj.append(ModelHtml[key]);
+		$(".OneVendorBlock[vendor='" + key + "'] .PrinterArea").append(ModelHtml[key]);
 	}
 
+	// Re-apply vendor filter visibility
+	let pVendor=$("#VendorFilterList input:not(#VendorAll)");
+	for(let n=0;n<pVendor.length;n++)
+	{
+		let oneV=pVendor[n];
+		let vName=oneV.getAttribute("vendorfilter");
+		if(!oneV.checked)
+			$(".OneVendorBlock[vendor='"+vName+"']").hide();
+	}
 
-	//Update Checkbox
-	ModelSelect = $('input[type=checkbox]');
+	//Restore Checkbox state
+	ModelSelect = $('input[type=checkbox][model]');
 	for (let n = 0; n < ModelSelect.length; n++) {
 		let OneItem = ModelSelect[n];
-
-		let strModel = OneItem.getAttribute("model");
-		let strVendor = OneItem.getAttribute("vendor");
-		let strNozzel = OneItem.getAttribute("nozzel");
-
-		let checked = GetModelSelect(strVendor, strModel, strNozzel);
-
-		OneItem.checked = checked;
+		OneItem.checked = GetModelSelect(OneItem.getAttribute("vendor"), OneItem.getAttribute("model"), OneItem.getAttribute("nozzel"));
 	}
-
-	// let AlreadySelect=$("input:checked");
-	// let nSelect=AlreadySelect.length;
-	// if(nSelect==0)
-	// {
-	// 	$("input[nozzel='0.4'][vendor='Custom']").prop("checked", true);
-	// }
 
 	TranslatePage();
 }
 
 function SelectPrinterAll( sVendor )
 {
-	$("input[vendor='"+sVendor+"']").prop("checked", true);
-	$("input[vendor='"+sVendor+"']").each(function() {
+	$("input[vendor='"+sVendor+"'][model]").prop("checked", true);
+	$("input[vendor='"+sVendor+"'][model]").each(function() {
 		CheckBoxOnclick(this);
 	});
 }
 
-
 function SelectPrinterNone( sVendor )
 {
-	$("input[vendor='"+sVendor+"']").prop("checked", false);
-	$("input[vendor='"+sVendor+"']").each(function() {
+	$("input[vendor='"+sVendor+"'][model]").prop("checked", false);
+	$("input[vendor='"+sVendor+"'][model]").each(function() {
 		CheckBoxOnclick(this);
 	});
 }
 
 function OnExitFilter() {
-
 	let nTotal = 0;
 	let ModelAll = {};
-	for (vendor in ModelNozzleSelected) {
-		for (model in ModelNozzleSelected[vendor]) {
-			for (nozzel in ModelNozzleSelected[vendor][model]) {
+
+	for (let vendor in ModelNozzleSelected) {
+		for (let model in ModelNozzleSelected[vendor]) {
+			for (let nozzel in ModelNozzleSelected[vendor][model]) {
 				if (!ModelNozzleSelected[vendor][model][nozzel])
 					continue;
 
 				if (!ModelAll.hasOwnProperty(model)) {
-					//alert("ADD: "+strModel);
-
 					ModelAll[model] = {};
-
 					ModelAll[model]["model"] = model;
 					ModelAll[model]["nozzle_diameter"] = '';
 					ModelAll[model]["vendor"] = vendor;
 				}
 
 				ModelAll[model]["nozzle_diameter"] += ModelAll[model]["nozzle_diameter"] == '' ? nozzel : ';' + nozzel;
-
 				nTotal++;
 			}
-
 		}
+	}
+
+	if(nTotal == 0)
+	{
+		ShowNotice(1);
+		return 0;
 	}
 
 	var tSend = {};
@@ -357,58 +359,7 @@ function OnExitFilter() {
 	SendWXMessage(JSON.stringify(tSend));
 
 	return nTotal;
-
 }
-
-//
-function OnExit()
-{	
-	let ModelAll={};
-	
-	let ModelSelect=$("input:checked");
-	let nTotal=ModelSelect.length;
-
-	if( nTotal==0 )
-	{
-		ShowNotice(1);
-		
-		return 0;
-	}
-	
-	for(let n=0;n<nTotal;n++)
-	{
-	    let OneItem=ModelSelect[n];
-		
-		let strModel=OneItem.getAttribute("model");
-		let strVendor=OneItem.getAttribute("vendor");
-		let strNozzel=OneItem.getAttribute("nozzel");
-			
-		//alert(strModel+strVendor+strNozzel);
-		
-		if(!ModelAll.hasOwnProperty(strModel))
-		{
-			//alert("ADD: "+strModel);
-			
-			ModelAll[strModel]={};
-		
-			ModelAll[strModel]["model"]=strModel;
-			ModelAll[strModel]["nozzle_diameter"]='';
-			ModelAll[strModel]["vendor"]=strVendor;
-		}
-		
-		ModelAll[strModel]["nozzle_diameter"]+=ModelAll[strModel]["nozzle_diameter"]==''?strNozzel:';'+strNozzel;
-	}
-		
-	var tSend={};
-	tSend['sequence_id']=Math.round(new Date() / 1000);
-	tSend['command']="save_userguide_models";
-	tSend['data']=ModelAll;
-	
-	SendWXMessage( JSON.stringify(tSend) );
-
-    return nTotal;
-}
-
 
 function ShowNotice( nShow )
 {
@@ -430,15 +381,14 @@ function CancelSelect()
 	tSend['sequence_id']=Math.round(new Date() / 1000);
 	tSend['command']="user_guide_cancel";
 	tSend['data']={};
-		
-	SendWXMessage( JSON.stringify(tSend) );			
-}
 
+	SendWXMessage( JSON.stringify(tSend) );
+}
 
 function ConfirmSelect()
 {
 	let nChoose=OnExitFilter();
-	
+
 	if(nChoose>0)
     {
 		var tSend={};
@@ -446,11 +396,7 @@ function ConfirmSelect()
 		tSend['command']="user_guide_finish";
 		tSend['data']={};
 		tSend['data']['action']="finish";
-		
-		SendWXMessage( JSON.stringify(tSend) );			
+
+		SendWXMessage( JSON.stringify(tSend) );
 	}
 }
-
-
-
-

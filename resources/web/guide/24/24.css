@@ -1,203 +1,237 @@
-#Content
-{
-	overflow-y:auto;
-	padding: 32px; /* ORCA Specify & Reduce horizontal paddings to fit 4 items per row */
+/* Two-column layout */
+#Content {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 }
 
-.BlockBanner
-{
-	padding: 0px;
-	border-bottom:#009688 1px solid;
-	width: 100%;
+#leftBlock {
+  flex: 0 0 220px;
+  padding-left: 9px;
+  padding-right: 9px;
+  border-right: 1px solid #EEEEEE;
+  overflow-y: auto;
 }
 
-
-.BannerBtns
-{
-	float: right;
-	display: flex;
-	white-space: nowrap;
-	justify-content: space-around;
-	align-items: center;
-	height: 40px;
-	text-align: center;
-	margin-right: 0px; /* ORCA align buttons with end of horizontal separator/line */
+#rightBlock {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.BannerBtns>.SmallBtn_Green.trans{
-	margin-right: 7px; /* ORCA adds a small gap between buttons */
+/* Accordion styles (matching guide/22) */
+.CNameBlock {
+  font-weight: 700;
+  height: 28px;
 }
 
-/*.Banner-Btn
-{
-	background-color: #C0C0C0;
-	color: #000;
-	padding: 0px 6px;
-	min-width: 50px;
-	border-radius: 4px;
-	height: 32px;
-	line-height: 32px;
-	cursor: pointer;
+.inlineAlign {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
 }
 
-.Banner-Btn-green
-{
-	background-color: #009688;
-	color: #fff;
-	padding: 0px 6px;
-	min-width: 50px;
-	border-radius: 8px;
-	height: 32px;
-	line-height: 32px;
-	cursor: pointer;
-}*/
-
-.BlockBanner  a
-{
-	display: inline-block;
-	background-color:#009688;
-	line-height: 40px;
-	height: 40px;
-	padding: 0px 24px;
-	color: #fff;
+.CNameIcon {
+  width: 16px;
+  height: 16px;
 }
 
-.PrinterArea
-{
-	padding: 10px 0px; /* ORCA Reduce horizontal paddings to fit 4 items per row */
-	display: flex;
-	flex-wrap: wrap;
+.CArrow {
+  width: 20px;
+  height: 20px;
+  background-image: url(../img/pull.svg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  float: right;
+  transition: transform 0.3s ease;
+  transform: rotate(90deg);
+}
+.CArrow.active {
+  transform: rotate(0deg);
 }
 
-.PrinterBlock
-{
-	width: 160px;
-	text-align: center;
-	padding: 10px;
+.CValues {
+  padding: 8px;
+  background-color: #F8F8F8;
 }
 
-.PrinterBlock img
-{
-	width:160px;
-	height: 160px;
+.checkboxText {
+  width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  line-height: 28px;
 }
 
-.PName
-{
-	font-weight: 700;
-	text-align:left;
+.checkboxText input {
+  margin-right: 8px;
+  vertical-align: middle;
+  width: 16px;
+  height: 16px;
 }
 
-.pNozzel
-{
-	display: flex;
-	align-items: center;
-	justify-content:flex-start;
-	color: #5A5A5A;	
-	padding-left: 0px; /* ORCA Align checkboxes with with model text */
-}
+.inputIndent { margin-left: 8px; }
 
-.pNozzel input
-{
-	vertical-align: middle;
-	margin-right: 5px;
-}
-
-
-/*-----Notice-----*/
-#NoticeMask
-{
-	background-color: #000;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-	opacity: 0.05;
-	display: none;
-}
-
-#NoticeBody
-{
-	display: none;
-	width: 400px;
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 4px;
-	background-color: inherit;	
-	position: absolute;
-	left: 50%;
-	top: 200px;
-	margin-left: -200px;
-}
-
-#NoticeBar
-{
-	background-color:#00f0d8;
-	height: 40px;
-	line-height: 40px;
-	color: #fff;
-	text-align: center;
-}
-
-#NoticeContent
-{
-	padding: 4mm 10mm;	
-}
-
-
-#NoticeBtns
-{
-	margin-top: 4mm;
-	display: flex;
-	justify-content:space-around;
+/* Search bar */
+.wrap {
+  padding: 8px 15px 5px 15px;
+  flex-shrink: 0;
 }
 
 .search {
-	width: 100%;
-	position: relative;
-	display: flex;
+  width: 100%;
+  position: relative;
+  display: flex;
 }
-  
+
 .searchTerm {
-	width: 100%;
-	border: 1px solid #DBDBDB; /* ORCA Searchbox > match border style */
-	/*border-right: none;*/
-	padding: 5px;
-	padding-left:32px;
-	height: 20px;      /* ORCA match height */
-	line-height: 20px; /* ORCA center text vertically */
-	border-radius: 5px 5px 5px 5px;
-	outline: none;
-	color: #9DBFAF;
+  width: 100%;
+  border: 1px solid #DBDBDB;
+  padding: 5px;
+  padding-left: 32px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 5px;
+  outline: none;
+  color: #9DBFAF;
 }
-@media (prefers-color-scheme: dark) {  /* ORCA Searchbox > add dark mode support */
-	.searchTerm {border: 1px solid #4A4A51;}
-}
-
-.searchTerm:focus{
-	color: #363636;       /* ORCA Searchbox > use normal text color */
-	border-color:#009688; /* ORCA Searchbox > highlight border color when focused. like on normal UI */
-}
-@media (prefers-color-scheme: dark) {  /* ORCA Searchbox > add dark mode support */
-	.searchTerm:focus{color: #FFFFFF}
+@media (prefers-color-scheme: dark) {
+  .searchTerm { border: 1px solid #4A4A51; }
 }
 
-#search-icon{ /* ORCA */
-	position:absolute;
-    top: 50%;
-    transform: translateY(-50%);
-	left:8px;
-	margin:0px auto;
-	fill:#7C8282
+.searchTerm:focus {
+  color: #363636;
+  border-color: #00AE42;
 }
-@media (prefers-color-scheme: dark) { /* ORCA Searchbox > add dark mode support */
-	#search-icon{fill:#949494}
+@media (prefers-color-scheme: dark) {
+  .searchTerm:focus { color: #FFFFFF; }
 }
 
-/*Resize the wrap to see the search bar change!*/
-.wrap{
-	width: 30%;
-	padding-bottom: 5px;
-	padding-left: 32px; /* ORCA Align with content */
+#search-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 8px;
+  margin: 0px auto;
+  fill: #7C8282;
+}
+@media (prefers-color-scheme: dark) {
+  #search-icon { fill: #949494; }
+}
+
+/* Printer grid */
+#PrinterGrid {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 15px 8px 15px;
+}
+
+/* Vendor sections */
+.BlockBanner {
+  padding: 0px;
+  border-bottom: #00AE42 1px solid;
+  width: 100%;
+}
+
+.BannerBtns {
+  float: right;
+  display: flex;
+  white-space: nowrap;
+  justify-content: space-around;
+  align-items: center;
+  height: 40px;
+  text-align: center;
+}
+
+.BannerBtns > .SmallBtn_Green.trans {
+  margin-right: 7px;
+}
+
+.BlockBanner a {
+  display: inline-block;
+  background-color: #00AE42;
+  line-height: 40px;
+  height: 40px;
+  padding: 0px 24px;
+  color: #fff;
+}
+
+.PrinterArea {
+  padding: 10px 0px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.PrinterBlock {
+  width: 160px;
+  text-align: center;
+  padding: 10px;
+}
+
+.PrinterBlock img {
+  width: 160px;
+  height: 160px;
+}
+
+.PName {
+  font-weight: 700;
+  text-align: left;
+}
+
+.pNozzel {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #5A5A5A;
+}
+
+.pNozzel input {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+/* Notice */
+#NoticeMask {
+  background-color: #000;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  opacity: 0.05;
+  display: none;
+}
+
+#NoticeBody {
+  display: none;
+  width: 400px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  background-color: inherit;
+  position: absolute;
+  left: 50%;
+  top: 200px;
+  margin-left: -200px;
+}
+
+#NoticeBar {
+  background-color: #00B35C;
+  height: 40px;
+  line-height: 40px;
+  color: #fff;
+  text-align: center;
+}
+
+#NoticeContent {
+  padding: 4mm 10mm;
+}
+
+#NoticeBtns {
+  margin-top: 4mm;
+  display: flex;
+  justify-content: space-around;
 }
