@@ -10,5 +10,5 @@
     "bed_texture": "SuperNova-bed_texture.png",
     "hotend_model": "cosmyx-3dp-hotend.stl",
     "default_bed_type": "7",
-    	"default_materials": "PETG 1mm OttoBock"
+    "default_materials": "PETG Enky Translucide"
 }
