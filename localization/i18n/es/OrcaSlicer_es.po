@@ -22321,3 +22321,7 @@ msgstr ""
 
 #~ msgid "preparing, export 3mf failed!"
 #~ msgstr "Preparando; ¡Error al exportar 3MF!"
+
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Bundle version %s"
+msgstr ""

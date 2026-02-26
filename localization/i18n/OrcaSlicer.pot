@@ -2805,6 +2805,10 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Bundle version %s"
+msgstr ""
+
 msgid "AMS Materials Setting"
 msgstr ""
 

@@ -20200,3 +20200,7 @@ msgstr ""
 
 #~ msgid "End end: "
 #~ msgstr "Final: "
+
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Bundle version %s"
+msgstr ""
