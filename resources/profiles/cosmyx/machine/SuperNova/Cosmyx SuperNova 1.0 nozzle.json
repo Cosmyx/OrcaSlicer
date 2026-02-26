@@ -5,8 +5,8 @@
     "from": "system",
     "instantiation": "true",
     "version": "01.07.00.18",
+    "printer_settings_id": "SN_1MM_OTO",
     "printer_technology": "FFF",
-    "printer_settings_id": "",
     "printer_model": "Cosmyx SuperNova",
     "printer_variant": "1.0",
     "nozzle_diameter": [
@@ -18,9 +18,9 @@
     "gcode_flavor": "klipper",
     "default_bed_type": "7",
     "default_filament_profile": [
-        "PETG 1mm OttoBock @Cosmyx SN"
+        "PETG Enky Translucide @Cosmyx SN"
     ],
-    "default_print_profile": "1mm OttoBock @Cosmyx SN 1.0 nozzle",
+    "default_print_profile": "1mm OttoBock 1.0 nozzle",
     "printable_area": [
         "0x0",
         "300x0",
@@ -152,11 +152,6 @@
     ],
     "wipe": [
         "1"
-    ],
-    "upward_compatible_machine": [
-        "Cosmyx P1P 0.8 nozzle",
-        "Cosmyx P1S 0.8 nozzle",
-        "Cosmyx X1 0.8 nozzle"
     ],
     "change_filament_gcode": "PAUSE",
     "layer_change_gcode": "G92 E0.0",

@@ -4,8 +4,9 @@
     "name": "Cosmyx SuperNova Double Tete 1.0 nozzle",
     "from": "system",
     "instantiation": "true",
+    "version": "01.07.00.18",
+    "printer_settings_id": "SNDTV2_1MM_OTO",
     "printer_technology": "FFF",
-    "printer_settings_id": "",
     "printer_model": "Cosmyx SuperNova Double Tete",
     "printer_variant": "1.0",
     "nozzle_diameter": [
@@ -17,9 +18,9 @@
     "gcode_flavor": "klipper",
     "default_bed_type": "7",
     "default_filament_profile": [
-        "PETG 1mm OttoBock @Cosmyx SN"
+        "PETG Enky Translucide @Cosmyx SN"
     ],
-    "default_print_profile": "1mm OttoBock @Cosmyx SN 1.0 nozzle",
+    "default_print_profile": "1mm OttoBock 1.0 nozzle",
     "printable_area": [
         "0x0",
         "300x0",

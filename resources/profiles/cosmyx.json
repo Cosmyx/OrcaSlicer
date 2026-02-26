@@ -28,8 +28,8 @@
             "sub_path": "process/global/fdm_process_cosmyx_0.56_nozzle_0.8.json"
         },
         {
-            "name": "1mm OttoBock @Cosmyx SN 1.0 nozzle",
-            "sub_path": "process/global/1mm OttoBock @Cosmyx SN 1.0 nozzle.json"
+            "name": "1mm OttoBock 1.0 nozzle",
+            "sub_path": "process/global/1mm OttoBock 1.0 nozzle.json"
         }
 
     ],
@@ -51,8 +51,8 @@
             "sub_path": "filament/standard/Cosmyx PETG Basic @Cosmyx Nova.json"
         },
         {
-            "name": "PETG 1mm OttoBock @Cosmyx SN",
-            "sub_path": "filament/standard/PETG 1mm OttoBock @Cosmyx SN.json"
+            "name": "PETG Enky Translucide @Cosmyx SN",
+            "sub_path": "filament/standard/PETG Enky Translucide @Cosmyx SN.json"
         }
     ],
     "machine_list": [
@@ -65,12 +65,12 @@
             "sub_path": "machine/Nova/fdm_cosmyx_3dp_001_common.json"
         },
         {
-            "name": "Cosmyx SuperNova Double Tete 1.0 nozzle",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete 1.0 nozzle.json"
-        },
-        {
             "name": "Cosmyx SuperNova 1.0 nozzle",
             "sub_path": "machine/SuperNova/Cosmyx SuperNova 1.0 nozzle.json"
+        },
+        {
+            "name": "Cosmyx SuperNova Double Tete 1.0 nozzle",
+            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete 1.0 nozzle.json"
         }
     ]
 }
