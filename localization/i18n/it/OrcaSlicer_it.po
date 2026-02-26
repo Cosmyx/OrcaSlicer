@@ -21066,3 +21066,11 @@ msgstr ""
 #, possible-c-format, possible-boost-format
 msgid "Cosmyx Bundle version %s"
 msgstr ""
+
+msgid "Ironing temperature"
+msgstr "Temperatura di stiratura"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Imposta la temperatura di estrusione per il passaggio di stiratura. Se non impostata nel profilo del filamento, viene utilizzata per impostazione predefinita la temperatura di stampa globale."

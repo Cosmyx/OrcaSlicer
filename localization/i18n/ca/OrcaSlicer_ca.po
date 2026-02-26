@@ -20239,3 +20239,11 @@ msgstr ""
 #, possible-c-format, possible-boost-format
 msgid "Cosmyx Bundle version %s"
 msgstr ""
+
+msgid "Ironing temperature"
+msgstr "Temperatura de planxat"
+
+msgid ""
+"Sets the extrusion temperature for the ironing pass. If unset in the "
+"filament profile, the global printing temperature is used by default."
+msgstr "Estableix la temperatura d'extrusió per a la passada de planxat. Si no s'estableix al perfil de filament, s'utilitza la temperatura d'impressió global per defecte."
