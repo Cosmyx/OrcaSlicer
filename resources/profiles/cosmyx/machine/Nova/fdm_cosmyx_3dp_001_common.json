@@ -23,6 +23,7 @@
     ],
     "gcode_flavor": "klipper",
     "inherits": "fdm_machine_common",
+    "default_bed_type": "7",
     "machine_max_acceleration_e": [
         "5000"
     ],

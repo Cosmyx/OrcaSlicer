@@ -29,10 +29,10 @@
     "complete_print_exhaust_fan_speed": [
         "10"
     ],
-    "cool_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "70"
     ],
-    "cool_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "70"
     ],
     "during_print_exhaust_fan_speed": [
@@ -59,10 +59,10 @@
     "filament_z_hop": [
         "0.2"
     ],
-    "hot_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "60"
     ],
-    "hot_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "60"
     ],
     "nozzle_temperature": [

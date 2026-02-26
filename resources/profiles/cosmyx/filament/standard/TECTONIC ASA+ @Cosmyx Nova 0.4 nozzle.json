@@ -35,10 +35,10 @@
     "filament_vendor": [
         "TECTONIC"
     ],
-    "hot_plate_temp": [
+    "cosmyx_textured_bed_temp": [
         "95"
     ],
-    "hot_plate_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
         "95"
     ],
     "is_custom_defined": "0",

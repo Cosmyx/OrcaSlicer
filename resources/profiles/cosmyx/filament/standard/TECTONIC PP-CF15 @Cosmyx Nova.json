@@ -45,17 +45,11 @@
     "filament_type": [
         "PP-CF"
     ],
-    "hot_plate_temp": [
-        "80"
+    "cosmyx_textured_bed_temp_initial_layer": [
+    "80"
     ],
-    "hot_plate_temp_initial_layer": [
-        "80"
-    ],
-    "cool_plate_temp_initial_layer": [
-        "80"
-    ],
-    "cool_plate_temp": [
-        "80"
+    "cosmyx_textured_bed_temp": [
+    "80"
     ],
     "version": "1.7.0.18",
     "required_nozzle_HRC": [
