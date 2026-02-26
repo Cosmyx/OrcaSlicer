@@ -19,6 +19,7 @@ ProfileTranslator& ProfileTranslator::instance()
 void ProfileTranslator::clear()
 {
     m_translations.clear();
+    m_reverse_translations.clear();
     m_current_language.clear();
 }
 
@@ -28,6 +29,14 @@ const std::string& ProfileTranslator::translate(const std::string& source) const
     if (it != m_translations.end())
         return it->second;
     return source;
+}
+
+const std::string& ProfileTranslator::untranslate(const std::string& translated) const
+{
+    auto it = m_reverse_translations.find(translated);
+    if (it != m_reverse_translations.end())
+        return it->second;
+    return translated;
 }
 
 bool ProfileTranslator::try_load_file(const std::string& filepath)
@@ -51,8 +60,10 @@ bool ProfileTranslator::try_load_file(const std::string& filepath)
                 entry.contains("translation") && entry["translation"].is_string()) {
                 std::string src = entry["source"].get<std::string>();
                 std::string trl = entry["translation"].get<std::string>();
-                if (!src.empty() && !trl.empty())
+                if (!src.empty() && !trl.empty()) {
+                    m_reverse_translations[trl] = src;
                     m_translations[std::move(src)] = std::move(trl);
+                }
             }
         }
 
