@@ -75,6 +75,7 @@ bool ProfileTranslator::try_load_file(const std::string& filepath)
                             m_translations.find(src_alias) == m_translations.end())
                             m_translations[src_alias] = trl_alias;
                     }
+                    m_reverse_translations[trl] = src;
                     m_translations[std::move(src)] = std::move(trl);
                 }
             }
