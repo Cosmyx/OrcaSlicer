@@ -17781,3 +17781,7 @@ msgstr ""
 
 #~ msgid "Orient the model"
 #~ msgstr "モデルの向きを調整"
+
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Bundle version %s"
+msgstr ""

@@ -19023,3 +19023,7 @@ msgstr ""
 #~ "Zadejte prosím platné hodnoty:\n"
 #~ "start > 10 kroků >= 0\n"
 #~ "konec > začátek + krok)"
+
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Bundle version %s"
+msgstr ""

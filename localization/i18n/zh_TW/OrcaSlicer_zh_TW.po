@@ -18274,3 +18274,7 @@ msgstr ""
 
 #~ msgid ", ver: "
 #~ msgstr "，版本"
+
+#, possible-c-format, possible-boost-format
+msgid "Cosmyx Bundle version %s"
+msgstr ""
