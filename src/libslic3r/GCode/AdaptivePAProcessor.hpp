@@ -1,5 +1,5 @@
 // AdaptivePAProcessor.hpp
-// OrcaSlicer
+// CosmoSlice
 //
 // Header file for the AdaptivePAProcessor class, responsible for processing G-code layers for the purposes of applying adaptive pressure advance.
 

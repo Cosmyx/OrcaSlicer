@@ -1,13 +1,13 @@
 # Auxiliary Fan
 
-OrcaSlicer uses `M106 P#` / `M107 P#` to control any fans managed by the slicer.
+CosmoSlice uses `M106 P#` / `M107 P#` to control any fans managed by the slicer.
 
 - `P0`: part cooling fan (default layer fan)
 - `P1` (if present): an additional fan
 - `P2`: often used as Aux / CPAP / Booster
 - `P3` (and higher): sometimes Exhaust / Enclosure, etc.
 
-With Klipper you can create macros that translate both the OrcaSlicer numeric fan index `P` and **human‑readable names** for your physical fans. This keeps compatibility with generated G‑code (M106 P0 / M106 P2 …) while letting you address fans by name internally.
+With Klipper you can create macros that translate both the CosmoSlice numeric fan index `P` and **human‑readable names** for your physical fans. This keeps compatibility with generated G‑code (M106 P0 / M106 P2 …) while letting you address fans by name internally.
 
 > [!WARNING]
 > Adjust pin names and parameters (power, cycle_time, etc.) to match your hardware.
@@ -64,9 +64,9 @@ gcode:
 Lets you use descriptive names like `CPAP`, `EXHAUST`, etc. Useful if you re‑wire or repurpose fans without changing slicer output. Just keep `fan_map` updated.
 
 ```ini
-# Example with friendly names + comments showing OrcaSlicer index
+# Example with friendly names + comments showing CosmoSlice index
 
-[fan_generic CPAP]        # fan 0 OrcaSlicer
+[fan_generic CPAP]        # fan 0 CosmoSlice
 pin: PB7
 max_power: 0.8
 shutdown_speed: 0
@@ -75,7 +75,7 @@ cycle_time: 0.005
 hardware_pwm: False
 off_below: 0.10
 
-[fan_generic EXHAUST]     # fan 3 OrcaSlicer
+[fan_generic EXHAUST]     # fan 3 CosmoSlice
 pin: PE5
 #max_power:
 #shutdown_speed:
@@ -127,15 +127,15 @@ gcode:
 ### Quick customization
 
 1. Add / remove entries in `fan_map` to reflect the indexes the slicer may use.
-2. Keep comments like `# fan X OrcaSlicer` next to each `[fan_generic]` for easy correlation.
+2. Keep comments like `# fan X CosmoSlice` next to each `[fan_generic]` for easy correlation.
 3. Tune `max_power`, `off_below`, `cycle_time` according to fan type (CPAP blower vs axial exhaust).
 
 ### Usage
 
-- From OrcaSlicer: `M106 P0 S255` (100% CPAP), `M106 P3 S128` (~50% EXHAUST).
+- From CosmoSlice: `M106 P0 S255` (100% CPAP), `M106 P3 S128` (~50% EXHAUST).
 - Turn one off: `M107 P3`. Turn all off: `M107`.
 - You can still manually use `SET_FAN_SPEED FAN=CPAP SPEED=0.7` in the Klipper console.
 
 ---
 
-Pick the variant that best fits your workflow; the advanced version provides extra clarity and flexibility while remaining fully compatible with standard OrcaSlicer G-code output.
+Pick the variant that best fits your workflow; the advanced version provides extra clarity and flexibility while remaining fully compatible with standard CosmoSlice G-code output.

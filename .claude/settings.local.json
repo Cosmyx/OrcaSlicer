@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(git mv:*)",
+      "Bash(find:*)",
+      "Bash(while read file)",
+      "Bash(do if grep -q CosmoSlice $file)",
+      "Bash(then sed -i s/CosmoSlice/CosmoSlice/g $file git add $file fi done)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

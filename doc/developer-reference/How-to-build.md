@@ -1,9 +1,9 @@
 # How to Build
 
-This wiki page provides detailed instructions for building OrcaSlicer from source on different operating systems, including Windows, macOS, and Linux.  
+This wiki page provides detailed instructions for building CosmoSlice from source on different operating systems, including Windows, macOS, and Linux.  
 It includes tool requirements, setup commands, and build steps for each platform.
 
-Whether you're a contributor or just want a custom build, this guide will help you compile OrcaSlicer successfully.
+Whether you're a contributor or just want a custom build, this guide will help you compile CosmoSlice successfully.
 
 - [Windows 64-bit](#windows-64-bit)
   - [Windows Tools Required](#windows-tools-required)
@@ -65,7 +65,7 @@ How to building with Visual Studio 2022 on Windows 64-bit.
    - If using the command line:
      1. Clone the repository:
      ```shell
-     git clone https://github.com/SoftFever/OrcaSlicer
+     git clone https://github.com/Cosmyx/OrcaSlicer
      ```
      2. Run lfs to download tools on Windows:
      ```shell
@@ -88,7 +88,7 @@ How to building with Visual Studio 2022 on Windows 64-bit.
 
 3. If successful, you will find the VS 2022 solution file in:
    ```shell
-   build\OrcaSlicer.sln
+   build\CosmoSlice.sln
    ```
 
 > [!IMPORTANT]
@@ -145,8 +145,8 @@ cmake --version
 
 1. Clone the repository:
    ```shell
-   git clone https://github.com/SoftFever/OrcaSlicer
-   cd OrcaSlicer
+   git clone https://github.com/Cosmyx/OrcaSlicer
+   cd CosmoSlice
    ```
 2. Build the application:
    ```shell
@@ -154,7 +154,7 @@ cmake --version
    ```
 3. Open the application:
    ```shell
-   open build/arm64/OrcaSlicer/OrcaSlicer.app
+   open build/arm64/CosmoSlice/CosmoSlice.app
    ```
 
 ### Debugging in Xcode
@@ -163,10 +163,10 @@ To build and debug directly in Xcode:
 
 1. Open the Xcode project:
    ```shell
-   open build/arm64/OrcaSlicer.xcodeproj
+   open build/arm64/CosmoSlice.xcodeproj
    ```
 2. In the menu bar:
-   - **Product > Scheme > OrcaSlicer**
+   - **Product > Scheme > CosmoSlice**
    - **Product > Scheme > Edit Scheme...**
      - Under **Run > Info**, set **Build Configuration** to `RelWithDebInfo`
      - Under **Run > Options**, uncheck **Allow debugging when browsing versions**
@@ -178,7 +178,7 @@ Linux distributions are available in two formats: [using Docker](#using-docker) 
 
 ### Using Docker
 
-How to build and run OrcaSlicer using Docker.
+How to build and run CosmoSlice using Docker.
 
 #### Docker Dependencies
 
@@ -188,7 +188,7 @@ How to build and run OrcaSlicer using Docker.
 #### Docker Instructions
 
 ```shell
-git clone https://github.com/SoftFever/OrcaSlicer && cd OrcaSlicer && ./scripts/DockerBuild.sh && ./scripts/DockerRun.sh
+git clone https://github.com/Cosmyx/OrcaSlicer && cd CosmoSlice && ./scripts/DockerBuild.sh && ./scripts/DockerRun.sh
 ```
 
 ### Troubleshooting
@@ -204,15 +204,15 @@ The `scripts/DockerRun.sh` script includes several commented-out options that ca
 - `-v $HOME:/home/$USER`: Mounts your home directory into the container, allowing you to easily load and save files.
 - `-e DISPLAY=$DISPLAY`: Passes your X display number to the container, enabling the graphical interface.
 - `--privileged=true`: Grants the container elevated privileges, which may be necessary for libGL and D-Bus functionalities.
-- `-ti`: Attaches a TTY to the container, enabling command-line interaction with OrcaSlicer.
+- `-ti`: Attaches a TTY to the container, enabling command-line interaction with CosmoSlice.
 - `--rm`: Automatically removes the container once it exits, keeping your system clean.
-- `orcaslicer $*`: Passes any additional parameters from the `scripts/DockerRun.sh` script directly to the OrcaSlicer executable within the container.
+- `orcacosmyx $*`: Passes any additional parameters from the `scripts/DockerRun.sh` script directly to the CosmoSlice executable within the container.
 
 By uncommenting and using these options as needed, you can often resolve issues related to display authorization, networking, and file permissions.
 
 ### Linux Build
 
-How to build OrcaSlicer on Linux.
+How to build CosmoSlice on Linux.
 
 #### Dependencies
 
@@ -264,7 +264,7 @@ The build system supports multiple Linux distributions including Ubuntu/Debian a
    ./build_linux.sh -d
    ```
 
-3. **Build OrcaSlicer:**
+3. **Build CosmoSlice:**
    ```shell
    ./build_linux.sh -s
    ```
@@ -303,17 +303,17 @@ The build system supports multiple Linux distributions including Ubuntu/Debian a
 
 ## Portable User Configuration
 
-If you want OrcaSlicer to use a custom user configuration folder (e.g., for a portable installation), you can simply place a folder named `data_dir` next to the OrcaSlicer executable. OrcaSlicer will automatically use this folder as its configuration directory.
+If you want CosmoSlice to use a custom user configuration folder (e.g., for a portable installation), you can simply place a folder named `data_dir` next to the CosmoSlice executable. CosmoSlice will automatically use this folder as its configuration directory.
 
 This allows for multiple self-contained installations with separate user data.
 
 > [!TIP]
-> This feature is especially useful if you want to run OrcaSlicer from a USB stick or keep different profiles isolated.
+> This feature is especially useful if you want to run CosmoSlice from a USB stick or keep different profiles isolated.
 
 ### Example folder structure
 
 ```shell
-OrcaSlicer.exe
+CosmoSlice.exe
 data_dir/
 ```
 

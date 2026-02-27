@@ -27,7 +27,7 @@ deps/build*/*
 install_*
 build_*/
 SVG
-src/OrcaSlicer-doc/
+src/CosmoSlice-doc/
 .idea/
 /.cache/
 *.mo

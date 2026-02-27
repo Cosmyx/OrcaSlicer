@@ -1,9 +1,9 @@
-# Single Extruder Multimaterial Printing in OrcaSlicer
+# Single Extruder Multimaterial Printing in CosmoSlice
 
 ## Introduction
 
-In this guide, we will explain the parameters for single extruder multimaterial printing in OrcaSlicer. The whole process and parameters are same as PrusaSlicer as OrcaSlicer is based on PrusaSlicer.
-OrcaSlicer has some additional features and minor differences though. We will explain them in this guide.
+In this guide, we will explain the parameters for single extruder multimaterial printing in CosmoSlice. The whole process and parameters are same as PrusaSlicer as CosmoSlice is based on PrusaSlicer.
+CosmoSlice has some additional features and minor differences though. We will explain them in this guide.
 
 ## Prime tower
 
