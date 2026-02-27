@@ -51,6 +51,8 @@ protected:
     boost::filesystem::path m_path;
     PrintHostPostUploadActions m_post_actions;
     wxArrayString m_storage_names;
+private:
+    wxString m_web_filename;
 };
 
 

@@ -14,10 +14,15 @@
 #include <wx/wupdlock.h>
 #include <wx/debug.h>
 #include <wx/msgdlg.h>
+#include <wx/uri.h>
+#include <wx/webview.h>
+#include <wx/tokenzr.h>
+#include <wx/config.h>
 
 #include <boost/log/trivial.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/nowide/convert.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include "GUI.hpp"
 #include "GUI_App.hpp"
@@ -28,6 +33,23 @@
 #include "NotificationManager.hpp"
 #include "ExtraRenderers.hpp"
 #include "format.hpp"
+
+
+// helpers d’échappement HTML (en haut du fichier si tu veux les réutiliser)
+static wxString html_escape(const wxString& s) {
+    wxString o; o.reserve(s.length()*11/10);
+    for (size_t i=0;i<s.length();++i) {
+        wxChar c = s[i];
+        switch (c) {
+            case '&':  o += "&amp;";  break;
+            case '<':  o += "&lt;";   break;
+            case '>':  o += "&gt;";   break;
+            case '"':  o += "&quot;"; break;
+            default:   o += c;        break;
+        }
+    }
+    return o;
+}
 
 namespace fs = boost::filesystem;
 
@@ -55,171 +77,201 @@ PrintHostSendDialog::PrintHostSendDialog(const fs::path &path, PrintHostPostUplo
     txt_filename->OSXDisableAllSmartSubstitutions();
 #endif
 }
+
 void PrintHostSendDialog::init()
 {
-    const auto& path = m_path;
-    const auto& storage_paths = m_paths;
-    const auto& post_actions = m_post_actions;
-    const auto& storage_names = m_storage_names;
+    Freeze();
+    SetSizer(nullptr);
 
-    const AppConfig* app_config = wxGetApp().app_config;
+    if (txt_filename) { txt_filename->Show(false); txt_filename->Disable(); txt_filename->SetMinSize(wxSize(0,0));  txt_filename->SetSize(wxSize(0,0)); txt_filename->Move(wxPoint(-10000,-10000));}
+    if (combo_groups)  { combo_groups->Show(false);  combo_groups->Disable();  combo_groups->Move(wxPoint(-10000,-10000)); }
+    if (combo_storage) { combo_storage->Show(false); combo_storage->Disable(); combo_storage->Move(wxPoint(-10000,-10000)); }
 
-    auto *label_dir_hint = new wxStaticText(this, wxID_ANY, _L("Use forward slashes ( / ) as a directory separator if needed."));
-    label_dir_hint->Wrap(CONTENT_WIDTH * wxGetApp().em_unit());
 
-    content_sizer->Add(txt_filename, 0, wxEXPAND);
-    content_sizer->Add(label_dir_hint);
-    content_sizer->AddSpacer(VERT_SPACING);
-    
-    if (combo_groups != nullptr) {
-        // Repetier specific: Show a selection of file groups.
-        auto *label_group = new wxStaticText(this, wxID_ANY, _L("Group"));
-        content_sizer->Add(label_group);
-        content_sizer->Add(combo_groups, 0, wxBOTTOM, 2*VERT_SPACING);        
-        wxString recent_group = from_u8(app_config->get("recent", CONFIG_KEY_GROUP));
-        if (! recent_group.empty())
-            combo_groups->SetValue(recent_group);
+#if wxCHECK_VERSION(3,2,0)
+    auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
+                               wxDefaultPosition, FromDIP(wxSize(700, 460)),
+                               "", wxWEBVIEW_BACKEND_DEFAULT);
+#else
+    auto* web = wxWebView::New(this, wxID_ANY, "about:blank",
+                               wxDefaultPosition, FromDIP(wxSize(700, 460)));
+#endif
+
+    wxConfig config("OrcaCosmyx");
+    const bool saved_c1 = config.ReadBool("WebPopup/Check1", false);
+    const bool saved_c2 = config.ReadBool("WebPopup/Check2", false);
+
+    // Charger le HTML externe depuis resources/web/print_host/index.html
+    fs::path base_dir  = (boost::filesystem::path(resources_dir()) / "web" / "print_host");
+    fs::path html_path = base_dir / "index.html";
+
+    // Lire le contenu de index.html dans une wxString
+    wxString html;
+    {
+        wxFile file(html_path.wstring());
+        if (file.IsOpened()) {
+            file.ReadAll(&html);
+        } else {
+            // fallback si le fichier est pas trouvé, pour éviter un crash moche
+            html = "<html><body><p>Missing print_host/index.html</p></body></html>";
+        }
     }
 
-    if (combo_storage != nullptr) {
-        // PrusaLink specific: User needs to choose a storage
-        auto* label_group = new wxStaticText(this, wxID_ANY, _L("Upload to storage") + ":");
-        content_sizer->Add(label_group);
-        content_sizer->Add(combo_storage, 0, wxBOTTOM, 2 * VERT_SPACING);
-        combo_storage->SetValue(storage_names.front());
-        wxString recent_storage = from_u8(app_config->get("recent", CONFIG_KEY_STORAGE));
-        if (!recent_storage.empty())
-            combo_storage->SetValue(recent_storage); 
-    } else if (storage_names.GetCount() == 1){
-        // PrusaLink specific: Show which storage has been detected.
-        auto* label_group = new wxStaticText(this, wxID_ANY, _L("Upload to storage") + ": " + storage_names.front());
-        content_sizer->Add(label_group);
-        m_preselected_storage = storage_paths.front();
-    }
-
-
-    wxString recent_path = from_u8(app_config->get("recent", CONFIG_KEY_PATH));
-    if (recent_path.Length() > 0 && recent_path[recent_path.Length() - 1] != '/') {
+    // reconstruire recent_path comme avant
+    wxString recent_path = from_u8(wxGetApp().app_config->get("recent", CONFIG_KEY_PATH));
+    if (recent_path.Length() > 0 && recent_path.Last() != '/')
         recent_path += '/';
-    }
-    const auto recent_path_len = recent_path.Length();
-    recent_path += path.filename().wstring();
-    wxString stem(path.stem().wstring());
-    const auto stem_len = stem.Length();
+    recent_path += m_path.filename().wstring();
 
-    txt_filename->SetValue(recent_path);
+    // sync le champ caché C++ avec le filename par défaut
+    if (txt_filename && txt_filename->GetValue().IsEmpty())
+        txt_filename->SetValue(recent_path);
 
-    auto checkbox_sizer = new wxBoxSizer(wxHORIZONTAL);
-    auto checkbox       = new ::CheckBox(this, wxID_APPLY);
-    checkbox->SetValue(m_switch_to_device_tab);
-    checkbox->Bind(wxEVT_TOGGLEBUTTON, [this](wxCommandEvent& e) {
-        m_switch_to_device_tab = e.IsChecked();
-        e.Skip();
-    });
-    checkbox_sizer->Add(checkbox, 0, wxALL | wxALIGN_CENTER, FromDIP(2));
 
-    auto checkbox_text = new wxStaticText(this, wxID_ANY, _L("Switch to Device tab after upload."), wxDefaultPosition, wxDefaultSize, 0);
-    checkbox_sizer->Add(checkbox_text, 0, wxALL | wxALIGN_CENTER, FromDIP(2));
-    checkbox_text->SetFont(::Label::Body_13);
-    checkbox_text->SetForegroundColour(StateColor::darkModeColorFor(wxColour("#323A3D")));
-    content_sizer->Add(checkbox_sizer);
-    content_sizer->AddSpacer(VERT_SPACING);
+    // Inject CSS
+    {
+        fs::path css_path = base_dir / "style.css";
+        if (fs::exists(css_path)) {
+            wxFile css_file(css_path.wstring());
+            wxString css;
+            if (css_file.IsOpened()) {
+                css_file.ReadAll(&css);
 
-    if (size_t extension_start = recent_path.find_last_of('.'); extension_start != std::string::npos)
-        m_valid_suffix = recent_path.substr(extension_start);
-    // .gcode suffix control
-    auto validate_path = [this](const wxString &path) -> bool {
-        if (! path.Lower().EndsWith(m_valid_suffix.Lower())) {
-            MessageDialog msg_wingow(this, wxString::Format(_L("Upload filename doesn't end with \"%s\". Do you wish to continue?"), m_valid_suffix), wxString(SLIC3R_APP_NAME), wxYES | wxNO);
-            if (msg_wingow.ShowModal() == wxID_NO)
-                return false;
-        }
-        return true;
-    };
+                wxString css_block;
+                css_block << "<style>\n" << css << "\n</style>";
 
-    auto* btn_ok = add_button(wxID_OK, true, _L("Upload"));
-    btn_ok->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-        if (validate_path(txt_filename->GetValue())) {
-            post_upload_action = PrintHostPostUploadAction::None;
-            EndDialog(wxID_OK);
-        }
-    });
-    txt_filename->SetFocus();
-    
-    // if (post_actions.has(PrintHostPostUploadAction::QueuePrint)) {
-    //     auto* btn_print = add_button(wxID_ADD, false, _L("Upload to Queue"));
-    //     btn_print->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-    //         if (validate_path(txt_filename->GetValue())) {
-    //             post_upload_action = PrintHostPostUploadAction::QueuePrint;
-    //             EndDialog(wxID_OK);
-    //         }
-    //         });
-    // }
-
-    if (post_actions.has(PrintHostPostUploadAction::StartPrint)) {
-        auto* btn_print = add_button(wxID_YES, false, _L("Upload and Print"));
-        btn_print->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-            if (validate_path(txt_filename->GetValue())) {
-                post_upload_action = PrintHostPostUploadAction::StartPrint;
-                EndDialog(wxID_OK);
+                // On remplace plusieurs variantes possibles du tag <link>
+                html.Replace("<link rel=\"stylesheet\" href=\"style.css\">",  css_block, false);
+                html.Replace("<link rel=\"stylesheet\" href=\"style.css\"/>", css_block, false);
+                html.Replace("<link rel=\"stylesheet\" href='style.css'>",    css_block, false);
+                html.Replace("<link rel=\"stylesheet\" href='style.css'/>",  css_block, false);
+            } else {
+                BOOST_LOG_TRIVIAL(error) << "WebPopup: cannot open style.css";
             }
-        });
+        } else {
+            BOOST_LOG_TRIVIAL(warning) << "WebPopup: style.css not found at " << css_path.string();
+        }
     }
 
-    // if (post_actions.has(PrintHostPostUploadAction::StartSimulation)) {
-    //     // Using wxID_MORE as a button identifier to be different from the other buttons, wxID_MORE has no other meaning here.
-    //     auto* btn_simulate = add_button(wxID_MORE, false, _L("Upload and Simulate"));
-    //     btn_simulate->Bind(wxEVT_BUTTON, [this, validate_path](wxCommandEvent&) {
-    //         if (validate_path(txt_filename->GetValue())) {
-    //             post_upload_action = PrintHostPostUploadAction::StartSimulation;
-    //             EndDialog(wxID_OK);
-    //         }        
-    //     });
-    // }
+    // injecter les valeurs dynamiques dans le HTML chargé
+    html.Replace("{C1}", saved_c1 ? "checked" : "");
+    html.Replace("{C2}", saved_c2 ? "checked" : "");
+    html.Replace("{FILENAME}", html_escape(recent_path), true);
 
-    add_button(wxID_CANCEL,false, L("Cancel"));
-    finalize();
 
-#ifdef __linux__
-    // On Linux with GTK2 when text control lose the focus then selection (colored background) disappears but text color stay white
-    // and as a result the text is invisible with light mode
-    // see https://github.com/prusa3d/PrusaSlicer/issues/4532
-    // Workaround: Unselect text selection explicitly on kill focus
-    txt_filename->Bind(wxEVT_KILL_FOCUS, [this](wxEvent& e) {
-        e.Skip();
-        txt_filename->SetInsertionPoint(txt_filename->GetLastPosition());
-    }, txt_filename->GetId());
-#endif /* __linux__ */
+    // Traductions  
+    html.Replace("{TITLE}", _L("Send G-code to printer host"));
+    html.Replace("{FILENAME_LABEL}", _L("filename:"));
+    html.Replace("{PLACEHOLDER}", _L("(generated by OrcaCosmyx)"));
+    html.Replace("{AUTO_PRINT_LABEL}", _L("Upload and Print")); // adapte à ton wording exact
+    html.Replace("{CANCEL_LABEL}", _L("Cancel"));
+    html.Replace("{VALIDATE_LABEL}", _L("Validate"));
+    html.Replace("{DEL_AFTER_PRINT}", _L("Delete G-Code after Print"));
 
-    Bind(wxEVT_SHOW, [=](const wxShowEvent &) {
-        // Another similar case where the function only works with EVT_SHOW + CallAfter,
-        // this time on Mac.
-        CallAfter([=]() {
-            txt_filename->SetInsertionPoint(0);
-            txt_filename->SetSelection(recent_path_len, recent_path_len + stem_len);
-        });
+    // 2) Charger 1 seule fois, sans "data:text/html" en baseUrl
+    wxString base_url = "file://" + wxString(base_dir.wstring());
+    auto loaded = std::make_shared<bool>(false);
+
+    web->Bind(wxEVT_WEBVIEW_LOADED, [web, html, base_url, loaded](wxWebViewEvent& e){
+        if (!*loaded && (e.GetURL().IsEmpty() || e.GetURL() == "about:blank")) {
+            *loaded = true;
+            // base_url => permet au <link rel="stylesheet" href="style.css"> de marcher
+            web->SetPage(html, base_url);
+        }
     });
+    web->LoadURL("about:blank");
+
+
+    // 3) Interception app://submit (inchangé)
+    web->Bind(wxEVT_WEBVIEW_NAVIGATING, [this](wxWebViewEvent& e) {
+        const wxString url = e.GetURL();
+
+        // Détection de la soumission (bouton "Validate" dans la page)
+        if (url.StartsWith("app://submit")) {
+            e.Veto(); // on empêche la vraie navigation
+
+            // Décomposer l'URL et ses paramètres
+            wxURI uri(url);
+            wxString query = uri.GetQuery();
+
+            wxString c1 = "0", c2 = "0", f; // f = filename transmis depuis la page
+            wxStringTokenizer tok(query, "&");
+
+            while (tok.HasMoreTokens()) {
+                const wxString kv = tok.GetNextToken();
+                const int eq = kv.Find('=');
+                if (eq != wxNOT_FOUND) {
+                    const wxString key = kv.Left(eq);
+                    const wxString val = wxURI::Unescape(kv.Mid(eq + 1));
+
+                    if      (key == "c1") c1 = val;
+                    else if (key == "c2") c2 = val;
+                    else if (key == "f")  f  = val; // <--- Récupération du filename
+                }
+            }
+
+            // Sauvegarde des cases à cocher (config OrcaCosmyx)
+            wxConfig config("OrcaCosmyx");
+            config.Write("WebPopup/Check1", c1 == "1");
+            config.Write("WebPopup/Check2", c2 == "1");
+            config.Flush();
+
+            // Injection du filename dans le champ natif caché
+            if (!f.IsEmpty()) {
+                if (txt_filename)
+                    txt_filename->SetValue(f);
+                else
+                    m_web_filename = f; // au cas où tu veux un fallback côté C++
+            }
+
+            // (Optionnel) validation de suffixe .gcode côté C++
+            if (!f.Lower().EndsWith(".gcode")) {
+                MessageDialog msg(this,
+                    wxString::Format(_L("Upload filename doesn't end with \".gcode\".\nContinue anyway?\n\n%s"), f),
+                    wxString(SLIC3R_APP_NAME),
+                    wxYES | wxNO);
+                if (msg.ShowModal() == wxID_NO)
+                    return; // annule la validation
+            }
+
+
+            if (c1 == "1")
+                post_upload_action = PrintHostPostUploadAction::StartPrint;
+            else
+                post_upload_action = PrintHostPostUploadAction::None;
+
+
+
+            // Ferme la popup proprement après traitement
+            CallAfter([this] {
+                if (IsModal()) EndModal(wxID_OK);
+                else Destroy();
+            });
+        }
+
+        // Gestion du bouton Cancel côté page (orcahost://cancel ou app://cancel)
+        else if (url.StartsWith("app://cancel") || url.StartsWith("orcahost://cancel")) {
+            e.Veto();
+            CallAfter([this] {
+                if (IsModal()) EndModal(wxID_CANCEL);
+                else Destroy();
+            });
+        }
+    });
+
+    auto* sizer = new wxBoxSizer(wxVERTICAL);
+    sizer->Add(web, 1, wxEXPAND | wxALL, FromDIP(8));
+
+    SetSizerAndFit(sizer);
+    SetMinSize(FromDIP(wxSize(700, 460)));
+    CentreOnParent();
+    Layout();
+    CentreOnParent();
+    Thaw();
+
 }
 
-fs::path PrintHostSendDialog::filename() const
-{
-    return into_path(txt_filename->GetValue());
-}
 
-PrintHostPostUploadAction PrintHostSendDialog::post_action() const
-{
-    return post_upload_action;
-}
-
-std::string PrintHostSendDialog::group() const
-{
-     if (combo_groups == nullptr) {
-         return "";
-     } else {
-         wxString group = combo_groups->GetValue();
-         return into_u8(group);
-    }
-}
 
 std::string PrintHostSendDialog::storage() const
 {
@@ -950,6 +1002,23 @@ void ElegooPrintHostSendDialog::refresh()
     }
     this->Layout();
     this->Fit();
+}
+
+boost::filesystem::path PrintHostSendDialog::filename() const
+{
+    if (txt_filename)
+        return boost::filesystem::path(txt_filename->GetValue().ToStdString());
+    return boost::filesystem::path();
+}
+
+Slic3r::PrintHostPostUploadAction PrintHostSendDialog::post_action() const
+{
+    return post_upload_action;
+}
+
+std::string PrintHostSendDialog::group() const
+{
+    return std::string();
 }
 
 }}
