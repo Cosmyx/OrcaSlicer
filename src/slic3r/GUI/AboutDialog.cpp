@@ -1,5 +1,6 @@
 #include "AboutDialog.hpp"
 #include "I18N.hpp"
+#include "libslic3r_version.h"
 
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Color.hpp"
@@ -269,6 +270,13 @@ AboutDialog::AboutDialog()
         cosmyx_version->SetForegroundColour(wxColour("#949494"));
         cosmyx_version->SetBackgroundColour(wxColour("#FFFFFF"));
         vesizer->Add(cosmyx_version, 0, wxRIGHT | wxALIGN_RIGHT, FromDIP(20));
+        vesizer->AddSpacer(FromDIP(5));
+        wxString build_id_str = wxString::Format(_L("Build ID: %s"), SLIC3R_BUILD_NUMBER);
+        wxStaticText* build_id_text = new wxStaticText(this, wxID_ANY, build_id_str, wxDefaultPosition, wxDefaultSize);
+        build_id_text->SetFont(_build_string_font);
+        build_id_text->SetForegroundColour(wxColour("#949494"));
+        build_id_text->SetBackgroundColour(wxColour("#FFFFFF"));
+        vesizer->Add(build_id_text, 0, wxRIGHT | wxALIGN_RIGHT, FromDIP(20));
         vesizer->Add(0, 0, 1, wxEXPAND, FromDIP(5));
     }
 
