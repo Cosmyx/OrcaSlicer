@@ -59,6 +59,9 @@ include("version.inc")
 include(GNUInstallDirs)
 include(CMakeDependentOption)
 
+# Generate a random build number baked into the binary at configure time
+string(RANDOM LENGTH 8 ALPHABET "0123456789ABCDEF" VARIABLE SLIC3R_BUILD_NUMBER)
+
 set(SLIC3R_RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 file(TO_NATIVE_PATH "${SLIC3R_RESOURCES_DIR}" SLIC3R_RESOURCES_DIR_WIN)
 

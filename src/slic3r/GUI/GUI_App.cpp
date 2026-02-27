@@ -2429,6 +2429,25 @@ bool GUI_App::on_init_inner()
         app_config->set("version", SLIC3R_VERSION);
     }
 
+    // Build number check: warn user if AppData was written by a different build
+    {
+        std::string stored_build = app_config->get("build_number");
+        if (!stored_build.empty() && stored_build != SLIC3R_BUILD_NUMBER) {
+            wxString data_dir_label = from_u8(Slic3r::data_dir());
+            wxMessageDialog dlg(nullptr,
+                wxString::Format(
+                    _L("A new build of OrcaSlicer is being run for the first time.\n\n"
+                       "Please backup and then delete your OrcaSlicer AppData folder "
+                       "to avoid potential compatibility issues.\n\n"
+                       "AppData location:\n%s"),
+                    data_dir_label),
+                _L("New Build Detected"),
+                wxOK | wxICON_WARNING);
+            dlg.ShowModal();
+        }
+        app_config->set("build_number", SLIC3R_BUILD_NUMBER);
+    }
+
     SplashScreen * scrn = nullptr;
     if (app_config->get("show_splash_screen") == "true") {
         // make a bitmap with dark grey banner on the left side
