@@ -14,10 +14,10 @@ EVT_PAINT(TabButton::paintEvent)
 
 END_EVENT_TABLE()
 
-static wxColour BORDER_HOVER_COL = wxColour(0, 150, 136);
+static wxColour BORDER_HOVER_COL = wxColour(162, 0, 255);
 
 const static wxColour TAB_BUTTON_BG    = wxColour("#FEFFFF");
-const static wxColour TAB_BUTTON_SEL   = wxColour("#BFE1DE"); // ORCA
+const static wxColour TAB_BUTTON_SEL   = wxColour("#cd79fc"); // ORCA
 
 TabButton::TabButton()
     : paddingSize(43, 16)
