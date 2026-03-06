@@ -124,7 +124,7 @@
     "is_infill_first": "0",
     "lateral_lattice_angle_1": "-45",
     "lateral_lattice_angle_2": "45",
-    "layer_height": "0.65",
+    "layer_height": "0.72",
     "line_width": "1.02",
     "make_overhang_printable": "0",
     "make_overhang_printable_angle": "55",
