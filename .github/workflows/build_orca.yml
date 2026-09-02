@@ -18,6 +18,9 @@ jobs:
   build_orca:
     name: Build OrcaSlicer
     runs-on: ${{ inputs.os }}
+    # Makes the OIDC token carry the `repo:<org>/<repo>:environment:azure-signing`
+    # subject expected by the Azure federated credential.
+    environment: azure-signing
     permissions:
       contents: write
       id-token: write # required for Azure OIDC login (Trusted Signing)
