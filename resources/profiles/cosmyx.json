@@ -42,6 +42,10 @@
         {
             "name": "0.20mm Strength @Cosmyx Nova",
             "sub_path": "process/global/0.20mm Strength @Cosmyx Nova.json"
+        },
+        {
+            "name": "0.20mm Standard @Cosmyx Common",
+            "sub_path": "process/global/0.20mm Standard @Cosmyx Common.json"
         }
     ],
     "filament_list": [

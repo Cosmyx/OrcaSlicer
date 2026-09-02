@@ -4,10 +4,10 @@
     "from": "system",
     "instantiation": "false",
     "inherits": "fdm_filament_common",
-    "cosmyx_textured_bed_temp": [
+    "textured_plate_bed_temp": [
         "80"
     ],
-    "cosmyx_textured_bed_temp_initial_layer": [
+    "textured_plate_bed_temp_initial_layer": [
         "80"
     ],
     "fan_cooling_layer_time": [

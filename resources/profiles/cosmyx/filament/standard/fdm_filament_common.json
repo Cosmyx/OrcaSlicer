@@ -9,10 +9,10 @@
     "required_nozzle_HRC": [
         "3"
     ],
-    "cosmyx_textured_bed_temp": [
+    "textured_plate_bed_temp": [
         "60"
     ],
-    "cosmyx_textured_bed_temp_initial_layer": [
+    "textured_plate_bed_temp_initial_layer": [
         "60"
     ],
     "overhang_fan_threshold": [

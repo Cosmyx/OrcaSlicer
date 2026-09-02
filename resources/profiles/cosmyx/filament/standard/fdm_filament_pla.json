@@ -19,10 +19,10 @@
     "filament_cost": [
         "20"
     ],
-    "cosmyx_textured_bed_temp": [
+    "textured_plate_bed_temp": [
         "55"
     ],
-    "cosmyx_textured_bed_temp_initial_layer": [
+    "textured_plate_bed_temp_initial_layer": [
         "55"
     ],
     "nozzle_temperature_initial_layer": [
