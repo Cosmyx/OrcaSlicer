@@ -18,11 +18,18 @@ jobs:
   build_orca:
     name: Build OrcaSlicer
     runs-on: ${{ inputs.os }}
+    permissions:
+      contents: write
+      id-token: write # required for Azure OIDC login (Trusted Signing)
     env:
       date:
       ver:
       ver_pure:
       ORCA_UPDATER_SIG_KEY: ${{ secrets.ORCA_UPDATER_SIG_KEY }}
+      # Exposed as env so the signing steps can be skipped when the secrets are
+      # not available (forks, PRs from forks): the `secrets` context cannot be
+      # used in a step-level `if`, but `env` can.
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
 
     steps:
       - name: Checkout
@@ -229,11 +236,47 @@ jobs:
           WindowsSDKVersion: '10.0.26100.0\'
         run: .\build_release_vs2022.bat slicer
 
+      - name: Azure Login
+        if: inputs.os == 'windows-latest' && env.AZURE_CLIENT_ID != ''
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Sign Windows executables and DLLs with Azure Trusted Signing
+        if: inputs.os == 'windows-latest' && env.AZURE_CLIENT_ID != ''
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}/build/OrcaSlicer
+          files-folder-filter: exe,dll
+          files-folder-recurse: true
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
       - name: Create installer Win
         if: inputs.os == 'windows-latest'
         working-directory: ${{ github.workspace }}/build
         run: |
           cpack -G NSIS
+
+      - name: Sign Windows installer with Azure Trusted Signing
+        if: inputs.os == 'windows-latest' && env.AZURE_CLIENT_ID != ''
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+          files-folder: ${{ github.workspace }}/build
+          files-folder-filter: exe
+          files-folder-recurse: false
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
 
       - name: Pack app
         if: inputs.os == 'windows-latest'
