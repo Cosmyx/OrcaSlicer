@@ -1838,8 +1838,8 @@ msgstr "디스크"
 msgid "Torus"
 msgstr "토러스"
 
-msgid "Orca Cube"
-msgstr "Orca 큐브"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr "Orca 공차 테스트"
@@ -12296,6 +12296,12 @@ msgstr "스테인레스 스틸"
 
 msgid "Brass"
 msgstr "황동"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "텅스텐 카바이드"
 
 msgid "Nozzle HRC"
 msgstr "노즐 HRC"

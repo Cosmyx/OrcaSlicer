@@ -1817,8 +1817,8 @@ msgstr "圓盤"
 msgid "Torus"
 msgstr "環面"
 
-msgid "Orca Cube"
-msgstr "Orca 立方體"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr "Orca 誤差測試"
@@ -11904,6 +11904,12 @@ msgstr "不鏽鋼"
 
 msgid "Brass"
 msgstr "黃銅"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "碳化鎢"
 
 msgid "Nozzle HRC"
 msgstr "噴嘴洛氏硬度"

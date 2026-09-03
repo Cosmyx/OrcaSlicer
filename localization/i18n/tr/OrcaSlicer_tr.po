@@ -1852,8 +1852,8 @@ msgstr "Disk"
 msgid "Torus"
 msgstr "Simit"
 
-msgid "Orca Cube"
-msgstr "Orca Küpü"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr "Orca tolerans testi"
@@ -12714,6 +12714,12 @@ msgstr "Paslanmaz çelik"
 
 msgid "Brass"
 msgstr "Pirinç"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "Tungsten karbür"
 
 msgid "Nozzle HRC"
 msgstr "Nozul HRC"

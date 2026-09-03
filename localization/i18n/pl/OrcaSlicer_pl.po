@@ -1859,8 +1859,8 @@ msgstr "Tarcza"
 msgid "Torus"
 msgstr "Torus"
 
-msgid "Orca Cube"
-msgstr "Sześcian Orca"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr "Test tolerancji Orca"
@@ -12755,6 +12755,12 @@ msgstr "Stal nierdzewna"
 
 msgid "Brass"
 msgstr "Mosiądz"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "węglik wolframu"
 
 msgid "Nozzle HRC"
 msgstr "Twardość dyszy (HRC)"

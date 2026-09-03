@@ -1866,8 +1866,8 @@ msgstr "Disco"
 msgid "Torus"
 msgstr "Toro"
 
-msgid "Orca Cube"
-msgstr "Cubo Orca"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr "Teste de Tolerância Orca"
@@ -12882,6 +12882,12 @@ msgstr "Aço inoxidável"
 
 msgid "Brass"
 msgstr "Latão"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "Carboneto de tungstênio"
 
 msgid "Nozzle HRC"
 msgstr "Bico HRC"

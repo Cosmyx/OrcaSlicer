@@ -1874,8 +1874,8 @@ msgstr "Диск"
 msgid "Torus"
 msgstr "Тороид"
 
-msgid "Orca Cube"
-msgstr "Куб Orca Design"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr "Тест допусков от Orca"
@@ -12982,6 +12982,12 @@ msgstr "Нержавеющая сталь"
 
 msgid "Brass"
 msgstr "Латунь"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "Карбид вольфрама"
 
 msgid "Nozzle HRC"
 msgstr "Твердость сопла (HRC)"

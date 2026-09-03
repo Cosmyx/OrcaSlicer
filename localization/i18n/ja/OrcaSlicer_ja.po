@@ -1819,7 +1819,7 @@ msgstr "Disc"
 msgid "Torus"
 msgstr "Torus"
 
-msgid "Orca Cube"
+msgid "Cosmyx Cube"
 msgstr ""
 
 msgid "Orca Tolerance Test"
@@ -11557,6 +11557,12 @@ msgstr "ステンレススチール"
 
 msgid "Brass"
 msgstr "真鍮"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "炭化タングステン"
 
 msgid "Nozzle HRC"
 msgstr "ノズルHRC"

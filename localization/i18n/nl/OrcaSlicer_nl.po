@@ -1827,8 +1827,8 @@ msgstr "Schijf"
 msgid "Torus"
 msgstr "Torus"
 
-msgid "Orca Cube"
-msgstr "Orca-kubus"
+msgid "Cosmyx Cube"
+msgstr ""
 
 msgid "Orca Tolerance Test"
 msgstr ""
@@ -12013,6 +12013,12 @@ msgstr "Roestvrij staal"
 
 msgid "Brass"
 msgstr "Messing"
+
+msgid "CHT"
+msgstr "CHT"
+
+msgid "Tungsten Carbide"
+msgstr "wolfraamcarbide"
 
 msgid "Nozzle HRC"
 msgstr "Mondstuk HRC"

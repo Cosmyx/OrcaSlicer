@@ -1799,7 +1799,7 @@ msgstr "Skiva"
 msgid "Torus"
 msgstr "Torus"
 
-msgid "Orca Cube"
+msgid "Cosmyx Cube"
 msgstr ""
 
 msgid "Orca Tolerance Test"
@@ -11779,6 +11779,12 @@ msgstr "Rostfritt stål"
 
 msgid "Brass"
 msgstr "Mässing"
+
+msgid "CHT"
+msgstr ""
+
+msgid "Tungsten Carbide"
+msgstr "Volframkarbid"
 
 msgid "Nozzle HRC"
 msgstr "Nozzle HRC"
