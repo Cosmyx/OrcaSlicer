@@ -61,3 +61,8 @@ jobs:
           file-digest: SHA256
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
+          # The service returns a bare "Failed" with no error body; trace logging
+          # is the only way to surface why. The correlation id is what Microsoft
+          # support needs to look the request up on their side.
+          trace: true
+          correlation-id: orcaslicer-probe-${{ github.run_id }}-${{ github.run_attempt }}
