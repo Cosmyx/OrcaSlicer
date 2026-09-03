@@ -255,10 +255,10 @@ jobs:
 
       - name: Sign Windows executables and DLLs with Azure Trusted Signing
         if: inputs.os == 'windows-2022' && env.AZURE_CLIENT_ID != ''
-        uses: azure/trusted-signing-action@v0.5.0
+        uses: Azure/artifact-signing-action@v2.0.0
         with:
           endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
-          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
           certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
           files-folder: ${{ github.workspace }}/build/OrcaSlicer
           files-folder-filter: exe,dll
@@ -275,10 +275,10 @@ jobs:
 
       - name: Sign Windows installer with Azure Trusted Signing
         if: inputs.os == 'windows-2022' && env.AZURE_CLIENT_ID != ''
-        uses: azure/trusted-signing-action@v0.5.0
+        uses: Azure/artifact-signing-action@v2.0.0
         with:
           endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
-          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
           certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
           files-folder: ${{ github.workspace }}/build
           files-folder-filter: exe
