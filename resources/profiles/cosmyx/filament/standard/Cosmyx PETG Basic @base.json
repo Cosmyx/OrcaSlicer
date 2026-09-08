@@ -26,10 +26,46 @@
     "fan_cooling_layer_time": [
         "30"
     ],
-    "textured_plate_bed_temp": [
+    "cosmyx_textured_bed_temp": [
         "70"
     ],
-    "textured_plate_bed_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
+        "70"
+    ],
+    "supertack_plate_temp": [
+        "70"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "70"
+    ],
+    "cool_plate_temp": [
+        "70"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "70"
+    ],
+    "textured_cool_plate_temp": [
+        "70"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "70"
+    ],
+    "eng_plate_temp": [
+        "70"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "70"
+    ],
+    "hot_plate_temp": [
+        "70"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "70"
+    ],
+    "textured_plate_temp": [
+        "70"
+    ],
+    "textured_plate_temp_initial_layer": [
         "70"
     ],
     "filament_vendor": [

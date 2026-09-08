@@ -31,10 +31,46 @@
     "filament_type": [
         "PP-CF"
     ],
-    "textured_plate_bed_temp": [
+    "cosmyx_textured_bed_temp": [
         "80"
     ],
-    "textured_plate_bed_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
+        "80"
+    ],
+    "supertack_plate_temp": [
+        "80"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "80"
+    ],
+    "cool_plate_temp": [
+        "80"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "80"
+    ],
+    "textured_cool_plate_temp": [
+        "80"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "80"
+    ],
+    "eng_plate_temp": [
+        "80"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "80"
+    ],
+    "hot_plate_temp": [
+        "80"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "80"
+    ],
+    "textured_plate_temp": [
+        "80"
+    ],
+    "textured_plate_temp_initial_layer": [
         "80"
     ],
 

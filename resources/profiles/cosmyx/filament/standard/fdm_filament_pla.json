@@ -19,10 +19,46 @@
     "filament_cost": [
         "20"
     ],
-    "textured_plate_bed_temp": [
+    "cosmyx_textured_bed_temp": [
         "55"
     ],
-    "textured_plate_bed_temp_initial_layer": [
+    "cosmyx_textured_bed_temp_initial_layer": [
+        "55"
+    ],
+    "supertack_plate_temp": [
+        "55"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "55"
+    ],
+    "cool_plate_temp": [
+        "55"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "55"
+    ],
+    "textured_cool_plate_temp": [
+        "55"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "55"
+    ],
+    "eng_plate_temp": [
+        "55"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "55"
+    ],
+    "hot_plate_temp": [
+        "55"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "55"
+    ],
+    "textured_plate_temp": [
+        "55"
+    ],
+    "textured_plate_temp_initial_layer": [
         "55"
     ],
     "nozzle_temperature_initial_layer": [
