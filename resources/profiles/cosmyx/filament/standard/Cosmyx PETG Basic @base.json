@@ -86,10 +86,5 @@
     "filament_start_gcode": [
 
     ],
-    "compatible_printers": [
-        "Cosmyx SuperNova Double Tete 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete 0.2 nozzle",
-        "Cosmyx SuperNova Double Tete 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete 0.8 nozzle"
-    ]
+    "compatible_printers": []
 }

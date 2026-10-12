@@ -79,7 +79,5 @@
         "1"
     ],
     "version": "1.7.0.18",
-    "compatible_printers": [
-        "Cosmyx SuperNova Double Tete 0.4 nozzle"
-    ]
+    "compatible_printers": []
 }

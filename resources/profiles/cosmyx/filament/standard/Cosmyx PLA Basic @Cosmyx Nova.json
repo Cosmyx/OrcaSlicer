@@ -8,11 +8,6 @@
     "filament_max_volumetric_speed": [
         "21"
     ],
-    "compatible_printers": [
-        "Cosmyx SuperNova Double Tete 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete 0.2 nozzle",
-        "Cosmyx SuperNova Double Tete 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete 0.8 nozzle"
-    ],
+    "compatible_printers": [],
     "version": "01.07.00.18"
 }
