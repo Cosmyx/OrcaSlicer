@@ -52,8 +52,8 @@
             "sub_path": "process/global/fdm_process_cosmyx_0.08.json"
         },
         {
-            "name": "fdm_process_cosmyx_0.10_nozzle_0.2",
-            "sub_path": "process/global/fdm_process_cosmyx_0.10_nozzle_0.2.json"
+            "name": "fdm_process_cosmyx_0.10_nozzle_0.25",
+            "sub_path": "process/global/fdm_process_cosmyx_0.10_nozzle_0.25.json"
         },
         {
             "name": "fdm_process_cosmyx_0.40_nozzle_0.8",
@@ -112,8 +112,8 @@
             "sub_path": "process/global/0.28mm Extra Draft @Cosmyx Nova.json"
         },
         {
-            "name": "0.10mm Standard @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "process/global/0.10mm Standard @Cosmyx Nova 0.2 nozzle.json"
+            "name": "0.10mm Standard @Cosmyx Nova 0.25 nozzle",
+            "sub_path": "process/global/0.10mm Standard @Cosmyx Nova 0.25 nozzle.json"
         },
         {
             "name": "0.30mm Standard @Cosmyx Nova 0.6 nozzle",
@@ -124,36 +124,36 @@
             "sub_path": "process/global/0.40mm Standard @Cosmyx Nova 0.8 nozzle.json"
         },
         {
-            "name": "fdm_process_cosmyx_0.06_nozzle_0.2",
-            "sub_path": "process/global/fdm_process_cosmyx_0.06_nozzle_0.2.json"
+            "name": "fdm_process_cosmyx_0.06_nozzle_0.25",
+            "sub_path": "process/global/fdm_process_cosmyx_0.06_nozzle_0.25.json"
         },
         {
-            "name": "fdm_process_cosmyx_0.08_nozzle_0.2",
-            "sub_path": "process/global/fdm_process_cosmyx_0.08_nozzle_0.2.json"
+            "name": "fdm_process_cosmyx_0.08_nozzle_0.25",
+            "sub_path": "process/global/fdm_process_cosmyx_0.08_nozzle_0.25.json"
         },
         {
-            "name": "fdm_process_cosmyx_0.12_nozzle_0.2",
-            "sub_path": "process/global/fdm_process_cosmyx_0.12_nozzle_0.2.json"
+            "name": "fdm_process_cosmyx_0.12_nozzle_0.25",
+            "sub_path": "process/global/fdm_process_cosmyx_0.12_nozzle_0.25.json"
         },
         {
-            "name": "fdm_process_cosmyx_0.14_nozzle_0.2",
-            "sub_path": "process/global/fdm_process_cosmyx_0.14_nozzle_0.2.json"
+            "name": "fdm_process_cosmyx_0.14_nozzle_0.25",
+            "sub_path": "process/global/fdm_process_cosmyx_0.14_nozzle_0.25.json"
         },
         {
-            "name": "0.06mm Standard @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "process/global/0.06mm Standard @Cosmyx Nova 0.2 nozzle.json"
+            "name": "0.06mm Standard @Cosmyx Nova 0.25 nozzle",
+            "sub_path": "process/global/0.06mm Standard @Cosmyx Nova 0.25 nozzle.json"
         },
         {
-            "name": "0.08mm Standard @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "process/global/0.08mm Standard @Cosmyx Nova 0.2 nozzle.json"
+            "name": "0.08mm Standard @Cosmyx Nova 0.25 nozzle",
+            "sub_path": "process/global/0.08mm Standard @Cosmyx Nova 0.25 nozzle.json"
         },
         {
-            "name": "0.12mm Standard @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "process/global/0.12mm Standard @Cosmyx Nova 0.2 nozzle.json"
+            "name": "0.12mm Standard @Cosmyx Nova 0.25 nozzle",
+            "sub_path": "process/global/0.12mm Standard @Cosmyx Nova 0.25 nozzle.json"
         },
         {
-            "name": "0.14mm Standard @Cosmyx Nova 0.2 nozzle",
-            "sub_path": "process/global/0.14mm Standard @Cosmyx Nova 0.2 nozzle.json"
+            "name": "0.14mm Standard @Cosmyx Nova 0.25 nozzle",
+            "sub_path": "process/global/0.14mm Standard @Cosmyx Nova 0.25 nozzle.json"
         },
         {
             "name": "fdm_process_cosmyx_0.18_nozzle_0.6",
@@ -252,8 +252,8 @@
             "sub_path": "process/ceramics/0.28mm Extra Draft @Metal and Ceramics.json"
         },
         {
-            "name": "0.10mm Standard @Metal and Ceramics 0.2 nozzle",
-            "sub_path": "process/ceramics/0.10mm Standard @Metal and Ceramics 0.2 nozzle.json"
+            "name": "0.10mm Standard @Metal and Ceramics 0.25 nozzle",
+            "sub_path": "process/ceramics/0.10mm Standard @Metal and Ceramics 0.25 nozzle.json"
         },
         {
             "name": "0.30mm Standard @Metal and Ceramics 0.6 nozzle",
@@ -264,20 +264,20 @@
             "sub_path": "process/ceramics/0.40mm Standard @Metal and Ceramics 0.8 nozzle.json"
         },
         {
-            "name": "0.06mm Standard @Metal and Ceramics 0.2 nozzle",
-            "sub_path": "process/ceramics/0.06mm Standard @Metal and Ceramics 0.2 nozzle.json"
+            "name": "0.06mm Standard @Metal and Ceramics 0.25 nozzle",
+            "sub_path": "process/ceramics/0.06mm Standard @Metal and Ceramics 0.25 nozzle.json"
         },
         {
-            "name": "0.08mm Standard @Metal and Ceramics 0.2 nozzle",
-            "sub_path": "process/ceramics/0.08mm Standard @Metal and Ceramics 0.2 nozzle.json"
+            "name": "0.08mm Standard @Metal and Ceramics 0.25 nozzle",
+            "sub_path": "process/ceramics/0.08mm Standard @Metal and Ceramics 0.25 nozzle.json"
         },
         {
-            "name": "0.12mm Standard @Metal and Ceramics 0.2 nozzle",
-            "sub_path": "process/ceramics/0.12mm Standard @Metal and Ceramics 0.2 nozzle.json"
+            "name": "0.12mm Standard @Metal and Ceramics 0.25 nozzle",
+            "sub_path": "process/ceramics/0.12mm Standard @Metal and Ceramics 0.25 nozzle.json"
         },
         {
-            "name": "0.14mm Standard @Metal and Ceramics 0.2 nozzle",
-            "sub_path": "process/ceramics/0.14mm Standard @Metal and Ceramics 0.2 nozzle.json"
+            "name": "0.14mm Standard @Metal and Ceramics 0.25 nozzle",
+            "sub_path": "process/ceramics/0.14mm Standard @Metal and Ceramics 0.25 nozzle.json"
         },
         {
             "name": "0.18mm Standard @Metal and Ceramics 0.6 nozzle",
@@ -452,8 +452,8 @@
             "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx SuperNova Double Tete 0.2 nozzle",
-            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete 0.2 nozzle.json"
+            "name": "Cosmyx SuperNova Double Tete 0.25 nozzle",
+            "sub_path": "machine/SuperNovaDT_V2/Cosmyx SuperNova Double Tete 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx SuperNova Double Tete 0.6 nozzle",
@@ -468,8 +468,8 @@
             "sub_path": "machine/Nova/Cosmyx Nova 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx Nova 0.2 nozzle",
-            "sub_path": "machine/Nova/Cosmyx Nova 0.2 nozzle.json"
+            "name": "Cosmyx Nova 0.25 nozzle",
+            "sub_path": "machine/Nova/Cosmyx Nova 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx Nova 0.6 nozzle",
@@ -484,8 +484,8 @@
             "sub_path": "machine/SuperNova/Cosmyx SuperNova 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx SuperNova 0.2 nozzle",
-            "sub_path": "machine/SuperNova/Cosmyx SuperNova 0.2 nozzle.json"
+            "name": "Cosmyx SuperNova 0.25 nozzle",
+            "sub_path": "machine/SuperNova/Cosmyx SuperNova 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx SuperNova 0.6 nozzle",
@@ -500,8 +500,8 @@
             "sub_path": "machine/Nova_Ceramique/Cosmyx Nova Metal Ceramique 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx Nova Metal Ceramique 0.2 nozzle",
-            "sub_path": "machine/Nova_Ceramique/Cosmyx Nova Metal Ceramique 0.2 nozzle.json"
+            "name": "Cosmyx Nova Metal Ceramique 0.25 nozzle",
+            "sub_path": "machine/Nova_Ceramique/Cosmyx Nova Metal Ceramique 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx Nova Metal Ceramique 0.6 nozzle",
@@ -516,8 +516,8 @@
             "sub_path": "machine/Nova_hightemp/Cosmyx Nova Haute Temperature 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx Nova Haute Temperature 0.2 nozzle",
-            "sub_path": "machine/Nova_hightemp/Cosmyx Nova Haute Temperature 0.2 nozzle.json"
+            "name": "Cosmyx Nova Haute Temperature 0.25 nozzle",
+            "sub_path": "machine/Nova_hightemp/Cosmyx Nova Haute Temperature 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx Nova Haute Temperature 0.6 nozzle",
@@ -532,8 +532,8 @@
             "sub_path": "machine/nova_dt/Cosmyx Nova Double Tete 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx Nova Double Tete 0.2 nozzle",
-            "sub_path": "machine/nova_dt/Cosmyx Nova Double Tete 0.2 nozzle.json"
+            "name": "Cosmyx Nova Double Tete 0.25 nozzle",
+            "sub_path": "machine/nova_dt/Cosmyx Nova Double Tete 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx Nova Double Tete 0.6 nozzle",
@@ -548,8 +548,8 @@
             "sub_path": "machine/SuperNova_DT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle.json"
         },
         {
-            "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle",
-            "sub_path": "machine/SuperNova_DT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle.json"
+            "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.25 nozzle",
+            "sub_path": "machine/SuperNova_DT_V2_Ceramique/Cosmyx SuperNova Double Tete Metal Ceramique 0.25 nozzle.json"
         },
         {
             "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle",
@@ -564,8 +564,8 @@
             "sub_path": "machine/nova_can_out/Cosmyx Nova 0.4 nozzle can-out.json"
         },
         {
-            "name": "Cosmyx Nova 0.2 nozzle can-out",
-            "sub_path": "machine/nova_can_out/Cosmyx Nova 0.2 nozzle can-out.json"
+            "name": "Cosmyx Nova 0.25 nozzle can-out",
+            "sub_path": "machine/nova_can_out/Cosmyx Nova 0.25 nozzle can-out.json"
         },
         {
             "name": "Cosmyx Nova 0.6 nozzle can-out",

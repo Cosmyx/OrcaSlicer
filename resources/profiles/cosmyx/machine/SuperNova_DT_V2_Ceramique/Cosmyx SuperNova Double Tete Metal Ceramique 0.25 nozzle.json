@@ -2,26 +2,26 @@
     "type": "machine",
     "setting_id": "GM002",
     "instantiation": "true",
-    "name": "Cosmyx SuperNova Double Tete 0.2 nozzle",
+    "name": "Cosmyx SuperNova Double Tete Metal Ceramique 0.25 nozzle",
     "from": "system",
-    "inherits": "Cosmyx SuperNova Double Tete 0.4 nozzle",
+    "inherits": "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
     "nozzle_diameter": [
-        "0.2",
-        "0.2"
+        "0.25",
+        "0.25"
     ],
-    "printer_model": "Cosmyx SuperNova Double Tete",
-    "printer_variant": "0.2",
+    "printer_model": "Cosmyx SuperNova Double Tete Metal Ceramique",
+    "printer_variant": "0.25",
     "default_filament_profile": [
         "Cosmyx PLA Basic @Cosmyx Nova"
     ],
-    "default_print_profile": "0.10mm Standard @Cosmyx Nova 0.2 nozzle",
+    "default_print_profile": "0.10mm Standard @Cosmyx Nova 0.25 nozzle",
     "max_layer_height": [
         "0.14"
     ],
     "min_layer_height": [
         "0.04"
     ],
-    "nozzle_type": "cht",
+    "nozzle_type": "brass",
     "retraction_length": [
         "0.4"
     ],

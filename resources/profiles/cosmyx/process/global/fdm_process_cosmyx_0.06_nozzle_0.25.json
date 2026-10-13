@@ -1,6 +1,6 @@
 {
   "type": "process",
-  "name": "fdm_process_cosmyx_0.06_nozzle_0.2",
+  "name": "fdm_process_cosmyx_0.06_nozzle_0.25",
   "from": "system",
   "instantiation": "false",
   "inherits": "fdm_process_cosmyx_common",

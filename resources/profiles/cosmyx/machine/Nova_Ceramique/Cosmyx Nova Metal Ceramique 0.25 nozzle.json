@@ -2,13 +2,13 @@
     "type": "machine",
     "setting_id": "GM402",
     "instantiation": "true",
-    "inherits": "Cosmyx Nova 0.2 nozzle",
-    "name": "Cosmyx Nova Metal Ceramique 0.2 nozzle",
+    "inherits": "Cosmyx Nova 0.25 nozzle",
+    "name": "Cosmyx Nova Metal Ceramique 0.25 nozzle",
     "nozzle_diameter": [
-        "0.2"
+        "0.25"
     ],
     "printer_model": "Cosmyx Nova Metal Ceramique",
-    "printer_variant": "0.2",
+    "printer_variant": "0.25",
     "nozzle_type": "brass",
     "z_hop": [
         "0.4"

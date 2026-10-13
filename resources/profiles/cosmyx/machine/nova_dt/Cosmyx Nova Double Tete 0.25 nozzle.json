@@ -2,11 +2,11 @@
     "type": "machine",
     "setting_id": "GM602",
     "instantiation": "true",
-    "inherits": "Cosmyx Nova 0.2 nozzle",
-    "name": "Cosmyx Nova Double Tete 0.2 nozzle",
+    "inherits": "Cosmyx Nova 0.25 nozzle",
+    "name": "Cosmyx Nova Double Tete 0.25 nozzle",
     "nozzle_diameter": [
-        "0.2",
-        "0.2"
+        "0.25",
+        "0.25"
     ],
     "printable_area": [
         "68x0",
@@ -15,7 +15,7 @@
         "68x200"
     ],
     "printer_model": "Cosmyx Nova Double Tete",
-    "printer_variant": "0.2",
+    "printer_variant": "0.25",
     "bed_exclude_area": [
         "0x0"
     ],
