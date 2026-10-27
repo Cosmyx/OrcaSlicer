@@ -211,7 +211,7 @@ void Tab::create_preset_tab()
 
                 // select preset
                 std::string preset_name = m_presets_choice->GetString(selection).ToUTF8().data();
-                select_preset(Preset::remove_suffix_modified(preset_name));
+                select_preset(ProfileTranslator::instance().untranslate(Preset::remove_suffix_modified(preset_name)));
             }
         });
     }
