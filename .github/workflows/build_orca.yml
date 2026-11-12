@@ -261,6 +261,22 @@ jobs:
           timestamp-rfc3161: http://timestamp.acs.microsoft.com
           timestamp-digest: SHA256
 
+      # The NSIS plugin DLLs (System.dll, StartMenu.dll, ...) are embedded in the installer and
+      # loaded from %TEMP% at install time; sign them so Smart App Control does not block them.
+      - name: Sign NSIS plugins with Azure Trusted Signing
+        if: inputs.os == 'windows-2022' && env.AZURE_CLIENT_ID != ''
+        uses: azure/trusted-signing-action@v0.5.0
+        with:
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
+          files-folder: C:\Program Files (x86)\NSIS\Plugins
+          files-folder-filter: dll
+          files-folder-recurse: true
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+
       - name: Create installer Win
         if: inputs.os == 'windows-2022'
         working-directory: ${{ github.workspace }}/build
