@@ -876,6 +876,13 @@ set (CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 set(CPACK_PACKAGE_EXECUTABLES "orca-slicer;OrcaSlicer")
 set(CPACK_CREATE_DESKTOP_LINKS "orca-slicer")
 set (CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE.txt) # must also include in install command
+# Package the already-installed tree (build/OrcaSlicer) as-is instead of re-running the install rules.
+# CI signs the exe/dll files in that tree before running cpack; re-running install() would copy the
+# unsigned originals back into the installer, and Windows code integrity then refuses to load them.
+if (WIN32)
+    set (CPACK_INSTALL_CMAKE_PROJECTS "")
+    set (CPACK_INSTALLED_DIRECTORIES "${CMAKE_BINARY_DIR}/OrcaSlicer;.")
+endif ()
 
 set(CPACK_WIX_UPGRADE_GUID "058245e8-20e0-4a95-9ab7-1acfe17ad511")
 set(CPACK_GENERATOR NSIS)
