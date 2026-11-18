@@ -39,6 +39,42 @@
     "cosmyx_textured_bed_temp_initial_layer": [
         "170"
     ],
+    "supertack_plate_temp": [
+        "170"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "170"
+    ],
+    "cool_plate_temp": [
+        "170"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "170"
+    ],
+    "textured_cool_plate_temp": [
+        "170"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "170"
+    ],
+    "eng_plate_temp": [
+        "170"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "170"
+    ],
+    "hot_plate_temp": [
+        "170"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "170"
+    ],
+    "textured_plate_temp": [
+        "170"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "170"
+    ],
     "nozzle_temperature": [
         "380"
     ],

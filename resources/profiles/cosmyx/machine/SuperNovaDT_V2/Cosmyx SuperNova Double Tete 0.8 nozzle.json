@@ -27,7 +27,7 @@
     "layer_change_gcode": "G92 E0.0\n",
     "purge_in_prime_tower": "0",
     "default_filament_profile": [
-        "Cosmyx PLA Basic @Cosmyx Nova 0.8 nozzle"
+        "Cosmyx PLA Basic @Cosmyx Nova"
     ],
     "default_print_profile": "0.40mm Standard @Cosmyx Nova 0.8 nozzle",
     "max_layer_height": [

@@ -19,11 +19,47 @@
     "filament_cost": [
         "20"
     ],
-    "cosmyx_textured_bed_temp" : [
-        "65"
+    "cosmyx_textured_bed_temp": [
+        "55"
     ],
-    "cosmyx_textured_bed_temp_initial_layer" : [
-        "65"
+    "cosmyx_textured_bed_temp_initial_layer": [
+        "55"
+    ],
+    "supertack_plate_temp": [
+        "55"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "55"
+    ],
+    "cool_plate_temp": [
+        "55"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "55"
+    ],
+    "textured_cool_plate_temp": [
+        "55"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "55"
+    ],
+    "eng_plate_temp": [
+        "55"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "55"
+    ],
+    "hot_plate_temp": [
+        "55"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "55"
+    ],
+    "textured_plate_temp": [
+        "55"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "55"
     ],
     "nozzle_temperature_initial_layer": [
         "205"
@@ -73,38 +109,5 @@
     "filament_start_gcode": [
 
     ],
-     "compatible_printers": [
-        "Cosmyx SuperNova Double Tete 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete 0.2 nozzle",
-        "Cosmyx SuperNova Double Tete 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete 0.8 nozzle",
-        "Cosmyx Nova 0.4 nozzle",
-        "Cosmyx Nova 0.4 nozzle can-out",
-        "Cosmyx Nova 0.2 nozzle",
-        "Cosmyx Nova 0.2 nozzle can-out",
-        "Cosmyx Nova 0.6 nozzle",
-        "Cosmyx Nova 0.6 nozzle can-out",
-        "Cosmyx Nova 0.8 nozzle",
-        "Cosmyx Nova 0.8 nozzle can-out",
-        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.2 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.6 nozzle",
-        "Cosmyx Nova Metal Ceramique 0.8 nozzle",
-        "Cosmyx Nova Double Tete 0.4 nozzle",
-        "Cosmyx Nova Double Tete 0.2 nozzle",
-        "Cosmyx Nova Double Tete 0.6 nozzle",
-        "Cosmyx Nova Double Tete 0.8 nozzle",
-        "Cosmyx Nova Haute Temperature 0.4 nozzle",
-        "Cosmyx Nova Haute Temperature 0.2 nozzle",
-        "Cosmyx Nova Haute Temperature 0.6 nozzle",
-        "Cosmyx Nova Haute Temperature 0.8 nozzle",
-        "Cosmyx SuperNova 0.4 nozzle",
-        "Cosmyx SuperNova 0.2 nozzle",
-        "Cosmyx SuperNova 0.6 nozzle",
-        "Cosmyx SuperNova 0.8 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.2 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle",
-        "Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle"
-    ]
+    "compatible_printers": []
 }

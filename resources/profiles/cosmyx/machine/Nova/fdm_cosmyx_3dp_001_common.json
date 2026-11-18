@@ -23,7 +23,6 @@
     ],
     "gcode_flavor": "klipper",
     "inherits": "fdm_machine_common",
-    "default_bed_type": "7",
     "machine_max_acceleration_e": [
         "5000"
     ],
@@ -127,14 +126,6 @@
     "z_hop_types": [
         "slope"
     ],
-    "retract_lift_above": [
-        "1",
-        "1"
-    ],
-    "retract_lift_below": [
-        "600",
-        "600"
-    ],
     "nozzle_type": "brass",
     "silent_mode": "0",
     "single_extruder_multi_material": "1",
@@ -145,5 +136,13 @@
     "machine_start_gcode": "PREHEAT B={max(first_layer_bed_temperature[0],first_layer_bed_temperature[1])} TL={first_layer_temperature[0]} TR={first_layer_temperature[1]}\n\n;; start_print ;;",
     "wipe": [
         "1"
+    ],
+    "retract_lift_above": [
+        "1",
+        "1"
+    ],
+    "retract_lift_below": [
+        "600",
+        "600"
     ]
 }

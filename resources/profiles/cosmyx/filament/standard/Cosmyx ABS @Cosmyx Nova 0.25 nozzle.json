@@ -1,7 +1,7 @@
 {
     "type": "filament",
     "setting_id": "GFSB00_00",
-    "name": "Cosmyx ABS @Cosmyx Nova 0.2 nozzle",
+    "name": "Cosmyx ABS @Cosmyx Nova 0.25 nozzle",
     "from": "system",
     "instantiation": "true",
     "inherits": "Cosmyx ABS @base",
