@@ -20,6 +20,7 @@ argument list, so the script behaves the same on Linux, macOS and Windows.
 from __future__ import annotations
 
 import argparse
+import fnmatch
 import json
 import os
 import re
@@ -362,11 +363,20 @@ def scheduled_workflows(workflows_dir: Path) -> list[str]:
     return names
 
 
+DEFAULT_OWNED_GLOB = "cosmyx-*.yml"
+
+
 @dataclass
 class Policy:
     disable: list[str]
     allow_scheduled: list[str]
     must_stay_enabled: list[str]
+    # Workflow files matching this glob belong to the fork: they are allowed to be
+    # scheduled without a policy entry and are never disabled (decision 0105).
+    cosmyx_owned_glob: str = DEFAULT_OWNED_GLOB
+
+    def is_owned(self, name: str) -> bool:
+        return bool(self.cosmyx_owned_glob) and fnmatch.fnmatchcase(name, self.cosmyx_owned_glob)
 
 
 def load_policy(path: Path) -> Policy:
@@ -375,6 +385,7 @@ def load_policy(path: Path) -> Policy:
         disable=list(data.get("disable", [])),
         allow_scheduled=list(data.get("allow_scheduled", [])),
         must_stay_enabled=list(data.get("must_stay_enabled", [])),
+        cosmyx_owned_glob=str(data.get("cosmyx_owned_glob", DEFAULT_OWNED_GLOB)),
     )
     return policy
 
@@ -387,9 +398,11 @@ def check_policy(policy: Policy, scheduled: Sequence[str]) -> list[str]:
         problems.append(f"{name} is both allowed and disabled")
     for name in sorted(set(policy.disable) & set(policy.must_stay_enabled)):
         problems.append(f"{name} must stay enabled but is in the disable list")
+    for name in sorted(n for n in set(policy.disable) if policy.is_owned(n)):
+        problems.append(f"{name} is Cosmyx-owned ({policy.cosmyx_owned_glob}) and cannot be disabled")
     known = set(policy.disable) | set(policy.allow_scheduled)
     for name in scheduled:
-        if name not in known:
+        if name not in known and not policy.is_owned(name):
             problems.append(
                 f"{name} has a schedule trigger but is in neither allow_scheduled nor disable "
                 "of .github/cosmyx/workflow-policy.json"
@@ -416,6 +429,10 @@ def apply_policy(policy: Policy, repo: str, runner: Runner = run_gh) -> list[str
     """
     lines = []
     for name in policy.disable:
+        if policy.is_owned(name):
+            # Defensive: check_policy already rejects this; never disable our own workflows.
+            lines.append(f"{name}: Cosmyx-owned, never disabled")
+            continue
         endpoint = f"repos/{repo}/actions/workflows/{name}"
         state_call = runner(["api", endpoint, "--jq", ".state"])
         if state_call.returncode != 0:
@@ -460,7 +477,7 @@ def workflow_policy(policy_path: Path, workflows_dir: Path, apply: bool, repo: s
     if problems:
         write_summary("### Workflow policy failed\n" + "\n".join(f"- {p}" for p in problems) + "\n")
         return EXIT_ERROR
-    print("Workflow policy: every scheduled workflow is allowed or disabled.")
+    print("Workflow policy: every scheduled workflow is Cosmyx-owned, allowed or disabled.")
     if apply:
         if not repo:
             raise SyncError("--apply needs --repo or GITHUB_REPOSITORY")

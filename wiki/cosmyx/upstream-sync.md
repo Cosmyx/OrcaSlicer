@@ -42,7 +42,7 @@ Upstream ships workflows that run on a schedule. Scheduled workflows only run
 from the default branch, so on the fork they run from `DEV`. Some are upstream
 issue and pull request bots that must not act on the fork.
 
-`.github/cosmyx/workflow-policy.json` holds three lists:
+`.github/cosmyx/workflow-policy.json` holds three lists and a pattern:
 
 - `disable`: workflows disabled on the repository through the GitHub API. A
   workflow that is already disabled, inactive, or not registered yet is left
@@ -50,10 +50,16 @@ issue and pull request bots that must not act on the fork.
 - `allow_scheduled`: scheduled workflows that may run on the fork.
 - `must_stay_enabled`: workflows the policy never disables and warns about
   when they are not active (`build_all.yml`, this sync).
+- `cosmyx_owned_glob` (default `cosmyx-*.yml`, case-sensitive): workflow files
+  of the fork itself. They may be scheduled without an entry in either list and
+  are never disabled; listing one in `disable` fails the check. An empty value
+  turns the exemption off. See decision 0105.
 
-Every workflow with a `schedule` trigger must be in `allow_scheduled` or in
-`disable`. When upstream adds a new scheduled workflow, the next sync fails
+Every other workflow with a `schedule` trigger must be in `allow_scheduled` or
+in `disable`. When upstream adds a new scheduled workflow, the next sync fails
 with an annotation naming it: add it to one of the two lists in a pull request.
+A Cosmyx pull request that adds a scheduled `cosmyx-*.yml` workflow does not
+touch the policy file.
 
 Event-driven upstream bots (`pr-label-bot.yml`, `pr-merge-bot.yml`,
 `dedupe-issues.yml`, `backfill-duplicate-comments.yml`) are not scheduled, so
