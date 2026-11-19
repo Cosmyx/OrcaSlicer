@@ -1,0 +1,181 @@
+# Cosmyx macOS signing: Developer ID signing, notarisation and stapling of the universal
+# build (wiki/cosmyx/macos-signing.md, decisions 0150-0158).
+# build_orca.yml calls it once, from its "# Cosmyx" step after "Create DMG without notary":
+# it signs every .app of build/universal/OrcaSlicer inside out, notarises and staples it,
+# rebuilds the DMGs under the same names, signs, notarises and staples them, and verifies.
+# The settings are the repository's seven Apple secrets, passed as inputs because a step's
+# `if:` cannot read secrets. None set: signing is off with a notice. Some set: the step fails
+# and names the missing ones. All set: it signs.
+name: Cosmyx macOS signing
+description: Sign, notarise and staple the universal macOS build with a Developer ID certificate.
+
+inputs:
+  version:
+    description: Build version in the DMG names (build_orca.yml's env.ver).
+    required: true
+  self-hosted:
+    description: The SELF_HOSTED variable; non-empty means a self-hosted runner (no pf rule).
+    required: false
+    default: ''
+  certificate-base64:
+    description: Developer ID Application certificate and key, .p12 in base64, secret BUILD_CERTIFICATE_BASE64.
+    required: false
+    default: ''
+  p12-password:
+    description: Password of the .p12, secret P12_PASSWORD.
+    required: false
+    default: ''
+  keychain-password:
+    description: Password for the temporary keychain, secret KEYCHAIN_PASSWORD.
+    required: false
+    default: ''
+  certificate-id:
+    description: codesign identity (SHA-1 or full name of the certificate), secret MACOS_CERTIFICATE_ID.
+    required: false
+    default: ''
+  apple-id:
+    description: Apple ID of the notarisation account, secret APPLE_DEV_ACCOUNT.
+    required: false
+    default: ''
+  app-password:
+    description: App-specific password of that Apple ID, secret APP_PWD.
+    required: false
+    default: ''
+  team-id:
+    description: Apple team ID, secret TEAM_ID.
+    required: false
+    default: ''
+
+outputs:
+  enabled:
+    description: "'true' when every signing secret was set and signing ran."
+    value: ${{ steps.settings.outputs.enabled }}
+
+runs:
+  using: composite
+  steps:
+    - name: Check the signing secrets
+      id: settings
+      shell: bash
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ inputs.certificate-base64 }}
+        P12_PASSWORD: ${{ inputs.p12-password }}
+        KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
+        MACOS_CERTIFICATE_ID: ${{ inputs.certificate-id }}
+        APPLE_DEV_ACCOUNT: ${{ inputs.apple-id }}
+        APP_PWD: ${{ inputs.app-password }}
+        TEAM_ID: ${{ inputs.team-id }}
+      run: |
+        names=(BUILD_CERTIFICATE_BASE64 P12_PASSWORD KEYCHAIN_PASSWORD MACOS_CERTIFICATE_ID APPLE_DEV_ACCOUNT APP_PWD TEAM_ID)
+        missing=()
+        for name in "${names[@]}"; do
+          if [ -z "${!name}" ]; then missing+=("$name"); fi
+        done
+        if [ "${#missing[@]}" -eq "${#names[@]}" ]; then
+          echo "::notice::macOS signing is off: the Apple signing secrets are not set."
+          echo "enabled=false" >> "$GITHUB_OUTPUT"
+          exit 0
+        fi
+        if [ "${#missing[@]}" -gt 0 ]; then
+          echo "::error::macOS signing needs these secrets too: ${missing[*]}. See wiki/cosmyx/macos-signing.md."
+          exit 1
+        fi
+        echo "enabled=true" >> "$GITHUB_OUTPUT"
+
+    # A temporary keychain holds the certificate; the user's search list and default keychain
+    # are saved first and restored by the cleanup step, which matters on self-hosted runners.
+    - name: Prepare the signing keychain
+      if: steps.settings.outputs.enabled == 'true'
+      shell: bash
+      env:
+        BUILD_CERTIFICATE_BASE64: ${{ inputs.certificate-base64 }}
+        P12_PASSWORD: ${{ inputs.p12-password }}
+        KEYCHAIN_PASSWORD: ${{ inputs.keychain-password }}
+        MACOS_CERTIFICATE_ID: ${{ inputs.certificate-id }}
+      run: |
+        set -euo pipefail
+        keychain="$RUNNER_TEMP/cosmyx-signing.keychain-db"
+        certificate="$RUNNER_TEMP/cosmyx-signing.p12"
+        security list-keychains -d user | sed -e 's/^[[:space:]]*"//' -e 's/"$//' > "$RUNNER_TEMP/cosmyx-keychains.txt"
+        security default-keychain -d user | sed -e 's/^[[:space:]]*"//' -e 's/"$//' > "$RUNNER_TEMP/cosmyx-default-keychain.txt"
+        printf '%s' "$BUILD_CERTIFICATE_BASE64" | base64 --decode > "$certificate"
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$keychain"
+        security set-keychain-settings -lut 21600 "$keychain"
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$keychain"
+        security import "$certificate" -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k "$keychain"
+        rm -f "$certificate"
+        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$keychain" > /dev/null
+        originals=()
+        while IFS= read -r line; do
+          if [ -n "$line" ]; then originals+=("$line"); fi
+        done < "$RUNNER_TEMP/cosmyx-keychains.txt"
+        security list-keychains -d user -s "$keychain" ${originals[@]+"${originals[@]}"}
+        security default-keychain -d user -s "$keychain"
+        identities=$(security find-identity -v -p codesigning "$keychain")
+        if ! grep -q '"Developer ID Application: ' <<< "$identities"; then
+          echo "::error::The certificate is not a Developer ID Application certificate (see wiki/cosmyx/macos-signing.md)."
+          exit 1
+        fi
+        if ! grep -qF -- "$MACOS_CERTIFICATE_ID" <<< "$identities"; then
+          echo "::error::MACOS_CERTIFICATE_ID matches no signing identity of the certificate."
+          exit 1
+        fi
+        echo "COSMYX_MAC_KEYCHAIN=$keychain" >> "$GITHUB_ENV"
+        echo "Keychain ready: $(grep -c '"Developer ID Application: ' <<< "$identities") Developer ID identity."
+
+    # xcrun stapler fetches the ticket over HTTP/3 (UDP 443), which GitHub-hosted macOS
+    # runners drop (Error 68); blocking UDP 443 makes it fall back to TCP, like upstream's
+    # "Force stapler onto TCP". pfctl -E returns a token, released by the cleanup step so
+    # pf goes back to its previous state.
+    - name: Force stapler onto TCP
+      if: steps.settings.outputs.enabled == 'true' && inputs.self-hosted == ''
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "block return out quick proto udp from any to any port 443" | sudo pfctl -f - 2> /dev/null
+        token=$(sudo pfctl -E 2>&1 | sed -n 's/^Token : //p')
+        printf '%s' "$token" > "$RUNNER_TEMP/cosmyx-pf-token.txt"
+
+    - name: Sign, notarise and staple
+      if: steps.settings.outputs.enabled == 'true'
+      shell: bash
+      env:
+        COSMYX_MAC_SIGN_IDENTITY: ${{ inputs.certificate-id }}
+        COSMYX_MAC_APPLE_ID: ${{ inputs.apple-id }}
+        COSMYX_MAC_APP_PASSWORD: ${{ inputs.app-password }}
+        COSMYX_MAC_TEAM_ID: ${{ inputs.team-id }}
+        VERSION: ${{ inputs.version }}
+      run: |
+        python3 -I "$GITHUB_WORKSPACE/scripts/cosmyx/macos_signing/cli.py" run --root "$GITHUB_WORKSPACE" \
+          --version "$VERSION" --summary "$GITHUB_STEP_SUMMARY" --log-dir "$RUNNER_TEMP/cosmyx-notary-logs" \
+          --work "$RUNNER_TEMP/cosmyx-notary-work"
+
+    - name: Keep the notary logs
+      if: failure() && steps.settings.outputs.enabled == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: cosmyx-notary-log-${{ inputs.version }}
+        path: ${{ runner.temp }}/cosmyx-notary-logs
+        retention-days: 30
+        if-no-files-found: ignore
+
+    - name: Clean up the keychain and pf
+      if: always() && steps.settings.outputs.enabled == 'true'
+      shell: bash
+      run: |
+        keychain="$RUNNER_TEMP/cosmyx-signing.keychain-db"
+        if [ -s "$RUNNER_TEMP/cosmyx-pf-token.txt" ]; then
+          sudo pfctl -X "$(cat "$RUNNER_TEMP/cosmyx-pf-token.txt")" || true
+        fi
+        if [ -f "$RUNNER_TEMP/cosmyx-keychains.txt" ]; then
+          originals=()
+          while IFS= read -r line; do
+            if [ -n "$line" ]; then originals+=("$line"); fi
+          done < "$RUNNER_TEMP/cosmyx-keychains.txt"
+          security list-keychains -d user -s ${originals[@]+"${originals[@]}"} || true
+        fi
+        if [ -s "$RUNNER_TEMP/cosmyx-default-keychain.txt" ]; then
+          security default-keychain -d user -s "$(cat "$RUNNER_TEMP/cosmyx-default-keychain.txt")" || true
+        fi
+        security delete-keychain "$keychain" 2> /dev/null || true
+        rm -f "$RUNNER_TEMP/cosmyx-signing.p12" "$RUNNER_TEMP/cosmyx-pf-token.txt"
