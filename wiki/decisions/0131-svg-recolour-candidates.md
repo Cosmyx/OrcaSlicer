@@ -47,8 +47,10 @@ reviewed, and the user approves every image that ships (decision 0121).
 - An icon turns violet in the product only once its candidate is accepted;
   until then it keeps its teal, and release builds fail on its `missing`
   row.
-- A teal shade without a mapping (today `#33ABA1`, in the four
-  `one_layer_*_hover` icons) produces no candidate: it needs a mapping in
-  `colours.json`, validated by the user, first.
+- A teal shade without a mapping produces no candidate: it needs a mapping
+  in `colours.json`, validated by the user, first. `#33ABA1`, the hover
+  teal of the four `one_layer_*_hover` icons, was the only one; the user
+  mapped it to `#A472F5` (decision 0127), so every recolour icon now gets a
+  candidate.
 - Removing it: delete `candidates.py` and its recipe file; overlay files
   are then written by hand and recorded with `just brand-sync`.
