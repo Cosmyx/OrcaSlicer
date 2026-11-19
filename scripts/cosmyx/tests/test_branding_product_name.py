@@ -1,0 +1,579 @@
+"""Tests of the product-name stage (T11e): the token rule, the C++ lexer, the
+hint and guide readers, the catalogue rename (never fuzzy), the tables, the
+G8 guards on a fake tree, and a real-tree apply on a scratch copy.
+
+Ported from the CosmoSlice product-name tests (D-001..D-006) to unittest.
+"""
+
+from __future__ import annotations
+
+import tempfile
+import unittest
+from pathlib import Path
+
+from branding_fixture import (
+    RELEASE,
+    REPO_ROOT,
+    TreeCase,
+    apply_module,
+    branding,
+    copy_real_tree,
+    read,
+    snapshot,
+    write,
+)
+
+from branding.product_name import catalogues, cpp, resources, tables, tokens  # noqa: E402
+
+graft = catalogues.graft
+PN = branding.PRODUCT_NAME_DIR
+
+
+# ---------------------------------------------------------------- tokens
+
+
+class TokenTest(unittest.TestCase):
+    def test_matches_product_name(self) -> None:
+        for text in ["OrcaSlicer", "Orca Slicer", "Orca will", "ORCA", "\\nOrca will", "(Orca)", "restarting Orca.",
+                     "Orca-PA", "Orcslicer", "Orc Slicer", "Orcaslicer", "OrcaSlicer's"]:  # fmt: skip
+            with self.subTest(text=text):
+                self.assertTrue(tokens.has_token(text))
+
+    def test_ignores_other_words_and_identifiers(self) -> None:
+        for text in ["orca_slicer", "orcaslicer.com", "Orcas", "TorcaSlicer", "CosmoSlice", "orca",
+                     "OrcaSlicerVersion", "ORCA_CAD_GLYPH", "OrcaSlicer_192px", "_OrcaTee", "OrcaSliced"]:  # fmt: skip
+            with self.subTest(text=text):
+                self.assertFalse(tokens.has_token(text))
+
+    def test_native_tokens(self) -> None:
+        self.assertTrue(tokens.has_native_token("逆戟鲸切片", "zh_CN"))
+        self.assertTrue(tokens.has_native_token("逆戟鯨", "zh_TW"))
+        self.assertTrue(tokens.has_native_token("오르카 슬라이서", "ko"))
+        self.assertFalse(tokens.has_native_token("逆戟鲸", "fr"))
+        self.assertFalse(tokens.has_native_token("오르카", None))
+
+    def test_replace_keeps_urls_files_ids_and_kept_names(self) -> None:
+        kept = [
+            "https://github.com/OrcaSlicer/OrcaSlicer/wiki",
+            "www.OrcaSlicer.com",
+            "OrcaSlicer.exe",
+            "%1%/images/%2%OrcaSlicer%3%.png",
+            "orca/OrcaCube_v2.3mf",
+            "OrcaSlicer/build",
+            "OrcaSlicer\\\\build",
+            "com.orcaslicer.OrcaSlicer",
+            " Orca.Slicer.1",
+            "  // ORCA: Apply bias",
+            "Sync with Orca Cloud",
+            "Orca Cube",
+            "Orca YOLO Flow Calibration",
+            "OrcaSliced Combo",
+        ]
+        for text in kept:
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text), text)
+                self.assertFalse(tokens.visible_name(text))
+
+    def test_replace_prose(self) -> None:
+        cases = {
+            "About OrcaSlicer": "About CosmoSlice",
+            "Orca Slicer will be set up": "CosmoSlice will be set up",
+            "\\nOrca will cap": "\\nCosmoSlice will cap",
+            "Restart Orca.": "Restart CosmoSlice.",
+            "using OrcaSlicer.\\n": "using CosmoSlice.\\n",
+            "Orca Cloud and OrcaSlicer": "Orca Cloud and CosmoSlice",
+            "Unlike OrcaSlicer, see https://orcaslicer.com/OrcaSlicer": "Unlike CosmoSlice, see https://orcaslicer.com/OrcaSlicer",
+        }
+        for text, expected in cases.items():
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text), expected)
+                self.assertTrue(tokens.visible_name(text))
+
+    def test_replace_native_spellings(self) -> None:
+        self.assertEqual(tokens.replace_tokens("오르카슬라이서가 지원", "ko"), "CosmoSlice가 지원")
+        self.assertEqual(tokens.replace_tokens("오르카 슬라이서 시작", "ko"), "CosmoSlice 시작")
+        self.assertEqual(tokens.replace_tokens("欢迎使用逆戟鲸", "zh_CN"), "欢迎使用CosmoSlice")
+        self.assertEqual(tokens.replace_tokens("欢迎使用逆戟鲸", "fr"), "欢迎使用逆戟鲸")
+
+
+# ---------------------------------------------------------------- lexer
+
+
+def raws(source: str) -> list[str]:
+    return [literal.raw for literal in cpp.literals(source)]
+
+
+class LexerTest(unittest.TestCase):
+    def test_skips_comments_and_chars(self) -> None:
+        source = """
+        // "OrcaSlicer in a line comment"
+        /* "OrcaSlicer in a block
+           comment" */
+        char c = '"'; char d = '\\'';
+        auto s = "real";
+        """
+        self.assertEqual(raws(source), ["real"])
+
+    def test_digit_separator_is_not_a_char_literal(self) -> None:
+        self.assertEqual(raws("int n = 1'000'000; auto s = \"x\";"), ["x"])
+
+    def test_escaped_quote_and_prefixes(self) -> None:
+        found = cpp.literals('a = L"wide \\"q\\""; b = u8"utf"; c = foo"bar";')
+        self.assertEqual([(lit.prefix, lit.raw) for lit in found], [("L", 'wide \\"q\\"'), ("u8", "utf"), ("", "bar")])
+
+    def test_raw_string(self) -> None:
+        found = cpp.literals('auto r = R"js(var x = "Orca"; )js"; auto t = "after"; auto u = LR"(w)";')
+        self.assertEqual([lit.raw for lit in found], ['var x = "Orca"; ', "after", "w"])
+        self.assertEqual([lit.prefix for lit in found], ["R", "", "LR"])
+        self.assertEqual(found[0].value, 'var x = "Orca"; ')
+
+    def test_lines_and_context(self) -> None:
+        source = 'int a;\nBOOST_LOG_TRIVIAL(info) << "Orca log";\nshow(_L("Orca text"));\n#include "OrcaSlicer.hpp"\n'
+        found = cpp.literals(source, "f.cpp")
+        self.assertEqual([(lit.line, lit.is_log, lit.is_include) for lit in found], [(2, True, False), (3, False, False), (4, False, True)])
+
+    def test_log_context_spans_lines(self) -> None:
+        source = 'BOOST_LOG_TRIVIAL(info) << "a"\n    << "Orca b";\nshow("Orca c");'
+        self.assertEqual([lit.is_log for lit in cpp.literals(source)], [True, True, False])
+
+    def test_lines_after_block_comment_and_raw_string(self) -> None:
+        source = '/* a\nb */ R"(x\ny)" "z";\n"w";'
+        self.assertEqual([lit.line for lit in cpp.literals(source)], [2, 3, 4])
+
+    def test_decode_escapes(self) -> None:
+        self.assertEqual(cpp.decode('a\\nb\\t\\"q\\"\\\\'), 'a\nb\t"q"\\')
+        self.assertEqual(cpp.decode("\\101\\x42\\u00e9\\013"), "ABé\x0b")
+        self.assertEqual(cpp.decode("\\%"), "%")
+
+    def test_encode_round_trip(self) -> None:
+        value = 'line\n"quoted" \\ tab\tend é'
+        self.assertEqual(cpp.decode(cpp.encode(value)), value)
+
+    def test_groups_join_adjacent_literals(self) -> None:
+        source = 'f(_L("Orca "\n   /* c */ "Slicer" // d\n  "!"), "other");'
+        self.assertEqual([group.value for group in cpp.groups(source)], ["Orca Slicer!", "other"])
+
+    def test_rename_keeps_the_layout_when_it_can(self) -> None:
+        source = 'show(_L("Orca will "\n        "cap it"));\n'
+        renamed, counts = cpp.rename(source, {"Orca will cap it": "CosmoSlice will cap it"})
+        self.assertEqual(renamed, 'show(_L("CosmoSlice will "\n        "cap it"));\n')
+        self.assertEqual(counts, {"Orca will cap it": 1})
+
+    def test_rename_falls_back_to_one_literal(self) -> None:
+        source = 'show(_L("Orca "\n   "Slicer is great"));\n'
+        renamed, _ = cpp.rename(source, {"Orca Slicer is great": "CosmoSlice is great"})
+        self.assertEqual(renamed, 'show(_L("CosmoSlice is great"));\n')
+        renamed, _ = cpp.rename('auto w = L"The Orca Slicer\\n";', {"The Orca Slicer\n": 'A "new" CosmoSlice\n'})
+        self.assertEqual(renamed, 'auto w = L"A \\"new\\" CosmoSlice\\n";')
+
+    def test_rename_raw_string(self) -> None:
+        source = 'doc(R"pbdoc(Loaded by OrcaSlicer.\nDone)pbdoc");'
+        renamed, counts = cpp.rename(source, {"Loaded by OrcaSlicer.\nDone": "Loaded by CosmoSlice.\nDone"})
+        self.assertEqual(renamed, 'doc(R"pbdoc(Loaded by CosmoSlice.\nDone)pbdoc");')
+        self.assertEqual(counts, {"Loaded by OrcaSlicer.\nDone": 1})
+
+    def test_rename_only_whole_values(self) -> None:
+        source = 'a("About OrcaSlicer"); b("About OrcaSlicer today"); c("About OrcaSlicer");'
+        renamed, counts = cpp.rename(source, {"About OrcaSlicer": "About CosmoSlice"})
+        self.assertEqual(renamed, 'a("About CosmoSlice"); b("About OrcaSlicer today"); c("About CosmoSlice");')
+        self.assertEqual(counts, {"About OrcaSlicer": 2})
+
+
+# ---------------------------------------------------------------- resources
+
+
+class ResourcesTest(unittest.TestCase):
+    def test_hint_decode_and_rename(self) -> None:
+        text = '# OrcaSlicer comment\n[hint:A]\ntext = Title\\nSay \\"OrcaSlicer\\"\n\n[hint:B]\nimage = x.png\ntext = Other\n'
+        self.assertEqual(resources.decode_hint('Title\\nSay \\"x\\"'), 'Title\nSay "x"')
+        renamed, counts = resources.rename_hints(text, {'Title\nSay "OrcaSlicer"': 'Title\nSay "CosmoSlice"'})
+        self.assertEqual(renamed, text.replace('\\"OrcaSlicer\\"', '\\"CosmoSlice\\"'))
+        self.assertEqual(counts, {'Title\nSay "OrcaSlicer"': 1})
+        renamed, _ = resources.rename_hints(text, {'Title\nSay "OrcaSlicer"': "New\nline"})
+        self.assertIn("text = New\\nline\n", renamed)
+
+    def test_hint_texts(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write(root, resources.HINTS_FILE, '[hint:A]\ntext = Title\\nSay \\"Orca\\"\n\n[hint:B]\nimage = x.png\n')
+            self.assertEqual(resources.hint_texts(root), {"hint:A": 'Title\nSay "Orca"'})
+
+    def test_guide_texts_only_translated_elements(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            write(
+                root,
+                f"{resources.GUIDE_DIR}/1/index.html",
+                '<div data-i18n="welcome">Welcome to <b>Orca</b><br>Slicer</div>\n'
+                '<div class="a trans">Orca  Slicer\n  is here</div>\n'
+                '<div class="other">Orca hidden</div>\n<!-- Orca comment -->\n',
+            )
+            self.assertEqual(
+                [text for _, _, text in resources.guide_texts(root)], ["Welcome to", "Orca", "Slicer", "Orca Slicer is here"]
+            )
+
+
+# ---------------------------------------------------------------- catalogues
+
+PO = '''msgid ""
+msgstr ""
+"Language: ko\\n"
+"Plural-Forms: nplurals=1; plural=0;\\n"
+
+#: src/a.cpp:1
+msgid "About OrcaSlicer"
+msgstr "오르카 슬라이서 정보"
+
+#, fuzzy
+msgid "Restart Orca"
+msgstr "오르카 재시작"
+
+msgctxt "Menu"
+msgid "Quit OrcaSlicer"
+msgstr "OrcaSlicer 종료, https://github.com/OrcaSlicer/OrcaSlicer 참조"
+
+msgid "%d Orca object"
+msgid_plural "%d Orca objects"
+msgstr[0] "%d 오르카 개체"
+
+msgid "Untouched OrcaSlicer"
+msgstr  "그대로  OrcaSlicer"
+
+#~ msgid "About OrcaSlicer"
+#~ msgstr "obsolete"
+'''
+MAPPING = {
+    "About OrcaSlicer": "About CosmoSlice",
+    "Restart Orca": "Restart CosmoSlice",
+    "Quit OrcaSlicer": "Quit CosmoSlice",
+    "%d Orca object": "%d CosmoSlice object",
+    "%d Orca objects": "%d CosmoSlice objects",
+}
+
+
+class CatalogueTest(unittest.TestCase):
+    def rename(self, text: str = PO, lang: str | None = "ko"):
+        catalogue = graft.parse_po(text)
+        changed = catalogues.rename_catalogue(catalogue, MAPPING, lang)
+        return changed, catalogue
+
+    def entry(self, catalogue, msgid: str):
+        return next(entry for entry in catalogue.messages() if entry.msgid == msgid)
+
+    def test_renames_msgid_and_translation_never_fuzzy(self) -> None:
+        changed, catalogue = self.rename()
+        self.assertEqual(changed, 4)
+        about = self.entry(catalogue, "About CosmoSlice")
+        self.assertEqual(about.msgstr, "CosmoSlice 정보")
+        self.assertFalse(about.fuzzy)
+        self.assertEqual(about.comments, ["#: src/a.cpp:1"])
+        self.assertNotIn("#| ", catalogue.render())
+
+    def test_existing_fuzzy_flag_is_kept(self) -> None:
+        _, catalogue = self.rename()
+        self.assertTrue(self.entry(catalogue, "Restart CosmoSlice").fuzzy)
+        self.assertEqual(catalogue.render().count("fuzzy"), PO.count("fuzzy"))
+
+    def test_context_plural_and_urls(self) -> None:
+        _, catalogue = self.rename()
+        quit_entry = self.entry(catalogue, "Quit CosmoSlice")
+        self.assertEqual(quit_entry.msgctxt, "Menu")
+        self.assertEqual(quit_entry.msgstr, "CosmoSlice 종료, https://github.com/OrcaSlicer/OrcaSlicer 참조")
+        plural = self.entry(catalogue, "%d CosmoSlice object")
+        self.assertEqual(plural.msgid_plural, "%d CosmoSlice objects")
+        self.assertEqual(plural.msgstr_plural, {0: "%d CosmoSlice 개체"})
+
+    def test_untouched_entries_and_obsolete_keep_their_bytes(self) -> None:
+        _, catalogue = self.rename()
+        text = catalogue.render()
+        self.assertIn('msgid "Untouched OrcaSlicer"\nmsgstr  "그대로  OrcaSlicer"\n', text)
+        self.assertIn('#~ msgid "About OrcaSlicer"\n#~ msgstr "obsolete"\n', text)
+        self.assertTrue(text.startswith('msgid ""\nmsgstr ""\n"Language: ko\\n"'))
+
+    def test_template_keeps_empty_msgstr(self) -> None:
+        pot = 'msgid ""\nmsgstr ""\n\nmsgid "About OrcaSlicer"\nmsgstr ""\n'
+        changed, catalogue = self.rename(pot, None)
+        self.assertEqual(changed, 1)
+        self.assertEqual(catalogue.render(), 'msgid ""\nmsgstr ""\n\nmsgid "About CosmoSlice"\nmsgstr ""\n')
+
+    def test_duplicate_new_msgid_fails(self) -> None:
+        text = PO + '\nmsgid "About CosmoSlice"\nmsgstr ""\n'
+        with self.assertRaises(branding.BrandingError):
+            self.rename(text)
+
+    def test_language_of_a_catalogue(self) -> None:
+        self.assertEqual(catalogues.language("localization/i18n/fr/OrcaSlicer_fr.po"), "fr")
+        self.assertIsNone(catalogues.language("localization/i18n/OrcaSlicer.pot"))
+
+
+# ---------------------------------------------------------------- tables
+
+
+class TablesTest(unittest.TestCase):
+    ROW = {"kind": "msgid", "old": "About OrcaSlicer", "new": "About CosmoSlice", "source": "cosmyx"}
+
+    def test_valid_rows(self) -> None:
+        self.assertEqual(len(tables.rename_rows([self.ROW])), 1)
+        self.assertEqual(tables.mapping([self.ROW]), {"About OrcaSlicer": "About CosmoSlice"})
+
+    def test_rename_rejections(self) -> None:
+        bad = [
+            [dict(self.ROW, kind="other")],
+            [dict(self.ROW, new="About OrcaSlicer")],
+            [dict(self.ROW, old="About it")],
+            [dict(self.ROW, new="About it")],
+            [self.ROW, dict(self.ROW, new="About CosmoSlice now")],
+            [self.ROW, dict(self.ROW, old="Hello OrcaSlicer")],
+        ]
+        for rows in bad:
+            with self.subTest(rows=rows), self.assertRaises(branding.BrandingError):
+                tables.rename_rows(rows)
+
+    def test_chain_rejected(self) -> None:
+        first = {"kind": "msgid", "old": "OrcaSlicer CosmoSlice", "new": "About CosmoSlice X"}
+        second = {"kind": "literal", "old": "Orca X", "new": "OrcaSlicer CosmoSlice"}
+        tables.rename_rows([first])
+        with self.assertRaises(branding.BrandingError):
+            tables.rename_rows([first, second])
+
+    def test_allowlist_rejections(self) -> None:
+        good = {"kind": "literal", "file": "src/a.cpp", "literal": "OrcaSlicer", "count": 1, "reason": "asset: icon"}
+        self.assertEqual(len(tables.allow_rows([good])), 1)
+        for row in [
+            dict(good, reason="because"),
+            dict(good, count=0),
+            dict(good, file="/abs/a.cpp"),
+            {"kind": "msgid", "reason": "credit: x"},
+            {"kind": "other", "reason": "credit: x"},
+        ]:
+            with self.subTest(row=row), self.assertRaises(branding.BrandingError):
+                tables.allow_rows([row])
+        with self.assertRaises(branding.BrandingError):
+            tables.allow_rows([good, good])
+
+
+# ---------------------------------------------------------------- plugin on a fake tree
+
+SOURCE = (
+    '#include "OrcaSlicer.hpp"\n'
+    'void f() {\n'
+    '    show(_L("About OrcaSlicer"));\n'
+    '    BOOST_LOG_TRIVIAL(info) << "OrcaSlicer started";\n'
+    '    icon("OrcaSlicer");\n'
+    '    title(" - OrcaSlicer");\n'
+    '    // OrcaSlicer comment\n'
+    '}\n'
+)
+POT = 'msgid ""\nmsgstr ""\n\nmsgid "About OrcaSlicer"\nmsgstr ""\n\nmsgid "Hint\\nOrcaSlicer helps"\nmsgstr ""\n'
+FR = 'msgid ""\nmsgstr ""\n"Language: fr\\n"\n\nmsgid "About OrcaSlicer"\nmsgstr "À propos de Orca Slicer"\n\nmsgid "Hint\\nOrcaSlicer helps"\nmsgstr "Astuce\\nOrcaSlicer aide"\n'
+HINTS = "[hint:Help]\ntext = Hint\\nOrcaSlicer helps\n"
+RENAME = [
+    {"kind": "literal", "old": " - OrcaSlicer", "new": " - CosmoSlice", "source": "cosmyx"},
+    {"kind": "msgid", "old": "About OrcaSlicer", "new": "About CosmoSlice", "source": "cosmyx"},
+    {"kind": "msgid", "old": "Hint\nOrcaSlicer helps", "new": "Hint\nCosmoSlice helps", "source": "cosmoslice"},
+]
+ALLOW = [{"kind": "literal", "file": "src/slic3r/GUI/About.cpp", "literal": "OrcaSlicer", "count": 1, "reason": "asset: icon name"}]
+
+
+class PluginTest(TreeCase):
+    def setUp(self) -> None:
+        super().setUp()
+        write(self.root, "src/slic3r/GUI/About.cpp", SOURCE)
+        write(self.root, "localization/i18n/OrcaSlicer.pot", POT)
+        write(self.root, "localization/i18n/fr/OrcaSlicer_fr.po", FR)
+        write(self.root, resources.HINTS_FILE, HINTS)
+        self.tables(RENAME, ALLOW)
+
+    def tables(self, rename, allow, patches=None) -> None:
+        self.write_json(f"{PN}/rename.json", {"schema": 1, "rows": rename})
+        self.write_json(f"{PN}/allowlist.json", {"schema": 1, "rows": allow})
+        self.write_json(f"{PN}/patches.json", {"schema": 1, "rows": patches or []})
+
+    def g8(self, phase: str, env=None):
+        ctx = self.ctx(env)
+        ctx.plugins = apply_module.load_plugins()
+        return [finding for finding in apply_module.guards.run(ctx, phase) if finding.guard == "G8"]
+
+    def run_apply(self, env=None):
+        lines = []
+        code = apply_module.apply(self.root, env={} if env is None else env, out=lines.append)
+        return code, lines
+
+    def test_plugin_is_loaded(self) -> None:
+        self.assertEqual(len(apply_module.load_plugins()["product_name"]), 1)
+
+    def test_literal_and_msgid_renamed_together(self) -> None:
+        before = snapshot(self.root)
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0, "\n".join(lines))
+        source = read(self.root, "src/slic3r/GUI/About.cpp").decode()
+        self.assertIn('show(_L("About CosmoSlice"));', source)
+        self.assertIn('title(" - CosmoSlice");', source)
+        self.assertIn('"OrcaSlicer started"', source)
+        self.assertIn('icon("OrcaSlicer");', source)
+        self.assertIn('#include "OrcaSlicer.hpp"', source)
+        self.assertIn("// OrcaSlicer comment", source)
+        self.assertIn('msgid "About CosmoSlice"', read(self.root, "localization/i18n/OrcaSlicer.pot").decode())
+        french = read(self.root, "localization/i18n/fr/OrcaSlicer_fr.po").decode()
+        self.assertIn('msgid "About CosmoSlice"\nmsgstr "À propos de CosmoSlice"', french)
+        self.assertIn('"CosmoSlice aide"', french)
+        self.assertNotIn("Orca", french)
+        self.assertNotIn("fuzzy", french)
+        self.assertEqual(read(self.root, resources.HINTS_FILE).decode(), HINTS.replace("OrcaSlicer", "CosmoSlice"))
+        apply_module.revert(self.root)
+        self.assertEqual(snapshot(self.root), before)
+
+    def test_pre_guards_pass_on_matching_tables(self) -> None:
+        self.assertEqual(self.g8("pre"), [])
+
+    def test_stale_rename_row_fails(self) -> None:
+        self.tables(RENAME + [{"kind": "msgid", "old": "Gone OrcaSlicer", "new": "Gone CosmoSlice"}], ALLOW)
+        found = self.g8("pre")
+        self.assertEqual([f.level for f in found], ["error", "error"])
+        self.assertTrue(all("stale" in f.message for f in found))
+        code, _ = self.run_apply()
+        self.assertEqual(code, 1)
+
+    def test_literal_row_naming_a_msgid_fails(self) -> None:
+        rename = [dict(row, kind="literal") if row["old"] == "About OrcaSlicer" else row for row in RENAME]
+        self.tables(rename, ALLOW)
+        self.assertIn("make it a msgid row", " ".join(f.message for f in self.g8("pre")))
+
+    def test_msgid_row_without_literal_fails(self) -> None:
+        write(self.root, "src/slic3r/GUI/About.cpp", SOURCE.replace('_L("About OrcaSlicer")', '_L("About")'))
+        self.assertIn("no C++ literal or hint", " ".join(f.message for f in self.g8("pre")))
+
+    def test_new_msgid_already_present_fails(self) -> None:
+        write(self.root, "localization/i18n/OrcaSlicer.pot", POT + '\nmsgid "About CosmoSlice"\nmsgstr ""\n')
+        self.assertIn("already exists", " ".join(f.message for f in self.g8("pre")))
+
+    def test_stale_allowlist_row_fails(self) -> None:
+        self.tables(RENAME, [dict(ALLOW[0], count=2)])
+        found = self.g8("pre")
+        self.assertEqual([f.level for f in found], ["error"])
+        self.assertIn("stale allowlist", found[0].message)
+        self.tables(RENAME, ALLOW + [{"kind": "msgid", "msgid": "Gone OrcaSlicer", "reason": "credit: gone"}])
+        self.assertIn("stale msgid row", " ".join(f.message for f in self.g8("pre")))
+
+    def test_residue_warns_on_development_and_fails_release(self) -> None:
+        self.tables(RENAME, [])
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0)
+        self.assertTrue(any("G8" in line and "'OrcaSlicer'" in line and line.startswith("warning") for line in lines))
+        self.assertEqual([f.level for f in self.g8("post", RELEASE)], ["error"])
+
+    def test_new_upstream_msgid_is_residue(self) -> None:
+        write(self.root, "src/slic3r/GUI/New.cpp", 'auto t = _L("Restart OrcaSlicer now");\n')
+        write(self.root, "localization/i18n/OrcaSlicer.pot", POT + '\nmsgid "Restart OrcaSlicer now"\nmsgstr ""\n')
+        _, lines = self.run_apply()
+        messages = [line for line in lines if line.startswith("warning: G8")]
+        self.assertTrue(any("msgid names the upstream product" in line for line in messages))
+        self.assertTrue(any("literal names the upstream product" in line for line in messages))
+
+    def test_kept_msgid_excuses_its_literal(self) -> None:
+        write(self.root, "src/slic3r/GUI/New.cpp", 'auto t = _L("Credit: built on OrcaSlicer");\n')
+        write(self.root, "localization/i18n/OrcaSlicer.pot", POT + '\nmsgid "Credit: built on OrcaSlicer"\nmsgstr ""\n')
+        self.tables(RENAME, ALLOW + [{"kind": "msgid", "msgid": "Credit: built on OrcaSlicer", "reason": "credit: upstream"}])
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0, "\n".join(lines))
+        self.assertEqual(self.g8("post", RELEASE), [])
+
+    def test_guide_residue_and_allowlist(self) -> None:
+        write(self.root, f"{resources.GUIDE_DIR}/1/index.html", '<div data-i18n="w">Welcome to Orca Slicer</div>\n')
+        _, lines = self.run_apply()
+        self.assertTrue(any("guide text names the upstream product" in line for line in lines))
+        rows = ALLOW + [{"kind": "text", "file": f"{resources.GUIDE_DIR}/1/index.html", "text": "Welcome to Orca Slicer", "count": 1, "reason": "kept-name: test"}]
+        self.tables(RENAME, rows)
+        self.assertEqual(self.run_apply()[0], 0)
+        self.assertEqual(self.g8("post", RELEASE), [])
+
+    def test_translation_left_naming_the_product_fails(self) -> None:
+        from branding import product_name
+
+        self.assertEqual(self.run_apply()[0], 0)
+        relative = "localization/i18n/fr/OrcaSlicer_fr.po"
+        french = read(self.root, relative).decode()
+        self.assertEqual(product_name.check_translations(self.root, tables.rename_rows(RENAME)), [])
+        write(self.root, relative, french.replace("À propos de CosmoSlice", "À propos de Orca"))
+        found = product_name.check_translations(self.root, tables.rename_rows(RENAME))
+        self.assertEqual([(f.level, f.path) for f in found], [("error", relative)])
+
+    def test_candidates_propose_rows_for_new_upstream_text(self) -> None:
+        from branding.product_name import candidates
+
+        self.assertEqual(candidates.propose(self.root), {"rename": [], "literals": [], "stale": []})
+        write(self.root, "src/slic3r/GUI/New.cpp", 'auto t = _L("Restart OrcaSlicer now"); auto u = "Hello Orca";\n')
+        write(self.root, "localization/i18n/OrcaSlicer.pot", POT.replace("About OrcaSlicer", "About it") + '\nmsgid "Restart OrcaSlicer now"\nmsgstr ""\n')
+        write(self.root, "src/slic3r/GUI/About.cpp", SOURCE.replace("About OrcaSlicer", "About it"))
+        found = candidates.propose(self.root)
+        self.assertEqual(found["rename"], [{"kind": "msgid", "old": "Restart OrcaSlicer now", "new": "Restart CosmoSlice now", "source": "cosmyx"}])
+        self.assertEqual(found["literals"], [{"file": "src/slic3r/GUI/New.cpp", "literal": "Hello Orca", "count": 1, "value": "Hello Orca"}])
+        self.assertEqual(found["stale"], ["About OrcaSlicer"])
+
+    def test_patches_run_before_the_plugin_and_keep_the_app_key(self) -> None:
+        patch = {"file": "version.inc", "old": 'SLIC3R_APP_NAME "OrcaSlicer"', "new": 'SLIC3R_APP_NAME "CosmoSlice"', "count": 1, "reason": "name"}
+        self.tables(RENAME, ALLOW, [patch])
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0, "\n".join(lines))
+        self.assertEqual(read(self.root, "version.inc").decode(), 'set(SLIC3R_APP_NAME "CosmoSlice")\nset(SLIC3R_APP_KEY "OrcaSlicer")\n')
+
+
+# ---------------------------------------------------------------- the committed tables on the real tree
+
+
+class RealTreeTest(unittest.TestCase):
+    """Apply the committed tables to a scratch copy of this checkout's files."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls._tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls._tmp.name)
+        copy_real_tree(cls.root)
+        cls.before = snapshot(cls.root)
+        cls.lines = []
+        cls.code = apply_module.apply(cls.root, env={}, out=cls.lines.append)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls._tmp.cleanup()
+
+    def test_applies_without_error_and_no_visible_name_is_left(self) -> None:
+        self.assertEqual(self.code, 0, "\n".join(self.lines))
+        self.assertEqual([line for line in self.lines if "G8" in line], [])
+
+    def test_display_name_changes_and_the_app_key_stays(self) -> None:
+        version = read(self.root, "version.inc").decode()
+        self.assertIn('set(SLIC3R_APP_NAME "CosmoSlice")', version)
+        self.assertIn('set(SLIC3R_APP_KEY "OrcaSlicer")', version)
+        self.assertIn("SLIC3R_APP_KEY \" \" SoftFever_VERSION", read(self.root, "src/libslic3r/utils.cpp").decode())
+        self.assertIn("{ EProducer::OrcaSlicer, SLIC3R_APP_KEY },", read(self.root, "src/libslic3r/GCode/GCodeProcessor.cpp").decode())
+        self.assertIn('set (CPACK_NSIS_DISPLAY_NAME "CosmoSlice")', read(self.root, "CMakeLists.txt").decode())
+        self.assertIn('set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "OrcaSlicer")', read(self.root, "CMakeLists.txt").decode())
+
+    def test_catalogues_never_get_fuzzy(self) -> None:
+        for relative in catalogues.catalogue_files(self.root):
+            with self.subTest(relative=relative):
+                before = self.before[relative].decode("utf-8")
+                after = read(self.root, relative).decode("utf-8")
+                self.assertEqual(after.count("fuzzy"), before.count("fuzzy"))
+                self.assertEqual(after.count("#| msgid"), before.count("#| msgid"))
+
+    def test_zz_revert_restores_every_byte(self) -> None:
+        apply_module.revert(self.root)
+        self.assertEqual(snapshot(self.root), self.before)
+
+
+class CommittedTablesTest(unittest.TestCase):
+    def test_tables_are_valid_and_canonical(self) -> None:
+        for name in ("rename", "allowlist", "patches"):
+            path = REPO_ROOT / PN / f"{name}.json"
+            data = branding.load_json(path)
+            self.assertEqual(data["schema"], 1)
+            self.assertEqual(path.read_bytes().decode("utf-8"), branding.dump_json(data))
+        rename = tables.rename_rows(branding.load_json(REPO_ROOT / PN / "rename.json")["rows"])
+        tables.allow_rows(branding.load_json(REPO_ROOT / PN / "allowlist.json")["rows"])
+        self.assertEqual(sum(1 for row in rename if row["source"] == "cosmoslice"), 48)
+
+
+if __name__ == "__main__":
+    unittest.main()
