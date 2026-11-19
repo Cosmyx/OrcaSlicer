@@ -87,3 +87,10 @@ here; see the upstream release notes.
   are both accepted, and a build without the profile validator passes. Pull
   request: pending. Decisions: 0140, 0141, 0142, 0143, 0144, 0145, 0146, 0147, 0148,
   0149.
+
+<!-- cosmyx-slot: T15 -->
+- Sign DEV and `release/*` macOS builds with the Cosmyx Developer ID
+  certificate, notarise and staple the apps and the DMGs, and verify them
+  before upload; the DMG names do not change. Uses the repository's existing
+  Apple signing secrets and is off without them. Pull request: pending.
+  Decisions: 0150, 0151, 0152, 0153, 0154, 0155, 0157, 0158.
