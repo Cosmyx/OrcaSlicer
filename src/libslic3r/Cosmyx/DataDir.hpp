@@ -25,11 +25,12 @@ inline constexpr const char *DATA_DIR_VENDOR = "Cosmyx";
 // to the per-user config root (XDG_CONFIG_HOME on Linux).
 std::string vendor_app_subdir(const std::string &app_key);
 
-// The same path with its vendor folder taken out: "<base>/Cosmyx/<leaf>" becomes
-// "<base>/<leaf>". A path whose parent folder is not the vendor folder comes back
-// unchanged. Used to find where a data folder lived before it was nested, such as
-// the legacy Flatpak data folder.
-std::string without_vendor_dir(const std::string &data_dir);
+// True when the data folder sits right under the vendor folder ("<base>/Cosmyx/<leaf>"),
+// that is, the Cosmyx data folder. Upstream's legacy data migration (Flatpak,
+// migrate_flatpak_legacy_datadir() in GUI_App.cpp) is skipped for it: a Cosmyx build
+// starts fresh and never copies upstream data in (decisions 0180 and 0184). Any other
+// folder (custom --datadir, portable data_dir) keeps upstream behaviour.
+bool skip_legacy_data_migration(const std::string &data_dir);
 
 } // namespace Cosmyx
 } // namespace Slic3r

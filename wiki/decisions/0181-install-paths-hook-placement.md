@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Accepted, amended by 0184.
 
 ## Context
 
@@ -19,8 +19,10 @@ same lines.
     block: `#include "Cosmyx/AppPaths.hpp" // Cosmyx`;
   - right after `SetAppName(SLIC3R_APP_KEY);` in `init_app_config()`:
     `Cosmyx::use_vendor_data_dir(); // Cosmyx`;
-  - in `migrate_flatpak_legacy_datadir()`, the line that copies the data folder
-    path now goes through `::Slic3r::Cosmyx::without_vendor_dir()`;
+  - in `migrate_flatpak_legacy_datadir()`, right after the "not running as a
+    Flatpak" return, one inserted line returns early when
+    `::Slic3r::Cosmyx::skip_legacy_data_migration()` says the data folder is
+    the Cosmyx one (decision 0184);
   - in `check_old_linux_datadir()`, the default path goes through
     `::Slic3r::Cosmyx::vendor_app_subdir()`.
   The libslic3r helpers are called fully qualified, because inside
