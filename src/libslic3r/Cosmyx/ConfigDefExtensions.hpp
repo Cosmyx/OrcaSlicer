@@ -10,12 +10,14 @@
 // lines.
 
 #include <cstddef>
+#include <map>
 #include <string>
 
 #include "libslic3r/Config.hpp"
 
 namespace Slic3r {
 
+class DynamicPrintConfig;
 class PrintConfigDef;
 
 namespace Cosmyx {
@@ -36,6 +38,14 @@ ConfigOptionDef* add_option(PrintConfigDef& def, const std::string& key, ConfigO
 
 // True for an option defined through add_option().
 bool is_cosmyx_option(const ConfigOptionDef& opt);
+
+// Out of range check of the Cosmyx options of config. Slic3r::validate() only walks
+// the static FullPrintConfig, which holds no Cosmyx option, so
+// DynamicPrintConfig::validate() passes its result through here. For each Cosmyx
+// option of config with a numeric value outside its [min, max], and no entry yet
+// in errors, adds the same "not in range" message as Slic3r::validate(). Returns
+// errors with those entries added.
+std::map<std::string, std::string> validate_option_ranges(const DynamicPrintConfig& config, std::map<std::string, std::string> errors);
 
 // Runs every Cosmyx extender on def. Called from PrintConfigDef::PrintConfigDef().
 void extend_print_config_def(PrintConfigDef& def);
