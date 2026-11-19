@@ -311,6 +311,30 @@ class GraftCliTests(TreeCase):
         self.run_main()
         self.assertNotIn(b"\r\n", path.read_bytes())
 
+    def test_crlf_catalogue_grafts_like_lf_and_stays_crlf(self) -> None:
+        # A Windows checkout (core.autocrlf) has CRLF catalogues: the graft
+        # must give the same text as on LF, written back in CRLF only.
+        lf = self.orca("fr", ORCA_FR)
+        self.feature("feature-a", "fr", FEATURE_A_FR)
+        self.feature("feature-b", "fr", FEATURE_B_FR)
+        self.run_main()
+        expected = lf.read_bytes()
+        lf.write_bytes(ORCA_FR.replace("\n", "\r\n").encode("utf-8"))
+        for path in (self.cosmyx / "feature-a" / "fr.po", self.cosmyx / "feature-b" / "fr.po"):
+            path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+        code, _, err = self.run_main()
+        self.assertEqual(code, 0, err)
+        data = lf.read_bytes()
+        self.assertEqual(data.replace(b"\r\n", b"\n"), expected)
+        self.assertEqual(data.count(b"\n"), data.count(b"\r\n"), "mixed line endings")
+
+    def test_crlf_untranslated_only_graft_keeps_orca_bytes(self) -> None:
+        path = self.orca("fr", ORCA_FR)
+        path.write_bytes(ORCA_FR.replace("\n", "\r\n").encode("utf-8"))
+        self.feature("feature-a", "fr", 'msgid "Shared"\r\nmsgstr ""\r\n')
+        self.run_main()
+        self.assertEqual(path.read_bytes(), ORCA_FR.replace("\n", "\r\n").encode("utf-8"))
+
     def test_no_cosmyx_folder_is_a_no_op(self) -> None:
         self.orca("fr", ORCA_FR)
         code, _, _ = self.run_main()
@@ -343,6 +367,21 @@ class PoFormatTests(unittest.TestCase):
     def test_crlf_input_is_parsed(self) -> None:
         text = 'msgid "A"\r\nmsgstr "a"\r\n'
         self.assertEqual(g.parse_po(text).messages()[0].msgstr, "a")
+
+    def test_line_ending_is_the_dominant_one(self) -> None:
+        self.assertEqual(g.line_ending("a\r\nb\r\nc\n"), "\r\n")
+        self.assertEqual(g.line_ending("a\nb\nc\r\n"), "\n")
+        self.assertEqual(g.line_ending("no newline"), "\n")
+
+    def test_read_po_holds_lf_text_and_remembers_crlf(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "x.po"
+            path.write_bytes(b'msgid "A"\r\nmsgstr "a"\r\n\r\nmsgid "B"\r\nmsgstr "b"\r\n')
+            catalogue = g.read_po(path)
+            self.assertEqual(catalogue.eol, "\r\n")
+            self.assertNotIn("\r", catalogue.render())
+            g.write_text(path, catalogue.render(), catalogue.eol)
+            self.assertEqual(path.read_bytes(), b'msgid "A"\r\nmsgstr "a"\r\n\r\nmsgid "B"\r\nmsgstr "b"\r\n')
 
     def test_missing_msgstr_is_an_error(self) -> None:
         with self.assertRaises(g.PoError):
