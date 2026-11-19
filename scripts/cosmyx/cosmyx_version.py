@@ -1,4 +1,4 @@
-"""Compute the Cosmyx display version and the CI build tag (decisions 0060-0063).
+"""Compute the Cosmyx display version and the CI build tag (decisions 0060-0064).
 
 The display version is "<SoftFever_VERSION>-<Cosmyx patch>", e.g. 2.6.0-8, or 2.6.0-dev-8 on a development base.
 SoftFever_VERSION is read from version.inc and the patch from the C++ header that the app is built with, so the
@@ -27,9 +27,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 VERSION_INC = Path("version.inc")
 VERSION_HEADER = Path("src", "slic3r", "GUI", "Cosmyx", "logic", "CosmyxVersion.hpp")
 
+# Numbers are ASCII decimal only (decision 0064): CMake and the C++ compiler read no other digits, and a
+# leading zero makes a C++ integer literal octal, so `010` is 8 in the app but would be 10 here.
 UPSTREAM = re.compile(r'^\s*set\(\s*SoftFever_VERSION\s+"([^"]*)"\s*\)', re.MULTILINE)
-PATCH = re.compile(r"^\s*inline\s+constexpr\s+int\s+patch_version\s*=\s*(\d+)\s*;", re.MULTILINE)
-UPSTREAM_FORMAT = re.compile(r"\d+\.\d+\.\d+(-[0-9A-Za-z.]+)?")
+PATCH = re.compile(r"^\s*inline\s+constexpr\s+int\s+patch_version\s*=\s*(\S+?)\s*;", re.MULTILINE)
+PATCH_FORMAT = re.compile(r"0|[1-9][0-9]*", re.ASCII)
+UPSTREAM_FORMAT = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?", re.ASCII)
 COMMIT = re.compile(r"[0-9a-f]{7,40}")
 MIN_PATCH = 8
 
@@ -56,7 +59,13 @@ def patch_version(root: Path = REPO_ROOT) -> int:
     matches = PATCH.findall(path.read_text(encoding="utf-8"))
     if len(matches) != 1:
         raise VersionError(f"{VERSION_HEADER.as_posix()}: expected one `inline constexpr int patch_version = N;` line")
-    value = int(matches[0])
+    literal = matches[0]
+    if not PATCH_FORMAT.fullmatch(literal):
+        raise VersionError(
+            f"{VERSION_HEADER.as_posix()}: patch_version is {literal!r}, expected an ASCII decimal number without"
+            " a leading zero (C++ reads a leading zero as octal)"
+        )
+    value = int(literal)
     if value < MIN_PATCH:
         raise VersionError(f"{VERSION_HEADER.as_posix()}: patch_version is {value}, Cosmyx patches start at {MIN_PATCH}")
     return value
