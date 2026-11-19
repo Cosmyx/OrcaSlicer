@@ -12,13 +12,18 @@ plugin then renames, from the `rename` table:
     template and its text in the sources, the new msgid not there yet; a
     literal row: its text in the sources and no msgid); every allowlist row
     still matches with its exact count. A stale row is an error.
+  - pre: every inflection row still matches a confirmed translation of a
+    renamed msgid in its language.
   - post: literal and msgid renamed together (old gone everywhere, new in
-    both); no renamed translation still names the upstream product; and no
+    both); no renamed translation still names the upstream product (an
+    inflected name without its inflection row is reported as "needs
+    inflection row": a warning on development builds, an error on release
+    builds, decision 0135); and no
     visible text names it (non-log C++ literals, template msgids, hints,
     setup-guide pages) outside the allowlist. A new upstream text is drift:
     a warning on development builds, an error on release builds.
 
-Tables: `cosmyx-src/branding/product-name/{rename,allowlist,patches}.json`.
+Tables: `cosmyx-src/branding/product-name/{rename,allowlist,patches,inflections}.json`.
 """
 
 from __future__ import annotations
@@ -27,9 +32,9 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from .. import BrandingError, Finding, encode_text, is_cosmyx_path, line_ending, read_lf, relative_posix, repo_path
+from .. import PRODUCT_NAME_DIR, BrandingError, Finding, encode_text, load_json, is_cosmyx_path, line_ending, read_lf, relative_posix, repo_path
 from . import catalogues, cpp, resources, tables
-from .tokens import NEW_NAME, replace_tokens, visible_name
+from .tokens import NEW_NAME, inflection_map, replace_tokens, unresolved, visible_name
 
 GUARD = "G8"
 SOURCE_DIR = "src"
@@ -44,6 +49,20 @@ _CANDIDATE = re.compile(r"Orc|ORCA|CosmoSlice")
 def load_tables(ctx) -> tuple[list, list]:
     data = ctx.product_name or {}
     return tables.rename_rows(data.get("rename", [])), tables.allow_rows(data.get("allowlist", []))
+
+
+INFLECTIONS_FILE = f"{PRODUCT_NAME_DIR}/inflections.json"
+
+
+def load_inflections(root: Path) -> list:
+    """Validated inflection rows of the tree (none when the table is absent)."""
+    path = repo_path(root, INFLECTIONS_FILE)
+    if not path.is_file():
+        return []
+    data = load_json(path)
+    if not isinstance(data, dict) or data.get("schema") != 1 or not isinstance(data.get("rows"), list):
+        raise BrandingError(f'{INFLECTIONS_FILE}: expected {{"schema": 1, "rows": [...]}}')
+    return tables.inflection_rows(data["rows"])
 
 
 def drift_level(ctx) -> str:
@@ -111,6 +130,7 @@ def apply(ctx, backup) -> dict:
     rename, _ = load_tables(ctx)
     mapping = tables.mapping(rename)
     root = ctx.root
+    inflections = inflection_map(load_inflections(root))
     written: dict = {}
     for relative in source_files(root):
         text = read_source(root, relative)
@@ -119,10 +139,14 @@ def apply(ctx, backup) -> dict:
             written[relative] = new_text
     hints = repo_path(root, resources.HINTS_FILE)
     if hints.is_file():
-        new_text, counts = resources.rename_hints(read_lf(hints), mapping)
+        try:
+            hint_text = read_lf(hints)
+        except UnicodeDecodeError as error:
+            raise BrandingError(f"{resources.HINTS_FILE} is not UTF-8: {error}") from error
+        new_text, counts = resources.rename_hints(hint_text, mapping)
         if counts:
             written[resources.HINTS_FILE] = new_text
-    renamed = catalogues.plan(root, tables.mapping(rename, "msgid"))
+    renamed = catalogues.plan(root, tables.mapping(rename, "msgid"), inflections)
     # Everything is computed before the first write; the engine reverts the
     # backups if anything fails afterwards.
     for relative, text in sorted(written.items()):
@@ -135,28 +159,46 @@ def apply(ctx, backup) -> dict:
         "rows": len(rename),
         "sources": sorted(written),
         "catalogues": {relative: changed for relative, (_, changed) in sorted(renamed.items())},
+        "needs_inflection": needs_inflection(root, rename, inflections),
     }
+
+
+def needs_inflection(root: Path, rename: list, inflections: dict) -> dict:
+    """{language: [inflected forms no row renames]} over the confirmed
+    translations of the renamed msgids (old or new msgid: before or after apply)."""
+    msgids = {row[key] for row in rename if row["kind"] == "msgid" for key in ("old", "new")}
+    found: dict = {}
+    for _, lang, _, text in catalogues.renamed_translations(root, msgids):
+        for form in unresolved(text, lang, inflections):
+            found.setdefault(lang, set()).add(form)
+    return {lang: sorted(forms) for lang, forms in sorted(found.items())}
 
 
 # ---------------------------------------------------------------- guards
 
 
 def guards(ctx, phase: str) -> list[Finding]:
+    root = ctx.root
     try:
         rename, allow = load_tables(ctx)
+        inflections = load_inflections(root)
     except BrandingError as error:
-        return [Finding(GUARD, "error", "cosmyx-src/branding/product-name", str(error))]
-    root = ctx.root
+        return [Finding(GUARD, "error", PRODUCT_NAME_DIR, str(error))]
     try:
         sources = source_groups(root)
         pot = template_msgids(root)
-    except (BrandingError, OSError, UnicodeDecodeError) as error:
+        texts = text_counts(root, sources)
+        findings = check_rename(rename, texts, pot, phase)
+        findings += check_allowlist(ctx, allow, sources, pot, texts, phase, {row["new"] for row in rename})
+        if phase == "pre":
+            findings += check_inflections(root, rename, inflections)
+        else:
+            findings += check_translations(root, rename, inflection_map(inflections), drift_level(ctx))
+    except (BrandingError, OSError) as error:
         return [Finding(GUARD, "error", "", str(error))]
-    texts = text_counts(root, sources)
-    findings = check_rename(rename, texts, pot, phase)
-    findings += check_allowlist(ctx, allow, sources, pot, texts, phase, {row["new"] for row in rename})
-    if phase == "post":
-        findings += check_translations(root, rename)
+    except UnicodeDecodeError as error:
+        # A file that is not UTF-8 (hints, a guide page): a clean finding, no traceback.
+        return [Finding(GUARD, "error", "", f"a product-name input is not UTF-8: {error}")]
     return findings
 
 
@@ -237,20 +279,40 @@ def compare(found: Counter, allowed: Counter, phase: str, level: str, label: str
     return findings
 
 
-def check_translations(root: Path, rename: list) -> list[Finding]:
-    """No confirmed translation of a renamed msgid still names the upstream product."""
+def check_inflections(root: Path, rename: list, rows: list) -> list[Finding]:
+    """Pre: every inflection row matches a confirmed translation of a renamed
+    msgid in its language; a row that matches none is stale."""
+    msgids = {row["old"] for row in rename if row["kind"] == "msgid"}
+    texts: dict = {}
+    for _, lang, _, text in catalogues.renamed_translations(root, msgids):
+        texts.setdefault(lang, []).append(text)
+    return [
+        Finding(GUARD, "error", INFLECTIONS_FILE, f"stale inflection row {row['language']} {row['old']!r}: no renamed translation has it")
+        for row in rows
+        if not any(row["old"] in text for text in texts.get(row["language"], []))
+    ]
+
+
+def check_translations(root: Path, rename: list, inflections: dict | None = None, level: str = "warning") -> list[Finding]:
+    """No confirmed translation of a renamed msgid still names the upstream product.
+
+    An inflected name left only because its inflection row is missing is
+    reported as "needs inflection row" at `level` (the drift level: a speaker
+    of the language writes the row); any other name left is an error.
+    `inflections` defaults to the tree's own table."""
+    if inflections is None:
+        inflections = inflection_map(load_inflections(root))
     renamed = {row["new"] for row in rename if row["kind"] == "msgid"}
     findings = []
-    for relative in catalogues.catalogue_files(root):
-        lang = catalogues.language(relative)
-        if lang is None:
-            continue
-        for entry in catalogues.read(root, relative).messages():
-            if entry.msgid not in renamed or entry.fuzzy:
-                continue
-            texts = [entry.msgstr, *entry.msgstr_plural.values()]
-            if any(replace_tokens(text, lang) != text for text in texts):
-                findings.append(Finding(GUARD, "error", relative, f"translation still names the upstream product: {entry.msgid[:60]!r}"))
+    for relative, lang, msgid, text in catalogues.renamed_translations(root, renamed):
+        left = unresolved(text, lang, inflections)
+        if left:
+            forms = ", ".join(sorted(set(left)))
+            findings.append(
+                Finding(GUARD, level, relative, f"needs inflection row ({lang}): {forms} in {msgid[:60]!r}; add it to {INFLECTIONS_FILE}")
+            )
+        if replace_tokens(text, lang, inflections=inflections) != text:
+            findings.append(Finding(GUARD, "error", relative, f"translation still names the upstream product: {msgid[:60]!r}"))
     return findings
 
 
