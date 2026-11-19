@@ -53,11 +53,16 @@ std::string value_to_config_string(const std::string& key, const json& value)
 // definition (unknown keys and values of the wrong type are refused).
 void set_option(DynamicPrintConfig& config, const std::string& key, const json& value)
 {
+    // The legacy-name pass clears a key it does not know and only records it
+    // in the substitution context, so unknown keys are checked there.
+    ConfigSubstitutionContext ctxt{ ForwardCompatibilitySubstitutionRule::Disable };
     try {
-        config.set_deserialize_strict(key, value_to_config_string(key, value));
+        config.set_deserialize(key, value_to_config_string(key, value), ctxt);
     } catch (const std::exception& e) {
         throw std::runtime_error("calibration preset: invalid option '" + key + "': " + e.what());
     }
+    if (!ctxt.unrecogized_keys.empty())
+        throw std::runtime_error("calibration preset: unknown option '" + key + "'");
 }
 
 Vec3d read_vec3(const json& region, const char* key)
