@@ -3,6 +3,7 @@ with a fake runner; the running interpreter as a real ELF file on Linux."""
 
 from __future__ import annotations
 
+import importlib
 import json
 import signal
 import struct
@@ -11,6 +12,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -53,13 +55,37 @@ class SmokeTests(unittest.TestCase):
             ((0, "", False), "pass"),
             ((1, "Usage: orca-slicer [ OPTIONS ]", False), "pass"),
             ((1, "cannot open display", False), "fail"),
-            ((-signal.SIGSEGV, "", False), "fail"),
-            ((128 + signal.SIGABRT, "", False), "fail"),
+            # Linux numbers, whatever the host: SIGSEGV 11, SIGABRT 6, SIGBUS 7.
+            ((-11, "", False), "fail"),
+            ((128 + 6, "", False), "fail"),
+            ((-7, "", False), "fail"),
+            ((128 + 7, "", False), "fail"),
             ((None, "", True), "fail"),
         ]
         for (code, output, timed_out), expected in cases:
             with self.subTest(code=code, output=output):
                 self.assertEqual(linux.smoke_status(code, output, timed_out, 60)[0], expected)
+
+    def test_crash_names_are_the_linux_ones(self) -> None:
+        self.assertEqual(linux.smoke_status(-7, "", False, 60), ("fail", "crashed with signal SIGBUS"))
+        self.assertEqual(linux.smoke_status(128 + 11, "", False, 60), ("fail", "crashed with signal SIGSEGV"))
+        # 10 is SIGBUS on macOS but SIGUSR1 on Linux: not a crash.
+        self.assertEqual(linux.smoke_status(-10, "", False, 60)[0], "fail")
+        self.assertIn("without a usage text", linux.smoke_status(-10, "", False, 60)[1])
+
+    def test_imports_without_sigbus(self) -> None:
+        # Windows has no signal.SIGBUS; the module (imported by the report cli on
+        # every runner) must load there and keep the Linux table.
+        saved = getattr(signal, "SIGBUS", None)
+        if saved is not None:
+            delattr(signal, "SIGBUS")
+        try:
+            module = importlib.reload(linux)
+            self.assertEqual(module.CRASH_SIGNALS[7], "SIGBUS")
+        finally:
+            if saved is not None:
+                signal.SIGBUS = saved
+            importlib.reload(linux)
 
     def test_timeout_and_command(self) -> None:
         calls = []
@@ -117,8 +143,11 @@ class CheckTests(unittest.TestCase):
     def fake_run(self, args, **kwargs):
         args = [str(a) for a in args]
         self.calls.append(args)
-        if args[-1] == "--appimage-extract":
-            root = Path(kwargs["cwd"]) / "squashfs-root"
+        if args[-1] == "--appimage-extract" or args[0] == "unsquashfs":
+            if args[0] == "unsquashfs":
+                root = Path(args[args.index("-d") + 1])
+            else:
+                root = Path(kwargs["cwd"]) / "squashfs-root"
             (root / "resources" / "i18n").mkdir(parents=True)
             (root / "resources" / "profiles").mkdir()
             (root / "resources" / "cosmyx" / "models").mkdir(parents=True)
@@ -154,14 +183,28 @@ class CheckTests(unittest.TestCase):
         validator = next(r for r in records if "validator" in r.artifact)
         self.assertEqual(validator.status, "pass")
 
-    def test_fork_build_is_never_executed(self) -> None:
-        records = linux.check(self.artifacts, self.artifacts_list(), self.work, self.subject, EXPECTATIONS, False,
-                              self.fake_run)
+    def fork_check(self, unsquashfs: str | None):
+        # shutil.which is pinned so the result does not depend on the host having unsquashfs.
+        with mock.patch.object(linux.shutil, "which", lambda name: unsquashfs if name == "unsquashfs" else None):
+            records = linux.check(self.artifacts, self.artifacts_list(), self.work, self.subject, EXPECTATIONS,
+                                  False, self.fake_run)
         self.assertFalse(any(c[-1] in ("--appimage-extract", "--help") or "--slice" in c for c in self.calls))
-        x64 = [r for r in records if r.artifact == f"OrcaSlicer_Linux_ubuntu_2404_{TAG}"]
-        # Without unsquashfs on the host the unpack fails cleanly; with it, smoke and slice are skipped.
-        self.assertTrue(all(r.status in ("fail", "skip", "pass") for r in x64))
-        self.assertFalse(any(r.check in ("smoke", "slice") and r.status == "pass" for r in x64))
+        return {r.check: r for r in records if r.artifact == f"OrcaSlicer_Linux_ubuntu_2404_{TAG}"}
+
+    def test_fork_build_is_never_executed(self) -> None:
+        # With unsquashfs the AppImage is unpacked without running it; smoke and slice are skipped by design.
+        x64 = self.fork_check("/usr/bin/unsquashfs")
+        self.assertEqual(sum(c[0] == "unsquashfs" for c in self.calls), 1)
+        self.assertEqual(x64["elf"].status, "pass")
+        self.assertEqual((x64["smoke"].status, x64["slice"].status), ("skip", "skip"))
+        self.assertTrue(x64["smoke"].by_design and x64["slice"].by_design)
+
+    def test_fork_build_without_unsquashfs_fails_cleanly(self) -> None:
+        x64 = self.fork_check(None)
+        self.assertEqual(self.calls, [])
+        self.assertEqual(list(x64), ["elf"])
+        self.assertEqual(x64["elf"].status, "fail")
+        self.assertIn("unsquashfs", x64["elf"].reason)
 
 
 if __name__ == "__main__":
