@@ -13,8 +13,14 @@ import plistlib
 import shlex
 import shutil
 from pathlib import Path
+from xml.parsers.expat import ExpatError
 
 from . import Context, REPO_ROOT
+
+# What plistlib raises on a damaged file besides InvalidFileException (a
+# ValueError): expat errors for broken XML, and lookup or type errors from
+# malformed values such as a bad <date>.
+PLIST_ERRORS = (OSError, ValueError, ExpatError, AttributeError, KeyError, TypeError, OverflowError, RecursionError)
 
 
 def dmg_name(app: Path, version: str) -> str:
@@ -24,9 +30,11 @@ def dmg_name(app: Path, version: str) -> str:
 def volume_name(app: Path) -> str:
     try:
         with open(app / "Contents" / "Info.plist", "rb") as handle:
-            name = plistlib.load(handle).get("CFBundleName")
-    except (OSError, plistlib.InvalidFileException, ValueError):
-        name = None
+            info = plistlib.load(handle)
+    except PLIST_ERRORS:
+        info = None
+    # A valid plist may still have any shape: only a string name in a dict counts.
+    name = info.get("CFBundleName") if isinstance(info, dict) else None
     return name if isinstance(name, str) and name.strip() else app.stem
 
 

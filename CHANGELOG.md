@@ -93,6 +93,7 @@ here; see the upstream release notes.
   certificate, notarise and staple the apps and the DMGs, and verify them
   before upload; the DMG names do not change. The artifact checks then
   enforce Developer ID, team, notarisation and stapling on those DMGs. Uses
-  the repository's existing Apple signing secrets and is off without them.
-  Pull request: pending.
-  Decisions: 0150, 0151, 0152, 0153, 0154, 0155, 0156, 0157, 0158.
+  the repository's existing Apple signing secrets and is off without them;
+  the app-specific password never appears on a command line. Pull request:
+  pending. Decisions: 0150, 0151, 0152, 0153, 0154, 0155, 0156, 0157, 0158,
+  0159.
