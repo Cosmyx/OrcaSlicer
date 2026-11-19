@@ -26,6 +26,7 @@
 #include "libslic3r_version.h"
 #include "BuildCommit.hpp"
 #include "Downloader.hpp"
+#include "Cosmyx/AppPaths.hpp" // Cosmyx
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -604,7 +605,7 @@ static void migrate_flatpak_legacy_datadir(const boost::filesystem::path &data_d
     }
     std::cerr << "Migrating Flatpak data dir: " << data_dir_path << std::endl;
 
-    std::string legacy_data_dir_str = data_dir_path.string();
+    std::string legacy_data_dir_str = ::Slic3r::Cosmyx::without_vendor_dir(data_dir_path.string()); // Cosmyx
     boost::replace_first(legacy_data_dir_str, "com.orcaslicer.OrcaSlicer", "io.github.softfever.OrcaSlicer");
     const fs::path legacy_data_dir(legacy_data_dir_str);
 
@@ -634,7 +635,7 @@ bool static check_old_linux_datadir(const wxString& app_name) {
 
     std::string new_path = Slic3r::data_dir();
 
-    std::string default_path = xdg_config_dir(app_name.ToUTF8().data());
+    std::string default_path = xdg_config_dir(::Slic3r::Cosmyx::vendor_app_subdir(app_name.ToUTF8().data())); // Cosmyx
 
     if (new_path != default_path) {
         // This happens when the user specifies a custom --datadir.
@@ -2742,6 +2743,7 @@ void GUI_App::init_app_config()
 {
 	// Profiles for the alpha are stored into the PrusaSlicer-alpha directory to not mix with the current release.
     SetAppName(SLIC3R_APP_KEY);
+    Cosmyx::use_vendor_data_dir(); // Cosmyx
 //	SetAppName(SLIC3R_APP_KEY "-alpha");
 //  SetAppName(SLIC3R_APP_KEY "-beta");
 //	SetAppDisplayName(SLIC3R_APP_NAME);
