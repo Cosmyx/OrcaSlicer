@@ -2,11 +2,11 @@
 
 After every "Build all" run, the workflow `cosmyx-artifact-checks.yml` downloads
 what the build produced and checks it on the OS it is meant for: signatures,
-installer payload, architectures, ELF files, a smoke run and a slice on Linux,
-the build tag in the names, the shipped translations and models. The result is
-a JUnit report, a Markdown summary on the run page, and the commit status
-`cosmyx/artifact-checks` on the built commit. Decisions 0140 to 0149, and
-0156 for the macOS Developer ID rules.
+installer payload, architectures, ELF files, a smoke run and a slice on every
+OS, the build tag in the names, the shipped translations and models. The result
+is a JUnit report, a Markdown summary on the run page, and the commit status
+`cosmyx/artifact-checks` on the built commit. Decisions 0140 to 0149, 0156 for
+the macOS Developer ID rules, and 0160 and 0161 for the Windows and macOS runs.
 
 ## How it runs
 
@@ -25,8 +25,9 @@ executed (decision 0141).
 The code lives in `scripts/cosmyx/artifact_checks/`: `cli.py` (entry point),
 `inventory.py` (artifact families, required set, names), `signing_policy.py`
 (modes), `allowlist.py`, `policy_windows.py` with `facts_windows.ps1`,
-`macos.py`, `linux.py`, `slice.py`, `content.py`, `report.py`. Artifact name
-patterns and limits are in `data/expectations.json`.
+`macos.py`, `linux.py`, `slice.py`, `smoke_native.py` (Windows and macOS runs),
+`mesa_win.py` (pinned Mesa for Windows), `content.py`, `report.py`. Artifact
+name patterns, limits and the Mesa pin are in `data/expectations.json`.
 
 ## What is checked
 
@@ -43,6 +44,24 @@ patterns and limits are in `data/expectations.json`.
   plus the optional pins `COSMYX_SIGN_EKU` and `COSMYX_SIGN_SUBJECT`.
 - Payload: every PE of the portable folder is in the installer payload with
   the same SHA-256 (every mode).
+- Smoke and slice (x64 portable, when the build may be run, decision 0160):
+  the portable folder is copied to a temporary folder, the pinned Mesa
+  software OpenGL goes into its `mesa/` folder (below), then
+  `orca-slicer.exe --help` (60 s) and the slice of the shipped cube (300 s),
+  judged like on Linux. A crash is named from its NTSTATUS exit code
+  (`STATUS_ACCESS_VIOLATION`, for example). arm64 folders are not run.
+- Mesa (decision 0161): the hosted runner has no GPU, so the app's launcher
+  loads `<exe folder>/mesa/opengl32.dll`, which the build does not ship. The
+  check downloads one pinned
+  [mesa-dist-win](https://github.com/pal1000/mesa-dist-win) release (MIT), checks
+  the archive's SHA-256, unpacks `opengl32.dll`, `libgallium_wgl.dll` and
+  `dxil.dll` from its `x64/` folder with the runner's 7-Zip, checks each file's
+  SHA-256, and runs the app with that folder first on `PATH` and
+  `GALLIUM_DRIVER=llvmpipe`. Mesa is test-only and never reaches an artifact.
+  A hash mismatch or a failed download fails both runs; no 7-Zip skips them
+  with that reason (a failure in strict mode). The archive is cached between
+  runs (`actions/cache`, keyed on `data/expectations.json`; the hash is checked
+  whatever the cache returns).
 
 ### macOS
 
@@ -59,6 +78,11 @@ patterns and limits are in `data/expectations.json`.
   (`macho_identity`); the DMG is Developer ID signed by the team (`dmg_sig`);
   the DMG and its apps are stapled and Gatekeeper accepts them as notarised
   (`notarization`). The per-arch DMGs stay ad-hoc and are reported only.
+- Smoke and slice (when the build may be run, decision 0160): from the mounted
+  image, `<app>/Contents/MacOS/<CFBundleExecutable> --help` (60 s) and the
+  slice of the shipped cube (300 s), judged like on Linux. Only disk images
+  whose architectures include the runner's are run (the arm64 runner skips the
+  x86_64-only image by design). A crash is named from its signal.
 
 ### Linux
 
@@ -140,6 +164,17 @@ it saw: copy the EKU into `COSMYX_SIGN_EKU`. Once the status has been posted
 once, it can be made a required check in the DEV and `release/*` branch
 protection rules.
 
+## Updating the Mesa pin
+
+The pin is `mesa_win` in `data/expectations.json`: `version`, `url` of the
+`mesa3d-<version>-release-msvc.7z` asset, its `sha256` and `size`, and the
+SHA-256 of each file taken from the archive. To move it, pick a release at
+least two weeks old whose release notes report no OpenGL regression for the
+MSVC x64 build (26.2.6 shipped without `opengl32.dll`), take the asset's
+SHA-256 from the release page (or hash the downloaded file), list the archive
+to check that `x64/opengl32.dll` is there, hash the three files, update the
+pin and record the change in a decision that supersedes 0161.
+
 ## Running it
 
 - `just artifact-checks <run id>` starts the checks on a finished run
@@ -158,6 +193,6 @@ protection rules.
 
 ## Deferred
 
-Smoke and slice runs on Windows and macOS, aarch64 runs on arm runners, the
-identity of nested Windows signatures, and the branding guard. macOS
-Developer ID and notarisation are checked since T15 (decision 0156).
+aarch64 runs on arm runners, Windows arm64 runs, the identity of nested
+Windows signatures, and the branding guard. macOS Developer ID and
+notarisation are checked since T15 (decision 0156).
