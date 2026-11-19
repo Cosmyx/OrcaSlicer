@@ -66,7 +66,7 @@ The step fails when any of these does not hold (decision 0155):
 - each DMG is stapled and `spctl -t open --context
   context:primary-signature` accepts it.
 
-The artifact checks repeat the essential rules on the uploaded DMG (see
+The artifact checks repeat the essential rules on the uploaded DMG (decision 0156, see
 `wiki/cosmyx/artifact-checks.md`).
 
 ## When it fails

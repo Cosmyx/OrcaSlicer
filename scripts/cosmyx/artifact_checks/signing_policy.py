@@ -1,4 +1,4 @@
-"""Which Windows signing rules apply to a build run (decisions 0098, 0144).
+"""Which signing rules apply to a build run (decisions 0098, 0144, 0156).
 
 The build signs when the 0098 predicate holds: Windows, not the upstream
 repository, not a pull request, not MIXED, DEV or release/* (or every ref when
@@ -12,6 +12,9 @@ workflows). The checks mirror the predicate:
   so the build is unsigned on purpose; reported with a notice (a failure in
   strict mode);
 - report: pull requests, MIXED and other refs; signatures are reported only.
+
+macOS follows the same predicate with its own seven Apple secrets (T15,
+decision 0151): `mac_mode` gives the mode of the macOS checks.
 """
 
 from __future__ import annotations
@@ -25,17 +28,23 @@ SIGNING_SECRETS = (
     "AZURE_CLIENT_ID", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID",
     "AZURE_TRUSTED_SIGNING_ENDPOINT", "AZURE_CODE_SIGNING_NAME", "AZURE_CERT_PROFILE_NAME",
 )
+MAC_NOTICE = "macOS signing not configured (0151): reported, not enforced"
+MAC_SIGNING_SECRETS = (
+    "BUILD_CERTIFICATE_BASE64", "P12_PASSWORD", "KEYCHAIN_PASSWORD", "MACOS_CERTIFICATE_ID",
+    "APPLE_DEV_ACCOUNT", "APP_PWD", "TEAM_ID",
+)
 SECRET_ENV_PREFIX = "COSMYX_HAS_"
 
 
 def secrets_from_env(env: Mapping[str, str]) -> dict[str, bool]:
     """Which signing secrets are set, from COSMYX_HAS_<SECRET>=true|false (the
     workflow writes `secrets.X != ''` there, never the secret itself)."""
-    return {name: env.get(SECRET_ENV_PREFIX + name, "").strip().lower() == "true" for name in SIGNING_SECRETS}
+    return {name: env.get(SECRET_ENV_PREFIX + name, "").strip().lower() == "true"
+            for name in SIGNING_SECRETS + MAC_SIGNING_SECRETS}
 
 
-def missing_secrets(secrets: Mapping[str, bool]) -> list[str]:
-    return [name for name in SIGNING_SECRETS if not secrets.get(name)]
+def missing_secrets(secrets: Mapping[str, bool], names: tuple[str, ...] = SIGNING_SECRETS) -> list[str]:
+    return [name for name in names if not secrets.get(name)]
 
 
 def signed_ref(head_branch: str, variables: Mapping[str, str]) -> bool:
@@ -50,14 +59,21 @@ def would_sign(repository: str, event: str, head_branch: str, variables: Mapping
 
 
 def mode(repository: str, event: str, head_branch: str, variables: Mapping[str, str],
-         secrets: Mapping[str, bool]) -> str:
+         secrets: Mapping[str, bool], names: tuple[str, ...] = SIGNING_SECRETS) -> str:
     if not would_sign(repository, event, head_branch, variables):
         return REPORT
-    return NOT_CONFIGURED if missing_secrets(secrets) else ENFORCE
+    return NOT_CONFIGURED if missing_secrets(secrets, names) else ENFORCE
 
 
-def mode_for_run(run: dict, variables: Mapping[str, str], secrets: Mapping[str, bool]) -> str:
-    return mode(run["repository"]["full_name"], run.get("event", ""), run.get("head_branch") or "", variables, secrets)
+def mode_for_run(run: dict, variables: Mapping[str, str], secrets: Mapping[str, bool],
+                 names: tuple[str, ...] = SIGNING_SECRETS) -> str:
+    return mode(run["repository"]["full_name"], run.get("event", ""), run.get("head_branch") or "", variables, secrets,
+                names)
+
+
+def mac_mode_for_run(run: dict, variables: Mapping[str, str], secrets: Mapping[str, bool]) -> str:
+    """The mode of the macOS checks: the same predicate with the Apple secrets."""
+    return mode_for_run(run, variables, secrets, MAC_SIGNING_SECRETS)
 
 
 def exec_ok(run: dict) -> bool:
