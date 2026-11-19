@@ -17,7 +17,9 @@
 - G8 product name: every patch row matches its exact count (pre), and no
   line naming SLIC3R_APP_KEY in the patched files is lost (post), except a
   line a patch row names the key in on purpose; the key's definition never.
-  Inactive until product-name/patches.json exists.
+  Every packaging pin (PACKAGING_PINS) is still there after apply (post); a
+  pinned file that lost its pinned text upstream is drift (pre). Inactive until
+  product-name/patches.json exists.
 - Status policy: `missing` and `to-validate` rows warn on development builds
   (pull requests, DEV, MIXED, local) and fail release builds (release/*
   branches and tags).
@@ -362,6 +364,58 @@ def app_key_removals(before: dict, after: dict, patches: list) -> list[Finding]:
     return findings
 
 
+# Packaging identifiers the product-name rename must never change (decision
+# 0134): the build scripts, the CI upload steps and the artifact checks find the
+# packages by these names. Each pin is (file, exact text, why it is pinned).
+PACKAGING_PINS = (
+    ("src/dev-utils/platform/unix/build_appimage.sh.in", "\nName=@SLIC3R_APP_KEY@\n",
+     "appimagetool names the AppImage file after the desktop entry Name, and the script then moves "
+     "@SLIC3R_APP_KEY@-<arch>.AppImage"),
+    ("src/dev-utils/platform/unix/build_appimage.sh.in", "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}",
+     "the file name appimagetool writes"),
+    ("src/dev-utils/platform/unix/build_appimage.sh.in", 'APP_IMAGE="@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"',
+     "the AppImage name build_linux.sh and build_orca.yml move and upload"),
+    ("src/dev-utils/platform/unix/build_linux_image.sh.in",
+     'mv package_appimage/"@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage" "@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"',
+     "the AppImage name build_orca.yml moves and uploads"),
+    ("CMakeLists.txt", 'set (CPACK_PACKAGE_NAME "OrcaSlicer")', "the CPack package name"),
+    ("CMakeLists.txt", 'set (CPACK_PACKAGE_FILE_NAME "OrcaSlicer_Windows_Installer_V${SoftFever_VERSION}")',
+     "the Windows installer name build_orca.yml signs and uploads"),
+    ("scripts/flatpak/com.orcaslicer.OrcaSlicer.yml", "app-id: com.orcaslicer.OrcaSlicer\n",
+     "the Flatpak id, bundle name and desktop file id"),
+)
+
+
+def packaging_pins_present(root: Path) -> list:
+    """The pins found in `root`, as indexes into PACKAGING_PINS."""
+    present = []
+    for index, (relative, text, _) in enumerate(PACKAGING_PINS):
+        path = repo_path(root, relative)
+        if path.is_file() and text in path.read_bytes().decode("utf-8", "replace").replace("\r\n", "\n"):
+            present.append(index)
+    return present
+
+
+def packaging_pin_findings(ctx, phase: str) -> list[Finding]:
+    present = set(packaging_pins_present(ctx.root))
+    findings = []
+    if phase == "pre":
+        ctx.snapshot["packaging_pins"] = sorted(present)
+        for index, (relative, text, why) in enumerate(PACKAGING_PINS):
+            # A tree without the file has nothing to pin (the fake trees of the
+            # tests); the real-tree test checks every pinned file exists.
+            if index not in present and repo_path(ctx.root, relative).is_file():
+                findings.append(Finding("G8", drift_level(ctx), relative,
+                                        f"packaging pin not found upstream, review PACKAGING_PINS ({why}): {text.strip()!r}"))
+        return findings
+    for index in ctx.snapshot.get("packaging_pins", []):
+        if index not in present:
+            relative, text, why = PACKAGING_PINS[index]
+            findings.append(Finding("G8", "error", relative,
+                                    f"the product-name rename changed a packaging identifier ({why}): {text.strip()!r}"))
+    return findings
+
+
 def g8_product_name(ctx, phase: str) -> list[Finding]:
     if ctx.product_name is None:
         return []
@@ -378,6 +432,7 @@ def g8_product_name(ctx, phase: str) -> list[Finding]:
         before = ctx.snapshot.get("app_key_lines")
         if before is not None:
             findings += app_key_removals(before, app_key_lines(ctx.root, files), patches)
+    findings += packaging_pin_findings(ctx, phase)
     for plugin in ctx.plugins.get("product_name", []):
         findings += list(plugin.guards(ctx, phase))
     return findings
