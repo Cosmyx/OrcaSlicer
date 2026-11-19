@@ -1,6 +1,7 @@
 #include "CloudProvider.hpp"
 #include "Cosmyx/logic/CosmyxVersion.hpp" // Cosmyx
 #include "Cosmyx/ColorMode.hpp" // Cosmyx
+#include "Cosmyx/GoldenDriver.hpp" // Cosmyx
 #include "ExportPresetBundleDialog.hpp"
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
@@ -3876,6 +3877,7 @@ bool GUI_App::on_init_inner()
             this->mainframe->register_win32_callbacks();
 #endif
             this->post_init();
+            Cosmyx::start_golden_driver_if_requested(); // Cosmyx
 
             update_publish_status();
         }
