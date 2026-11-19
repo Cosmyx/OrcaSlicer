@@ -149,7 +149,8 @@ colour is yours (`user`) or derived from yours (`derived`), and `status` is
 `to-validate` until you change it to `validated` in `colours.json` yourself.
 Development builds warn while a mapping is `to-validate`; release builds fail.
 You approved the whole table on 2026-11-19, so every mapping is `validated`;
-a new or changed mapping starts again at `to-validate`.
+the same day you chose `#33ABA1` (the hover teal of the one-layer icons)
+-> `#A472F5` yourself. A new or changed mapping starts again at `to-validate`.
 
 Contrast is the WCAG 2 ratio of the colour on white (`#FFFFFF`) and on the
 dark screen background (`#1C1C1F`). Dark mode is forced, so the dark column is
@@ -162,6 +163,7 @@ for body text.
 | `#00675B` | `#A472F5` | dark base (brand on dark screens) | user | 6.79 / 2.50 | 3.33 / 5.10 |
 | `#00897B` | `#8000FF` | pressed | derived | 4.32 / 3.94 | 6.25 / 2.72 |
 | `#26A69A` | `#A472F5` | light hover | derived | 3.00 / 5.67 | 3.33 / 5.10 |
+| `#33ABA1` | `#A472F5` | light hover (one-layer icons) | user | 2.81 / 6.06 | 3.33 / 5.10 |
 | `#008172` | `#8000FF` | dark hover | derived | 4.79 / 3.55 | 6.25 / 2.72 |
 | `#BFE1DE` | `#DFBFFF` | light tint 25% (checked item) | derived | 1.40 / 12.18 | 1.61 / 10.55 |
 | `#E5F0EE` | `#F2E6FF` | light tint 10% (focused item) | derived | 1.16 / 14.60 | 1.20 / 14.20 |

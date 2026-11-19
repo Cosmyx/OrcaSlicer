@@ -387,7 +387,13 @@ class CommittedTableTest(unittest.TestCase):
 
     def test_user_colours_and_sources(self) -> None:
         by_source = {row["from"]: row for row in self.table["mappings"]}
-        for source, target in (("#009688", "#8000FF"), ("#00675B", "#A472F5"), ("#223C3C", "#382D43")):
+        for source, target in (
+            ("#009688", "#8000FF"),
+            ("#00675B", "#A472F5"),
+            ("#223C3C", "#382D43"),
+            # Hover teal of the one-layer icons, chosen by the user (decision 0127).
+            ("#33ABA1", "#A472F5"),
+        ):
             self.assertEqual((by_source[source]["to"], by_source[source]["source"]), (target, "user"))
         self.assertEqual({by_source[c]["to"] for c in ("#52C7B8", "#4DB6AC")}, {"#B4B9DD"})
         self.assertTrue(all(row["status"] in colours.STATUSES for row in self.table["mappings"]))

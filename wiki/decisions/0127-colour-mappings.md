@@ -42,6 +42,12 @@ user approves what ships.
   table, as this decision allows. Any mapping added or changed later starts
   at `to-validate` again.
 
+- The same day the user chose a 24th mapping themselves: `#33ABA1`, the
+  hover teal of the four `one_layer_{off,on}_hover{,_dark}.svg` icons, maps to
+  `#A472F5`, mirroring `#26A69A` -> `#A472F5`. It was picked by the user from
+  that proposal, so it went in as `source: user`, `validated`. It only occurs
+  in those SVG files: no C++ or CSS literal row needed it.
+
 ## Consequences
 
 - Changing a colour is one edit of a `to` cell (or of the palette and its
