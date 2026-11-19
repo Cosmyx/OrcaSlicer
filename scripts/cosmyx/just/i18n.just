@@ -23,6 +23,11 @@ i18n-graft-dry-run:
 i18n-graft:
     {{python}} scripts/cosmyx/i18n_graft.py
 
-# Restore the committed localization/i18n after a local i18n-graft.
+# Restore the committed localization/i18n after a graft, also clearing the skip-worktree bit the CI's hide step sets.
 i18n-ungraft:
+    {{python}} scripts/cosmyx/worktree_clean.py unhide localization/i18n
     git checkout -- localization/i18n
+
+# List the tracked files hidden from git diff by skip-worktree (set by the CI's prepare step).
+worktree-hidden:
+    {{python}} scripts/cosmyx/worktree_clean.py show
