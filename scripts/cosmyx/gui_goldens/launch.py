@@ -4,9 +4,14 @@
   under Xvfb 1600x1000x24 with openbox, when no display is set (the Docker
   image).
 - macOS: the .app is copied out of the DMG, so the mounted image can go.
-- Windows: the portable build is copied to a temporary folder, the pinned
-  Mesa software renderer (artifact_checks.mesa_win, decision 0161) is put in
-  its mesa/ folder and the app runs with --sw-renderer.
+- Windows: the portable build is copied to a temporary folder and the pinned
+  Mesa software renderer (artifact_checks.mesa_win, decision 0161) is fetched
+  into its mesa/ folder, then its DLLs are copied next to the executable.
+  The launcher's --sw-renderer switch cannot be used: it is passed on to the
+  command line parser, which rejects it (its option is commented out in
+  PrintConfig.cpp). opengl32.dll is not a known DLL, so the copy next to the
+  executable wins over the system one, and the launcher's own OpenGL check
+  then sees Mesa.
 
 Every OS gets --datadir <seeded folder> and the COSMYX_GUI_DRIVER_* variables.
 """
@@ -85,14 +90,19 @@ def prepare_macos(artifact_dir: Path, work: Path, run: Runner = subprocess.run) 
     return App([str(target / "Contents" / "MacOS" / executable)], executable)
 
 
-def mesa_fetch(dest: Path) -> Path:
-    """artifact_checks.mesa_win.fetch (T16a), imported from the trusted
-    checkout only when a Windows pass runs."""
-    from artifact_checks import mesa_win  # noqa: PLC0415 (runtime import, decision 0161)
-    return Path(mesa_win.fetch(dest))
+def mesa_fetch(dest: Path) -> tuple[Path, dict[str, str]]:
+    """artifact_checks.mesa_win (T16a): fetches the pinned Mesa into `dest`
+    (a folder named mesa) and gives the environment the app needs (Mesa first
+    on PATH, GALLIUM_DRIVER=llvmpipe). Imported from the trusted checkout only
+    when a Windows pass runs."""
+    from artifact_checks import inventory, mesa_win  # noqa: PLC0415 (runtime import, decision 0161)
+    folder = Path(mesa_win.fetch(dest))
+    env = mesa_win.run_env(dict(os.environ), folder, mesa_win.load_pin(inventory.load_expectations()))
+    return folder, dict(env)
 
 
-def prepare_windows(artifact_dir: Path, work: Path, fetch: Callable[[Path], Path] = mesa_fetch) -> App:
+def prepare_windows(artifact_dir: Path, work: Path,
+                    fetch: Callable[[Path], tuple[Path, dict[str, str]]] = mesa_fetch) -> App:
     exes = sorted(artifact_dir.rglob("orca-slicer.exe")) or sorted(artifact_dir.rglob("OrcaSlicer.exe"))
     app_dir = work / "app"
     if app_dir.exists():
@@ -105,11 +115,13 @@ def prepare_windows(artifact_dir: Path, work: Path, fetch: Callable[[Path], Path
             bundle.extractall(work / "unzipped")
         shutil.copytree(_one(sorted((work / "unzipped").rglob("orca-slicer.exe")), "orca-slicer.exe").parent, app_dir)
     exe = next(p for p in (app_dir / "orca-slicer.exe", app_dir / "OrcaSlicer.exe") if p.is_file())
-    fetched = fetch(app_dir / "mesa")
+    fetched, env = fetch(app_dir / "mesa")
     dll_dir = fetched.parent if fetched.is_file() else fetched
     if not (dll_dir / "opengl32.dll").is_file() or dll_dir.resolve() != (app_dir / "mesa").resolve():
         raise GoldenError(f"Mesa was not put in {app_dir / 'mesa'} (got {fetched})")
-    return App([str(exe), "--sw-renderer"], exe.stem)
+    for dll in sorted(dll_dir.glob("*.dll")):
+        shutil.copy2(dll, exe.parent / dll.name)
+    return App([str(exe)], exe.stem, env)
 
 
 def prepare(os_name: str, artifact_dir: Path, work: Path) -> App:

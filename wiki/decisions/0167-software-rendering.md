@@ -13,10 +13,14 @@ renderer gives stable 3D pixels.
 
 - Linux: Mesa llvmpipe from the pinned image; the harness records
   `GL_RENDERER` in `environment.json`.
-- Windows: the portable build runs with `--sw-renderer`, which loads
-  `<exe>/mesa/opengl32.dll`; the harness puts the pinned mesa-dist-win build
-  there with `artifact_checks.mesa_win.fetch(dest_dir)` (T16a, decision 0161),
-  imported at run time from the trusted checkout.
+- Windows: the harness fetches the pinned mesa-dist-win build into the
+  portable copy's `mesa/` folder with `artifact_checks.mesa_win.fetch()` and
+  starts the app with `mesa_win.run_env()` (T16a, decision 0161), imported at
+  run time from the trusted checkout. The Mesa DLLs are also copied next to
+  the executable: `opengl32.dll` is not a known DLL, so that copy wins over
+  the system driver. The launcher's `--sw-renderer` switch is not used: the
+  launcher passes it on to the command line parser, which rejects it (the
+  option is commented out in `PrintConfig.cpp`).
 - macOS: there is no software switch; the runner's renderer is used and the
   pixel tolerance of decision 0168 absorbs its noise (OS exception).
 
