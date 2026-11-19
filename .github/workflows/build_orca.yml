@@ -509,17 +509,18 @@ jobs:
 
       - name: Cosmyx code signing setup # Cosmyx
         id: cosmyx_sign # Cosmyx
-        if: runner.os == 'Windows' && github.repository != 'OrcaSlicer/OrcaSlicer' && github.event_name != 'pull_request' && github.ref_name != 'MIXED' && vars.COSMYX_SIGN_ACCOUNT != '' && (github.ref_name == 'DEV' || startsWith(github.ref_name, 'release/') || vars.COSMYX_SIGN_ALL_REFS == 'true') # Cosmyx
+        if: runner.os == 'Windows' && github.repository != 'OrcaSlicer/OrcaSlicer' && github.event_name != 'pull_request' && github.ref_name != 'MIXED' && (github.ref_name == 'DEV' || startsWith(github.ref_name, 'release/') || vars.COSMYX_SIGN_ALL_REFS == 'true') # Cosmyx
         uses: ./.github/actions/cosmyx-sign # Cosmyx
         with: # Cosmyx
           mode: setup # Cosmyx
-          endpoint: ${{ vars.COSMYX_SIGN_ENDPOINT }} # Cosmyx
-          account: ${{ vars.COSMYX_SIGN_ACCOUNT }} # Cosmyx
-          certificate-profile: ${{ vars.COSMYX_SIGN_PROFILE }} # Cosmyx
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }} # Cosmyx
+          account: ${{ secrets.AZURE_CODE_SIGNING_NAME }} # Cosmyx
+          certificate-profile: ${{ secrets.AZURE_CERT_PROFILE_NAME }} # Cosmyx
           subject: ${{ vars.COSMYX_SIGN_SUBJECT }} # Cosmyx
-          client-id: ${{ vars.COSMYX_AZURE_CLIENT_ID }} # Cosmyx
-          tenant-id: ${{ vars.COSMYX_AZURE_TENANT_ID }} # Cosmyx
-          subscription-id: ${{ vars.COSMYX_AZURE_SUBSCRIPTION_ID }} # Cosmyx
+          eku: ${{ vars.COSMYX_SIGN_EKU }} # Cosmyx
+          client-id: ${{ secrets.AZURE_CLIENT_ID }} # Cosmyx
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }} # Cosmyx
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Cosmyx
 
       - name: Build slicer Win
         if: runner.os == 'Windows'
@@ -568,7 +569,7 @@ jobs:
           ./scripts/sign_windows.ps1 -Path $paths
 
       - name: Cosmyx sign Windows binaries # Cosmyx
-        if: steps.cosmyx_sign.outcome == 'success' # Cosmyx
+        if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx
         uses: ./.github/actions/cosmyx-sign # Cosmyx
         with: # Cosmyx
           mode: sign # Cosmyx
@@ -627,7 +628,7 @@ jobs:
           ./scripts/sign_windows.ps1 -Verify -Path $paths
 
       - name: Cosmyx verify Windows signatures # Cosmyx
-        if: steps.cosmyx_sign.outcome == 'success' # Cosmyx
+        if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx
         timeout-minutes: 20 # Cosmyx
         uses: ./.github/actions/cosmyx-sign # Cosmyx
         with: # Cosmyx
