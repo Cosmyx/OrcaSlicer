@@ -212,15 +212,32 @@ TEST_CASE("Bed temperature placeholders keep positive values", "[cosmyx][BedTemp
 
 TEST_CASE("A bed temperature of 0 still means the filament does not support the plate", "[cosmyx][BedTemperatureOff]")
 {
-    const auto bed_type_error = [](int value) {
+    // validate() returns its first error, so the config must pass every check
+    // before the bed type one. The default Marlin flavour with relative E needs
+    // "G92 E0" in the layer change G-code, or validate() stops there first.
+    const auto validate_with = [](int value) {
         DynamicPrintConfig config = config_with_bed_temperature(value);
-        config.set_deserialize_strict("support_multi_bed_types", "1");
+        config.set_deserialize_strict({{"support_multi_bed_types", "1"}, {"layer_change_gcode", "G92 E0\n"}});
         Print print;
         Model model;
         Test::init_print({Test::cube(20)}, print, model, config);
-        return print.validate().type == STRING_EXCEPT_FILAMENT_NOT_MATCH_BED_TYPE;
+        return print.validate();
     };
-    CHECK(bed_type_error(0));
-    CHECK_FALSE(bed_type_error(Cosmyx::bed_temperature_off));
-    CHECK_FALSE(bed_type_error(60));
+
+    SECTION("0 refuses the plate")
+    {
+        const StringObjectException error = validate_with(0);
+        INFO("validate(): " << error.string);
+        CHECK(error.type == STRING_EXCEPT_FILAMENT_NOT_MATCH_BED_TYPE);
+        CHECK(error.string.find("does not support filament 1") != std::string::npos);
+    }
+
+    SECTION("-1 and a positive value pass the whole validation")
+    {
+        const int value = GENERATE(Cosmyx::bed_temperature_off, 60);
+        const StringObjectException error = validate_with(value);
+        INFO("bed temperature " << value << ", validate(): " << error.string);
+        CHECK(error.type != STRING_EXCEPT_FILAMENT_NOT_MATCH_BED_TYPE);
+        CHECK(error.string.empty());
+    }
 }
