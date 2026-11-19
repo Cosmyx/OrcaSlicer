@@ -148,6 +148,8 @@ Every mapping is a proposal until you validate it: `source` says whether the
 colour is yours (`user`) or derived from yours (`derived`), and `status` is
 `to-validate` until you change it to `validated` in `colours.json` yourself.
 Development builds warn while a mapping is `to-validate`; release builds fail.
+You approved the whole table on 2026-11-19, so every mapping is `validated`;
+a new or changed mapping starts again at `to-validate`.
 
 Contrast is the WCAG 2 ratio of the colour on white (`#FFFFFF`) and on the
 dark screen background (`#1C1C1F`). Dark mode is forced, so the dark column is

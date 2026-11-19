@@ -34,6 +34,14 @@ user approves what ships.
   unrelated upstream text. Unvalidated mappings warn on development
   builds and fail release builds, like the image rows (decision 0121).
 
+- On 2026-11-19 the user approved the whole table in their own words
+  ("c'est validé les couleurs pour moi"), directly to the orchestrator, not
+  through an agent's proposal. All 23 mappings, derived ones included, were
+  set to `validated` in `colours.json` on that approval. The validate command
+  of decision 0121 covers manifest rows only, so the flip is an edit of the
+  table, as this decision allows. Any mapping added or changed later starts
+  at `to-validate` again.
+
 ## Consequences
 
 - Changing a colour is one edit of a `to` cell (or of the palette and its
