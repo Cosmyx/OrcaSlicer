@@ -63,6 +63,13 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T11f -->
 
+<!-- cosmyx-slot: T18 -->
+- Cosmyx now uses its own cloud, CosmoCloud (orca-cloud.cosmyx3d.fr), for
+  sign-in, sync and the plugin hub, and stealth mode can be turned off again:
+  it is on by default until the user opts out. Preferences can point the app
+  at a custom orca-cloud instance; cloud addresses set by the user always win.
+  Pull request: pending. Decisions: 0200, 0201, 0202, 0203.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->
