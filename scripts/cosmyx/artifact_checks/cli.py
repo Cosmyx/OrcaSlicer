@@ -27,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from artifact_checks import allowlist as allowlist_mod  # noqa: E402
 from artifact_checks import content, inventory, linux, macos, policy_windows, report, signing_policy  # noqa: E402
+from artifact_checks import smoke_native  # noqa: E402
 from artifact_checks.records import Record, build_manifest, sha256sums, write_jsonl  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -173,8 +174,11 @@ def cmd_windows(args, run=subprocess.run) -> int:
     manifests = {}
     hook = tree_hook("windows", Path(args.tools), Path(args.subject))
     for name, tree in collected.trees:
+        artifact = next(a for a in artifacts if a.name == name)
         manifests[name] = build_manifest(tree)
-        records += hook(next(a for a in artifacts if a.name == name), tree)
+        records += hook(artifact, tree)
+        records += smoke_native.windows_records(artifact, tree, Path(args.subject), work, expectations,
+                                                boolean(args.exec_ok), run=run)
     write_outputs(out, "windows", records, artifacts_dir, artifacts, manifests)
     return 0
 
@@ -191,7 +195,8 @@ def cmd_macos(args, run=subprocess.run) -> int:
     # masked by GitHub, as COSMYX_MAC_TEAM_ID.
     records += macos.check(artifacts_dir, artifacts, work, allow, run, tree_hook("macos", Path(args.tools), Path(args.subject)),
                            manifests, enforce_stale=args.mode == signing_policy.ENFORCE, mode=args.mode,
-                           team=os.environ.get("COSMYX_MAC_TEAM_ID", "").strip(), strict=boolean(args.strict))
+                           team=os.environ.get("COSMYX_MAC_TEAM_ID", "").strip(), strict=boolean(args.strict),
+                           exec_ok=boolean(args.exec_ok), subject=Path(args.subject), expectations=expectations)
     write_outputs(out, "macos", records, artifacts_dir, artifacts, manifests)
     return 0
 
