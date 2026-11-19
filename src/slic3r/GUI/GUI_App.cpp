@@ -596,6 +596,7 @@ static void migrate_flatpak_legacy_datadir(const boost::filesystem::path &data_d
 {
     if (!is_running_in_flatpak())
         return; // Not running as a Flatpak, nothing to migrate.
+    if (::Slic3r::Cosmyx::skip_legacy_data_migration(data_dir_path.string())) return; // Cosmyx: start fresh (decision 0184)
     
     namespace fs = boost::filesystem;
 
@@ -605,7 +606,7 @@ static void migrate_flatpak_legacy_datadir(const boost::filesystem::path &data_d
     }
     std::cerr << "Migrating Flatpak data dir: " << data_dir_path << std::endl;
 
-    std::string legacy_data_dir_str = ::Slic3r::Cosmyx::without_vendor_dir(data_dir_path.string()); // Cosmyx
+    std::string legacy_data_dir_str = data_dir_path.string();
     boost::replace_first(legacy_data_dir_str, "com.orcaslicer.OrcaSlicer", "io.github.softfever.OrcaSlicer");
     const fs::path legacy_data_dir(legacy_data_dir_str);
 

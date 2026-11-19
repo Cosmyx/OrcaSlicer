@@ -5,7 +5,7 @@ A Cosmyx build keeps everything it installs and everything it writes under a
 on the same machine without sharing presets, sign-in or plugins.
 
 Decisions: 0180 (data folder), 0181 (hooks), 0182 (Windows installer),
-0183 (removal of an earlier Cosmyx install).
+0183 (removal of an earlier Cosmyx install), 0184 (no legacy data migration).
 
 ## User data folder
 
@@ -36,10 +36,11 @@ new one by hand while the app is closed.
 Cosmyx builds that already used `Cosmyx\OrcaSlicer` on Windows and macOS (the
 CosmoSlice builds) keep their data: the path is the same.
 
-Flatpak only: on its first start, when the new folder does not exist yet,
-the app still copies the data of the legacy Flatpak id
-(`~/.var/app/io.github.softfever.OrcaSlicer/config/OrcaSlicer`), as upstream
-does.
+This holds for Flatpak too: upstream copies the data of its legacy Flatpak id
+(`~/.var/app/io.github.softfever.OrcaSlicer/config/OrcaSlicer`) into a missing
+data folder on first start, and a Cosmyx build skips that copy for its
+`Cosmyx/OrcaSlicer` folder (decision 0184). No other upstream code copies a
+legacy data folder on Windows, macOS or Linux.
 
 ### Other per-user folders
 

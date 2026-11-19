@@ -170,7 +170,7 @@ class HookTests(unittest.TestCase):
             "src/slic3r/GUI/GUI_App.cpp": [
                 '#include "Cosmyx/AppPaths.hpp" // Cosmyx',
                 "    Cosmyx::use_vendor_data_dir(); // Cosmyx",
-                "    std::string legacy_data_dir_str = ::Slic3r::Cosmyx::without_vendor_dir(data_dir_path.string()); // Cosmyx",
+                "    if (::Slic3r::Cosmyx::skip_legacy_data_migration(data_dir_path.string())) return; // Cosmyx: start fresh (decision 0184)",
                 "    std::string default_path = xdg_config_dir(::Slic3r::Cosmyx::vendor_app_subdir(app_name.ToUTF8().data())); // Cosmyx",
             ],
             "src/libslic3r/utils.cpp": [
@@ -183,6 +183,16 @@ class HookTests(unittest.TestCase):
             for hook in hooks:
                 with self.subTest(path=path, hook=hook):
                     self.assertEqual(lines.count(hook), 1)
+
+    def test_flatpak_migration_skip_is_first_after_the_flatpak_check(self) -> None:
+        lines = (REPO_ROOT / "src/slic3r/GUI/GUI_App.cpp").read_text(encoding="utf-8").splitlines()
+        hook = ("    if (::Slic3r::Cosmyx::skip_legacy_data_migration(data_dir_path.string())) return;"
+                " // Cosmyx: start fresh (decision 0184)")
+        index = lines.index(hook)
+        self.assertEqual(lines[index - 1], "        return; // Not running as a Flatpak, nothing to migrate.")
+        # The legacy path line stays upstream's own, so the hook is a pure insertion.
+        self.assertIn("    std::string legacy_data_dir_str = data_dir_path.string();", lines)
+        self.assertLess(index, lines.index("    std::string legacy_data_dir_str = data_dir_path.string();"))
 
     def test_vendor_call_follows_set_app_name(self) -> None:
         lines = (REPO_ROOT / "src/slic3r/GUI/GUI_App.cpp").read_text(encoding="utf-8").splitlines()

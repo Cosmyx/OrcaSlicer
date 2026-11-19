@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Accepted, amended by 0184.
 
 ## Context
 
@@ -31,11 +31,9 @@ other's presets and sign-in.
   `check_old_linux_datadir()` compares against the same path. The vendor
   setting also moves `GetUserDataDir()` on Linux from `~/.OrcaSlicer` to
   `~/.Cosmyx/OrcaSlicer`, so the token fallback file never meets upstream's.
-- The Flatpak legacy data folder is computed from the data folder with the
-  vendor folder taken out (`Cosmyx::without_vendor_dir()`), so the legacy
-  path stays `~/.var/app/io.github.softfever.OrcaSlicer/config/OrcaSlicer`.
 - No migration from the un-nested folder: a Cosmyx build starts fresh (user
-  decision). A portable `data_dir` folder next to the executable and
+  decision). That includes upstream's Flatpak legacy data migration, which is
+  skipped for the Cosmyx data folder (decision 0184). A portable `data_dir` folder next to the executable and
   `--datadir` still take precedence, as upstream.
 
 ## Consequences

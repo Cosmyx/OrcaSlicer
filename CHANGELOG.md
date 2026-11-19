@@ -38,13 +38,13 @@ here; see the upstream release notes.
 - **Breaking:** user data now lives under a `Cosmyx` folder on every OS
   (`%APPDATA%\Cosmyx\OrcaSlicer`, `~/Library/Application Support/Cosmyx/OrcaSlicer`,
   `~/.config/Cosmyx/OrcaSlicer`), apart from upstream OrcaSlicer. Nothing is
-  migrated: presets, login and plugins from the old folder must be set up again
-  (Cosmyx builds that already used `Cosmyx\OrcaSlicer` on Windows and macOS keep
+  migrated, not even upstream's legacy Flatpak data: presets, login and plugins
+  from the old folder must be set up again (Cosmyx builds that already used `Cosmyx\OrcaSlicer` on Windows and macOS keep
   theirs). The Windows installer installs to `Program Files\Cosmyx\CosmoSlice`
   under the uninstall key `Cosmyx CosmoSlice`, side by side with upstream
   OrcaSlicer, and removes an earlier Cosmyx install only when its key and
   publisher identify it as Cosmyx. Pull request: pending. Decisions: 0180,
-  0181, 0182, 0183.
+  0181, 0182, 0183, 0184.
 
 ### libslic3r
 
