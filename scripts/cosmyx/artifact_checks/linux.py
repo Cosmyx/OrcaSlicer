@@ -12,7 +12,6 @@
 from __future__ import annotations
 
 import shutil
-import signal
 import stat
 import subprocess
 from collections.abc import Callable
@@ -25,7 +24,11 @@ from .records import Record, build_manifest, posix_relative
 
 Runner = Callable[..., subprocess.CompletedProcess]
 TreeHook = Callable[[Artifact, Path], list[Record]]
-CRASH_SIGNALS = {signal.SIGSEGV, signal.SIGABRT, signal.SIGBUS, signal.SIGILL, signal.SIGFPE}
+# Linux signal numbers, fixed by the kernel ABI on x86_64 and aarch64. The exit
+# codes come from a Linux process, while this module is also imported on
+# Windows (no SIGBUS) and macOS (SIGBUS is 10), so the host's signal module
+# must not be used.
+CRASH_SIGNALS = {11: "SIGSEGV", 6: "SIGABRT", 7: "SIGBUS", 4: "SIGILL", 8: "SIGFPE"}
 USAGE_WORDS = ("usage", "--help", "options")
 
 
@@ -37,9 +40,9 @@ def smoke_status(returncode: int | None, output: str, timed_out: bool, timeout: 
     if returncode is None:
         return "fail", "did not run"
     if returncode < 0 and -returncode in CRASH_SIGNALS:
-        return "fail", f"crashed with signal {signal.Signals(-returncode).name}"
+        return "fail", f"crashed with signal {CRASH_SIGNALS[-returncode]}"
     if returncode > 128 and returncode - 128 in CRASH_SIGNALS:
-        return "fail", f"crashed with signal {signal.Signals(returncode - 128).name}"
+        return "fail", f"crashed with signal {CRASH_SIGNALS[returncode - 128]}"
     if returncode == 0:
         return "pass", "exit 0"
     if any(word in output.lower() for word in USAGE_WORDS):
