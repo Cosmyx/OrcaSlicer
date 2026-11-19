@@ -1,4 +1,5 @@
 #include "PrintConfig.hpp"
+#include "Cosmyx/ConfigDefExtensions.hpp" // Cosmyx
 #include "CommonDefs.hpp"
 #include "Point.hpp"
 #include "Polygon.hpp"
@@ -1001,6 +1002,7 @@ PrintConfigDef::PrintConfigDef()
     assign_printer_technology_to_unknown(this->options, ptAny);
     this->init_fff_params();
     this->init_extruder_option_keys();
+    Cosmyx::extend_print_config_def(*this); // Cosmyx
     assign_printer_technology_to_unknown(this->options, ptFFF);
     this->init_sla_params();
     assign_printer_technology_to_unknown(this->options, ptSLA);
