@@ -47,6 +47,12 @@ here; see the upstream release notes.
 ### GUI
 
 <!-- cosmyx-slot: T5 -->
+- Add the "Cosmyx 3D Models" menu to the empty-space and plate context menus:
+  Dual Head calibration models (Calage 1, 2 and 3 SNDT, Cube Bicolore), Single
+  Head ones (Calage 1 Nova, Cosmyx Cube) and handy models (belt tension
+  control, spool holder). Calage 1 offers 0 degree infill directions; Calage 3
+  offers its base settings and adds its modifier boxes to the loaded objects
+  only. Pull request: pending. Decisions: 0050, 0051, 0052, 0053, 0054, 0055.
 
 <!-- cosmyx-slot: T6 -->
 
