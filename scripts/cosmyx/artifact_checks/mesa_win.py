@@ -126,7 +126,8 @@ def extract(seven_zip: str, archive: Path, target: Path, pin: Pin, run: Runner =
     if target.exists():
         shutil.rmtree(target)
     target.mkdir(parents=True)
-    done = run(extract_command(seven_zip, archive, target, pin), capture_output=True, text=True, check=False)
+    done = run(extract_command(seven_zip, archive, target, pin), capture_output=True, text=True, errors="replace",
+               check=False)
     if done.returncode != 0:
         tail = (done.stderr or done.stdout or "").strip().splitlines()[-1:]
         raise MesaError("fail", f"7-Zip could not unpack Mesa (exit {done.returncode}) {' '.join(tail)}".strip())

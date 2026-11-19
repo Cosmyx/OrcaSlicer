@@ -103,6 +103,7 @@ here; see the upstream release notes.
 - Run the Windows x64 and macOS apps after every "Build all" run, as on Linux:
   `--help` and a slice of the shipped cube, judged on the G-code it writes. On
   Windows the app runs from a temporary copy with a pinned, hash-checked Mesa
-  software OpenGL (mesa-dist-win 26.2.5, MIT, test-only, never shipped). See
+  software OpenGL (mesa-dist-win 26.2.5, MIT, test-only, never shipped). The
+  macOS run never executes a file outside the app bundle. See
   `wiki/cosmyx/artifact-checks.md`. Pull request: pending. Decisions: 0160,
   0161.

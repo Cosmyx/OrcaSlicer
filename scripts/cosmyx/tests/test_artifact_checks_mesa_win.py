@@ -16,6 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from artifact_checks import inventory, mesa_win  # noqa: E402
+from undecodable_output import UNDECODABLE, run_printing  # noqa: E402
 
 ARCHIVE = b"fake 7z archive"
 FILES = {"x64/opengl32.dll": b"opengl32", "x64/libgallium_wgl.dll": b"gallium"}
@@ -127,6 +128,14 @@ class PrepareTests(unittest.TestCase):
     def test_seven_zip_error_fails(self) -> None:
         with self.assertRaises(mesa_win.MesaError) as caught:
             self.prepare(Opener([ARCHIVE]), SevenZip(FILES, code=2))
+        self.assertEqual(caught.exception.status, "fail")
+        self.assertIn("exit 2", caught.exception.reason)
+
+    def test_undecodable_seven_zip_error_is_reported(self) -> None:
+        def broken(args, **kwargs):
+            return run_printing(args, kwargs, b"ERROR " + UNDECODABLE + b"\n", 2)
+        with self.assertRaises(mesa_win.MesaError) as caught:
+            self.prepare(Opener([ARCHIVE]), broken)
         self.assertEqual(caught.exception.status, "fail")
         self.assertIn("exit 2", caught.exception.reason)
 

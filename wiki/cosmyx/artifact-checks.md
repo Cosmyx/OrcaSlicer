@@ -83,7 +83,9 @@ name patterns, limits and the Mesa pin are in `data/expectations.json`.
   image, `<app>/Contents/MacOS/<CFBundleExecutable> --help` (60 s) and the
   slice of the shipped cube (300 s), judged like on Linux. Only disk images
   whose architectures include the runner's are run (the arm64 runner skips the
-  x86_64-only image by design). A crash is named from its signal.
+  x86_64-only image by design). A crash is named from its signal. A
+  `CFBundleExecutable` that is not a plain file name is ignored, and an
+  executable that resolves outside `Contents/MacOS` is never run.
 
 ### Linux
 
