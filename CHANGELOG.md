@@ -34,6 +34,18 @@ here; see the upstream release notes.
   changelog, the decision register under `wiki/decisions/`, the justfile and
   the Cosmyx checks workflow. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/86. Decisions: 0001, 0002, 0003, 0004, 0005.
 
+<!-- cosmyx-slot: T17 -->
+- **Breaking:** user data now lives under a `Cosmyx` folder on every OS
+  (`%APPDATA%\Cosmyx\OrcaSlicer`, `~/Library/Application Support/Cosmyx/OrcaSlicer`,
+  `~/.config/Cosmyx/OrcaSlicer`), apart from upstream OrcaSlicer. Nothing is
+  migrated: presets, login and plugins from the old folder must be set up again
+  (Cosmyx builds that already used `Cosmyx\OrcaSlicer` on Windows and macOS keep
+  theirs). The Windows installer installs to `Program Files\Cosmyx\CosmoSlice`
+  under the uninstall key `Cosmyx CosmoSlice`, side by side with upstream
+  OrcaSlicer, and removes an earlier Cosmyx install only when its key and
+  publisher identify it as Cosmyx. Pull request: pending. Decisions: 0180,
+  0181, 0182, 0183.
+
 ### libslic3r
 
 <!-- cosmyx-slot: T1 -->
