@@ -669,7 +669,75 @@ class InflectionTokenTest(unittest.TestCase):
         self.assertEqual(tokens.replace_tokens("OrcaSlicer.\nApply"), "CosmoSlice.\nApply")
 
 
+HU_PHRASES = tokens.inflection_map(
+    [
+        {"language": "hu", "old": "az OrcaSlicer", "new": "a CosmoSlice"},
+        {"language": "hu", "old": "Az OrcaSlicer", "new": "A CosmoSlice"},
+        {"language": "hu", "old": "az OrcaSlicerrel", "new": "a CosmoSlice-szal"},
+        {"language": "hu", "old": "az Orca", "new": "a CosmoSlice"},
+        {"language": "eu", "old": "Orca-ren", "new": "CosmoSlice-en"},
+        {"language": "eu", "old": "OrcaSlicer-etik", "new": "CosmoSlice-tik"},
+    ]
+)
+
+
+class PhraseRowTest(unittest.TestCase):
+    """A row's `old` may be a phrase around the plain or hyphenated name."""
+
+    def rename(self, text: str, lang: str) -> str:
+        return tokens.replace_tokens(text, lang, inflections=HU_PHRASES)
+
+    def test_article_phrase_is_renamed_longest_first(self) -> None:
+        self.assertEqual(self.rename("az OrcaSlicerrel és az OrcaSlicer", "hu"), "a CosmoSlice-szal és a CosmoSlice")
+        self.assertEqual(self.rename("Az OrcaSlicer fut.", "hu"), "A CosmoSlice fut.")
+        self.assertEqual(self.rename("Tip\\nAz OrcaSlicer fut", "hu"), "Tip\\nA CosmoSlice fut")
+
+    def test_phrase_matches_whole_words_only(self) -> None:
+        self.assertEqual(self.rename("haz OrcaSlicer", "hu"), "haz CosmoSlice")
+        # A longer inflected form without its row is never cut by the phrase.
+        self.assertEqual(self.rename("az OrcaSlicerből", "hu"), "az OrcaSlicerből")
+        self.assertEqual(tokens.unresolved("az OrcaSlicerből", "hu", HU_PHRASES), ["OrcaSlicerből"])
+
+    def test_phrase_never_cuts_a_name_or_a_kept_name(self) -> None:
+        self.assertEqual(self.rename("az Orca Slicer", "hu"), "az CosmoSlice")  # "Orca Slicer" is one name
+        self.assertEqual(self.rename("az Orca Cloud", "hu"), "az Orca Cloud")
+        self.assertEqual(self.rename("az Orca minden", "hu"), "a CosmoSlice minden")
+
+    def test_phrase_applies_in_its_language_only(self) -> None:
+        self.assertEqual(self.rename("az OrcaSlicer", "de"), "az CosmoSlice")
+        self.assertEqual(self.rename("Orca-ren", "hu"), "CosmoSlice-ren")
+
+    def test_hyphenated_rows(self) -> None:
+        self.assertEqual(self.rename("Orca-ren bertsioa", "eu"), "CosmoSlice-en bertsioa")
+        self.assertEqual(self.rename("OrcaSlicer-etik?", "eu"), "CosmoSlice-tik?")
+        self.assertEqual(self.rename("OrcaSlicer-ekin", "eu"), "CosmoSlice-ekin")  # plain rule
+
+    def test_fired_rows(self) -> None:
+        text, fired = tokens.apply_inflections("az OrcaSlicerrel", "hu", HU_PHRASES)
+        self.assertEqual((text, fired), ("a CosmoSlice-szal", {"az OrcaSlicerrel"}))
+
+
 class InflectionTablesTest(unittest.TestCase):
+    def test_phrase_rows_are_valid(self) -> None:
+        rows = [
+            {"language": "hu", "old": "az OrcaSlicer", "new": "a CosmoSlice"},
+            {"language": "eu", "old": "Orca-ren", "new": "CosmoSlice-en"},
+            {"language": "eu", "old": "OrcaSlicer-etik", "new": "CosmoSlice-tik"},
+        ]
+        self.assertEqual(tables.inflection_rows(rows), rows)
+
+    def test_rejected_phrase_rows(self) -> None:
+        bad = [
+            {"language": "hu", "old": "Orca Slicer", "new": "CosmoSlice"},  # bare plain name
+            {"language": "hu", "old": "az Slicer", "new": "a CosmoSlice"},  # no upstream name
+            {"language": "hu", "old": " az OrcaSlicer", "new": "a CosmoSlice"},  # stray space
+            {"language": "hu", "old": "az OrcaSlicer", "new": "a CosmoSlice Orca"},  # new names upstream
+            {"language": "hu", "old": "az OrcaSlicer", "new": "a Slice"},  # new lacks the stem
+        ]
+        for row in bad:
+            with self.subTest(row=row), self.assertRaises(branding.BrandingError):
+                tables.inflection_rows([row])
+
     def test_valid_row(self) -> None:
         self.assertEqual(tables.inflection_rows([CS_ROW]), [CS_ROW])
 
@@ -740,6 +808,35 @@ class InflectionPluginTest(ProductNameTreeCase):
         self.inflections([CS_ROW])
         self.assertEqual(inflections.needed(self.root), {})
 
+    def test_row_shadowed_by_a_longer_row_is_stale(self) -> None:
+        hu = (
+            'msgid ""\nmsgstr ""\n"Language: hu\\n"\n\n'
+            'msgid "About OrcaSlicer"\nmsgstr "Az OrcaSlicer-ről, az OrcaSlicerrel"\n'
+        )
+        write(self.root, "localization/i18n/hu/OrcaSlicer_hu.po", hu)
+        self.inflections(
+            [
+                CS_ROW,
+                {"language": "hu", "old": "az OrcaSlicerrel", "new": "a CosmoSlice-szal", "source": "test"},
+                {"language": "hu", "old": "OrcaSlicerrel", "new": "CosmoSlice-szal", "source": "test"},
+                {"language": "hu", "old": "Az OrcaSlicer-ről", "new": "A CosmoSlice-ról", "source": "test"},
+            ]
+        )
+        found = [f.message for f in self.g8("pre") if "stale inflection row" in f.message]
+        self.assertEqual(found, ["stale inflection row hu 'OrcaSlicerrel': no renamed translation has it"])
+
+    def test_hyphenated_form_renamed_by_a_row_is_not_listed(self) -> None:
+        from branding.product_name import inflections
+
+        eu = 'msgid ""\nmsgstr ""\n"Language: eu\\n"\n\nmsgid "About OrcaSlicer"\nmsgstr "OrcaSlicer-etik eta OrcaSlicer-ekin"\n'
+        write(self.root, "localization/i18n/eu/OrcaSlicer_eu.po", eu)
+        self.inflections([CS_ROW, {"language": "eu", "old": "OrcaSlicer-etik", "new": "CosmoSlice-tik", "source": "test"}])
+        listed = inflections.needed(self.root)
+        self.assertEqual([item["form"] for item in listed["eu"]["hyphenated"]], ["OrcaSlicer-ekin"])
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0, "\n".join(lines))
+        self.assertIn('msgstr "CosmoSlice-tik eta CosmoSlice-ekin"', read(self.root, "localization/i18n/eu/OrcaSlicer_eu.po").decode())
+
 
 class NonUtf8InputTest(ProductNameTreeCase):
     def test_non_utf8_hints_is_a_clean_finding(self) -> None:
@@ -762,7 +859,10 @@ class CommittedTablesTest(unittest.TestCase):
             self.assertTrue(branding.same_text(path, branding.dump_json(data)), name)
         rename = tables.rename_rows(branding.load_json(REPO_ROOT / PN / "rename.json")["rows"])
         tables.allow_rows(branding.load_json(REPO_ROOT / PN / "allowlist.json")["rows"])
-        tables.inflection_rows(branding.load_json(REPO_ROOT / PN / "inflections.json")["rows"])
+        rows = tables.inflection_rows(branding.load_json(REPO_ROOT / PN / "inflections.json")["rows"])
+        keys = [(row["language"], row["old"]) for row in rows]
+        self.assertEqual(keys, sorted(keys), "inflection rows are sorted by language, then old")
+        self.assertTrue(all(row.get("source") for row in rows), "every inflection row says where it comes from")
         self.assertEqual(sum(1 for row in rename if row["source"] == "cosmoslice"), 48)
 
 

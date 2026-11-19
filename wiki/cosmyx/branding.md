@@ -123,7 +123,7 @@ Four tables in `cosmyx-src/branding/product-name/`:
 | `patches.json` | `{file, old, new, count, reason}` | Exact text patches, applied first: `SLIC3R_APP_NAME`, the display-name macros, packaging names, window titles, and the machine-read sites rewired to `SLIC3R_APP_KEY` (decision 0133). |
 | `rename.json` | `{kind, old, new, source}` | Whole texts: a `msgid` row renames the C++ literal (or hint) and the msgid in the template and every catalogue together, translations included, never fuzzy; a `literal` row renames a visible text without a msgid (decision 0134). |
 | `allowlist.json` | `msgid`, `literal` or `text` rows with a `reason` | Texts that keep the upstream name on purpose: credits, upstream releases, CLI output, compared or persisted tags, ids sent to other services, icon names (decision 0135). |
-| `inflections.json` | `{language, old, new, source}` | Per catalogue language, an inflected name (cs "OrcaSliceru", hu "OrcaSlicerrel", eu "OrcaSlicerren") or a phrase around it, and its CosmoSlice form, written by a speaker of that language, never guessed (decision 0134). |
+| `inflections.json` | `{language, old, new, source}` | Per catalogue language, an inflected name (cs "OrcaSliceru", hu "OrcaSlicerrel", eu "OrcaSlicerren") or a phrase around the inflected, plain or hyphenated name (hu "az OrcaSlicer" -> "a CosmoSlice", eu "Orca-ren" -> "CosmoSlice-en"), and its CosmoSlice form, written by a speaker of that language, never guessed; sorted by language, then `old` (decision 0134). |
 
 Names that name an upstream thing are never rewritten: Orca Cloud, Orca Cube,
 Orca String Hell, Orca Tolerance Test, Orca YOLO, Orca Arena, Orca Palette,
@@ -144,8 +144,11 @@ After an upstream merge, `just brand-check` (or the next build) reports:
 Translations of renamed strings get CosmoSlice in place of the name,
 including the native spellings in Chinese and Korean; nothing else in the
 translations changes. An inflected name (the name with a grammatical suffix
-glued to it) is renamed only by its `inflections.json` row; without one it
-stays, and G8 reports "needs inflection row" (a warning on development
+glued to it) is renamed only by its `inflections.json` row; a row may also
+be a phrase around the name when a word next to it changes with the new name
+(the Hungarian article az becomes a; a Basque suffix follows the new name's
+sound). Rows match whole words, in their language only, longest first, before
+the plain rule. Without a row an inflected name stays, and G8 reports "needs inflection row" (a warning on development
 builds, an error on release builds). `just brand-name-inflections` lists every
 form still without a row, per language, with an example msgid and
 translation (`just brand-name-inflections OUT=<file>` writes it to a file);
