@@ -18,11 +18,14 @@ allowlist row: kept on purpose, with a reason whose category comes first
   of a setup-guide page.
 
 inflection row: `{"language", "old", "new", "source"}`: in the translations
-of one catalogue language, the exact text `old` (an inflected upstream name
-such as cs "OrcaSliceru", or a longer phrase around it when the words next to
-the name must change too) becomes `new`. Rows are written by a speaker of
-that language, never guessed: an inflected name without its row is reported
-by G8 as "needs inflection row".
+of one catalogue language, the exact text `old`, as whole words, becomes
+`new`. `old` is an inflected upstream name (cs "OrcaSliceru"), or a phrase
+around the name, inflected, plain or hyphenated, when the words next to it
+must change too (hu "az OrcaSlicer" -> "a CosmoSlice", eu "Orca-ren" ->
+"CosmoSlice-en"); never the bare plain name, which the plain rule renames.
+Rows are applied longest first, before the plain rule. They are written by a
+speaker of that language, never guessed: an inflected name without its row
+is reported by G8 as "needs inflection row".
 """
 
 from __future__ import annotations
@@ -72,8 +75,9 @@ def rename_rows(rows: list) -> list[dict]:
 
 
 def inflection_rows(rows: list) -> list[dict]:
-    """Validated inflection rows: an inflected upstream name in `old`, none in
-    `new`, the new stem in `new`, one row per (language, old)."""
+    """Validated inflection rows: `old` names the upstream product (inflected,
+    or in a phrase: not the bare plain name), `new` names none and carries the
+    new stem, one row per (language, old)."""
     if not isinstance(rows, list):
         raise BrandingError(f"inflection rows must be a list: {rows!r}")
     checked = []
@@ -84,9 +88,13 @@ def inflection_rows(rows: list) -> list[dict]:
         language, old, new = (row[key] for key in INFLECTION_KEYS)
         if not _LANGUAGE.fullmatch(language):
             raise BrandingError(f"inflection row language must be a catalogue language such as cs or pt_BR: {row!r}")
-        if not any(match.group("suffix") for match in TOKEN.finditer(old)):
-            raise BrandingError(f"inflection row old has no inflected upstream name: {old!r}")
-        if has_token(new) or NEW_STEM not in new:
+        if old != old.strip():
+            raise BrandingError(f"inflection row old has leading or trailing space: {old!r}")
+        if not TOKEN.search(old):
+            raise BrandingError(f"inflection row old does not name the upstream product: {old!r}")
+        if TOKEN.fullmatch(old) and not TOKEN.fullmatch(old).group("suffix"):
+            raise BrandingError(f"inflection row old is the plain name, which needs no row: {old!r}")
+        if TOKEN.search(new) or NEW_STEM not in new:
             raise BrandingError(f"inflection row new must name {NEW_NAME} (stem {NEW_STEM!r}) and not the upstream product: {new!r}")
         if (language, old) in seen:
             raise BrandingError(f"duplicate inflection row: {language} {old!r}")

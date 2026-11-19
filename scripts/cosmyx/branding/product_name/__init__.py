@@ -12,8 +12,9 @@ plugin then renames, from the `rename` table:
     template and its text in the sources, the new msgid not there yet; a
     literal row: its text in the sources and no msgid); every allowlist row
     still matches with its exact count. A stale row is an error.
-  - pre: every inflection row still matches a confirmed translation of a
-    renamed msgid in its language.
+  - pre: every inflection row still renames, as whole words and after the
+    longer rows of its language, a confirmed translation of a renamed msgid
+    in its language.
   - post: literal and msgid renamed together (old gone everywhere, new in
     both); no renamed translation still names the upstream product (an
     inflected name without its inflection row is reported as "needs
@@ -34,7 +35,7 @@ from pathlib import Path
 
 from .. import PRODUCT_NAME_DIR, BrandingError, Finding, encode_text, load_json, is_cosmyx_path, line_ending, read_lf, relative_posix, repo_path
 from . import catalogues, cpp, resources, tables
-from .tokens import NEW_NAME, inflection_map, replace_tokens, unresolved, visible_name
+from .tokens import NEW_NAME, apply_inflections, inflection_map, replace_tokens, unresolved, visible_name
 
 GUARD = "G8"
 SOURCE_DIR = "src"
@@ -283,13 +284,16 @@ def check_inflections(root: Path, rename: list, rows: list) -> list[Finding]:
     """Pre: every inflection row matches a confirmed translation of a renamed
     msgid in its language; a row that matches none is stale."""
     msgids = {row["old"] for row in rename if row["kind"] == "msgid"}
-    texts: dict = {}
+    inflections = inflection_map(rows)
+    fired: set = set()
     for _, lang, _, text in catalogues.renamed_translations(root, msgids):
-        texts.setdefault(lang, []).append(text)
+        # A row is live only when it renames something once the longer rows
+        # of its language went first: a row they always shadow is stale too.
+        fired |= {(lang, old) for old in apply_inflections(text, lang, inflections)[1]}
     return [
         Finding(GUARD, "error", INFLECTIONS_FILE, f"stale inflection row {row['language']} {row['old']!r}: no renamed translation has it")
         for row in rows
-        if not any(row["old"] in text for text in texts.get(row["language"], []))
+        if (row["language"], row["old"]) not in fired
     ]
 
 
