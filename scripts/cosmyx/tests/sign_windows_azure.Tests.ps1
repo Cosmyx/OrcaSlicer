@@ -9,8 +9,12 @@ Describe 'Cosmyx Azure signing' {
         $AzureScript = Join-Path (Join-Path $ScriptsDir 'cosmyx') 'sign_windows_azure.ps1'
         $UpstreamScript = Join-Path $ScriptsDir 'sign_windows.ps1'
         $Subject = 'CN=Cosmyx Test, O=Cosmyx Test, C=FR'
+        $CustomerEku = '1.3.6.1.4.1.311.97.123456789.1'
+        # What an Artifact Signing certificate carries: the service EKU, code signing and the EKU of
+        # the identity validation.
+        $ArtifactEkus = @('1.3.6.1.4.1.311.97.1.0', '1.3.6.1.5.5.7.3.3', $CustomerEku)
         $EnvNames = 'COSMYX_SIGN_BACKEND', 'COSMYX_SIGN_ENDPOINT', 'COSMYX_SIGN_ACCOUNT', 'COSMYX_SIGN_PROFILE',
-            'COSMYX_SIGN_SUBJECT', 'COSMYX_SIGN_TOKEN', 'COSMYX_SIGN_TOKEN_EXPIRES', 'COSMYX_SIGN_RESOURCE',
+            'COSMYX_SIGN_SUBJECT', 'COSMYX_SIGN_EKU', 'COSMYX_SIGN_TOKEN', 'COSMYX_SIGN_TOKEN_EXPIRES', 'COSMYX_SIGN_RESOURCE',
             'COSMYX_SIGN_DRYRUN', 'ORCA_SIGN_JSIGN', 'ORCA_SIGN_REUSE', 'ORCA_SIGN_KMS_KEY', 'ORCA_SIGN_CERTFILE',
             'ORCA_SIGN_TOKEN', 'JAVA_HOME'
         $SavedEnv = @{}
@@ -33,13 +37,20 @@ Describe 'Cosmyx Azure signing' {
             [pscustomobject] @{ SignerCertificate = $null; TimeStamperCertificate = $null; Status = 'NotSigned' }
         }
 
-        function New-Signature([string] $signerSubject, [bool] $timestamped = $true, [string] $status = 'Valid') {
+        # A real X509EnhancedKeyUsageExtension, as X509Certificate2.Extensions returns it on Windows.
+        function New-Signature([string] $signerSubject, [bool] $timestamped = $true, [string] $status = 'Valid',
+            [string[]] $ekus = $ArtifactEkus) {
             $stamp = $null
             if ($timestamped) {
                 $stamp = [pscustomobject] @{ Subject = 'CN=Timestamp' }
             }
+            $oids = [System.Security.Cryptography.OidCollection]::new()
+            foreach ($eku in $ekus) {
+                $null = $oids.Add([System.Security.Cryptography.Oid]::new($eku))
+            }
+            $extension = [System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension]::new($oids, $false)
             [pscustomobject] @{
-                SignerCertificate      = [pscustomobject] @{ Subject = $signerSubject; Thumbprint = 'AB' }
+                SignerCertificate      = [pscustomobject] @{ Subject = $signerSubject; Thumbprint = 'AB'; Extensions = @($extension) }
                 TimeStamperCertificate = $stamp
                 Status                 = $status
             }
@@ -107,7 +118,7 @@ Describe 'Cosmyx Azure signing' {
         }
 
         It 'leaves already signed files alone' {
-            $global:CosmyxTestSignatures['lib.dll'] = New-Signature 'CN=Vendor'
+            $global:CosmyxTestSignatures['lib.dll'] = New-Signature 'CN=Vendor' $true 'Valid' @('1.3.6.1.5.5.7.3.3')
             $out = Invoke-Captured $AzureScript @{ Path = @($App) }
             $out | Should -Match '3 of 4 files to sign'
             $out | Should -Not -Match 'DRYRUN sign .*lib\.dll'
@@ -147,6 +158,19 @@ Describe 'Cosmyx Azure signing' {
             $out = Invoke-Captured $AzureScript @{ Path = @($App) }
             $out | Should -Match '0 of them copied'
             $out | Should -Match 'DRYRUN sign .*app\.exe'
+        }
+
+        It 'does not reuse a file signed without the Artifact Signing EKU when no subject is pinned' {
+            $env:COSMYX_SIGN_SUBJECT = $null
+            $signedCopy = Join-Path $TestDrive 'vendor-app.exe'
+            Set-Content -LiteralPath $signedCopy -Value 'vendor'
+            $global:CosmyxTestSignatures['vendor-app.exe'] = New-Signature 'CN=Vendor' $true 'Valid' @('1.3.6.1.5.5.7.3.3')
+            $hash = (Get-FileHash -LiteralPath (Join-Path $App 'app.exe') -Algorithm SHA256).Hash
+            $record = Join-Path $TestDrive 'record-vendor.json'
+            @{ $hash = $signedCopy } | ConvertTo-Json | Set-Content -LiteralPath $record -Encoding UTF8
+            $env:ORCA_SIGN_REUSE = $record
+            $out = Invoke-Captured $AzureScript @{ Path = @($App) }
+            $out | Should -Match '0 of them copied'
         }
 
         It 'never prints the access token' {
@@ -194,7 +218,7 @@ Describe 'Cosmyx Azure signing' {
 
         It 'passes when every file is signed and ours are timestamped' {
             $global:CosmyxTestSignatures['app.exe'] = New-Signature $Subject
-            $global:CosmyxTestSignatures['lib.dll'] = New-Signature 'CN=Vendor'
+            $global:CosmyxTestSignatures['lib.dll'] = New-Signature 'CN=Vendor' $true 'Valid' @('1.3.6.1.5.5.7.3.3')
             $global:CosmyxTestSignatures['mod.pyd'] = New-Signature $Subject
             $global:CosmyxTestSignatures['nested.dll'] = New-Signature $Subject
             $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject
@@ -208,7 +232,7 @@ Describe 'Cosmyx Azure signing' {
         }
 
         It 'fails on a named file signed by another subject' {
-            $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature 'CN=Vendor'
+            $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature 'CN=Vendor' $true 'Valid' @('1.3.6.1.5.5.7.3.3')
             { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
         }
 
@@ -222,9 +246,75 @@ Describe 'Cosmyx Azure signing' {
             { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
         }
 
-        It 'needs COSMYX_SIGN_SUBJECT' {
-            $env:COSMYX_SIGN_SUBJECT = $null
-            { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*COSMYX_SIGN_SUBJECT is not set*'
+        It 'fails on a named file signed by another subject when the subject is pinned' {
+            $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature 'CN=Someone Else'
+            { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+        }
+
+        Context 'without a subject or EKU pin' {
+            BeforeEach {
+                $env:COSMYX_SIGN_SUBJECT = $null
+                $env:COSMYX_SIGN_EKU = $null
+            }
+
+            It 'accepts any Artifact Signing certificate and prints its subject and EKUs' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject
+                $out = Invoke-Captured $AzureScript @{ Path = @($Named); Verify = $true }
+                $out | Should -Match 'All 1 files are signed, 1 of them with an Artifact Signing certificate\.'
+                $out | Should -Match ([regex]::Escape("Signer of the files named directly: Subject '$Subject'"))
+                $out | Should -Match ([regex]::Escape($CustomerEku))
+            }
+
+            It 'fails on a named file without the Artifact Signing EKU' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject $true 'Valid' @('1.3.6.1.5.5.7.3.3')
+                { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+            }
+
+            It 'fails on a named file without the code signing EKU' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject $true 'Valid' @('1.3.6.1.4.1.311.97.1.0')
+                { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+            }
+
+            It 'fails on a signer without any EKU' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject $true 'Valid' @()
+                { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+            }
+
+            It 'still requires a timestamp' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject $false
+                { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+            }
+
+            It 'still requires a Valid status' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject $true 'UnknownError'
+                { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+            }
+
+            It 'names the observed signer in the failure' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature 'CN=Vendor' $true 'Valid' @('1.3.6.1.5.5.7.3.3')
+                $log = & {
+                    try { & $AzureScript -Path $Named -Verify } catch { }
+                } *>&1 | Out-String
+                $log | Should -Match "signed with Subject 'CN=Vendor', EKU 1\.3\.6\.1\.5\.5\.7\.3\.3, not an Artifact Signing certificate"
+            }
+        }
+
+        Context 'with an EKU pin' {
+            BeforeEach {
+                $env:COSMYX_SIGN_SUBJECT = $null
+                $env:COSMYX_SIGN_EKU = $CustomerEku
+            }
+
+            It 'accepts a certificate that carries the pinned EKU' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature 'CN=Renamed'
+                $out = Invoke-Captured $AzureScript @{ Path = @($Named); Verify = $true }
+                $out | Should -Match ([regex]::Escape("with EKU $CustomerEku."))
+            }
+
+            It 'fails on an Artifact Signing certificate of another identity' {
+                $global:CosmyxTestSignatures['makensis-temp.tmp'] = New-Signature $Subject $true 'Valid' @('1.3.6.1.4.1.311.97.1.0', '1.3.6.1.5.5.7.3.3', '1.3.6.1.4.1.311.97.999.1')
+                { & $AzureScript -Path $Named -Verify *>&1 | Out-Null } | Should -Throw '*1 of 1 files failed*'
+            }
         }
     }
 
