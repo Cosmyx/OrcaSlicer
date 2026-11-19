@@ -7,9 +7,11 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import subprocess
 import tempfile
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
+from unittest import mock
 from pathlib import Path
 
 from branding_fixture import (
@@ -195,11 +197,29 @@ class GitCleanTest(BrandedTreeCase):
         self.assertEqual(worktree_clean.hidden_files(self.root), [])
         self.assertEqual(git(self.root, "status", "--porcelain").stdout, b"")
 
+    def test_failing_git_is_reported_with_its_message(self) -> None:
+        # A container workspace git does not trust fails every call with exit
+        # 128; the warning carries git's text instead of passing silently.
+        failed = subprocess.CompletedProcess([], 128, stdout=b"", stderr=b"fatal: detected dubious ownership")
+        err = io.StringIO()
+        with mock.patch.object(apply_module.subprocess, "run", return_value=failed), redirect_stderr(err):
+            apply_module.clear_skip_worktree(self.root, ["README.md"])
+        self.assertIn("git ls-files -v failed", err.getvalue())
+        self.assertIn("fatal: detected dubious ownership", err.getvalue())
+
     def test_sync_refuses_a_branded_tree(self) -> None:
         self.apply()
         lines = []
         self.assertEqual(cli.main(["--root", str(self.root), "sync"], out=lines.append), 2)
         self.assertIn("brand-revert", lines[0])
+
+
+class OutsideGitTest(BrandedTreeCase):
+    def test_clear_skip_worktree_is_silent_outside_git(self) -> None:
+        err = io.StringIO()
+        with redirect_stderr(err):
+            apply_module.clear_skip_worktree(self.root, ["README.md"])
+        self.assertEqual(err.getvalue(), "")
 
 
 class CliTest(TreeCase):
