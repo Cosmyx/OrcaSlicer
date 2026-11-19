@@ -14,8 +14,9 @@
   wiki/cosmyx/branding-assets are up to date, the other tables parse.
 - G7 upstream stays Orca: no palette colour and no "CosmoSlice" in tracked
   files outside the Cosmyx paths (pre), except allow-listed palette rows.
-- G8 product name: every patch row matches its exact count (pre), and the
-  lines naming SLIC3R_APP_KEY in the patched files are unchanged (post).
+- G8 product name: every patch row matches its exact count (pre), and no
+  line naming SLIC3R_APP_KEY in the patched files is lost (post), except a
+  line a patch row names the key in on purpose; the key's definition never.
   Inactive until product-name/patches.json exists.
 - Status policy: `missing` and `to-validate` rows warn on development builds
   (pull requests, DEV, MIXED, local) and fail release builds (release/*
@@ -37,7 +38,9 @@ Optional stage plugins (`colours`, `product_name`) may expose
 from __future__ import annotations
 
 import fnmatch
+import re
 import subprocess
+from collections import Counter
 from pathlib import Path
 
 from . import (
@@ -335,6 +338,30 @@ def app_key_lines(root: Path, files) -> dict:
     return lines
 
 
+# The definition of the app key itself, which no row may ever touch.
+APP_KEY_DEFINITION = re.compile(r"(?:set\(\s*|#\s*define\s+)SLIC3R_APP_KEY\b")
+
+
+def app_key_removals(before: dict, after: dict, patches: list) -> list[Finding]:
+    """Lines naming SLIC3R_APP_KEY that apply removed without a row asking for it.
+
+    A line may go only when a patch row on that file names SLIC3R_APP_KEY in
+    its `old` text (the row rewires that line on purpose, such as the AppImage
+    desktop entry name); the definition of the key never goes. New lines
+    naming the key (machine-read sites rewired to it) are always fine.
+    """
+    findings = []
+    for relative, lines in sorted(before.items()):
+        removed = Counter(lines) - Counter(after.get(relative, []))
+        for line in sorted(removed):
+            targeted = any(
+                patch.file == relative and APP_KEY in patch.old and patch.old.strip("\n") in line for patch in patches
+            )
+            if APP_KEY_DEFINITION.search(line) or not targeted:
+                findings.append(Finding("G8", "error", relative, f"a line naming {APP_KEY} changed; the app key must stay: {line.strip()!r}"))
+    return findings
+
+
 def g8_product_name(ctx, phase: str) -> list[Finding]:
     if ctx.product_name is None:
         return []
@@ -349,8 +376,8 @@ def g8_product_name(ctx, phase: str) -> list[Finding]:
         ctx.snapshot["app_key_lines"] = app_key_lines(ctx.root, files)
     else:
         before = ctx.snapshot.get("app_key_lines")
-        if before is not None and app_key_lines(ctx.root, files) != before:
-            findings.append(Finding("G8", "error", "", f"a line naming {APP_KEY} changed; the app key must stay"))
+        if before is not None:
+            findings += app_key_removals(before, app_key_lines(ctx.root, files), patches)
     for plugin in ctx.plugins.get("product_name", []):
         findings += list(plugin.guards(ctx, phase))
     return findings
