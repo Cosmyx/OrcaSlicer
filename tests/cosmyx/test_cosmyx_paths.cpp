@@ -106,18 +106,36 @@ TEST_CASE("without_vendor_dir takes the vendor folder out of a nested data folde
     }
 }
 
-#ifndef _WIN32
-TEST_CASE("The Flatpak legacy data folder ignores the Cosmyx vendor folder", "[cosmyx][CosmyxPaths]")
+TEST_CASE("The Cosmyx data folder is never the target of a legacy data migration", "[cosmyx][CosmyxPaths]")
 {
-    // migrate_flatpak_legacy_datadir() in GUI_App.cpp: the sandbox config root of the
-    // current app id, nested under Cosmyx/, maps to the legacy app id's un-nested folder.
-    const std::string data_dir = "/home/user/.var/app/com.orcaslicer.OrcaSlicer/config/Cosmyx/OrcaSlicer";
-    std::string       legacy   = Cosmyx::without_vendor_dir(data_dir);
-    const std::string current_id = "com.orcaslicer.OrcaSlicer";
-    legacy.replace(legacy.find(current_id), current_id.size(), "io.github.softfever.OrcaSlicer");
-    CHECK(legacy == "/home/user/.var/app/io.github.softfever.OrcaSlicer/config/OrcaSlicer");
+    // migrate_flatpak_legacy_datadir() in GUI_App.cpp copies upstream's legacy Flatpak
+    // data folder into the data folder when the latter does not exist yet. A Cosmyx
+    // build starts fresh (decisions 0180 and 0184), so its nested folder opts out.
+    SECTION("the Flatpak sandbox data folder nested under Cosmyx is skipped")
+    {
+        CHECK(Cosmyx::skip_legacy_data_migration(
+            join({"home", "user", ".var", "app", "com.orcaslicer.OrcaSlicer", "config", "Cosmyx", "OrcaSlicer"})));
+    }
+    SECTION("the nested XDG data folder built by default_data_dir() is skipped")
+    {
+        CHECK(Cosmyx::skip_legacy_data_migration(join({"cfg", Cosmyx::vendor_app_subdir(SLIC3R_APP_KEY).c_str()})));
+    }
+    SECTION("a trailing separator does not hide the vendor folder")
+    {
+        CHECK(Cosmyx::skip_legacy_data_migration(join({"base", "Cosmyx", "OrcaSlicer"}) + std::string(1, fs::path::preferred_separator)));
+    }
+    SECTION("an un-nested data folder (custom --datadir, portable data_dir) keeps upstream behaviour")
+    {
+        CHECK_FALSE(Cosmyx::skip_legacy_data_migration(join({"home", "user", ".var", "app", "com.orcaslicer.OrcaSlicer", "config", "OrcaSlicer"})));
+        CHECK_FALSE(Cosmyx::skip_legacy_data_migration(join({"opt", "app", "data_dir"})));
+        CHECK_FALSE(Cosmyx::skip_legacy_data_migration(join({"Cosmyx", "OrcaSlicer", "sub"})));
+        CHECK_FALSE(Cosmyx::skip_legacy_data_migration(join({"cosmyx", "OrcaSlicer"})));
+        CHECK_FALSE(Cosmyx::skip_legacy_data_migration(""));
+        CHECK_FALSE(Cosmyx::skip_legacy_data_migration("OrcaSlicer"));
+    }
 }
 
+#ifndef _WIN32
 TEST_CASE("The XDG data folder is nested under Cosmyx", "[cosmyx][CosmyxPaths]")
 {
     SECTION("XDG_CONFIG_HOME set")
