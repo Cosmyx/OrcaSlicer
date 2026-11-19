@@ -199,6 +199,8 @@ class Entry:
 class Catalogue:
     entries: list[Entry]
     path: Path | None = None
+    # Line ending of the file it was read from; the text itself is held in LF.
+    eol: str = "\n"
 
     @property
     def header(self) -> Entry | None:
@@ -330,14 +332,29 @@ def parse_po(text: str, path: Path | None = None) -> Catalogue:
     return Catalogue(entries=entries, path=path)
 
 
+def line_ending(text: str) -> str:
+    """The dominant line ending of `text`: CRLF when most lines end with it
+    (a Windows checkout with core.autocrlf), LF otherwise."""
+    crlf = text.count("\r\n")
+    return "\r\n" if crlf > text.count("\n") - crlf else "\n"
+
+
 def read_po(path: Path) -> Catalogue:
+    """Parse a catalogue file of either line ending. The catalogue holds LF
+    text and remembers the file's line ending in `eol`."""
     with path.open("r", encoding="utf-8", newline="") as handle:
-        return parse_po(handle.read(), path)
+        text = handle.read()
+    eol = line_ending(text)
+    catalogue = parse_po(text.replace("\r\n", "\n"), path)
+    catalogue.eol = eol
+    return catalogue
 
 
-def write_text(path: Path, text: str) -> None:
-    """Write UTF-8 with LF line endings on every OS."""
-    with path.open("w", encoding="utf-8", newline="\n") as handle:
+def write_text(path: Path, text: str, eol: str = "\n") -> None:
+    """Write UTF-8 text with one line ending throughout: LF by default, or the
+    `eol` of the file it was read from, so a CRLF checkout stays CRLF."""
+    text = text.replace("\r\n", "\n")
+    with path.open("w", encoding="utf-8", newline=eol) as handle:
         handle.write(text)
 
 
@@ -502,7 +519,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"{'::warning title=Cosmyx graft::' if in_actions else 'warning: '}{warning}", file=sys.stderr)
     for result in report.results:
         if not args.dry_run and result.changed:
-            write_text(result.target, result.catalogue.render())
+            write_text(result.target, result.catalogue.render(), result.catalogue.eol)
         print(
             f"{result.language}: {result.replaced} replaced, {result.appended} appended, "
             f"{result.appended_untranslated} appended untranslated, {result.kept_orca} kept OrcaSlicer, "

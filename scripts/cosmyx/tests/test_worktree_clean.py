@@ -159,6 +159,46 @@ class WorktreeCleanTest(unittest.TestCase):
         self.assertRegex(err.getvalue(), r"git rev-parse --show-toplevel failed: fatal")
 
 
+class WorktreeCleanCrlfTest(unittest.TestCase):
+    """A Windows-like checkout: core.autocrlf=true, so the files on disk are
+    CRLF while the repository stores LF."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+        git(self.root, "init", "-q")
+        git(self.root, "config", "user.name", "Test")
+        git(self.root, "config", "user.email", "test@example.invalid")
+        git(self.root, "config", "core.autocrlf", "true")
+        for name in ("edited.po", "rewritten-lf.po", "kept.po"):
+            write(self.root, name, f"line one {name}\nline two\n")
+        git(self.root, "add", "-A")
+        self.assertEqual(git(self.root, "commit", "-q", "-m", "init").returncode, 0)
+        for name in ("edited.po", "rewritten-lf.po", "kept.po"):
+            self.root.joinpath(name).unlink()
+        git(self.root, "checkout", "--", ".")
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_checkout_is_crlf(self) -> None:
+        self.assertEqual(read(self.root, "kept.po"), "line one kept.po\r\nline two\r\n")
+
+    def test_hide_is_quiet_after_crlf_and_lf_rewrites(self) -> None:
+        # An edit written back in CRLF, and a same-content rewrite in LF.
+        write(self.root, "edited.po", "line one edited.po\r\nline two grafted\r\n")
+        write(self.root, "rewritten-lf.po", "line one rewritten-lf.po\nline two\n")
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = wc.main(["--repo", str(self.root), "hide"])
+        self.assertEqual(code, 0, err.getvalue())
+        self.assertEqual(git(self.root, "diff", "--quiet", "HEAD").returncode, 0)
+        self.assertEqual(read(self.root, "edited.po"), "line one edited.po\r\nline two grafted\r\n")
+        # GitCommitHash.cmake asks this exact question; ask it twice, since
+        # the first call may refresh the index stat data.
+        self.assertEqual(git(self.root, "diff", "--quiet", "HEAD").returncode, 0)
+
+
 class PrepareActionTests(unittest.TestCase):
     def test_workspace_is_trusted_before_any_git_use(self) -> None:
         # In a job container git rejects the workspace as owned by another user
