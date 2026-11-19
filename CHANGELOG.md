@@ -51,6 +51,10 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T6 -->
 
 <!-- cosmyx-slot: T7 -->
+- Stealth mode is always on: no cloud login, profile sync or online vendor
+  update, whatever the Preferences or the login dialog say, and the setup
+  guide finishes without the stealth mode and network plugin pages. Pull
+  request: pending. Decisions: 0070, 0071, 0072, 0073.
 
 <!-- cosmyx-slot: T11b -->
 
