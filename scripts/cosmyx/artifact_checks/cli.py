@@ -69,6 +69,7 @@ def resolve(run: dict, artifacts: list[dict], variables: dict, secrets: dict, st
         "event": run.get("event", ""),
         "conclusion": conclusion or "",
         "mode": signing_policy.mode_for_run(run, variables, secrets),
+        "mac_mode": signing_policy.mac_mode_for_run(run, variables, secrets),
         "exec_ok": "true" if signing_policy.exec_ok(run) else "false",
         "strict": "true" if strict else "false",
         "run_url": run.get("html_url", ""),
@@ -101,6 +102,9 @@ def cmd_resolve(args) -> int:
     missing = signing_policy.missing_secrets(secrets)
     if outputs["mode"] == signing_policy.NOT_CONFIGURED and len(missing) < len(signing_policy.SIGNING_SECRETS):
         print(f"::warning::Windows signing secrets partly set; missing: {', '.join(missing)}")
+    mac_missing = signing_policy.missing_secrets(secrets, signing_policy.MAC_SIGNING_SECRETS)
+    if outputs["mac_mode"] == signing_policy.NOT_CONFIGURED and len(mac_missing) < len(signing_policy.MAC_SIGNING_SECRETS):
+        print(f"::warning::macOS signing secrets partly set; missing: {', '.join(mac_missing)}")
     write_jsonl(Path(args.out) / "report-resolve.jsonl", records)
     for key, value in outputs.items():
         print(f"{key}={value}")
@@ -181,8 +185,13 @@ def cmd_macos(args, run=subprocess.run) -> int:
     artifacts = downloaded(artifacts_dir, "macos", expectations)
     allow, records = load_allowlist("macos")
     manifests: dict = {}
+    if args.mode == signing_policy.NOT_CONFIGURED and os.environ.get("GITHUB_ACTIONS") == "true":
+        print(f"::notice::{signing_policy.MAC_NOTICE}")
+    # The macOS leg gets the macOS mode (decision 0156) and the TEAM_ID secret,
+    # masked by GitHub, as COSMYX_MAC_TEAM_ID.
     records += macos.check(artifacts_dir, artifacts, work, allow, run, tree_hook("macos", Path(args.tools), Path(args.subject)),
-                           manifests, enforce_stale=args.mode == signing_policy.ENFORCE)
+                           manifests, enforce_stale=args.mode == signing_policy.ENFORCE, mode=args.mode,
+                           team=os.environ.get("COSMYX_MAC_TEAM_ID", "").strip(), strict=boolean(args.strict))
     write_outputs(out, "macos", records, artifacts_dir, artifacts, manifests)
     return 0
 
@@ -212,7 +221,8 @@ def cmd_report(args) -> int:
     records = report.load_all(Path(args.input))
     jobs = dict(item.split("=", 1) for item in args.job or [])
     records += report.job_records(jobs, records)
-    ok = report.write(records, Path(args.out), args.mode, boolean(args.strict), args.run_url or "")
+    ok = report.write(records, Path(args.out), args.mode, boolean(args.strict), args.run_url or "",
+                      args.mac_mode)
     text = (Path(args.out) / "report.md").read_text(encoding="utf-8")
     if args.step_summary:
         with open(args.step_summary, "a", encoding="utf-8", newline="\n") as summary:
@@ -285,7 +295,8 @@ def cmd_local(args) -> int:
     artifacts = [json.loads(line) for line in listing.splitlines() if line.strip()]
     variables = {name: os.environ.get(name, "") for name in SIGN_VARIABLES}
     # A local run cannot see the repository secrets: COSMYX_HAS_<SECRET>=true
-    # in the environment stands for them (wiki/cosmyx/artifact-checks.md).
+    # in the environment stands for them, and COSMYX_MAC_TEAM_ID for TEAM_ID
+    # (wiki/cosmyx/artifact-checks.md).
     secrets = signing_policy.secrets_from_env(os.environ)
     expectations = inventory.load_expectations()
     outputs, records = resolve(run, artifacts, variables, secrets, args.strict, expectations)
@@ -303,13 +314,15 @@ def cmd_local(args) -> int:
     subject = dest / "subject"
     if not export_subject(outputs["head_sha"], subject):
         return 1
+    host_mode = outputs["mac_mode"] if HOST_OS == "macos" else outputs["mode"]
     common = argparse.Namespace(tools=str(REPO_ROOT), subject=str(subject), artifacts=str(artifacts_dir),
-                                mode=outputs["mode"], strict=outputs["strict"], exec_ok=outputs["exec_ok"],
+                                mode=host_mode, strict=outputs["strict"], exec_ok=outputs["exec_ok"],
                                 out=str(out), work=str(dest / "work"), no_install=True, os=HOST_OS,
                                 head_sha=outputs["head_sha"])
     {"windows": cmd_windows, "macos": cmd_macos, "linux": cmd_linux}[HOST_OS](common)
     cmd_content(common)
-    result = cmd_report(argparse.Namespace(input=str(out), out=str(out), mode=outputs["mode"], strict=outputs["strict"],
+    result = cmd_report(argparse.Namespace(input=str(out), out=str(out), mode=outputs["mode"],
+                                           mac_mode=outputs["mac_mode"], strict=outputs["strict"],
                                            job=[], run_url=outputs["run_url"], step_summary=""))
     print(f"report: {out / 'report.md'}")
     return result
@@ -344,6 +357,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--in", dest="input", required=True)
     p.add_argument("--out", required=True)
     p.add_argument("--mode", default=signing_policy.REPORT)
+    p.add_argument("--mac-mode", default="")
     p.add_argument("--strict", default="false")
     p.add_argument("--job", action="append", help="OS=RESULT of an OS job")
     p.add_argument("--run-url", default="")

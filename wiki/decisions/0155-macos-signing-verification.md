@@ -30,5 +30,5 @@ notarisation, stapling and Gatekeeper.
 ## Consequences
 
 - The verification costs one `codesign` call per Mach-O file (a few minutes).
-- The artifact checks report the signature of the uploaded DMG
-  (decision 0146).
+- The artifact checks repeat the essential rules on the uploaded DMG
+  (decision 0156).
