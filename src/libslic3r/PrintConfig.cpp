@@ -1,4 +1,5 @@
 #include "PrintConfig.hpp"
+#include "Cosmyx/ConfigDefExtensions.hpp" // Cosmyx
 #include "CommonDefs.hpp"
 #include "Point.hpp"
 #include "Polygon.hpp"
@@ -1008,6 +1009,7 @@ PrintConfigDef::PrintConfigDef()
     assign_printer_technology_to_unknown(this->options, ptAny);
     this->init_fff_params();
     this->init_extruder_option_keys();
+    Cosmyx::extend_print_config_def(*this); // Cosmyx
     assign_printer_technology_to_unknown(this->options, ptFFF);
     this->init_sla_params();
     assign_printer_technology_to_unknown(this->options, ptSLA);
@@ -10920,7 +10922,7 @@ std::map<std::string, std::string> DynamicPrintConfig::validate(bool under_cli)
         FullPrintConfig fpc;
         fpc.apply(*this, true);
         // Verify this print options through the FullPrintConfig.
-        return Slic3r::validate(fpc, under_cli);
+        return Cosmyx::validate_option_ranges(*this, Slic3r::validate(fpc, under_cli)); // Cosmyx
     }
     default:
         //FIXME no validation on SLA data?
