@@ -27,7 +27,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from .. import BrandingError, Finding, is_cosmyx_path, relative_posix, repo_path
+from .. import BrandingError, Finding, encode_text, is_cosmyx_path, line_ending, read_lf, relative_posix, repo_path
 from . import catalogues, cpp, resources, tables
 from .tokens import NEW_NAME, replace_tokens, visible_name
 
@@ -71,7 +71,15 @@ def source_files(root: Path) -> list[str]:
 
 
 def read_source(root: Path, relative: str) -> str:
-    return repo_path(root, relative).read_bytes().decode("utf-8", "surrogateescape")
+    """A C++ source as LF text: a CRLF checkout (Windows) reads the same."""
+    return read_lf(repo_path(root, relative), "surrogateescape")
+
+
+def write_like(root: Path, relative: str, text: str, errors: str = "strict") -> None:
+    """Write LF `text` over a file with that file's own dominant line ending."""
+    path = repo_path(root, relative)
+    eol = line_ending(path.read_bytes()).decode("ascii")
+    path.write_bytes(encode_text(text, eol, errors))
 
 
 def source_groups(root: Path) -> list[tuple[str, cpp.Group]]:
@@ -111,7 +119,7 @@ def apply(ctx, backup) -> dict:
             written[relative] = new_text
     hints = repo_path(root, resources.HINTS_FILE)
     if hints.is_file():
-        new_text, counts = resources.rename_hints(hints.read_bytes().decode("utf-8"), mapping)
+        new_text, counts = resources.rename_hints(read_lf(hints), mapping)
         if counts:
             written[resources.HINTS_FILE] = new_text
     renamed = catalogues.plan(root, tables.mapping(rename, "msgid"))
@@ -119,10 +127,10 @@ def apply(ctx, backup) -> dict:
     # backups if anything fails afterwards.
     for relative, text in sorted(written.items()):
         backup(relative)
-        repo_path(root, relative).write_bytes(text.encode("utf-8", "surrogateescape"))
+        write_like(root, relative, text, "surrogateescape")
     for relative, (text, _) in sorted(renamed.items()):
         backup(relative)
-        repo_path(root, relative).write_bytes(text.encode("utf-8"))
+        write_like(root, relative, text)
     return {
         "rows": len(rename),
         "sources": sorted(written),

@@ -23,6 +23,7 @@ from branding_fixture import (
     write,
 )
 
+from branding import product_name  # noqa: E402
 from branding.product_name import catalogues, cpp, resources, tables, tokens  # noqa: E402
 
 graft = catalogues.graft
@@ -579,13 +580,47 @@ class RealTreeTest(unittest.TestCase):
         self.assertEqual(snapshot(self.root), self.before)
 
 
+class CrlfTest(unittest.TestCase):
+    """A Windows checkout (core.autocrlf) has CRLF files: the stage reads LF
+    text and writes each file back in its own line ending."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_sources_read_as_lf_and_write_back_crlf(self) -> None:
+        source = 'auto a = R"(Welcome to OrcaSlicer.\n\nEnjoy)";\nauto b = "OrcaSlicer"\n    " rocks";\n'
+        write(self.root, "src/a.cpp", source.replace("\n", "\r\n"))
+        text = product_name.read_source(self.root, "src/a.cpp")
+        self.assertEqual(text, source)
+        self.assertEqual([group.value for group in cpp.groups(text, "src/a.cpp")], ["Welcome to OrcaSlicer.\n\nEnjoy", "OrcaSlicer rocks"])
+        product_name.write_like(self.root, "src/a.cpp", text.replace("OrcaSlicer", "CosmoSlice"))
+        self.assertEqual(read(self.root, "src/a.cpp"), source.replace("OrcaSlicer", "CosmoSlice").replace("\n", "\r\n").encode())
+
+    def test_lf_file_stays_lf(self) -> None:
+        write(self.root, "src/a.cpp", 'auto b = "OrcaSlicer";\n')
+        product_name.write_like(self.root, "src/a.cpp", 'auto b = "CosmoSlice";\n')
+        self.assertEqual(read(self.root, "src/a.cpp"), b'auto b = "CosmoSlice";\n')
+
+    def test_hints_read_the_same_in_crlf(self) -> None:
+        hints = "[hint:Welcome]\ntext = Welcome to OrcaSlicer\n"
+        write(self.root, resources.HINTS_FILE, hints)
+        expected = resources.hint_texts(self.root)
+        write(self.root, resources.HINTS_FILE, hints.replace("\n", "\r\n"))
+        self.assertEqual(resources.hint_texts(self.root), expected)
+
+
 class CommittedTablesTest(unittest.TestCase):
     def test_tables_are_valid_and_canonical(self) -> None:
         for name in ("rename", "allowlist", "patches"):
             path = REPO_ROOT / PN / f"{name}.json"
             data = branding.load_json(path)
             self.assertEqual(data["schema"], 1)
-            self.assertEqual(path.read_bytes().decode("utf-8"), branding.dump_json(data))
+            # Line endings aside: a Windows checkout (core.autocrlf) holds it in CRLF.
+            self.assertTrue(branding.same_text(path, branding.dump_json(data)), name)
         rename = tables.rename_rows(branding.load_json(REPO_ROOT / PN / "rename.json")["rows"])
         tables.allow_rows(branding.load_json(REPO_ROOT / PN / "allowlist.json")["rows"])
         self.assertEqual(sum(1 for row in rename if row["source"] == "cosmoslice"), 48)
