@@ -11,6 +11,7 @@ import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 COSMYX_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = COSMYX_DIR.parents[1]
@@ -155,13 +156,37 @@ class CliTests(unittest.TestCase):
 
     def test_github_env_appends_ver(self) -> None:
         env_file = Path(self.tmp.name) / "github_env"
-        env_file.write_text("ver=V2.6.0-dev\n", encoding="utf-8")
+        # Bytes, not write_text: text mode would write CRLF on Windows and the
+        # fixture, not the cli, would put the \r in the file.
+        env_file.write_bytes(b"ver=V2.6.0-dev\n")
         code, out, _ = run_main(
             ["--root", str(self.root), "github-env", "--commit", "aa9dac8"], env={"GITHUB_ENV": str(env_file)}
         )
         self.assertEqual((code, out), (0, "2.6.0-dev-8_aa9dac8"))
         # The later line wins in GitHub Actions, so the upstream value is overridden.
         self.assertEqual(env_file.read_bytes(), b"ver=V2.6.0-dev\nver=2.6.0-dev-8_aa9dac8\n")
+
+    def test_github_env_is_written_with_lf_on_every_os(self) -> None:
+        # Text mode with the default newline writes CRLF on Windows only; GitHub
+        # Actions reads $GITHUB_ENV as LF lines, so the cli must ask for LF
+        # explicitly. Record the open() call so this holds on every host.
+        env_file = Path(self.tmp.name) / "github_env"
+        calls = []
+
+        def spy(file, *args, **kwargs):
+            calls.append((str(file), args, kwargs))
+            return open(file, *args, **kwargs)
+
+        with mock.patch.object(cv, "open", spy, create=True):
+            code, _, _ = run_main(
+                ["--root", str(self.root), "github-env", "--commit", "aa9dac8"], env={"GITHUB_ENV": str(env_file)}
+            )
+        self.assertEqual(code, 0)
+        modes = [(args, kwargs) for file, args, kwargs in calls if file == str(env_file)]
+        self.assertEqual(len(modes), 1)
+        args, kwargs = modes[0]
+        self.assertNotIn("b", (args[0] if args else kwargs.get("mode", "r")))
+        self.assertEqual(kwargs.get("newline", args[3] if len(args) > 3 else None), "\n")
 
     def test_github_env_without_github_env_fails(self) -> None:
         code, _, err = run_main(["--root", str(self.root), "github-env", "--commit", "aa9dac8"])
