@@ -87,5 +87,13 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T10 -->
 
 <!-- cosmyx-slot: T11a -->
+- Apply the Cosmyx branding at build time from tables under
+  `cosmyx-src/branding/` (image manifest of 560 rows, all missing for now,
+  and the vendored overlay), with guards before and after, an exact revert,
+  and a clean git tree. Unvalidated rows warn on development builds and fail
+  release builds. Recipes `just brand-check`, `brand-apply`, `brand-revert`,
+  `brand-sync`, `brand-refresh`, `brand-validate` (user only), `brand-table`;
+  workflow in `wiki/cosmyx/branding.md`. Pull request: pending. Decisions:
+  0120, 0121, 0122, 0123.
 
 <!-- cosmyx-slot: T13 -->
