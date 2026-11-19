@@ -168,3 +168,17 @@ def prepare(app_dir: Path, work: Path, expectations: dict, env: dict, run: Runne
         shutil.copy2(path, mesa_dir / path.name)
     details = {"mesa": pin.version, "mesa_sha256": pin.sha256, "mesa_files": sorted(p.name for p in files.values())}
     return Prepared(mesa_dir, run_env(env, mesa_dir, pin), details)
+
+
+def fetch(mesa_dir: Path, work: Path | None = None, env: dict | None = None, **kwargs) -> Path:
+    """Put the pinned Mesa files directly in mesa_dir (<app folder>/mesa) and
+    return it. The app still needs run_env() (PATH and GALLIUM_DRIVER).
+    Raises MesaError. Used by the GUI goldens launcher."""
+    from .inventory import load_expectations
+
+    mesa_dir = Path(mesa_dir)
+    if mesa_dir.name != "mesa":
+        raise ValueError(f"{mesa_dir} must be the app's mesa folder")
+    work = Path(work) if work is not None else mesa_dir.parent.parent / "mesa-work"
+    env = dict(os.environ if env is None else env)
+    return prepare(mesa_dir.parent, work, load_expectations(), env, **kwargs).mesa_dir
