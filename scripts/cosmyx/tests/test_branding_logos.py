@@ -11,6 +11,7 @@ import subprocess
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 COSMYX_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = COSMYX_DIR.parents[1]
@@ -46,10 +47,15 @@ def derived_outputs() -> dict:
 
 def tracked_upstream_hashes() -> set:
     """sha256 of every tracked file outside the Cosmyx paths, as git stores it (raw bytes)."""
-    listing = subprocess.run(
+    process = subprocess.run(
         ["git", "-C", str(REPO_ROOT), "ls-files", "-s", "--", "resources", "scripts/msix"],
-        capture_output=True, text=True, check=True,
-    ).stdout  # fmt: skip
+        capture_output=True, text=True, check=False,
+    )  # fmt: skip
+    if process.returncode != 0:
+        # git's own text, so a CI failure says why (for example a container
+        # workspace git rejects as owned by another user).
+        raise AssertionError(f"git ls-files failed ({process.returncode}): {process.stderr.strip()}")
+    listing = process.stdout
     hashes = set()
     for line in listing.splitlines():
         path = line.split("\t", 1)[1]
@@ -143,6 +149,15 @@ class FreshRenderTest(unittest.TestCase):
         result = derive.run_in_docker("check", capture=True)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertIn(", 0 stale", result.stdout)
+
+
+class GitFailureTest(unittest.TestCase):
+    def test_git_failure_reports_git_message(self) -> None:
+        failed = subprocess.CompletedProcess([], 128, stdout="", stderr="fatal: detected dubious ownership\n")
+        with mock.patch.object(subprocess, "run", return_value=failed):
+            with self.assertRaises(AssertionError) as caught:
+                tracked_upstream_hashes()
+        self.assertIn("fatal: detected dubious ownership", str(caught.exception))
 
 
 if __name__ == "__main__":
