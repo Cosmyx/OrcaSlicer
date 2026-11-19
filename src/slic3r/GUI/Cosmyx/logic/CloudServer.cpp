@@ -13,11 +13,20 @@ namespace Cosmyx {
 namespace {
 
 constexpr const char* HTTPS = "https://";
+constexpr const char* HTTP  = "http://";
 
 std::string seeded_key(std::size_t field) { return std::string(SEEDED_PREFIX) + CLOUD_KEYS[field]; }
 std::string custom_key(std::size_t field) { return std::string(CUSTOM_PREFIX) + CLOUD_KEYS[field]; }
 
 bool is_space(char c) { return std::isspace(static_cast<unsigned char>(c)) != 0; }
+bool is_digit(char c) { return c >= '0' && c <= '9'; }
+
+std::string to_lower(std::string value)
+{
+    for (char& c : value)
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return value;
+}
 
 bool has_space_or_control(const std::string& value)
 {
@@ -27,15 +36,104 @@ bool has_space_or_control(const std::string& value)
     });
 }
 
-bool starts_with_https(const std::string& url)
+// Case-insensitive prefix test; scheme is lower case.
+bool starts_with_scheme(const std::string& url, const char* scheme)
 {
-    const std::size_t n = std::char_traits<char>::length(HTTPS);
-    if (url.size() < n)
-        return false;
-    for (std::size_t i = 0; i < n; ++i)
-        if (std::tolower(static_cast<unsigned char>(url[i])) != HTTPS[i])
+    const std::size_t n = std::char_traits<char>::length(scheme);
+    return url.size() >= n && to_lower(url.substr(0, n)) == scheme;
+}
+
+// The scheme prefix of url ("https://" or "http://"), or nullptr.
+const char* url_scheme(const std::string& url)
+{
+    if (starts_with_scheme(url, HTTPS))
+        return HTTPS;
+    if (starts_with_scheme(url, HTTP))
+        return HTTP;
+    return nullptr;
+}
+
+// 127.0.0.0/8 written as four decimal octets.
+bool is_loopback_ipv4(const std::string& host)
+{
+    int         octets = 0;
+    std::size_t pos    = 0;
+    while (true) {
+        const std::size_t end = host.find('.', pos);
+        const std::string part = host.substr(pos, end == std::string::npos ? std::string::npos : end - pos);
+        if (part.empty() || part.size() > 3 || !std::all_of(part.begin(), part.end(), is_digit) || std::stoi(part) > 255)
             return false;
-    return true;
+        if (octets == 0 && part != "127")
+            return false;
+        ++octets;
+        if (end == std::string::npos)
+            break;
+        pos = end + 1;
+    }
+    return octets == 4;
+}
+
+struct Authority
+{
+    std::string host; // without the IPv6 brackets
+    bool        ipv6 = false;
+};
+
+// Parses the authority of url after its scheme prefix of length skip:
+// [user info is refused] host or [IPv6], then an optional port 1-65535.
+CloudValueError parse_authority(const std::string& url, std::size_t skip, Authority& out)
+{
+    const std::string rest      = url.substr(skip);
+    const std::string authority = rest.substr(0, rest.find_first_of("/?#"));
+    if (authority.find('@') != std::string::npos)
+        return CloudValueError::Invalid;
+
+    std::string host = authority;
+    std::string port;
+    if (!authority.empty() && authority.front() == '[') {
+        // IPv6 literal: [address] or [address]:port
+        const std::size_t close = authority.find(']');
+        if (close == std::string::npos)
+            return CloudValueError::Invalid;
+        host     = authority.substr(1, close - 1);
+        out.ipv6 = true;
+        const std::string tail = authority.substr(close + 1);
+        if (!tail.empty()) {
+            if (tail.front() != ':')
+                return CloudValueError::Invalid;
+            port = tail.substr(1);
+            if (port.empty())
+                return CloudValueError::Invalid;
+        }
+    } else if (const std::size_t colon = authority.find(':'); colon != std::string::npos) {
+        host = authority.substr(0, colon);
+        port = authority.substr(colon + 1);
+        if (port.empty())
+            return CloudValueError::Invalid;
+    }
+    if (host.empty())
+        return CloudValueError::NoHost;
+    if (!port.empty()) {
+        if (port.size() > 5 || !std::all_of(port.begin(), port.end(), is_digit))
+            return CloudValueError::Invalid;
+        const long number = std::stol(port);
+        if (number < 1 || number > 65535)
+            return CloudValueError::Invalid;
+    }
+    out.host = host;
+    return CloudValueError::None;
+}
+
+// localhost, any name under .localhost (RFC 6761), 127.0.0.0/8 and [::1].
+bool is_loopback(const Authority& authority)
+{
+    const std::string name = to_lower(authority.host);
+    if (authority.ipv6)
+        return name == "::1";
+    const std::string suffix = ".localhost";
+    return name == "localhost" ||
+           (name.size() > suffix.size() && name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0) ||
+           is_loopback_ipv4(name);
 }
 
 } // namespace
@@ -72,47 +170,19 @@ CloudValueError check_cloud_url(const std::string& url)
 {
     if (url.empty())
         return CloudValueError::Empty;
-    if (!starts_with_https(url))
+    const char* scheme = url_scheme(url);
+    if (scheme == nullptr)
         return CloudValueError::NotHttps;
     if (has_space_or_control(url))
         return CloudValueError::Invalid;
 
-    const std::string rest      = url.substr(std::char_traits<char>::length(HTTPS));
-    const std::string authority = rest.substr(0, rest.find_first_of("/?#"));
-    if (authority.find('@') != std::string::npos)
-        return CloudValueError::Invalid;
-
-    std::string host = authority;
-    std::string port;
-    if (!authority.empty() && authority.front() == '[') {
-        // IPv6 literal: [address] or [address]:port
-        const std::size_t close = authority.find(']');
-        if (close == std::string::npos)
-            return CloudValueError::Invalid;
-        host = authority.substr(1, close - 1);
-        const std::string tail = authority.substr(close + 1);
-        if (!tail.empty()) {
-            if (tail.front() != ':')
-                return CloudValueError::Invalid;
-            port = tail.substr(1);
-            if (port.empty())
-                return CloudValueError::Invalid;
-        }
-    } else if (const std::size_t colon = authority.find(':'); colon != std::string::npos) {
-        host = authority.substr(0, colon);
-        port = authority.substr(colon + 1);
-        if (port.empty())
-            return CloudValueError::Invalid;
-    }
-    if (host.empty())
-        return CloudValueError::NoHost;
-    if (!port.empty()) {
-        if (port.size() > 5 || !std::all_of(port.begin(), port.end(), [](char c) { return c >= '0' && c <= '9'; }))
-            return CloudValueError::Invalid;
-        const long number = std::stol(port);
-        if (number < 1 || number > 65535)
-            return CloudValueError::Invalid;
-    }
+    Authority             authority;
+    const CloudValueError error = parse_authority(url, std::char_traits<char>::length(scheme), authority);
+    if (error != CloudValueError::None)
+        return error;
+    // Plain http is allowed only on a loopback host, where it never leaves the machine.
+    if (scheme == HTTP && !is_loopback(authority))
+        return CloudValueError::NotHttps;
     return CloudValueError::None;
 }
 
@@ -133,9 +203,16 @@ CloudValidation normalize_cloud_values(CloudValues& values)
         std::string& value = values[field];
         if (field == PubKey)
             continue;
-        if (starts_with_https(value)) {
-            value.replace(0, std::char_traits<char>::length(HTTPS), HTTPS);
-            while (value.size() > std::char_traits<char>::length(HTTPS) && value.back() == '/')
+        if (!value.empty() && value.find("://") == std::string::npos) {
+            // No scheme: http for a loopback host, https for any other.
+            Authority authority;
+            const bool loopback = parse_authority(value, 0, authority) == CloudValueError::None && is_loopback(authority);
+            value.insert(0, loopback ? HTTP : HTTPS);
+        }
+        if (const char* scheme = url_scheme(value)) {
+            const std::size_t n = std::char_traits<char>::length(scheme);
+            value.replace(0, n, scheme);
+            while (value.size() > n && value.back() == '/')
                 value.pop_back();
         }
     }

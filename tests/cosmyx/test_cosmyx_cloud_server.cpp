@@ -192,7 +192,7 @@ TEST_CASE("Cloud values are trimmed", "[cosmyx]")
     CHECK(CC::trim_value("key") == "key");
 }
 
-TEST_CASE("Cloud addresses must be https with a host", "[cosmyx]")
+TEST_CASE("Cloud addresses must be https with a host, or http on loopback", "[cosmyx]")
 {
     CHECK(CC::check_cloud_url("https://cloud.example.org") == CloudValueError::None);
     CHECK(CC::check_cloud_url("HTTPS://cloud.example.org") == CloudValueError::None);
@@ -226,6 +226,39 @@ TEST_CASE("Cloud addresses must be https with a host", "[cosmyx]")
     CHECK(CC::check_cloud_url("https://cloud.example.org\t") == CloudValueError::Invalid);
 }
 
+TEST_CASE("Plain http is accepted only on a loopback host", "[cosmyx]")
+{
+    // A local test server, e.g. CosmoCloud run on the developer's machine.
+    CHECK(CC::check_cloud_url("http://localhost:8000") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://localhost") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("HTTP://LocalHost:8000/api") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://cloud.localhost:8000") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://127.0.0.1:8000") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://127.255.255.254") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://[::1]:8000") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://[::1]") == CloudValueError::None);
+
+    CHECK(CC::check_cloud_url("http://cloud.example.org") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://192.168.1.10:8000") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://128.0.0.1") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://127.0.0") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://127.0.0.1.example.org") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://127.0.0.256") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://localhost.example.org") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://notlocalhost") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://.localhost") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://[::2]") == CloudValueError::NotHttps);
+    CHECK(CC::check_cloud_url("http://[localhost]") == CloudValueError::NotHttps);
+
+    // The other rules still hold for http.
+    CHECK(CC::check_cloud_url("http://") == CloudValueError::NoHost);
+    CHECK(CC::check_cloud_url("http://localhost:0") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("http://localhost:65536") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("http://localhost:65535") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("http://user@localhost") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("http://local host") == CloudValueError::Invalid);
+}
+
 TEST_CASE("The public key must be one word", "[cosmyx]")
 {
     CHECK(CC::check_pub_key("sb_publishable_abc") == CloudValueError::None);
@@ -257,6 +290,41 @@ TEST_CASE("Custom values are normalized before they are checked", "[cosmyx]")
         const CC::CloudValidation error = CC::normalize_cloud_values(bad);
         CHECK(error.field == CC::PubKey);
         CHECK(error.error == CloudValueError::Empty);
+    }
+    SECTION("an explicit http:// on loopback is kept") {
+        CC::CloudValues local = {" http://localhost:8000/ ", "HTTP://127.0.0.1:8000", "http://[::1]:8000/web/", "k"};
+        CHECK(CC::normalize_cloud_values(local).ok());
+        CHECK(local[CC::ApiUrl] == "http://localhost:8000");
+        CHECK(local[CC::AuthUrl] == "http://127.0.0.1:8000");
+        CHECK(local[CC::CloudUrl] == "http://[::1]:8000/web");
+    }
+    SECTION("an explicit http:// elsewhere is refused, not rewritten") {
+        CC::CloudValues bad = custom_values();
+        bad[CC::ApiUrl]     = "http://api.example.org";
+        const CC::CloudValidation error = CC::normalize_cloud_values(bad);
+        CHECK(bad[CC::ApiUrl] == "http://api.example.org");
+        CHECK(error.field == CC::ApiUrl);
+        CHECK(error.error == CloudValueError::NotHttps);
+    }
+    SECTION("a missing scheme is http on loopback, https elsewhere") {
+        CC::CloudValues bare = {"localhost:8000", "127.0.0.1:8000/", "api.example.org", "k"};
+        CHECK(CC::normalize_cloud_values(bare).ok());
+        CHECK(bare[CC::ApiUrl] == "http://localhost:8000");
+        CHECK(bare[CC::AuthUrl] == "http://127.0.0.1:8000");
+        CHECK(bare[CC::CloudUrl] == "https://api.example.org");
+        CC::CloudValues v6 = {"[::1]:8000", "192.168.1.10:8000", "localhost.example.org", "k"};
+        CHECK(CC::normalize_cloud_values(v6).ok());
+        CHECK(v6[CC::ApiUrl] == "http://[::1]:8000");
+        CHECK(v6[CC::AuthUrl] == "https://192.168.1.10:8000");
+        CHECK(v6[CC::CloudUrl] == "https://localhost.example.org");
+    }
+    SECTION("an unknown scheme is not prefixed") {
+        CC::CloudValues bad = custom_values();
+        bad[CC::CloudUrl]   = "ftp://web.example.org";
+        const CC::CloudValidation error = CC::normalize_cloud_values(bad);
+        CHECK(bad[CC::CloudUrl] == "ftp://web.example.org");
+        CHECK(error.field == CC::CloudUrl);
+        CHECK(error.error == CloudValueError::NotHttps);
     }
     SECTION("https:// alone stays as it is and has no host") {
         CC::CloudValues bad = custom_values();
