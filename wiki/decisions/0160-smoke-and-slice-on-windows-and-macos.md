@@ -21,7 +21,13 @@ check.
     on `result.json` and `plate_*.gcode` exactly as on Linux.
 - macOS: from the read-only mounted image, the executable named by the app's
   `Info.plist` (`CFBundleExecutable`). Only images whose architectures include
-  the runner's are run; the others are skipped by design.
+  the runner's are run; the others are skipped by design. The plist comes
+  from the artifact: a damaged or oddly shaped plist, or a name that is not a
+  plain file name, falls back to the bundle's own name, and an executable that
+  resolves outside `Contents/MacOS` (a symlink) fails both checks without
+  being run.
+- The app's output is decoded with replacement characters: bytes that are not
+  valid text give a record, never a crashed job.
 - Windows: `orca-slicer.exe` of a temporary copy of each x64 portable folder
   (the downloaded artifact is never changed), with the pinned Mesa of 0161.
   arm64 folders are skipped by design. `--sw-renderer` is not passed: the
