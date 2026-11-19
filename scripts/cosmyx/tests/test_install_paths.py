@@ -100,8 +100,14 @@ class PackagingScriptModeTests(unittest.TestCase):
 
 class LegacyRemovalSnippetTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.raw = LEGACY_NSH.read_bytes()
-        self.text = self.raw.decode("utf-8")
+        # The macro checks read the checkout NSIS includes, which is CRLF on a
+        # Windows checkout (core.autocrlf): parse it as LF text. The LF check
+        # reads the committed blob, which is what the repository carries.
+        self.raw = subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "cat-file", "blob", ":cmake/cosmyx/remove_legacy_install.nsh"],
+            capture_output=True, check=True,
+        ).stdout
+        self.text = LEGACY_NSH.read_bytes().decode("utf-8").replace("\r\n", "\n")
         self.calls = re.findall(r'^!insertmacro CosmyxRemoveLegacyInstall (\S+) "([^"]+)" (\S+)$',
                                 self.text, flags=re.MULTILINE)
         body = re.search(r"^!macro CosmyxRemoveLegacyInstall .*?^!macroend$", self.text,
