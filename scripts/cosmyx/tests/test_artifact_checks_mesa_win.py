@@ -93,6 +93,8 @@ class PrepareTests(unittest.TestCase):
                                     Opener([ARCHIVE]), seven_zip="7z.exe", pause=0)
         self.assertEqual((self.app / "mesa" / "opengl32.dll").read_bytes(), b"opengl32")
         self.assertEqual((self.app / "mesa" / "libgallium_wgl.dll").read_bytes(), b"gallium")
+        self.assertEqual((self.app / "opengl32.dll").read_bytes(), b"opengl32")
+        self.assertEqual((self.app / "libgallium_wgl.dll").read_bytes(), b"gallium")
         self.assertEqual(prepared.env["Path"].split(os.pathsep), [str(self.app / "mesa"), "sysbin"])
         self.assertNotIn("PATH", prepared.env)
         self.assertEqual(prepared.env["GALLIUM_DRIVER"], "llvmpipe")
