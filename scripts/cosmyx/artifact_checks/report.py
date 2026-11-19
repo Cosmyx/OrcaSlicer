@@ -16,6 +16,43 @@ from .records import Record, read_jsonl
 MAX_LISTED = 200
 
 
+def _escape(char: str) -> str:
+    code = ord(char)
+    return f"\\x{code:02x}" if code <= 0xFF else f"\\u{code:04x}" if code <= 0xFFFF else f"\\U{code:08x}"
+
+
+def xml_safe(text: str) -> str:
+    """Text that XML 1.0 can carry: other characters become visible escapes.
+
+    Paths and reasons come from the artifacts (a fork controls them) and may
+    hold control characters or lone surrogates that no XML parser accepts.
+    """
+    return "".join(c if c in "\t\n\r" or " " <= c <= "\ud7ff" or "\ue000" <= c <= "\ufffd" or c >= "\U00010000"
+                   else _escape(c) for c in text)
+
+
+def md_safe(text: str) -> str:
+    """One line of plain text: line breaks and other non-printable characters
+    become visible escapes, so a file name cannot start a new Markdown block."""
+    return "".join(c if c.isprintable() else _escape(c) for c in text)
+
+
+def md_code(text: str) -> str:
+    """An inline code span that holds any text, backticks included."""
+    text = md_safe(text)
+    run = longest = 0
+    for c in text:
+        run = run + 1 if c == "`" else 0
+        longest = max(longest, run)
+    fence = "`" * (longest + 1)
+    pad = " " if text.startswith("`") or text.endswith("`") else ""
+    return f"{fence}{pad}{text}{pad}{fence}"
+
+
+def md_cell(text: str) -> str:
+    return md_safe(text).replace("|", "\\|")
+
+
 def failing(record: Record, strict: bool) -> bool:
     return record.status == "fail" or (strict and record.status == "skip" and not record.by_design)
 
@@ -45,19 +82,19 @@ def junit(records: list[Record], strict: bool) -> str:
     root = ET.Element("testsuites", name="cosmyx-artifact-checks")
     total = fails = skips = 0
     for (os_name, check), items in sorted(suites.items()):
-        suite = ET.SubElement(root, "testsuite", name=f"{os_name}.{check}")
+        suite = ET.SubElement(root, "testsuite", name=xml_safe(f"{os_name}.{check}"))
         suite_fails = suite_skips = 0
         for record in items:
             name = f"{record.artifact}: {record.path}" if record.path else record.artifact
-            case = ET.SubElement(suite, "testcase", classname=f"{os_name}.{check}", name=name)
+            case = ET.SubElement(suite, "testcase", classname=xml_safe(f"{os_name}.{check}"), name=xml_safe(name))
             if failing(record, strict):
-                ET.SubElement(case, "failure", message=record.reason or record.status)
+                ET.SubElement(case, "failure", message=xml_safe(record.reason or record.status))
                 suite_fails += 1
             elif record.status == "skip":
-                ET.SubElement(case, "skipped", message=record.reason)
+                ET.SubElement(case, "skipped", message=xml_safe(record.reason))
                 suite_skips += 1
             elif record.status == "warn":
-                ET.SubElement(case, "system-out").text = f"warning: {record.reason}"
+                ET.SubElement(case, "system-out").text = xml_safe(f"warning: {record.reason}")
         suite.set("tests", str(len(items)))
         suite.set("failures", str(suite_fails))
         suite.set("skipped", str(suite_skips))
@@ -72,8 +109,8 @@ def junit(records: list[Record], strict: bool) -> str:
 
 
 def _line(record: Record) -> str:
-    where = f"{record.artifact}" + (f" `{record.path}`" if record.path else "")
-    return f"- **{record.os}/{record.check}** {where}: {record.reason}"
+    where = md_safe(record.artifact) + (f" {md_code(record.path)}" if record.path else "")
+    return f"- **{md_safe(record.os)}/{md_safe(record.check)}** {where}: {md_safe(record.reason)}"
 
 
 def markdown(records: list[Record], mode: str, strict: bool, run_url: str = "") -> str:
@@ -85,7 +122,7 @@ def markdown(records: list[Record], mode: str, strict: bool, run_url: str = "") 
     for record in records:
         counts[(record.os, record.check)]["fail" if failing(record, strict) else record.status] += 1
     for (os_name, check), counter in sorted(counts.items()):
-        lines.append(f"| {os_name} | {check} | {counter['pass']} | {counter['fail']} | {counter['warn']} | {counter['skip']} |")
+        lines.append(f"| {md_cell(os_name)} | {md_cell(check)} | {counter['pass']} | {counter['fail']} | {counter['warn']} | {counter['skip']} |")
     fails = [r for r in records if failing(r, strict)]
     warns = [r for r in records if r.status == "warn"]
     for title, items in (("Failures", fails), ("Warnings", warns)):

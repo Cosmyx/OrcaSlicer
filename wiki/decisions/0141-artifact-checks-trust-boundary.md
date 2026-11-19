@@ -24,6 +24,14 @@ untrusted input.
   `--appimage-extract` (the AppImage is unpacked with `unsquashfs` at its
   runtime's end instead), no smoke run, no slice. Those checks are skipped by
   design.
+- Everything read from an artifact is data, never markup. File names, reasons
+  and tool output are escaped before they reach the summary (one Markdown line
+  per record, file names in a code span) and junit.xml (characters XML 1.0
+  cannot carry become visible escapes). Tool output is decoded with
+  replacement characters, git file names are listed with `-z`, and a package
+  that cannot be opened is a fail record for that artifact. A hostile file
+  name can then neither forge a "Result: passed" line nor end a job before it
+  writes its records.
 
 ## Consequences
 
