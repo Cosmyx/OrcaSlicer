@@ -5,7 +5,7 @@ OpenGL 1.1. The app's Windows launcher (OrcaSlicer_app_msvc.cpp) then loads
 <exe folder>/mesa/opengl32.dll, which the build does not ship. This module
 fetches one pinned mesa-dist-win release (MIT), checks its SHA-256 and the
 SHA-256 of every file it takes, and puts those files in the mesa/ folder of a
-temporary copy of the portable app. Mesa is test-only: it never reaches an
+temporary copy of the portable app and next to its exe. Mesa is test-only: it never reaches an
 artifact.
 
 The archive is 7z: Python cannot read it, so the runner's 7-Zip unpacks it.
@@ -166,6 +166,10 @@ def prepare(app_dir: Path, work: Path, expectations: dict, env: dict, run: Runne
     mesa_dir.mkdir(parents=True, exist_ok=True)
     for path in files.values():
         shutil.copy2(path, mesa_dir / path.name)
+        # Also next to the exe: the launcher's version check loads
+        # "opengl32.dll" by name (the exe folder is searched first, it is not
+        # a KnownDLL), so it finds OpenGL >= 2.0 and the app imports this one.
+        shutil.copy2(path, app_dir / path.name)
     details = {"mesa": pin.version, "mesa_sha256": pin.sha256, "mesa_files": sorted(p.name for p in files.values())}
     return Prepared(mesa_dir, run_env(env, mesa_dir, pin), details)
 

@@ -26,10 +26,15 @@ approved downloading a pinned third-party Mesa build for tests only.
 - Files: `x64/opengl32.dll`, `x64/libgallium_wgl.dll` (the driver it loads)
   and `x64/dxil.dll`, unpacked with 7-Zip `e` (Python cannot read 7z; 7-Zip is
   preinstalled on the runner and already required by 0143), each hash checked,
-  copied into `mesa/` of the temporary copy of the portable folder. The app
-  runs with that folder first on `PATH` (the loader looks for
-  `libgallium_wgl.dll` there, not next to `opengl32.dll`) and
+  copied into `mesa/` of the temporary copy of the portable folder and next
+  to its exe. The launcher's version check loads `opengl32.dll` by name, and
+  the exe folder is searched first (it is not a KnownDLL), so it finds
+  OpenGL 2.0 or newer and the app imports that copy; `mesa/` covers the
+  launcher's own fallback. The app runs with `mesa/` first on `PATH` (so
+  `libgallium_wgl.dll` is found from either copy) and
   `GALLIUM_DRIVER=llvmpipe`, so the CPU renderer is always the one used.
+  `--sw-renderer` is never passed: the launcher forwards it to the command
+  line parser, which rejects it as an invalid option.
 - Failures: a hash mismatch, a 7-Zip error or a download that fails three
   times fails the smoke and slice records; a missing 7-Zip skips them with that
   reason (a failure in strict mode).

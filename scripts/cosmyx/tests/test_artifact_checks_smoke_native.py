@@ -173,6 +173,7 @@ class WindowsTests(unittest.TestCase):
         self.assertEqual(slice_kwargs["env"]["GALLIUM_DRIVER"], "llvmpipe")
         self.assertTrue(slice_kwargs["env"]["PATH"].startswith(str(copy / "mesa")))
         self.assertEqual((copy / "mesa" / "opengl32.dll").read_bytes(), b"gl")
+        self.assertEqual((copy / "opengl32.dll").read_bytes(), b"gl")
         self.assertFalse((self.portable / "mesa").exists(), "the downloaded artifact is never changed")
         self.assertEqual(records["smoke"].details["mesa_files"], ["libgallium_wgl.dll", "opengl32.dll"])
 
