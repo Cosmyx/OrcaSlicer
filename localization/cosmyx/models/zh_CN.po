@@ -13,10 +13,12 @@ msgid ""
 "direction' and 'Solid infill direction' to 0.\n"
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
-msgstr ""
+msgstr "此校准模型在填充方向设为 0 度时效果最佳。为获得最佳校准效果，建议将“填充方向”和“实心填充方向”都设为 0。\n"
+"是 - 自动更改这些设置\n"
+"否 - 不要为我更改这些设置"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "校准建议"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -28,40 +30,47 @@ msgid ""
 "\n"
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
-msgstr ""
+msgstr "此校准模型在特定填充设置下效果最佳。\n"
+"为获得最佳校准效果，建议设置：\n"
+"- 填充方向：%.0f°\n"
+"- 实心填充方向：%.0f°\n"
+"- 首层仅单层墙：%s\n"
+"\n"
+"是 - 自动更改这些设置\n"
+"否 - 不要为我更改这些设置"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Cosmyx 3D 模型"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "双头校准模型"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "单头校准模型"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Cosmyx 实用模型"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "校准件 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx 校准件 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx 校准件 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "双色立方体"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx 校准件 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx 立方体"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "皮带张力检测"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "线盘支架"
