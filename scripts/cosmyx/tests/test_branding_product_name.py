@@ -376,7 +376,9 @@ RENAME = [
 ALLOW = [{"kind": "literal", "file": "src/slic3r/GUI/About.cpp", "literal": "OrcaSlicer", "count": 1, "reason": "asset: icon name"}]
 
 
-class PluginTest(TreeCase):
+class ProductNameTreeCase(TreeCase):
+    """A fake tree with one source, the template, a French catalogue, hints and tables."""
+
     def setUp(self) -> None:
         super().setUp()
         write(self.root, "src/slic3r/GUI/About.cpp", SOURCE)
@@ -400,6 +402,8 @@ class PluginTest(TreeCase):
         code = apply_module.apply(self.root, env={} if env is None else env, out=lines.append)
         return code, lines
 
+
+class PluginTest(ProductNameTreeCase):
     def test_plugin_is_loaded(self) -> None:
         self.assertEqual(len(apply_module.load_plugins()["product_name"]), 1)
 
@@ -613,9 +617,144 @@ class CrlfTest(unittest.TestCase):
         self.assertEqual(resources.hint_texts(self.root), expected)
 
 
+# ---------------------------------------------------------------- inflections and token edge cases
+
+CS = (
+    'msgid ""\nmsgstr ""\n"Language: cs\\n"\n\n'
+    'msgid "About OrcaSlicer"\nmsgstr "O OrcaSliceru"\n\n'
+    'msgid "Hint\\nOrcaSlicer helps"\nmsgstr "Tip\\nOrcaSlicer pomaha"\n'
+)
+CS_ROW = {"language": "cs", "old": "OrcaSliceru", "new": "CosmoSlicu", "source": "test"}
+
+
+class InflectionTokenTest(unittest.TestCase):
+    ROWS = tokens.inflection_map([CS_ROW, {"language": "hu", "old": "az OrcaSlicerrel", "new": "a CosmoSlice-szal"}])
+
+    def test_inflected_name_is_seen_only_in_a_translation(self) -> None:
+        self.assertTrue(tokens.visible_name("verze OrcaSliceru", "cs", {}))
+        self.assertEqual(tokens.unresolved("verze OrcaSliceru", "cs", {}), ["OrcaSliceru"])
+        self.assertFalse(tokens.visible_name("Orcas swim", None, {}))
+        self.assertFalse(tokens.has_token("OrcaSliceru"))
+        self.assertTrue(tokens.is_inflected("OrcaSliceru"))
+        self.assertFalse(tokens.is_inflected("OrcaSlicer"))
+
+    def test_row_renames_the_exact_form_of_its_language_only(self) -> None:
+        self.assertEqual(tokens.replace_tokens("verze OrcaSliceru a OrcaSlicer", "cs", inflections=self.ROWS), "verze CosmoSlicu a CosmoSlice")
+        self.assertEqual(tokens.replace_tokens("verze OrcaSliceru", "sk", inflections=self.ROWS), "verze OrcaSliceru")
+        self.assertEqual(tokens.replace_tokens("az OrcaSlicerrel", "hu", inflections=self.ROWS), "a CosmoSlice-szal")
+        self.assertEqual(tokens.unresolved("verze OrcaSliceru", "cs", self.ROWS), [])
+
+    def test_row_never_touches_a_url(self) -> None:
+        text = "https://example.org/OrcaSliceru"
+        self.assertEqual(tokens.replace_tokens(text, "cs", inflections=self.ROWS), text)
+
+    def test_korean_particle_is_not_an_inflection(self) -> None:
+        self.assertEqual(tokens.replace_tokens("OrcaSlicer\ub294", "ko", inflections={}), "CosmoSlice\ub294")
+
+    def test_identifiers_and_kept_names_stay(self) -> None:
+        for text in ("OrcaSlicerVersion", "OrcaCloudban", "OrcaSliced"):
+            with self.subTest(text=text):
+                self.assertFalse(tokens.visible_name(text, "hu", {}))
+
+    def test_uppercase_and_combining_marks(self) -> None:
+        self.assertEqual(tokens.replace_tokens("ORCASLICER ORCA SLICER ORCA"), "CosmoSlice CosmoSlice CosmoSlice")
+        self.assertFalse(tokens.visible_name("OrcaSlicer\u0301"))
+        self.assertTrue(tokens.visible_name("Orca\u0301 OrcaSlicer"))
+        self.assertEqual(tokens.replace_tokens("Orca\u0301 OrcaSlicer"), "Orca\u0301 CosmoSlice")
+
+    def test_app_key_names_stay_and_escapes_still_rename(self) -> None:
+        self.assertEqual(tokens.replace_tokens("Open OrcaSlicer.conf"), "Open OrcaSlicer.conf")
+        self.assertEqual(tokens.replace_tokens("Roaming\\\\OrcaSlicer"), "Roaming\\\\OrcaSlicer")
+        self.assertEqual(tokens.replace_tokens("Hi\\nOrcaSlicer"), "Hi\\nCosmoSlice")
+        self.assertEqual(tokens.replace_tokens("OrcaSlicer.\nApply"), "CosmoSlice.\nApply")
+
+
+class InflectionTablesTest(unittest.TestCase):
+    def test_valid_row(self) -> None:
+        self.assertEqual(tables.inflection_rows([CS_ROW]), [CS_ROW])
+
+    def test_rejected_rows(self) -> None:
+        bad = [
+            [{"language": "cs", "old": "OrcaSlicer", "new": "CosmoSlice"}],  # not inflected
+            [{"language": "cs", "old": "OrcaSliceru", "new": "OrcaSlicu"}],  # new names upstream
+            [{"language": "cs", "old": "OrcaSliceru", "new": "Slicu"}],  # new lacks the stem
+            [{"language": "Czech", "old": "OrcaSliceru", "new": "CosmoSlicu"}],
+            [{"language": "cs", "old": "OrcaSliceru"}],
+            [CS_ROW, dict(CS_ROW)],
+            "rows",
+        ]
+        for rows in bad:
+            with self.subTest(rows=rows):
+                with self.assertRaises(branding.BrandingError):
+                    tables.inflection_rows(rows)
+
+
+class InflectionPluginTest(ProductNameTreeCase):
+    def setUp(self) -> None:
+        super().setUp()
+        write(self.root, "localization/i18n/cs/OrcaSlicer_cs.po", CS)
+
+    def inflections(self, rows) -> None:
+        self.write_json(f"{PN}/inflections.json", {"schema": 1, "rows": rows})
+
+    def test_missing_row_is_reported_as_needs_inflection_row(self) -> None:
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0, "\n".join(lines))
+        czech = read(self.root, "localization/i18n/cs/OrcaSlicer_cs.po").decode()
+        self.assertIn('msgid "About CosmoSlice"\nmsgstr "O OrcaSliceru"', czech)
+        self.assertIn('"CosmoSlice pomaha"', czech)
+        needs = [line for line in lines if "needs inflection row (cs): OrcaSliceru" in line]
+        self.assertEqual(len(needs), 1, "\n".join(lines))
+        self.assertTrue(needs[0].startswith("warning:"), needs[0])
+
+    def test_missing_row_fails_a_release_build(self) -> None:
+        self.assertEqual(self.run_apply()[0], 0)
+        found = [f for f in self.g8("post", RELEASE) if "needs inflection row" in f.message]
+        self.assertEqual([(f.level, f.path) for f in found], [("error", "localization/i18n/cs/OrcaSlicer_cs.po")])
+
+    def test_row_renames_the_translation(self) -> None:
+        self.inflections([CS_ROW])
+        code, lines = self.run_apply()
+        self.assertEqual(code, 0, "\n".join(lines))
+        self.assertFalse(any("G8" in line for line in lines), "\n".join(lines))
+        self.assertIn('msgstr "O CosmoSlicu"', read(self.root, "localization/i18n/cs/OrcaSlicer_cs.po").decode())
+
+    def test_stale_row_is_an_error(self) -> None:
+        self.inflections([CS_ROW, {"language": "cs", "old": "OrcaSlicerem", "new": "CosmoSlicem"}])
+        found = [f for f in self.g8("pre") if "stale inflection row" in f.message]
+        self.assertEqual([(f.level, "OrcaSlicerem" in f.message) for f in found], [("error", True)])
+
+    def test_invalid_table_is_an_error(self) -> None:
+        self.inflections([{"language": "cs", "old": "OrcaSlicer", "new": "CosmoSlice"}])
+        self.assertTrue(any(f.level == "error" and "inflection row" in f.message for f in self.g8("pre")))
+
+    def test_list_names_every_form_with_an_example(self) -> None:
+        from branding.product_name import inflections
+
+        listed = inflections.needed(self.root)
+        self.assertEqual(list(listed), ["cs"])
+        self.assertEqual(
+            listed["cs"]["inflected"],
+            [{"form": "OrcaSliceru", "count": 1, "example_msgid": "About OrcaSlicer", "example_translation": "O OrcaSliceru"}],
+        )
+        self.inflections([CS_ROW])
+        self.assertEqual(inflections.needed(self.root), {})
+
+
+class NonUtf8InputTest(ProductNameTreeCase):
+    def test_non_utf8_hints_is_a_clean_finding(self) -> None:
+        repo = self.root / resources.HINTS_FILE
+        repo.write_bytes("[hint:Help]\ntext = Caf\u00e9 OrcaSlicer\n".encode("latin-1"))
+        found = self.g8("pre")
+        self.assertTrue(any(f.level == "error" and "not UTF-8" in f.message for f in found), found)
+        code, lines = self.run_apply()
+        self.assertNotEqual(code, 0)
+        self.assertFalse(any("Traceback" in line for line in lines))
+
+
 class CommittedTablesTest(unittest.TestCase):
     def test_tables_are_valid_and_canonical(self) -> None:
-        for name in ("rename", "allowlist", "patches"):
+        for name in ("rename", "allowlist", "patches", "inflections"):
             path = REPO_ROOT / PN / f"{name}.json"
             data = branding.load_json(path)
             self.assertEqual(data["schema"], 1)
@@ -623,6 +762,7 @@ class CommittedTablesTest(unittest.TestCase):
             self.assertTrue(branding.same_text(path, branding.dump_json(data)), name)
         rename = tables.rename_rows(branding.load_json(REPO_ROOT / PN / "rename.json")["rows"])
         tables.allow_rows(branding.load_json(REPO_ROOT / PN / "allowlist.json")["rows"])
+        tables.inflection_rows(branding.load_json(REPO_ROOT / PN / "inflections.json")["rows"])
         self.assertEqual(sum(1 for row in rename if row["source"] == "cosmoslice"), 48)
 
 

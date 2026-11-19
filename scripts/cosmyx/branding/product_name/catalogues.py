@@ -73,8 +73,10 @@ def msgids(catalogue) -> dict:
     return found
 
 
-def rename_catalogue(catalogue, mapping: dict, lang: str | None) -> int:
-    """Rename in place; returns the number of messages changed."""
+def rename_catalogue(catalogue, mapping: dict, lang: str | None, inflections: dict | None = None) -> int:
+    """Rename in place; returns the number of messages changed.
+
+    `inflections` is a `tokens.inflection_map` (None: the committed table)."""
     present = msgids(catalogue)
     for old, new in mapping.items():
         if old in present and new in present:
@@ -91,22 +93,39 @@ def rename_catalogue(catalogue, mapping: dict, lang: str | None) -> int:
         if not hit:
             continue
         if lang is not None:
-            entry.msgstr = replace_tokens(entry.msgstr, lang)
-            entry.msgstr_plural = {index: replace_tokens(text, lang) for index, text in entry.msgstr_plural.items()}
+            entry.msgstr = replace_tokens(entry.msgstr, lang, inflections=inflections)
+            entry.msgstr_plural = {
+                index: replace_tokens(text, lang, inflections=inflections) for index, text in entry.msgstr_plural.items()
+            }
         entry.touch()
         changed += 1
     return changed
 
 
-def plan(root: Path, mapping: dict) -> dict:
+def plan(root: Path, mapping: dict, inflections: dict | None = None) -> dict:
     """{relative path: (new text, messages changed)} for every catalogue that changes."""
     result = {}
     for relative in catalogue_files(root):
         catalogue = read(root, relative)
         try:
-            changed = rename_catalogue(catalogue, mapping, language(relative))
+            changed = rename_catalogue(catalogue, mapping, language(relative), inflections)
         except BrandingError as error:
             raise BrandingError(f"{relative}: {error}") from error
         if changed:
             result[relative] = (catalogue.render(), changed)
     return result
+
+
+def renamed_translations(root: Path, msgids: set):
+    """(relative, language, msgid, text) of every confirmed translation (msgstr
+    and plural forms) of a msgid in `msgids`, in every `<lang>/*.po`."""
+    for relative in catalogue_files(root):
+        lang = language(relative)
+        if lang is None:
+            continue
+        for entry in read(root, relative).messages():
+            if entry.msgid not in msgids or entry.fuzzy:
+                continue
+            for text in (entry.msgstr, *entry.msgstr_plural.values()):
+                if text:
+                    yield relative, lang, entry.msgid, text

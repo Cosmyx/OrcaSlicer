@@ -16,15 +16,28 @@ allowlist row: kept on purpose, with a reason whose category comes first
   (its source text between the quotes) and its exact count in that file.
 - `{"kind": "text", "file", "text", "count", "reason"}`: a translated element
   of a setup-guide page.
+
+inflection row: `{"language", "old", "new", "source"}`: in the translations
+of one catalogue language, the exact text `old` (an inflected upstream name
+such as cs "OrcaSliceru", or a longer phrase around it when the words next to
+the name must change too) becomes `new`. Rows are written by a speaker of
+that language, never guessed: an inflected name without its row is reported
+by G8 as "needs inflection row".
 """
 
 from __future__ import annotations
 
 from .. import BrandingError, check_relative
-from .tokens import NEW_NAME, has_token
+import re
+
+from .tokens import NEW_NAME, TOKEN, has_token
 
 RENAME_KINDS = ("msgid", "literal")
 ALLOW_KINDS = {"msgid": ("msgid",), "literal": ("file", "literal", "count"), "text": ("file", "text", "count")}
+INFLECTION_KEYS = ("language", "old", "new")
+_LANGUAGE = re.compile(r"[a-z]{2,3}(?:_[A-Z]{2})?")
+# Every inflected form of the new name starts with this stem.
+NEW_STEM = NEW_NAME[:-1]
 REASON_CATEGORIES = frozenset(
     {"asset", "cli", "compared", "credit", "dev-tool", "external", "internal", "kept-name", "persisted", "url"}
 )
@@ -55,6 +68,30 @@ def rename_rows(rows: list) -> list[dict]:
     chained = sorted(set(olds) & set(news))
     if chained:
         raise BrandingError(f"rename chain (a new text is also an old one): {chained!r}")
+    return checked
+
+
+def inflection_rows(rows: list) -> list[dict]:
+    """Validated inflection rows: an inflected upstream name in `old`, none in
+    `new`, the new stem in `new`, one row per (language, old)."""
+    if not isinstance(rows, list):
+        raise BrandingError(f"inflection rows must be a list: {rows!r}")
+    checked = []
+    seen = set()
+    for row in rows:
+        if not isinstance(row, dict) or any(not isinstance(row.get(key), str) for key in INFLECTION_KEYS):
+            raise BrandingError(f"inflection row needs string {INFLECTION_KEYS}: {row!r}")
+        language, old, new = (row[key] for key in INFLECTION_KEYS)
+        if not _LANGUAGE.fullmatch(language):
+            raise BrandingError(f"inflection row language must be a catalogue language such as cs or pt_BR: {row!r}")
+        if not any(match.group("suffix") for match in TOKEN.finditer(old)):
+            raise BrandingError(f"inflection row old has no inflected upstream name: {old!r}")
+        if has_token(new) or NEW_STEM not in new:
+            raise BrandingError(f"inflection row new must name {NEW_NAME} (stem {NEW_STEM!r}) and not the upstream product: {new!r}")
+        if (language, old) in seen:
+            raise BrandingError(f"duplicate inflection row: {language} {old!r}")
+        seen.add((language, old))
+        checked.append(row)
     return checked
 
 
