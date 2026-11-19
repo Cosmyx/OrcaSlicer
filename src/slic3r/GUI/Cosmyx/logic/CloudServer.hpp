@@ -78,8 +78,8 @@ int apply_cloud_server(AppConfig& config);
 enum class CloudValueError {
     None,
     Empty,    // nothing entered
-    NotHttps, // an address that does not start with https://
-    NoHost,   // https:// with no host name
+    NotHttps, // not https://, and not http:// on a loopback host
+    NoHost,   // a scheme with no host name
     Invalid,  // spaces, user info, a bad port
 };
 
@@ -93,16 +93,19 @@ struct CloudValidation
 // Leading and trailing spaces, tabs and line breaks removed.
 std::string trim_value(const std::string& value);
 
-// Checks a trimmed address: https scheme (any case), a host name, an optional
-// numeric port, no spaces and no user info.
+// Checks a trimmed address: https scheme (any case), or http on a loopback
+// host (localhost, *.localhost, 127.0.0.0/8, [::1]) for a local test server;
+// a host name, an optional port 1-65535, no spaces and no user info.
 CloudValueError check_cloud_url(const std::string& url);
 
 // Checks a trimmed public key: not empty, no spaces.
 CloudValueError check_pub_key(const std::string& key);
 
-// Trims every value, writes the scheme as "https://" and drops trailing
-// slashes of the addresses (the agent appends paths starting with '/'), then
-// checks them in field order and reports the first error.
+// Trims every value, adds a missing scheme to an address ("http://" for a
+// loopback host, else "https://"), writes the scheme in lower case and drops
+// trailing slashes (the agent appends paths starting with '/'), then checks
+// the values in field order and reports the first error. An explicit scheme
+// is never changed.
 CloudValidation normalize_cloud_values(CloudValues& values);
 
 bool custom_cloud_enabled(const AppConfig& config);
