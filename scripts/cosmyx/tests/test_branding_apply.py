@@ -16,17 +16,20 @@ from pathlib import Path
 
 from branding_fixture import (
     RELEASE,
+    REPO_ROOT,
     TreeCase,
     apply_module,
     branding,
     cli,
     copy_real_tree,
     git,
+    lf_snapshot,
     manifest,
     read,
     render,
     snapshot,
     svg,
+    to_crlf,
     write,
 )
 
@@ -276,6 +279,43 @@ class RealTreeTest(unittest.TestCase):
         self.assertEqual(read(self.root, target), svg("#8000FF", 64).encode())
         apply_module.revert(self.root)
         self.assertEqual(snapshot(self.root), before)
+
+
+class CrlfRealTreeTest(unittest.TestCase):
+    """A Windows checkout (core.autocrlf) of the real tree brands exactly like
+    an LF one, keeps CRLF in every file it patches, and reverts byte for byte."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.lf = Path(self._tmp.name) / "lf"
+        self.crlf = Path(self._tmp.name) / "crlf"
+        copy_real_tree(self.lf)
+        copy_real_tree(self.crlf)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_crlf_tree_applies_like_lf(self) -> None:
+        converted = to_crlf(self.crlf)
+        self.assertTrue(converted)
+        before = snapshot(self.crlf)
+        for root in (self.lf, self.crlf):
+            lines = []
+            code = apply_module.apply(root, env={}, out=lines.append)
+            self.assertEqual(code, 0, f"{root.name}:\n" + "\n".join(lines))
+        lf_after, crlf_after = lf_snapshot(self.lf), lf_snapshot(self.crlf)
+        self.assertEqual(sorted(crlf_after), sorted(lf_after))
+        differ = [relative for relative in lf_after if crlf_after[relative] != lf_after[relative]]
+        self.assertEqual(differ, [], "branded content differs between the LF and CRLF trees")
+        after = snapshot(self.crlf)
+        patched = [relative for relative in converted if after[relative] != before[relative]]
+        if (REPO_ROOT / branding.COLOURS_FILE).is_file() or (REPO_ROOT / branding.PRODUCT_NAME_DIR).is_dir():
+            # The text stages exist on this branch: they must have patched files.
+            self.assertTrue(patched)
+        mixed = [relative for relative in converted if after[relative].count(b"\n") != after[relative].count(b"\r\n")]
+        self.assertEqual(mixed, [], "mixed line endings after apply")
+        apply_module.revert(self.crlf)
+        self.assertEqual(snapshot(self.crlf), before)
 
 
 if __name__ == "__main__":

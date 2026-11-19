@@ -168,6 +168,45 @@ def write_text(path: Path, text: str) -> None:
     path.write_bytes(text.encode("utf-8"))
 
 
+# ---------------------------------------------------------------- line endings
+#
+# A Windows checkout (core.autocrlf, the runners' default) has CRLF text files
+# while the repository stores LF. Every text read and match works on LF text;
+# every write puts back the file's own dominant line ending, never a mix; every
+# comparison with expected content is made on LF.
+
+
+def line_ending(data: bytes) -> bytes:
+    """The dominant line ending of `data`: CRLF when most lines end with it."""
+    crlf = data.count(b"\r\n")
+    return b"\r\n" if crlf > data.count(b"\n") - crlf else b"\n"
+
+
+def to_lf(data: bytes) -> bytes:
+    return data.replace(b"\r\n", b"\n")
+
+
+def decode_text(data: bytes, errors: str = "strict") -> tuple[str, str]:
+    """(LF text, line ending) of a file's bytes."""
+    return to_lf(data).decode("utf-8", errors), line_ending(data).decode("ascii")
+
+
+def read_lf(path: Path, errors: str = "strict") -> str:
+    """A text file's content with LF line endings, whatever is on disk."""
+    return to_lf(path.read_bytes()).decode("utf-8", errors)
+
+
+def encode_text(text: str, eol: str, errors: str = "strict") -> bytes:
+    """LF `text` encoded with `eol` throughout (no mixed line endings)."""
+    data = text.replace("\r\n", "\n").encode("utf-8", errors)
+    return data if eol == "\n" else data.replace(b"\n", eol.encode("ascii"))
+
+
+def same_text(path: Path, expected: str) -> bool:
+    """True when the file holds `expected`, line endings aside."""
+    return to_lf(path.read_bytes()) == expected.replace("\r\n", "\n").encode("utf-8")
+
+
 # ---------------------------------------------------------------- colours
 
 # The hex rule of the frozen contract: `#RRGGBB` in any case, not followed by
