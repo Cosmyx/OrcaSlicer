@@ -7,7 +7,6 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
-import shutil
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -15,11 +14,11 @@ from pathlib import Path
 
 from branding_fixture import (
     RELEASE,
-    REPO_ROOT,
     TreeCase,
     apply_module,
     branding,
     cli,
+    copy_real_tree,
     git,
     manifest,
     read,
@@ -233,15 +232,7 @@ class RealTreeTest(unittest.TestCase):
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()
         self.root = Path(self._tmp.name)
-        shutil.copytree(REPO_ROOT / branding.BRAND_DIR, self.root / branding.BRAND_DIR)
-        shutil.copytree(REPO_ROOT / branding.TABLES_DIR, self.root / branding.TABLES_DIR)
-        for top in manifest.TEAL_ROOTS:
-            shutil.copytree(REPO_ROOT / top, self.root / top, ignore=shutil.ignore_patterns("*.smbdelete*"))
-        for _, row in manifest.load(REPO_ROOT).rows():
-            source = REPO_ROOT / row["path"]
-            if source.is_file() and not (self.root / row["path"]).exists():
-                (self.root / row["path"]).parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(source, self.root / row["path"])
+        copy_real_tree(self.root)
 
     def tearDown(self) -> None:
         self._tmp.cleanup()

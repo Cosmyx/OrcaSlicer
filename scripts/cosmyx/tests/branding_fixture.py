@@ -5,6 +5,7 @@ Not a test module itself (the runner only collects test_*.py).
 
 from __future__ import annotations
 
+import shutil
 import struct
 import subprocess
 import sys
@@ -144,6 +145,51 @@ class TreeCase(unittest.TestCase):
         write(self.root, relative, branding.dump_json(data))
 
 
+# Whole folders the product-name stage reads (C++ sources, catalogues, hints).
+PRODUCT_NAME_TOPS = ["src", "localization/i18n", "resources/data"]
+
+
+def copy_real_tree(destination: Path) -> None:
+    """Copy into `destination` every file of this checkout the committed
+    branding tables read, for the real-tree tests of every stage.
+
+    Always: the branding tables, the review tables, the teal roots and the
+    manifest files. When colours.json exists: its scopes and every file a
+    literal or snippet row names. When the product-name tables exist: the
+    folders that stage scans and every file a patch row names. A stage whose
+    table is absent adds nothing, so each stage's branch works on its own and
+    combined. Network-share leftovers are skipped.
+    """
+    ignore = shutil.ignore_patterns("*.smbdelete*")
+    tops = [branding.BRAND_DIR, branding.TABLES_DIR, *manifest.TEAL_ROOTS]
+    files = [row["path"] for _, row in manifest.load(REPO_ROOT).rows()]
+    colours_path = REPO_ROOT / branding.COLOURS_FILE
+    if colours_path.is_file():
+        colours = branding.load_json(colours_path)
+        for pattern in colours.get("scopes", []):
+            if pattern.startswith("!"):
+                continue
+            if "*" in pattern:
+                tops.append(pattern.split("*", 1)[0].rstrip("/"))
+            else:
+                files.append(pattern)
+        files += [row["file"] for key in ("literals", "snippets") for row in colours.get(key, [])]
+    product_name_path = REPO_ROOT / branding.PRODUCT_NAME_DIR
+    if product_name_path.is_dir():
+        tops += PRODUCT_NAME_TOPS
+        patches = product_name_path / "patches.json"
+        if patches.is_file():
+            files += [row["file"] for row in branding.load_json(patches)["rows"]]
+    for top in sorted(set(tops)):
+        if top and (REPO_ROOT / top).is_dir() and not (destination / top).exists():
+            shutil.copytree(REPO_ROOT / top, destination / top, ignore=ignore)
+    for relative in sorted(set(files)):
+        source = REPO_ROOT / relative
+        target = destination / relative
+        if source.is_file() and not target.exists():
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, target)
+
 __all__ = [
     "BINARY",
     "DEV",
@@ -154,6 +200,7 @@ __all__ = [
     "apply_module",
     "branding",
     "cli",
+    "copy_real_tree",
     "git",
     "guards",
     "manifest",
