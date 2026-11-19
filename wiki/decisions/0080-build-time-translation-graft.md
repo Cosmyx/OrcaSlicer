@@ -24,10 +24,12 @@ edited upstream files.
   kept; the OrcaSlicer header is kept; the same key in two features is an
   error; a language OrcaSlicer lacks is a warning. Every check runs before a
   file is written.
-- The graft runs from the composite action `.github/actions/cosmyx-i18n-graft`
-  (graft unit tests, then the graft), called by one upstream hook in
+- The graft runs from the composite action `.github/actions/cosmyx-prepare`
+  (graft unit tests, then the graft, then the edited files are hidden from git
+  diff, decision 0087), called by one upstream hook in
   `.github/workflows/build_orca.yml` right after Checkout, skipped on the macOS
-  combine-only leg, which compiles nothing.
+  combine-only leg, which compiles nothing. The Flatpak build calls it too
+  (decision 0086).
 - Locally the graft is never committed: `just i18n-graft` grafts for a local
   check and `just i18n-ungraft` restores the committed files.
 
