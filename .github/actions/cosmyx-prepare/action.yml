@@ -53,11 +53,15 @@ runs:
         PYTHON_PATH: ${{ steps.container.outputs.python || steps.python.outputs.python-path }}
       run: echo "COSMYX_PYTHON=$PYTHON_PATH" >> "$GITHUB_ENV"
 
+    # Only fast, hermetic tests run here, on every build leg: the profile makes
+    # the tests that need Docker, the network or a long build skip themselves
+    # (they run in cosmyx-checks and `just test-scripts`).
     - name: Test the graft, the worktree helper and the branding engine
       shell: bash
       working-directory: ${{ github.workspace }}
       env:
         PYTHONDONTWRITEBYTECODE: '1'
+        COSMYX_TEST_PROFILE: prepare
       run: |
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_i18n_graft.py -t scripts/cosmyx/tests
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_worktree_clean.py -t scripts/cosmyx/tests
