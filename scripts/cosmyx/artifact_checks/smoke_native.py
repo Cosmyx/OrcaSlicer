@@ -45,6 +45,9 @@ NTSTATUS = {
     0xC0000409: "STATUS_STACK_BUFFER_OVERRUN",
 }
 MAC_ARCHS = {"arm64": "arm64", "aarch64": "arm64", "x86_64": "x86_64"}
+# Darwin signal numbers (sys/signal.h): SIGBUS is 10 there, not Linux's 7. Fixed
+# here because this module also runs on hosts whose signal module differs.
+MACOS_CRASH_SIGNALS = {11: "SIGSEGV", 6: "SIGABRT", 10: "SIGBUS", 4: "SIGILL", 8: "SIGFPE"}
 
 
 def windows_crash(returncode: int | None) -> str:
@@ -66,7 +69,7 @@ def classify(os_name: str, returncode: int | None, output: str, timed_out: bool,
         crash = windows_crash(returncode)
         if crash:
             return "fail", f"crashed with {crash}"
-    return smoke_status(returncode, output, timed_out, timeout)
+    return smoke_status(returncode, output, timed_out, timeout, MACOS_CRASH_SIGNALS if os_name == "macos" else None)
 
 
 def smoke(os_name: str, artifact: str, exe: Path, label: str, timeout: int, run: Runner,
@@ -91,7 +94,7 @@ def name_crash(os_name: str, record: Record) -> Record:
     code = record.details.get("exit")
     crash = windows_crash(code) if os_name == "windows" else ""
     if os_name != "windows" and isinstance(code, int) and code < 0:
-        reason = smoke_status(code, "", False, 0)[1]
+        reason = classify(os_name, code, "", False, 0)[1]
         crash = reason.removeprefix("crashed with ") if reason.startswith("crashed with ") else ""
     if crash and not record.reason.startswith("crashed"):
         record.reason = f"crashed with {crash}; {record.reason}"
