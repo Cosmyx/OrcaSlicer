@@ -1,4 +1,5 @@
 #include "../GCode.hpp"
+#include "libslic3r/Cosmyx/ToolChangeFan.hpp" // Cosmyx
 #include "../LocalesUtils.hpp"
 #include "libslic3r/Extruder.hpp"
 #include "libslic3r/Point.hpp"
@@ -917,6 +918,7 @@ std::string CoolingBuffer::apply_layer_cooldown(
             if (std::errc::invalid_argument != ret.ec) {
                 if (new_extruder != m_current_extruder) {
                     m_current_extruder = new_extruder;
+                    if (std::exchange(fan_speed_change_requests[CoolingLine::TYPE_FORCE_RESUME_FAN], false)) m_current_fan_speed = -1; // Cosmyx: resume after Tn
                     change_extruder_set_fan(true);
                     if (m_belt_band_active)
                         need_set_fan = true;
@@ -966,7 +968,7 @@ std::string CoolingBuffer::apply_layer_cooldown(
             // check if any fan speed change request is active
             if (m_fan_speed != -1 && !std::any_of(fan_speed_change_requests.begin(), fan_speed_change_requests.end(), [](const std::pair<int, bool>& p) { return p.second; })){
                 fan_speed_change_requests[CoolingLine::TYPE_FORCE_RESUME_FAN] = true;
-                need_set_fan = true;
+                need_set_fan = !Cosmyx::resume_waits_for_tool_change(std::string_view(line_end, gcode.c_str() + gcode.size() - line_end), m_toolchange_prefix, m_current_extruder, m_num_extruders); // Cosmyx: resume after Tn
             }
             if (m_additional_fan_speed != -1 && m_config.auxiliary_fan.value)
                 new_gcode += GCodeWriter::set_additional_fan(m_additional_fan_speed);

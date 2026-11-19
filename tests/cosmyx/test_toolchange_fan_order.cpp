@@ -6,6 +6,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 #include <cstdlib>
 #include <optional>
 #include <sstream>
@@ -13,6 +14,7 @@
 #include <vector>
 
 #include "libslic3r/Config.hpp"
+#include "libslic3r/Cosmyx/ToolChangeFan.hpp"
 #include "libslic3r/PrintConfig.hpp"
 
 #include "test_helpers.hpp"
@@ -66,6 +68,16 @@ void set_constant_fan(DynamicPrintConfig &config, const std::vector<std::string>
 DynamicPrintConfig two_filament_config()
 {
     DynamicPrintConfig config = multifilament_config(2);
+    // The fan speeds are per variant options: their columns follow
+    // filament_extruder_variant and filament_self_index, which
+    // set_num_filaments() leaves at one filament. Left so, every filament reads
+    // the first column and both tools get the same speed, so no fan command is
+    // due at a tool change. Give each filament its own column, as a filament
+    // preset does.
+    config.set_deserialize_strict({
+        { "filament_extruder_variant", "Direct Drive Standard;Direct Drive Standard" },
+        { "filament_self_index",       "1,2" },
+    });
     set_constant_fan(config, { "30", "80" });
     return config;
 }
@@ -130,7 +142,19 @@ struct ToolChange
     int              tool;
     std::vector<int> fan_before; // between the previous extrusion and the Tn
     std::vector<int> fan_after;  // between the Tn and the next extrusion
+    std::string      excerpt;    // the G-code around the Tn, for failure reports
 };
+
+// The lines from `context` lines before line `at` to `context` lines after it,
+// the line `at` itself marked with ">>".
+std::string excerpt(const std::vector<std::string> &lines, size_t at, size_t context = 12)
+{
+    std::string out;
+    const size_t last = std::min(lines.size(), at + context + 1);
+    for (size_t i = at > context ? at - context : 0; i < last; ++i)
+        out += (i == at ? ">> " : "   ") + lines[i] + "\n";
+    return out;
+}
 
 // The tool changes made after the first extrusion and followed by another one.
 std::vector<ToolChange> mid_print_tool_changes(const std::string &gcode)
@@ -139,13 +163,15 @@ std::vector<ToolChange> mid_print_tool_changes(const std::string &gcode)
     std::vector<int>        fan_since_extrusion;
     std::optional<size_t>   open_change;
     bool                    extruded = false;
-    for (const std::string &line : split_lines(gcode)) {
+    const std::vector<std::string> lines = split_lines(gcode);
+    for (size_t i = 0; i < lines.size(); ++i) {
+        const std::string &line = lines[i];
         if (is_extrusion(line)) {
             extruded = true;
             open_change.reset();
             fan_since_extrusion.clear();
         } else if (const std::optional<int> tool = tool_change(line); tool && extruded) {
-            changes.push_back({ *tool, fan_since_extrusion, {} });
+            changes.push_back({ *tool, fan_since_extrusion, {}, excerpt(lines, i) });
             open_change = changes.size() - 1;
         } else if (const std::optional<int> fan = fan_command(line)) {
             if (open_change)
@@ -173,6 +199,7 @@ TEST_CASE("The new tool's fan command follows its tool change", "[cosmyx][Coolin
     REQUIRE(changes.size() >= 2);
     for (const ToolChange &change : changes) {
         CAPTURE(change.tool, change.fan_before, change.fan_after);
+        INFO("G-code around the tool change:\n" << change.excerpt);
         REQUIRE(change.tool >= 0);
         REQUIRE(change.tool <= 1);
         // Nothing drives the fan of the tool being parked.
@@ -181,6 +208,45 @@ TEST_CASE("The new tool's fan command follows its tool change", "[cosmyx][Coolin
         REQUIRE_FALSE(change.fan_after.empty());
         CHECK(change.fan_after.back() == (change.tool == 0 ? fan_30_percent : fan_80_percent));
     }
+}
+
+TEST_CASE("The fan comes back after the tool change when the change G-code sets it", "[cosmyx][Cooling]")
+{
+    // The change G-code turns the fan off. The cooling pass resumes the fan
+    // after it, and the resume belongs to the new tool, so it comes after the Tn.
+    DynamicPrintConfig config = two_filament_config();
+    config.set_deserialize_strict({ { "change_filament_gcode", "M106 S0" } });
+    const std::vector<ToolChange> changes = mid_print_tool_changes(two_cubes_on_two_filaments(config));
+    REQUIRE(changes.size() >= 2);
+    for (const ToolChange &change : changes) {
+        CAPTURE(change.tool, change.fan_before, change.fan_after);
+        INFO("G-code around the tool change:\n" << change.excerpt);
+        // Only the change G-code's own command comes before the Tn.
+        CHECK(change.fan_before == std::vector<int>{ 0 });
+        REQUIRE_FALSE(change.fan_after.empty());
+        CHECK(change.fan_after.back() == (change.tool == 0 ? fan_30_percent : fan_80_percent));
+    }
+}
+
+TEST_CASE("A fan resume waits only for a tool change the cooling pass acts on", "[cosmyx][Cooling]")
+{
+    using Cosmyx::resume_waits_for_tool_change;
+    // A change to another tool in range, with or without a comment or more G-code after it.
+    CHECK(resume_waits_for_tool_change("T1\n", "T", 0, 2));
+    CHECK(resume_waits_for_tool_change("T1 ; change extruder\nG92 E0\n", "T", 0, 2));
+    CHECK(resume_waits_for_tool_change("T0", "T", 1, 2));
+    CHECK(resume_waits_for_tool_change("M135 T2\n", "M135 T", 0, 3));
+    // The active tool, a tool out of range, no tool number, another command, or nothing.
+    CHECK_FALSE(resume_waits_for_tool_change("T0\n", "T", 0, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("T2\n", "T", 0, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("T\n", "T", 0, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("Tx\n", "T", 0, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("G1 X10\nT1\n", "T", 0, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("", "T", 0, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("T1\n", "", 0, 2));
+    // A number too large to read is tool 0, as the cooling pass reads it.
+    CHECK(resume_waits_for_tool_change("T99999999999999999999\n", "T", 1, 2));
+    CHECK_FALSE(resume_waits_for_tool_change("T99999999999999999999\n", "T", 0, 2));
 }
 
 TEST_CASE("A single filament print keeps one fan speed and no tool change", "[cosmyx][Cooling]")
@@ -206,6 +272,7 @@ TEST_CASE("A tool change inside the belt band leaves the fan off", "[cosmyx][Coo
     REQUIRE(changes.size() >= 2);
     for (const ToolChange &change : changes) {
         CAPTURE(change.tool, change.fan_before, change.fan_after);
+        INFO("G-code around the tool change:\n" << change.excerpt);
         CHECK(change.fan_before.empty());
         REQUIRE_FALSE(change.fan_after.empty());
         CHECK(change.fan_after.back() == 0);
