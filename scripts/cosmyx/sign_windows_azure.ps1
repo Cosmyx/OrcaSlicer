@@ -18,19 +18,24 @@
     and the installer. Files that already carry a signature are left alone (vendor-signed
     redistributables).
 
-    With -Verify nothing is signed. The check fails if any of those files is unsigned or has a
-    damaged signature, if a file named directly is not signed with a certificate whose subject is
-    COSMYX_SIGN_SUBJECT, or if such a signature has no timestamp. The subject is compared, not the
-    thumbprint, because Artifact Signing renews the certificate every few days.
+    With -Verify nothing is signed. A signature is ours when its certificate carries the Artifact
+    Signing EKU (1.3.6.1.4.1.311.97.1.0) and the code signing EKU (1.3.6.1.5.5.7.3.3), and, when
+    they are set, the subject COSMYX_SIGN_SUBJECT and the EKU COSMYX_SIGN_EKU. The check fails if
+    any of those files is unsigned or has a damaged signature, if a file named directly is not
+    ours, or if one of ours has no timestamp. It prints the subject and the EKUs of the
+    certificates that signed the files named directly, so the pins can be set from a first run.
+    No thumbprint is compared: Artifact Signing renews the certificate every few days.
 
     Environment:
       COSMYX_SIGN_ENDPOINT        Account endpoint, for example https://weu.codesigning.azure.net/
                                   (the scheme and the trailing slash are optional).
       COSMYX_SIGN_ACCOUNT         Artifact Signing account name.
       COSMYX_SIGN_PROFILE         Certificate profile name.
-      COSMYX_SIGN_SUBJECT         Subject of the profile's certificates, as Windows prints it
-                                  (for example 'CN=Example, O=Example, L=City, C=FR'). Needed for
-                                  -Verify; when signing, it limits ORCA_SIGN_REUSE to our files.
+      COSMYX_SIGN_SUBJECT         Optional subject of the profile's certificates, as Windows
+                                  prints it (for example 'CN=Example, O=Example, L=City, C=FR').
+      COSMYX_SIGN_EKU             Optional EKU OID that only our identity validation's
+                                  certificates carry (1.3.6.1.4.1.311.97.<...>).
+                                  Both pins narrow what -Verify and ORCA_SIGN_REUSE accept as ours.
       COSMYX_SIGN_TOKEN           Access token for the Artifact Signing resource. Not needed for
                                   -Verify or a dry run.
       COSMYX_SIGN_TOKEN_EXPIRES   Optional Unix time the token expires at. Within five minutes of
@@ -81,19 +86,52 @@ function Get-Signature([string] $file) {
     throw 'Reading Authenticode signatures needs Windows (Get-AuthenticodeSignature).'
 }
 
-$Subject = $env:COSMYX_SIGN_SUBJECT
+# Every Artifact Signing certificate carries both EKUs; the optional pins narrow that down to the
+# certificates of our own identity validation.
+$ArtifactSigningEku = '1.3.6.1.4.1.311.97.1.0'
+$CodeSigningEku = '1.3.6.1.5.5.7.3.3'
+$Subject = "$env:COSMYX_SIGN_SUBJECT".Trim()
+$PinnedEku = "$env:COSMYX_SIGN_EKU".Trim()
+$OursLabel = 'an Artifact Signing certificate'
 if ($Subject) {
-    $Subject = $Subject.Trim()
+    $OursLabel += " for $Subject"
 }
+if ($PinnedEku) {
+    $OursLabel += " with EKU $PinnedEku"
+}
+
+function Get-Ekus($certificate) {
+    $oids = @()
+    foreach ($extension in @($certificate.Extensions)) {
+        if ($extension -and $extension.PSObject.Properties['EnhancedKeyUsages']) {
+            foreach ($usage in $extension.EnhancedKeyUsages) {
+                $oids += "$($usage.Value)"
+            }
+        }
+    }
+    $oids
+}
+
 function Test-Ours($signature) {
     $signer = $signature.SignerCertificate
     if (-not $signer) {
         return $false
     }
-    if (-not $Subject) {
-        return $true
+    $ekus = @(Get-Ekus $signer)
+    if ($ekus -notcontains $ArtifactSigningEku -or $ekus -notcontains $CodeSigningEku) {
+        return $false
     }
-    $signer.Subject -eq $Subject
+    if ($Subject -and $signer.Subject -ne $Subject) {
+        return $false
+    }
+    if ($PinnedEku -and $ekus -notcontains $PinnedEku) {
+        return $false
+    }
+    $true
+}
+
+function Format-Signer($signer) {
+    "Subject '$($signer.Subject)', EKU $((@(Get-Ekus $signer)) -join ', ')"
 }
 
 # Each entry is a file and whether it was named directly.
@@ -111,9 +149,9 @@ foreach ($item in $Path) {
 }
 
 if ($Verify) {
-    $null = Require-Env 'COSMYX_SIGN_SUBJECT'
     $problems = @()
     $ourCount = 0
+    $observed = @()
     foreach ($file in $files) {
         $signature = Get-Signature $file.Path
         $signer = $signature.SignerCertificate
@@ -121,21 +159,26 @@ if ($Verify) {
         if ($ours) {
             $ourCount++
         }
+        if ($signer -and $file.Named) {
+            $observed += Format-Signer $signer
+        }
         if (-not $signer) {
             $problems += "unsigned: $($file.Path)"
         } elseif ($file.Named -and -not $ours) {
-            $problems += "signed by $($signer.Subject), not $Subject`: $($file.Path)"
+            $problems += "signed with $(Format-Signer $signer), not $OursLabel`: $($file.Path)"
         } elseif ($ours -and -not $signature.TimeStamperCertificate) {
             $problems += "no timestamp: $($file.Path)"
         } elseif ("$($signature.Status)" -ne 'Valid') {
             $problems += "signature status $($signature.Status): $($file.Path)"
         }
     }
+    # The values to pin with COSMYX_SIGN_SUBJECT and COSMYX_SIGN_EKU.
+    $observed | Sort-Object -Unique | ForEach-Object { Write-Host "Signer of the files named directly: $_" }
     if ($problems) {
         $problems | ForEach-Object { Write-Host $_ }
         throw "$($problems.Count) of $($files.Count) files failed the signature check."
     }
-    Write-Host "All $($files.Count) files are signed, $ourCount of them with $Subject."
+    Write-Host "All $($files.Count) files are signed, $ourCount of them with $OursLabel."
     return
 }
 

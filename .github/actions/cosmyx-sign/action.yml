@@ -9,6 +9,9 @@
 #          the uninstaller a silent install writes.
 # scripts/sign_windows.ps1 hands over to scripts/cosmyx/sign_windows_azure.ps1 because
 # COSMYX_SIGN_BACKEND is 'azure'.
+# The settings come from the repository's AZURE_* secrets. A step's `if:` cannot read secrets, so
+# setup checks they are all set and answers with the `enabled` output, which the sign and verify
+# steps test. Without any of them the build runs unsigned; with only some, setup fails.
 name: Cosmyx Windows signing
 description: Sign the Windows build with Azure Artifact Signing (setup, sign or verify).
 
@@ -17,64 +20,93 @@ inputs:
     description: setup, sign or verify.
     required: true
   endpoint:
-    description: Artifact Signing account endpoint (setup).
+    description: Artifact Signing account endpoint, secret AZURE_TRUSTED_SIGNING_ENDPOINT (setup).
     required: false
     default: ''
   account:
-    description: Artifact Signing account name (setup).
+    description: Artifact Signing account name, secret AZURE_CODE_SIGNING_NAME (setup).
     required: false
     default: ''
   certificate-profile:
-    description: Certificate profile name (setup).
+    description: Certificate profile name, secret AZURE_CERT_PROFILE_NAME (setup).
     required: false
     default: ''
   subject:
-    description: Subject of the profile's certificates, as Windows prints it (setup).
+    description: Optional pin, the certificates' subject as Windows prints it, variable COSMYX_SIGN_SUBJECT (setup).
+    required: false
+    default: ''
+  eku:
+    description: Optional pin, the identity validation's EKU OID, variable COSMYX_SIGN_EKU (setup).
     required: false
     default: ''
   client-id:
-    description: Entra application (client) ID with a federated credential for this ref (setup).
+    description: Entra application (client) ID with a federated credential for this ref, secret AZURE_CLIENT_ID (setup).
     required: false
     default: ''
   tenant-id:
-    description: Entra tenant ID (setup).
+    description: Entra tenant ID, secret AZURE_TENANT_ID (setup).
     required: false
     default: ''
   subscription-id:
-    description: Azure subscription ID that holds the signing account (setup).
+    description: Azure subscription ID that holds the signing account, secret AZURE_SUBSCRIPTION_ID (setup).
     required: false
     default: ''
+
+outputs:
+  enabled:
+    description: "'true' when setup found every signing secret and prepared the signing (setup)."
+    value: ${{ steps.settings.outputs.enabled }}
 
 runs:
   using: composite
   steps:
-    - name: Check the mode
+    - name: Check the mode and the signing secrets
+      id: settings
       shell: pwsh
       env:
         MODE: ${{ inputs.mode }}
+        AZURE_TRUSTED_SIGNING_ENDPOINT: ${{ inputs.endpoint }}
+        AZURE_CODE_SIGNING_NAME: ${{ inputs.account }}
+        AZURE_CERT_PROFILE_NAME: ${{ inputs.certificate-profile }}
+        AZURE_CLIENT_ID: ${{ inputs.client-id }}
+        AZURE_TENANT_ID: ${{ inputs.tenant-id }}
+        AZURE_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
       run: |
         if ($env:MODE -notin 'setup', 'sign', 'verify') {
           throw "Unknown mode '$env:MODE': use setup, sign or verify."
         }
+        if ($env:MODE -ne 'setup') { return }
+        $names = 'AZURE_TRUSTED_SIGNING_ENDPOINT', 'AZURE_CODE_SIGNING_NAME', 'AZURE_CERT_PROFILE_NAME',
+            'AZURE_CLIENT_ID', 'AZURE_TENANT_ID', 'AZURE_SUBSCRIPTION_ID'
+        $missing = @($names | Where-Object { -not [Environment]::GetEnvironmentVariable($_) })
+        if ($missing.Count -eq $names.Count) {
+          Write-Host '::notice::Windows signing is off: the AZURE_* signing secrets are not set.'
+          'enabled=false' | Out-File -Append -FilePath $env:GITHUB_OUTPUT -Encoding utf8
+          return
+        }
+        if ($missing) {
+          throw "Windows signing needs these secrets too: $($missing -join ', '). See wiki/cosmyx/windows-signing.md."
+        }
+        'enabled=true' | Out-File -Append -FilePath $env:GITHUB_OUTPUT -Encoding utf8
 
     # JSIGN_VERSION and JSIGN_SHA256 come from build_orca.yml's job environment, so Cosmyx signs
     # with the same pinned Jsign as upstream.
     - name: Download Jsign and export the signing environment
-      if: inputs.mode == 'setup'
+      if: inputs.mode == 'setup' && steps.settings.outputs.enabled == 'true'
       shell: pwsh
       env:
         SIGN_ENDPOINT: ${{ inputs.endpoint }}
         SIGN_ACCOUNT: ${{ inputs.account }}
         SIGN_PROFILE: ${{ inputs.certificate-profile }}
         SIGN_SUBJECT: ${{ inputs.subject }}
+        SIGN_EKU: ${{ inputs.eku }}
         AZURE_CLIENT_ID: ${{ inputs.client-id }}
         AZURE_TENANT_ID: ${{ inputs.tenant-id }}
         AZURE_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
       run: |
-        foreach ($name in 'JSIGN_VERSION', 'JSIGN_SHA256', 'SIGN_ENDPOINT', 'SIGN_ACCOUNT', 'SIGN_PROFILE',
-            'SIGN_SUBJECT', 'AZURE_CLIENT_ID', 'AZURE_TENANT_ID', 'AZURE_SUBSCRIPTION_ID') {
+        foreach ($name in 'JSIGN_VERSION', 'JSIGN_SHA256') {
           if (-not [Environment]::GetEnvironmentVariable($name)) {
-            throw "$name is empty: see wiki/cosmyx/windows-signing.md for the repository variables."
+            throw "$name is empty: build_orca.yml pins the Jsign version in its job environment."
           }
         }
         $jar = Join-Path $env:RUNNER_TEMP "jsign-$env:JSIGN_VERSION.jar"
@@ -94,13 +126,14 @@ runs:
           "COSMYX_SIGN_ACCOUNT=$env:SIGN_ACCOUNT"
           "COSMYX_SIGN_PROFILE=$env:SIGN_PROFILE"
           "COSMYX_SIGN_SUBJECT=$env:SIGN_SUBJECT"
+          "COSMYX_SIGN_EKU=$env:SIGN_EKU"
           "COSMYX_AZURE_CLIENT_ID=$env:AZURE_CLIENT_ID"
           "COSMYX_AZURE_TENANT_ID=$env:AZURE_TENANT_ID"
           "COSMYX_AZURE_SUBSCRIPTION_ID=$env:AZURE_SUBSCRIPTION_ID"
         ) | Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
 
     - name: Set up Java for code signing
-      if: inputs.mode == 'setup'
+      if: inputs.mode == 'setup' && steps.settings.outputs.enabled == 'true'
       uses: actions/setup-java@v6
       with:
         distribution: microsoft
