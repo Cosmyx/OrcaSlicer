@@ -5,6 +5,7 @@ Not a test module itself (the runner only collects test_*.py).
 
 from __future__ import annotations
 
+import os
 import shutil
 import struct
 import subprocess
@@ -26,6 +27,23 @@ from branding import cli  # noqa: E402
 
 DEV = {}
 RELEASE = {"COSMYX_BRAND_REF": "refs/heads/release/2.6"}
+
+# The cosmyx-prepare action runs the branding tests on every build leg with this
+# variable set to "prepare": only fast, hermetic tests belong there. A test that
+# needs Docker, the network or a long build carries @skip_in_prepare, and still
+# runs in `just test-scripts` and in the cosmyx-checks workflow.
+PROFILE_ENV = "COSMYX_TEST_PROFILE"
+PREPARE_PROFILE = "prepare"
+
+
+def prepare_profile() -> bool:
+    """True when the tests run inside the cosmyx-prepare action of a build leg."""
+    return os.environ.get(PROFILE_ENV, "").strip() == PREPARE_PROFILE
+
+
+def skip_in_prepare(reason: str):
+    """Skip a heavy test (Docker, network, long build) in the cosmyx-prepare action."""
+    return unittest.skipIf(prepare_profile(), f"{PROFILE_ENV}={PREPARE_PROFILE}: {reason}")
 
 
 def png(width: int, height: int) -> bytes:
