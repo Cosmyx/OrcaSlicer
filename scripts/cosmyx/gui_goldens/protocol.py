@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from pathlib import Path
 
 from . import GoldenError
@@ -35,14 +36,36 @@ REQUIRED = {
 }
 
 
+# Surface ids become file names (decision 0179): the same pattern as is_valid_surface_id() in
+# logic/GoldenScript.cpp, which only admits lower-case ASCII names that are portable on every OS
+# (no separator, no reserved Windows name, no character Windows forbids). The "surfaces" text event
+# is the one fixed name outside it.
+SURFACE_ID = re.compile(r"[0-9]{2}-[a-z0-9]+(-[a-z0-9]+)*", re.ASCII)
+SURFACES_TEXT = "surfaces"
+
+
+def _int(value) -> bool:
+    # bool is a subclass of int in Python, but true is not a number in the protocol.
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
 def _rect(value) -> bool:
-    return isinstance(value, list) and len(value) == 4 and all(isinstance(v, int) for v in value)
+    return isinstance(value, list) and len(value) == 4 and all(_int(v) for v in value)
 
 
-def validate(event: dict) -> dict:
+def check_surface_id(surface_id, text: bool = False) -> str:
+    """The id, or GoldenError when it cannot safely name a golden file."""
+    if isinstance(surface_id, str) and (SURFACE_ID.fullmatch(surface_id) or (text and surface_id == SURFACES_TEXT)):
+        return surface_id
+    raise GoldenError(f"invalid surface id {surface_id!r}")
+
+
+def validate(event) -> dict:
     """The event itself, or GoldenError naming what is wrong with it."""
+    if not isinstance(event, dict):
+        raise GoldenError(f"event is not a JSON object: {event!r}")
     kind = event.get("event")
-    if kind not in KINDS or not isinstance(event.get("seq"), int):
+    if kind not in KINDS or not _int(event.get("seq")):
         raise GoldenError(f"unknown event: {event!r}")
     missing = [name for name in REQUIRED[kind] if name not in event]
     if missing:
@@ -50,10 +73,21 @@ def validate(event: dict) -> dict:
     if kind == "hello" and event["protocol"] != PROTOCOL:
         raise GoldenError(f"the driver speaks protocol {event['protocol']}, this harness {PROTOCOL}")
     if kind == "capture":
+        check_surface_id(event["id"])
         if event["kind"] not in CAPTURE_KINDS:
             raise GoldenError(f"unknown capture kind {event['kind']!r}")
-        if not _rect(event["rect_px"]) or not all(_rect(m) for m in event["masks"] + event["webviews"]):
+        if not _rect(event["rect_px"]) or not all(
+            isinstance(event[name], list) and all(_rect(m) for m in event[name]) for name in ("masks", "webviews")
+        ):
             raise GoldenError(f"capture {event['id']}: bad rectangle")
+        if not isinstance(event["scale"], (int, float)) or isinstance(event["scale"], bool):
+            raise GoldenError(f"capture {event['id']}: scale is not a number")
+    elif kind == "text":
+        check_surface_id(event["id"], text=True)
+        if not isinstance(event["content"], str):
+            raise GoldenError(f"text {event['id']}: content is not a string")
+    elif kind == "fail" and not (isinstance(event["id"], str) and isinstance(event["reason"], str)):
+        raise GoldenError(f"fail event with a non-string id or reason: {event!r}")
     return event
 
 
@@ -99,8 +133,8 @@ def ack(directory: Path, seq: int) -> None:
 
 
 def text_file_name(surface_id: str) -> str:
-    return f"{surface_id}.txt"
+    return f"{check_surface_id(surface_id, text=True)}.txt"
 
 
 def image_file_name(surface_id: str) -> str:
-    return f"{surface_id}.png"
+    return f"{check_surface_id(surface_id)}.png"
