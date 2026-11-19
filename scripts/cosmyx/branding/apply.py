@@ -31,6 +31,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 from . import (
@@ -182,22 +183,35 @@ def clear_skip_worktree(root: Path, paths: list) -> None:
     """Drop the skip-worktree bit the CI hide step may have set on `paths`.
 
     Outside a git checkout, or for files git does not track, nothing happens.
+    Inside one, a failing git call (for example a workspace git rejects as
+    owned by another user) is reported on stderr with git's own message, and
+    the bits stay set.
     """
+    if not any((folder / ".git").exists() for folder in (root, *root.parents)):
+        return
     wanted = {path.encode("utf-8") for path in paths}
     listing = subprocess.run(
-        ["git", "-C", str(root), "ls-files", "-v", "-z"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=False
+        ["git", "-C", str(root), "ls-files", "-v", "-z"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False
     )
     if listing.returncode != 0:
+        warn_git_failure("ls-files -v", listing)
         return
     hidden = [entry[2:] for entry in listing.stdout.split(b"\0") if entry.startswith(b"S ") and entry[2:] in wanted]
     if hidden:
-        subprocess.run(
+        update = subprocess.run(
             ["git", "-C", str(root), "update-index", "--no-skip-worktree", "-z", "--stdin"],
             input=b"\0".join(hidden) + b"\0",
             stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             check=False,
         )
+        if update.returncode != 0:
+            warn_git_failure("update-index --no-skip-worktree", update)
+
+
+def warn_git_failure(command: str, process: subprocess.CompletedProcess) -> None:
+    message = (process.stderr or b"").decode("utf-8", "replace").strip() or f"exit code {process.returncode}"
+    print(f"warning: git {command} failed, skip-worktree bits left as they are: {message}", file=sys.stderr)
 
 
 # ---------------------------------------------------------------- stages
