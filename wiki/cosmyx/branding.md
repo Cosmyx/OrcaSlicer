@@ -86,7 +86,7 @@ The build checks the tables before it writes anything and the tree after:
 | G5 | Colour rewrites match their exact counts, and no teal is left in the colour scopes unless allow-listed. |
 | G6 | The tables are valid, sorted and canonical, and the review tables are up to date. |
 | G7 | No CosmoSlice colour or name is committed in an upstream-owned file. |
-| G8 | Product-name patches match their exact counts, and the app key (data folder, registry key) is unchanged. |
+| G8 | Product-name patches and rename rows match, literals and msgids are renamed together, no visible upstream name is left outside the allowlist, and the app key (data folder, registry key) is unchanged. |
 
 A failed check before apply writes nothing; a failure after apply puts every
 file back.
@@ -105,6 +105,38 @@ the runners) has CRLF text files: every match and count is made on LF text, a
 patched file is written back with its own line ending (never a mix), and the
 canonical-form checks and SVG hashes compare LF content, so a tree brands and
 checks the same on every OS.
+
+## Product name
+
+The build shows the name CosmoSlice; the app key stays OrcaSlicer, so the
+data folder, registry key, install folder, executable, bundle id, file
+associations and the `OrcaSlicer_` artifact names do not change, and an
+existing OrcaSlicer setup keeps working (decision 0132).
+
+Three tables in `cosmyx-src/branding/product-name/`:
+
+| Table | Rows | What it does |
+|-------|------|--------------|
+| `patches.json` | `{file, old, new, count, reason}` | Exact text patches, applied first: `SLIC3R_APP_NAME`, the display-name macros, packaging names, window titles, and the machine-read sites rewired to `SLIC3R_APP_KEY` (decision 0133). |
+| `rename.json` | `{kind, old, new, source}` | Whole texts: a `msgid` row renames the C++ literal (or hint) and the msgid in the template and every catalogue together, translations included, never fuzzy; a `literal` row renames a visible text without a msgid (decision 0134). |
+| `allowlist.json` | `msgid`, `literal` or `text` rows with a `reason` | Texts that keep the upstream name on purpose: credits, upstream releases, CLI output, compared or persisted tags, ids sent to other services, icon names (decision 0135). |
+
+Names that name an upstream thing are never rewritten: Orca Cloud, Orca Cube,
+Orca String Hell, Orca Tolerance Test, Orca YOLO, Orca Arena, Orca Palette,
+Orca Badge, OrcaSliced Combo, Orca Preset Bundle, Orca Filament Library, and
+any name inside a URL, file or path name, or dotted id.
+
+After an upstream merge, `just brand-check` (or the next build) reports:
+
+- a **stale** row (its text is gone upstream): an error; drop or update the row;
+- **residue** (a new text naming OrcaSlicer): a warning on development
+  builds, an error on release builds. Run `just brand-name-candidates`: it
+  prints proposed rename rows and the other literals; add each one to
+  `rename.json`, `patches.json`, or `allowlist.json` with its reason.
+
+Translations of renamed strings get CosmoSlice in place of the name,
+including the native spellings in Chinese and Korean; nothing else in the
+translations changes.
 
 ## Local use
 
