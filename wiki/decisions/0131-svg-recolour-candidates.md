@@ -52,5 +52,9 @@ reviewed, and the user approves every image that ships (decision 0121).
   teal of the four `one_layer_*_hover` icons, was the only one; the user
   mapped it to `#A472F5` (decision 0127), so every recolour icon now gets a
   candidate.
+- The user reviewed the `icons-a-m`, `icons-n-z` and `web` review sheets
+  and approved every candidate on 2026-11-19. All 524 candidates were
+  accepted, one commit per group, as `to-validate` rows. Marking them
+  `validated` stays the user's own `just brand-validate` command.
 - Removing it: delete `candidates.py` and its recipe file; overlay files
   are then written by hand and recorded with `just brand-sync`.
