@@ -58,10 +58,24 @@ class JustfileTests(unittest.TestCase):
                 self.assertGreater(index, 0)
                 self.assertTrue(lines[index - 1].startswith("# "))
 
+    def test_planned_feature_imports_are_present(self) -> None:
+        for name in ("branding", "i18n", "signing", "sync", "tests", "version"):
+            with self.subTest(name=name):
+                self.assertTrue(self.text_has_optional_import(f"scripts/cosmyx/just/{name}.just"))
+
     def test_foundation_recipes_exist(self) -> None:
         for recipe in ("default", "test-scripts", "build-all", "build-status", "decisions"):
             with self.subTest(recipe=recipe):
                 self.assertRegex(self.text, rf"(?m)^{re.escape(recipe)}\b[^:\n]*:")
+
+
+SLOTS_BY_AREA = {
+    "repo": ["T0"],
+    "libslic3r": ["T1", "T2", "T3", "T4"],
+    "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f"],
+    "i18n": ["T8"],
+    "CI-release": ["T9", "T10", "T11a", "T13"],
+}
 
 
 class ChangelogTests(unittest.TestCase):
@@ -69,30 +83,56 @@ class ChangelogTests(unittest.TestCase):
         self.text = (REPO_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
 
     def test_every_planned_task_has_one_slot(self) -> None:
-        for task in range(0, 11):
-            with self.subTest(task=task):
-                self.assertEqual(self.text.count(f"<!-- cosmyx-slot: T{task} -->"), 1)
+        for slots in SLOTS_BY_AREA.values():
+            for task in slots:
+                with self.subTest(task=task):
+                    self.assertEqual(self.text.count(f"<!-- cosmyx-slot: {task} -->"), 1)
+
+    def test_slots_are_blank_line_separated(self) -> None:
+        lines = self.text.splitlines()
+        for index, line in enumerate(lines):
+            if not line.startswith("<!-- cosmyx-slot:"):
+                continue
+            with self.subTest(slot=line):
+                self.assertEqual(lines[index - 1], "")
 
     def test_areas_are_in_order(self) -> None:
         areas = re.findall(r"^### (.+)$", self.text, flags=re.MULTILINE)
         self.assertEqual(areas[:5], ["repo", "libslic3r", "GUI", "i18n", "CI-release"])
 
     def test_slots_sit_in_their_area(self) -> None:
-        expected = {
-            "repo": ["T0"],
-            "libslic3r": ["T1", "T2", "T3", "T4"],
-            "GUI": ["T5", "T6", "T7"],
-            "i18n": ["T8"],
-            "CI-release": ["T9", "T10"],
-        }
+        expected = SLOTS_BY_AREA
         sections = re.split(r"^### ", self.text, flags=re.MULTILINE)[1:]
         found = {}
         for section in sections:
             name = section.splitlines()[0].strip()
-            found[name] = re.findall(r"<!-- cosmyx-slot: (T\d+) -->", section)
+            found[name] = re.findall(r"<!-- cosmyx-slot: (T\d+[a-z]?) -->", section)
         for area, slots in expected.items():
             with self.subTest(area=area):
                 self.assertEqual(found.get(area), slots)
+
+
+class DecisionSlotTests(unittest.TestCase):
+    def test_slot_decision_lists_every_marker(self) -> None:
+        text = (REPO_ROOT / "wiki" / "decisions" / "0003-changelog-slots.md").read_text(encoding="utf-8")
+        for area, slots in SLOTS_BY_AREA.items():
+            with self.subTest(area=area):
+                self.assertIn(f"- `{area}`: {', '.join(slots)}.", text)
+
+
+class ChecksWorkflowTests(unittest.TestCase):
+    def test_paths_cover_cosmyx_owned_files(self) -> None:
+        text = (REPO_ROOT / ".github" / "workflows" / "cosmyx-checks.yml").read_text(encoding="utf-8")
+        required = (
+            "justfile", "CHANGELOG.md", "scripts/cosmyx/**", "wiki/**",
+            ".github/workflows/cosmyx-checks.yml", "cosmyx/**", ".github/actions/**",
+            ".github/cosmyx/**", ".github/workflows/cosmyx-*.yml",
+            "localization/cosmyx/**", "scripts/sign_windows.ps1",
+        )
+        for path in required:
+            with self.subTest(path=path):
+                # Listed once under pull_request and once under push.
+                self.assertEqual(text.count(f"      - '{path}'\n"), 2)
 
 
 class DecisionTests(unittest.TestCase):
