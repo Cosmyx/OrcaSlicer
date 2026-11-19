@@ -84,21 +84,25 @@ class LaunchTests(unittest.TestCase):
                 bundle.writestr("OrcaSlicer/orca-slicer.exe", b"exe")
             fetched = []
 
-            def fetch(dest: Path) -> Path:
+            def fetch(dest: Path):
                 fetched.append(dest)
                 dest.mkdir(parents=True, exist_ok=True)
-                (dest / "opengl32.dll").write_bytes(b"dll")
-                return dest / "opengl32.dll"
+                for name in ("opengl32.dll", "libgallium_wgl.dll"):
+                    (dest / name).write_bytes(b"dll")
+                return dest, {"GALLIUM_DRIVER": "llvmpipe"}
 
             app = launch.prepare_windows(artifacts, work, fetch)
-            self.assertEqual(app.command[1:], ["--sw-renderer"])
+            # --sw-renderer would reach the command line parser, which rejects it.
+            self.assertEqual(len(app.command), 1)
             self.assertEqual(fetched, [work / "app" / "mesa"])
-            self.assertTrue((work / "app" / "orca-slicer.exe").is_file())
+            self.assertEqual(app.env, {"GALLIUM_DRIVER": "llvmpipe"})
+            for name in ("orca-slicer.exe", "opengl32.dll", "libgallium_wgl.dll"):
+                self.assertTrue((work / "app" / name).is_file(), name)
 
-            def misplaced(dest: Path) -> Path:
+            def misplaced(dest: Path):
                 (work / "elsewhere").mkdir(exist_ok=True)
                 (work / "elsewhere" / "opengl32.dll").write_bytes(b"dll")
-                return work / "elsewhere"
+                return work / "elsewhere", {}
 
             with self.assertRaises(GoldenError):
                 launch.prepare_windows(artifacts, work, misplaced)
