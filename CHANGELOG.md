@@ -52,6 +52,13 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11b -->
 
 <!-- cosmyx-slot: T11c -->
+- Turn the Orca teal into the Cosmyx violets at build time: 23 colour
+  mappings (all to validate, with their WCAG contrast on white and on the dark
+  screen), 115 exact literal rows for numeric colours, one dark-mode snippet
+  for the CSS-form SVG icons, and a guard that fails on any teal left unless
+  allow-listed. Recipes `just brand-colour-candidates` and
+  `brand-colour-literals`. Pull request: pending. Decisions: 0127, 0128,
+  0129, 0130.
 
 <!-- cosmyx-slot: T11d -->
 
