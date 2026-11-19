@@ -264,6 +264,35 @@ class MacTests(unittest.TestCase):
         self.assertEqual(records["smoke"].status, "fail")
         self.assertIn("MacOS/Other", records["smoke"].reason)
 
+    def test_executable_name_must_be_a_plain_file_name(self) -> None:
+        contents = self.mount / "OrcaSlicer.app" / "Contents"
+        for name in ("..", "a/b", "a\\b", "", "x\0y"):
+            with open(contents / "Info.plist", "wb") as handle:
+                # Binary format: XML plists cannot carry the NUL case.
+                plistlib.dump({"CFBundleExecutable": name}, handle, fmt=plistlib.FMT_BINARY)
+            self.assertEqual(smoke_native.app_executable(self.mount / "OrcaSlicer.app"),
+                             contents / "MacOS" / "OrcaSlicer", repr(name))
+
+    def test_damaged_info_plist_falls_back_to_the_bundle_name(self) -> None:
+        contents = self.mount / "OrcaSlicer.app" / "Contents"
+        for damaged in ("<?xml version=\"1.0\"?><plist><dict>", "<plist><date>x</date></plist>"):
+            (contents / "Info.plist").write_text(damaged, encoding="utf-8")
+            self.assertEqual(smoke_native.app_executable(self.mount / "OrcaSlicer.app"),
+                             contents / "MacOS" / "OrcaSlicer", damaged)
+
+    @unittest.skipIf(sys.platform == "win32", "symlinks need extra rights on Windows")
+    def test_executable_symlinked_out_of_the_bundle_is_never_run(self) -> None:
+        contents = self.mount / "OrcaSlicer.app" / "Contents"
+        outside = Path(self.tmp.name) / "outside"
+        outside.write_bytes(b"\xcf\xfa\xed\xfe")
+        (contents / "MacOS" / "OrcaSlicer").unlink()
+        (contents / "MacOS" / "OrcaSlicer").symlink_to(outside)
+        app = FakeApp()
+        records = by_check(self.records(app))
+        self.assertEqual(records["smoke"].status, "fail")
+        self.assertIn("outside Contents/MacOS", records["smoke"].reason)
+        self.assertEqual(app.app_calls(), [])
+
     def test_crash_signal_on_slice(self) -> None:
         records = by_check(self.records(FakeApp(slice_code=-signal.SIGABRT, gcode=None)))
         self.assertEqual(records["slice"].status, "fail")
