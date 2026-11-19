@@ -29,7 +29,7 @@ here; see the upstream release notes.
 - Add the Cosmyx foundation: the libslic3r and GUI Cosmyx modules with their
   one-line upstream hooks, the cosmyx_tests suite, this changelog, the decision
   register under `wiki/decisions/`, the justfile and the Cosmyx checks
-  workflow. Pull request: pending. Decisions: 0001, 0002, 0003, 0004.
+  workflow. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/86. Decisions: 0001, 0002, 0003, 0004.
 
 ### libslic3r
 
@@ -49,6 +49,16 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T7 -->
 
+<!-- cosmyx-slot: T11b -->
+
+<!-- cosmyx-slot: T11c -->
+
+<!-- cosmyx-slot: T11d -->
+
+<!-- cosmyx-slot: T11e -->
+
+<!-- cosmyx-slot: T11f -->
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->
@@ -58,3 +68,7 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T9 -->
 
 <!-- cosmyx-slot: T10 -->
+
+<!-- cosmyx-slot: T11a -->
+
+<!-- cosmyx-slot: T13 -->
