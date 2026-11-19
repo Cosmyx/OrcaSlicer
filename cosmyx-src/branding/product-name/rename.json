@@ -21,12 +21,6 @@
     },
     {
       "kind": "literal",
-      "old": "OrcaSlicer application is not initialized",
-      "new": "CosmoSlice application is not initialized",
-      "source": "cosmyx"
-    },
-    {
-      "kind": "literal",
       "old": "OrcaSlicer is closing",
       "new": "CosmoSlice is closing",
       "source": "cosmyx"
