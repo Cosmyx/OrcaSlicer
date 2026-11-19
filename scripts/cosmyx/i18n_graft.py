@@ -222,13 +222,47 @@ class Catalogue:
         return None
 
     def render(self) -> str:
-        text = "".join(entry.render() for entry in self.entries)
+        chunks: list[str] = []
+        for entry in self.entries:
+            piece = entry.render()
+            if chunks and piece:
+                previous = chunks[-1]
+                # The original last entry may lack its final newline, or the
+                # blank line that separates it from an entry written after it:
+                # restore them so the next entry starts on a line of its own.
+                if not previous.endswith("\n"):
+                    chunks.append("\n")
+                    previous += "\n"
+                if entry.raw is None and not previous.endswith("\n\n"):
+                    chunks.append("\n")
+            chunks.append(piece)
+        text = "".join(chunks)
         # A file ends with exactly one newline, like gettext writes it.
         return text.rstrip("\n") + "\n" if text else ""
 
+    def charset(self) -> str | None:
+        """The charset the header's Content-Type declares, or None."""
+        content_type = self.header_field("Content-Type")
+        if content_type is None:
+            return None
+        match = re.search(r"charset\s*=\s*([^;\s]+)", content_type, re.IGNORECASE)
+        return match.group(1) if match else None
 
-_KEYWORD = re.compile(r'^(msgctxt|msgid_plural|msgid|msgstr(?:\[(\d+)\])?)\s+"(.*)"\s*$')
-_CONTINUATION = re.compile(r'^"(.*)"\s*$')
+
+# A PO string: quotes around characters that are neither a quote nor a
+# backslash, or a backslash escape. An unescaped quote inside is an error, as
+# it is for msgfmt. Only ASCII blanks may surround it (a Unicode separator is
+# string content, never layout).
+_STRING = r'"((?:[^"\\]|\\.)*)"'
+_KEYWORD = re.compile(r'^(msgctxt|msgid_plural|msgid|msgstr(?:\[(\d+)\])?)[ \t]+' + _STRING + r'[ \t]*$')
+_CONTINUATION = re.compile(r'^' + _STRING + r'[ \t]*$')
+
+
+def split_lines(text: str) -> list[str]:
+    """Split on LF only, keeping each line's ending. gettext ends a line at LF
+    alone; `str.splitlines` would also split inside strings holding U+2028,
+    U+2029, U+0085, a form feed or an ASCII separator."""
+    return [line for line in re.split(r"(?<=\n)", text) if line]
 
 
 def parse_po(text: str, path: Path | None = None) -> Catalogue:
@@ -236,7 +270,7 @@ def parse_po(text: str, path: Path | None = None) -> Catalogue:
     where = str(path) if path else "<string>"
     if text.startswith("﻿"):
         raise PoError(f"{where}: byte order mark is not supported")
-    lines = text.splitlines(keepends=True)
+    lines = split_lines(text)
     entries: list[Entry] = []
     current: Entry | None = None
     raw_lines: list[str] = []
@@ -267,7 +301,7 @@ def parse_po(text: str, path: Path | None = None) -> Catalogue:
 
     for number, line in enumerate(lines, start=1):
         stripped = line.rstrip("\r\n")
-        if not stripped.strip():
+        if not stripped.strip(" \t"):
             if current is None:
                 # Blank lines before the first entry, or doubled blank lines,
                 # stay with the previous entry so the text round-trips.
@@ -279,7 +313,7 @@ def parse_po(text: str, path: Path | None = None) -> Catalogue:
             raw_lines.append(line)
             # Keep every following blank line in this entry's raw text.
             continue
-        if current is not None and raw_lines and not raw_lines[-1].strip():
+        if current is not None and raw_lines and not raw_lines[-1].strip(" \t\r\n"):
             finish()
 
         obsolete = stripped.startswith("#~")
@@ -341,13 +375,25 @@ def line_ending(text: str) -> str:
 
 def read_po(path: Path) -> Catalogue:
     """Parse a catalogue file of either line ending. The catalogue holds LF
-    text and remembers the file's line ending in `eol`."""
-    with path.open("r", encoding="utf-8", newline="") as handle:
-        text = handle.read()
+    text and remembers the file's line ending in `eol`. The file must be UTF-8."""
+    data = path.read_bytes()
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError as error:
+        raise PoError(f"{path}: not valid UTF-8 (byte {error.start}): catalogues must be UTF-8") from None
     eol = line_ending(text)
     catalogue = parse_po(text.replace("\r\n", "\n"), path)
     catalogue.eol = eol
     return catalogue
+
+
+def require_utf8(catalogue: Catalogue, path: Path) -> None:
+    """Refuse a catalogue whose header declares a charset other than UTF-8:
+    the graft writes UTF-8, which msgfmt would read in that charset and
+    garble (decision 0088). A header without a charset is read as UTF-8."""
+    charset = catalogue.charset()
+    if charset is not None and charset.lower().replace("-", "").replace("_", "") != "utf8":
+        raise PoError(f"{path}: declares charset {charset}; only UTF-8 catalogues can be grafted, convert it with msgconv --to-code=UTF-8")
 
 
 def write_text(path: Path, text: str, eol: str = "\n") -> None:
@@ -416,7 +462,9 @@ def collect_language(files: list[tuple[str, Path]]) -> dict[tuple, CosmyxEntry]:
     """Read one language's Cosmyx entries, refusing duplicate keys."""
     entries: dict[tuple, CosmyxEntry] = {}
     for feature, path in files:
-        for entry in read_po(path).messages():
+        catalogue = read_po(path)
+        require_utf8(catalogue, path)
+        for entry in catalogue.messages():
             other = entries.get(entry.key)
             if other is not None:
                 place = "twice in" if other.path == path else f"in both {other.path} and"
@@ -476,6 +524,7 @@ def graft(i18n_dir: Path, cosmyx_dir: Path) -> GraftReport:
             report.warnings.append(f"language {language!r} ({features}) has no OrcaSlicer catalogue in {i18n_dir}; skipped")
             continue
         catalogue = read_po(orca[language])
+        require_utf8(catalogue, orca[language])
         orca_plural = catalogue.header_field("Plural-Forms")
         for feature, path in files:
             plural = read_po(path).header_field("Plural-Forms")
