@@ -20,7 +20,8 @@ from typing import Iterable
 
 OSES = ("windows", "macos", "linux", "any")
 CHECKS = (
-    "signature", "payload", "arch", "macho_sig", "bundle_sig", "elf", "smoke", "slice",
+    "signature", "payload", "arch", "macho_sig", "bundle_sig", "macho_identity", "dmg_sig", "notarization",
+    "elf", "smoke", "slice",
     "names", "translations", "models", "required",
 )
 STATUSES = ("pass", "fail", "warn", "skip")

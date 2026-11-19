@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted.
+Amended by 0156 (Developer ID rules on signed builds).
 
 ## Context
 
