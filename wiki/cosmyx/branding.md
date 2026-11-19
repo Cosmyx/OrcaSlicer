@@ -12,8 +12,8 @@ branding unless you run `just brand-apply`.
 |------|---------------|
 | `cosmyx-src/branding/manifest/<group>.json` | One row per upstream image the build replaces. Groups: `logos`, `icons-a-m`, `icons-n-z`, `web`. |
 | `cosmyx-src/branding/overlay/<path>` | The vendored replacement for the upstream file at `<path>` (for example `overlay/resources/images/OrcaSlicer.svg`). |
-| `cosmyx-src/branding/colours.json` | The colour mappings and literal rewrites (added by the colours task). |
-| `cosmyx-src/branding/product-name/` | The product-name patches (added by the product-name task). |
+| `cosmyx-src/branding/colours.json` | The colour palette, mappings, literal rows, snippets, scopes and allowed residue (see [Colours](#colours)). |
+| `cosmyx-src/branding/product-name/` | The product name: `patches.json`, `rename.json`, `allowlist.json` (see [Product name](#product-name)). |
 | `wiki/cosmyx/branding-assets/<group>.md` | The review tables, generated from the manifest. |
 | `scripts/cosmyx/branding/` | The engine: guards, apply, revert, sync. |
 
