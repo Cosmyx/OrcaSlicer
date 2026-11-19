@@ -8,11 +8,11 @@
       "size": "multi",
       "usage": "macOS app bundle icon (src/CMakeLists.txt MACOSX_BUNDLE_ICON_FILE)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "e50995e3e3c48d57bef4ee724035e430d4919ca8d8ef32e7df556ac6fc78db19",
-      "override_sha256": null
+      "override_sha256": "91354ace7decabda0d3d56aef60445bf1c928eecf871ea6336ba4e4734da3395"
     },
     {
       "path": "resources/images/OrcaSlicer-mac_128px.png",
@@ -44,11 +44,11 @@
       "size": "multi",
       "usage": "macOS document icon (MacOSXBundleInfo.plist.in)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "33850360e20b58c180a6545d4f5822a090178d3581e291646f41f3a516158dc6",
-      "override_sha256": null
+      "override_sha256": "91354ace7decabda0d3d56aef60445bf1c928eecf871ea6336ba4e4734da3395"
     },
     {
       "path": "resources/images/OrcaSlicer.ico",
@@ -56,11 +56,11 @@
       "size": "16,32,48,64,128,256",
       "usage": "Windows executable and installer icon (OrcaSlicer.rc.in, CPack/NSIS)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "8abf41c3cd9865443d0ada46d69bf86b1128b8b9832cfe1940766d8315bb212f",
-      "override_sha256": null
+      "override_sha256": "d261f845d51b19c50933767a779935783aa869c040e628d2cf68c805ed992a48"
     },
     {
       "path": "resources/images/OrcaSlicer.png",
@@ -140,11 +140,11 @@
       "size": "184x184",
       "usage": "unreferenced, replaced anyway",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "1628a03be05e3150a280bca35601cf2925d5e17dc263fe0b5197136a53dea49a",
-      "override_sha256": null
+      "override_sha256": "bab4fc56fc86e84714a55427f66708f7e7d3e58e0579d1610312b41851a4a59d"
     },
     {
       "path": "resources/images/OrcaSlicer_192px.png",
@@ -164,11 +164,11 @@
       "size": "192x192",
       "usage": "message dialog (MsgDialog.cpp)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "2a10e4cd3c36e0d598afc7beff9559b7e289b956dca1997220897975bb0bffaf",
-      "override_sha256": null
+      "override_sha256": "2dabd102fffe1aeec3d25eefbd6d20c41e98f1a71e2deb281bb5d955c80c7825"
     },
     {
       "path": "resources/images/OrcaSlicer_192px_transparent.png",
@@ -308,11 +308,11 @@
       "size": "multi",
       "usage": "macOS G-code document icon (MacOSXBundleInfo.plist.in)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "6dbb6884d436d79342d426f59747a260e13beebeea46f22149df37936e59031e",
-      "override_sha256": null
+      "override_sha256": "91354ace7decabda0d3d56aef60445bf1c928eecf871ea6336ba4e4734da3395"
     },
     {
       "path": "resources/images/splash_logo.svg",
@@ -344,11 +344,11 @@
       "size": "multi",
       "usage": "macOS STL document icon (MacOSXBundleInfo.plist.in)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "f3b752c2c164b3d0f58a5af9c96684b16ce4c95f0417c9b8ae88412c5d185ef2",
-      "override_sha256": null
+      "override_sha256": "91354ace7decabda0d3d56aef60445bf1c928eecf871ea6336ba4e4734da3395"
     },
     {
       "path": "resources/images/studio_logo.svg",
@@ -380,11 +380,11 @@
       "size": "154x154",
       "usage": "setup guide page logo (web/guide/1/index.html)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "5f7172b793925880162cf08c4c2779b251fc126329e7bcf01afbf8d3f2a0b3d9",
-      "override_sha256": null
+      "override_sha256": "31b62d7a7483ec3e7629832fd271b7edf65409e452001d45f9e54a1271ea0a81"
     },
     {
       "path": "resources/web/image/logo2.png",
@@ -404,11 +404,11 @@
       "size": "150x150",
       "usage": "MSIX tile (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "305628f5f522158dc348e17cd2613e077cd13785fb46977e616a26ab0175b44b",
-      "override_sha256": null
+      "override_sha256": "833ce7631776b9325268225b6398498aa939dda17bfea9b68f92891f219a7027"
     },
     {
       "path": "scripts/msix/assets/Square44x44Logo.png",
@@ -416,11 +416,11 @@
       "size": "44x44",
       "usage": "MSIX small tile (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "0114ecee82b55c56c234a59cffe8410ad8738e216d48afab73a0f03c1aacb241",
-      "override_sha256": null
+      "override_sha256": "4be7bba80fd148e3bf61c371bb058b8869cece5ed42b0775bcec48a4a282d9c0"
     },
     {
       "path": "scripts/msix/assets/Square44x44Logo.targetsize-44_altform-unplated.png",
@@ -428,11 +428,11 @@
       "size": "44x44",
       "usage": "MSIX taskbar icon (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "0114ecee82b55c56c234a59cffe8410ad8738e216d48afab73a0f03c1aacb241",
-      "override_sha256": null
+      "override_sha256": "4be7bba80fd148e3bf61c371bb058b8869cece5ed42b0775bcec48a4a282d9c0"
     },
     {
       "path": "scripts/msix/assets/StoreLogo.png",
@@ -440,11 +440,11 @@
       "size": "50x50",
       "usage": "MSIX store logo (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "to-validate",
       "upstream_sha256": "31bdb5b60a90503679b7449c04539bd36c1385d931a31bc441a5ba6cb045fcff",
-      "override_sha256": null
+      "override_sha256": "04ca63a13d4d7fba7d05e0c94020ade829ce72cd6b38a950ac40e89007b7928e"
     }
   ]
 }
