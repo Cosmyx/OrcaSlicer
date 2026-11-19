@@ -65,6 +65,12 @@ here; see the upstream release notes.
 ### i18n
 
 <!-- cosmyx-slot: T8 -->
+- Translate the Cosmyx strings: per-feature catalogues under
+  `localization/cosmyx/` (cht-nozzle, ironing-temperature, models, version) for
+  every OrcaSlicer language, seeded from the previous Cosmyx branch, grafted
+  into the OrcaSlicer catalogues by every desktop build (not Flatpak). Recipes
+  `just i18n-extract`, `i18n-seed`, `i18n-graft`, `i18n-ungraft`. Pull
+  request: pending. Decisions: 0080, 0081, 0082, 0083, 0084, 0085.
 
 ### CI-release
 
