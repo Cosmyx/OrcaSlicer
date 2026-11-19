@@ -13,10 +13,10 @@ msgid ""
 "direction' and 'Solid infill direction' to 0.\n"
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
-msgstr ""
+msgstr "Questo modello di calibrazione funziona meglio con le direzioni del riempimento impostate a 0 gradi. Per risultati di calibrazione ottimali, è consigliabile impostare sia 'Direzione riempimento' sia 'Direzione riempimento solido' a 0.\nSì - Cambia automaticamente queste impostazioni\nNo  - Non modificare queste impostazioni per me"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Suggerimento di calibrazione"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -28,40 +28,40 @@ msgid ""
 "\n"
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
-msgstr ""
+msgstr "Questo modello di calibrazione funziona meglio con impostazioni di riempimento specifiche.\nPer risultati di calibrazione ottimali, è consigliabile impostare:\n- Direzione riempimento: %.0f°\n- Direzione riempimento solido: %.0f°\n- Solo una parete sul primo strato: %s\n\nSì - Cambia automaticamente queste impostazioni\nNo  - Non modificare queste impostazioni per me"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Modelli 3D Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Modelli di calibrazione doppia testina"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Modelli di calibrazione testina singola"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Modelli utili Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Calibrazione 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Calibrazione 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Calibrazione 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Cubo bicolore"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Calibrazione 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cubo Cosmyx"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Controllo tensione cinghia"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Supporto bobina"
