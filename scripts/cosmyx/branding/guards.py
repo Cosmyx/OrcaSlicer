@@ -2,7 +2,8 @@
 
 - G1 overlay hash: every override has its overlay file with the recorded
   hash (pre), and the applied file carries that hash (post).
-- G2 no orphan overlay: every overlay file has a manifest row.
+- G2 no orphan overlay: every overlay file has a manifest row, and no overlay
+  file is a symlink.
 - G3 upstream: the upstream file still exists with the recorded hash (pre).
 - G4 coverage: every teal SVG under resources/images and resources/web, and
   every branding image, has a row (pre).
@@ -48,6 +49,7 @@ from . import (
     repo_path,
 )
 from . import manifest as manifest_module
+from . import overlay as overlay_module
 from . import render, textpatch
 
 PHASES = ("pre", "post")
@@ -85,11 +87,13 @@ def g1_overlay_hash(ctx, phase: str) -> list[Finding]:
 
 def g2_orphan_overlay(ctx, phase: str) -> list[Finding]:
     rows = set(ctx.manifest.by_path())
-    return [
-        Finding("G2", "error", path, "overlay file has no manifest row (just brand-sync)")
-        for path in manifest_module.overlay_files(ctx.root)
-        if path not in rows
-    ]
+    findings = []
+    for path in manifest_module.overlay_files(ctx.root):
+        if path not in rows:
+            findings.append(Finding("G2", "error", path, "overlay file has no manifest row (just brand-sync)"))
+        if overlay_module.symlink_in(ctx.root, path):
+            findings.append(Finding("G2", "error", path, "overlay file is a symlink; commit the file itself"))
+    return findings
 
 
 # ---------------------------------------------------------------- G3 / G4
@@ -169,11 +173,42 @@ def residue(ctx) -> dict:
     return result
 
 
+def allow_residue_problems(ctx) -> list[str]:
+    """Rows of colours.json `allow_residue` that are not well formed."""
+    rows = (ctx.colours or {}).get("allow_residue", [])
+    if not isinstance(rows, list):
+        return ["allow_residue must be a list"]
+    problems = []
+    for row in rows:
+        if not isinstance(row, dict):
+            problems.append(f"allow_residue row is not an object: {row!r}")
+            continue
+        count = row.get("count")
+        if not isinstance(row.get("file"), str) or not row["file"]:
+            problems.append(f"allow_residue row {row!r}: file must be a non-empty string")
+        elif not isinstance(row.get("match"), str) or not row["match"]:
+            problems.append(f"allow_residue row {row!r}: match must be a non-empty string")
+        elif not isinstance(count, int) or isinstance(count, bool) or count < 1:
+            problems.append(f"allow_residue row {row!r}: count must be a positive integer")
+        elif not isinstance(row.get("reason"), str) or not row["reason"].strip():
+            problems.append(f"allow_residue row {row!r}: reason must be given")
+    return problems
+
+
 def allowed(ctx) -> dict:
-    """{(file, match uppercased): count} from colours.json `allow_residue`."""
+    """{(file, match uppercased): count} from colours.json `allow_residue`.
+    Malformed rows are left out; G6 reports them."""
+    rows = (ctx.colours or {}).get("allow_residue", [])
+    if not isinstance(rows, list):
+        return {}
     return {
-        (row["file"], str(row["match"]).upper()): int(row["count"])
-        for row in (ctx.colours or {}).get("allow_residue", [])
+        (row["file"], row["match"].upper()): row["count"]
+        for row in rows
+        if isinstance(row, dict)
+        and isinstance(row.get("file"), str)
+        and isinstance(row.get("match"), str)
+        and isinstance(row.get("count"), int)
+        and not isinstance(row.get("count"), bool)
     }
 
 
@@ -207,8 +242,10 @@ def g6_tables(ctx, phase: str) -> list[Finding]:
         for path in render.stale(ctx.root, ctx.manifest)
     ]
     unreadable = {name for name, _ in ctx.table_problems}
-    if ctx.colours is not None and COLOURS_FILE not in unreadable and ctx.colours.get("schema") != 1:
-        findings.append(Finding("G6", "error", COLOURS_FILE, "schema must be 1"))
+    if ctx.colours is not None and COLOURS_FILE not in unreadable:
+        if ctx.colours.get("schema") != 1:
+            findings.append(Finding("G6", "error", COLOURS_FILE, "schema must be 1"))
+        findings += [Finding("G6", "error", COLOURS_FILE, problem) for problem in allow_residue_problems(ctx)]
     for name, problem in ctx.table_problems:
         findings.append(Finding("G6", "error", name, problem))
     return findings
@@ -326,11 +363,23 @@ GUARDS = (
 )
 
 
+def guard_id(guard) -> str:
+    """`G1` for g1_overlay_hash, `P` for status_policy."""
+    head = guard.__name__.split("_", 1)[0]
+    return head.upper() if head[:1] == "g" and head[1:].isdigit() else "P"
+
+
 def run(ctx, phase: str) -> list[Finding]:
+    """Every guard's findings. A guard that cannot run (a malformed table row,
+    an unreadable file, a plugin bug) is an error finding, never an exception,
+    so apply refuses and reports instead of crashing."""
     if phase not in PHASES:
         raise ValueError(phase)
     findings = []
     for guard in GUARDS:
-        findings += guard(ctx, phase)
+        try:
+            findings += guard(ctx, phase)
+        except Exception as error:  # noqa: BLE001 - reported as a finding
+            findings.append(Finding(guard_id(guard), "error", "", f"guard failed: {type(error).__name__}: {error}"))
     return findings
 
