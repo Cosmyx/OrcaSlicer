@@ -3,7 +3,7 @@
 Every screen of the built application is pinned to a committed image, on
 Linux, macOS and Windows. A workflow starts the build a "Build all" run
 produced, walks it through every surface, captures each one and compares it
-with `tests/cosmyx/gui/goldens/<os>/`. Decisions 0162 to 0178.
+with `tests/cosmyx/gui/goldens/<os>/`. Decisions 0162 to 0179.
 
 ## How it works
 
@@ -25,6 +25,10 @@ harness (scripts/cosmyx/gui_goldens)            application (GoldenDriver)
   modal dialogs and menus through `CallAfter` and closes them once captured.
   Two hook lines in `GUI_App.cpp` start it (decision 0163).
 - The protocol is files only: `events.jsonl` and `ack-<seq>` (decision 0164).
+  The harness checks the shape of every event, accepts only surface ids that
+  are portable file names, reports a surface written twice in a pass, and
+  decodes PNG files strictly (chunk CRCs, sizes, at most 64 Mpx); anything
+  else is a failed surface, never a crash (decision 0179).
 - Captures are native: `xwd` under Xvfb on Linux, `screencapture` on macOS,
   `BitBlt` on Windows (decision 0165).
 
