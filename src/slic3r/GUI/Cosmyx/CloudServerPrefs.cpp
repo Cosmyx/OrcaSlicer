@@ -44,7 +44,7 @@ wxString error_text(std::size_t field, CloudValueError error)
         return error == CloudValueError::Empty ? _L("Enter the public key.") : _L("The public key must not contain spaces.");
     switch (error) {
     case CloudValueError::Empty: return _L("Enter an address.");
-    case CloudValueError::NotHttps: return _L("The address must start with https://.");
+    case CloudValueError::NotHttps: return _L("The address must start with https:// (http:// only for localhost).");
     case CloudValueError::NoHost: return _L("The address has no host name.");
     default: return _L("This address is not valid.");
     }

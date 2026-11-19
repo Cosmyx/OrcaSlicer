@@ -19,11 +19,22 @@ the CosmoCloud defaults.
 - The panel lives in `src/slic3r/GUI/Cosmyx/CloudServerPrefs.{hpp,cpp}`.
   `Preferences.cpp` gets one include line after its first include and one
   call line after the network test row; no Cosmyx hook existed there before.
-- Apply trims the values, writes the scheme as `https://` and drops trailing
+- Apply trims the values, writes the scheme in lower case and drops trailing
   slashes, then checks them: an address needs the https scheme, a host name,
   an optional numeric port (1-65535), and no spaces or user info; the key must
   be one non-empty word. The first error is shown under its field and nothing
-  is written. Valid values go to the four cloud keys, with a copy under
+  is written.
+- Plain `http://` is accepted only on a loopback host, so a server run on the
+  same machine (for example CosmoCloud at `http://localhost:8000`) can be
+  tested without a certificate: `localhost`, any name under `.localhost`
+  (RFC 6761 reserves it for loopback), `127.0.0.0/8` written as four decimal
+  octets, and `[::1]`. Traffic to those hosts never leaves the machine, so the
+  sign-in tokens are not exposed; every other host still needs https, a
+  private LAN address included. An explicit scheme is never rewritten: an
+  `http://` address on another host is refused, not upgraded to https.
+- An address typed without a scheme gets `http://` when its host is loopback
+  (`localhost:8000` becomes `http://localhost:8000`) and `https://` otherwise,
+  the scheme that host would accept. Valid values go to the four cloud keys, with a copy under
   `cosmyx_custom_<key>`, and the bool app key `cosmyx_custom_cloud` is set.
 - Checking the box writes nothing until Apply succeeds.
 - Unchecking it sets `cosmyx_custom_cloud` to false and writes the CosmoCloud
@@ -46,6 +57,8 @@ the CosmoCloud defaults.
 
 - The cloud is still only used with stealth mode off (decision 0200); the
   tooltip says so.
+- Removing the loopback exception: drop the http branch of
+  `check_cloud_url()` and the scheme guess of `normalize_cloud_values()`.
 - Validation and the configuration rules are checked by `cosmyx_tests`
   (`test_cosmyx_cloud_server.cpp`); the hook lines are pinned by
   `scripts/cosmyx/tests/test_cloud_server.py`. The panel itself is to be
