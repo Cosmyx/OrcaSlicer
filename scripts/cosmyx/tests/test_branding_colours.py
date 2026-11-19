@@ -20,6 +20,7 @@ from branding_fixture import (
     copy_real_tree,
     read,
     snapshot,
+    to_crlf,
     write,
 )
 from branding import colours, find_hexes, in_family
@@ -356,9 +357,8 @@ class CommittedTableTest(unittest.TestCase):
 
     def test_table_is_valid_and_canonical(self) -> None:
         self.assertEqual(colours.table_problems(self.table), [])
-        self.assertEqual(
-            (REPO_ROOT / branding.COLOURS_FILE).read_bytes().decode("utf-8"), branding.dump_json(self.table)
-        )
+        # Line endings aside: a Windows checkout (core.autocrlf) holds it in CRLF.
+        self.assertTrue(branding.same_text(REPO_ROOT / branding.COLOURS_FILE, branding.dump_json(self.table)))
 
     def test_user_colours_and_sources(self) -> None:
         by_source = {row["from"]: row for row in self.table["mappings"]}
@@ -423,6 +423,13 @@ class RealTreeColoursTest(unittest.TestCase):
         self.assertIn("0xFFFF0080", bitmap)
         apply_module.revert(self.root)
         self.assertEqual(snapshot(self.root), before)
+
+    def test_literal_rows_are_the_same_on_a_crlf_checkout(self) -> None:
+        table = branding.load_json(self.root / branding.COLOURS_FILE)
+        expected = colours.literal_rows(self.root, table)
+        to_crlf(self.root)
+        self.assertEqual(colours.literal_rows(self.root, table), expected)
+        self.assertNotIn("\r", colours.read_scope_text(self.root, "src/slic3r/GUI/BitmapCache.cpp"))
 
 
 if __name__ == "__main__":
