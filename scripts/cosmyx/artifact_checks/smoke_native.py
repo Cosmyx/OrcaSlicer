@@ -23,6 +23,7 @@ import subprocess
 import urllib.request
 from collections.abc import Callable
 from pathlib import Path
+from xml.parsers.expat import ExpatError
 
 from . import mesa_win, slice as slicer
 from .content import find_resources
@@ -72,7 +73,9 @@ def smoke(os_name: str, artifact: str, exe: Path, label: str, timeout: int, run:
           env: dict | None = None) -> Record:
     extra = {"env": env} if env is not None else {}
     try:
-        done = run([str(exe), "--help"], capture_output=True, text=True, check=False, timeout=timeout, **extra)
+        # The app output is untrusted bytes: a strict decode would end the job.
+        done = run([str(exe), "--help"], capture_output=True, text=True, errors="replace", check=False,
+                   timeout=timeout, **extra)
         status, reason = classify(os_name, done.returncode, (done.stdout or "") + (done.stderr or ""), False, timeout)
     except subprocess.TimeoutExpired:
         status, reason = classify(os_name, None, "", True, timeout)
@@ -125,16 +128,39 @@ def host_mac_arch() -> str:
     return MAC_ARCHS.get(platform.machine().lower(), platform.machine().lower())
 
 
+# What plistlib raises on a damaged file besides InvalidFileException (a
+# ValueError): expat errors for broken XML, and lookup or type errors from
+# malformed values such as a bad <date>.
+PLIST_ERRORS = (OSError, ValueError, ExpatError, AttributeError, KeyError, TypeError, OverflowError, RecursionError)
+
+
+def plain_file_name(name: object) -> bool:
+    """A single path component: no separator, no dot entry, nothing empty."""
+    return (isinstance(name, str) and name.strip() != "" and name not in (".", "..")
+            and not any(c in name for c in "/\\\0"))
+
+
+def inside(path: Path, folder: Path) -> bool:
+    """True when path, symlinks resolved, sits directly in folder."""
+    return path.resolve().parent == folder.resolve()
+
+
 def app_executable(app: Path) -> Path:
-    """Contents/MacOS/<CFBundleExecutable>, or the bundle's own name."""
-    name = app.stem
-    plist = app / "Contents" / "Info.plist"
+    """Contents/MacOS/<CFBundleExecutable>, or the bundle's own name.
+
+    The Info.plist comes from the artifact (a fork controls it): a name that is
+    not a plain file name, or that resolves outside Contents/MacOS, is ignored
+    like a missing one, so the smoke run never executes a file outside the app."""
+    macos_dir = app / "Contents" / "MacOS"
     try:
-        with open(plist, "rb") as handle:
-            name = plistlib.load(handle).get("CFBundleExecutable") or name
-    except (OSError, plistlib.InvalidFileException, ValueError):
-        pass
-    return app / "Contents" / "MacOS" / name
+        with open(app / "Contents" / "Info.plist", "rb") as handle:
+            info = plistlib.load(handle)
+    except PLIST_ERRORS:
+        info = None
+    name = info.get("CFBundleExecutable") if isinstance(info, dict) else None
+    if plain_file_name(name) and inside(macos_dir / name, macos_dir):
+        return macos_dir / name
+    return macos_dir / app.stem
 
 
 def macos_records(artifact: Artifact, mount: Path, subject: Path, work: Path, expectations: dict, exec_ok: bool,
@@ -149,6 +175,9 @@ def macos_records(artifact: Artifact, mount: Path, subject: Path, work: Path, ex
     if not apps:
         return skipped("macos", artifact.name, "no .app in the disk image", False, "fail")
     exe = app_executable(apps[0])
+    if not inside(exe, apps[0] / "Contents" / "MacOS"):
+        return skipped("macos", artifact.name, f"executable {exe.relative_to(mount).as_posix()} resolves outside "
+                       "Contents/MacOS", False, "fail")
     if not exe.is_file():
         return skipped("macos", artifact.name, f"no executable {exe.relative_to(mount).as_posix()}", False, "fail")
     label = f"{exe.relative_to(mount).as_posix()} --help"
