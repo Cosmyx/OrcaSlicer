@@ -7,7 +7,6 @@ import hashlib
 import io
 import json
 import plistlib
-import signal
 import subprocess
 import sys
 import tempfile
@@ -105,9 +104,12 @@ class ClassifyTests(unittest.TestCase):
             self.assertEqual((status, reason), ("fail", "did not exit within 60 s"))
 
     def test_macos_signals(self) -> None:
-        status, reason = smoke_native.classify("macos", -signal.SIGSEGV, "", False, 60)
+        # Darwin numbers, whatever the host: SIGSEGV 11, SIGBUS 10 (7 is SIGEMT there).
+        status, reason = smoke_native.classify("macos", -11, "", False, 60)
         self.assertEqual(status, "fail")
         self.assertIn("SIGSEGV", reason)
+        self.assertEqual(smoke_native.classify("macos", -10, "", False, 60), ("fail", "crashed with signal SIGBUS"))
+        self.assertNotIn("SIGBUS", smoke_native.classify("macos", -7, "", False, 60)[1])
         self.assertEqual(smoke_native.classify("macos", 0, "", False, 60)[0], "pass")
 
 
@@ -294,7 +296,8 @@ class MacTests(unittest.TestCase):
         self.assertEqual(app.app_calls(), [])
 
     def test_crash_signal_on_slice(self) -> None:
-        records = by_check(self.records(FakeApp(slice_code=-signal.SIGABRT, gcode=None)))
+        # -6 is SIGABRT on Darwin, written as a number so the host's signal module is not used.
+        records = by_check(self.records(FakeApp(slice_code=-6, gcode=None)))
         self.assertEqual(records["slice"].status, "fail")
         self.assertIn("SIGABRT", records["slice"].reason)
 
