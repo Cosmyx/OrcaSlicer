@@ -392,6 +392,10 @@ class CommittedTableTest(unittest.TestCase):
         self.assertEqual({by_source[c]["to"] for c in ("#52C7B8", "#4DB6AC")}, {"#B4B9DD"})
         self.assertTrue(all(row["status"] in colours.STATUSES for row in self.table["mappings"]))
 
+    def test_every_mapping_is_validated(self) -> None:
+        # The user approved the whole colour table on 2026-11-19 (decision 0127).
+        self.assertEqual([row["from"] for row in self.table["mappings"] if row["status"] != "validated"], [])
+
     def test_literal_rows_are_current(self) -> None:
         self.assertEqual(colours.literal_rows(REPO_ROOT, self.table), self.table["literals"])
 
@@ -426,6 +430,12 @@ class RealTreeColoursTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         self._tmp.cleanup()
+
+    def test_release_build_accepts_the_colour_table(self) -> None:
+        ctx = apply_module.Context(self.root, RELEASE)
+        findings = colours.guards(ctx, "pre")
+        self.assertEqual([f for f in findings if f.level == "error"], [])
+        self.assertFalse([f for f in findings if "colour mapping" in f.message])
 
     def test_apply_leaves_no_teal_and_reverts(self) -> None:
         before = snapshot(self.root)
