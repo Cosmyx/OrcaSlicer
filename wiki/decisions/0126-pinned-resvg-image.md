@@ -21,8 +21,12 @@ Host renderers differ by version, fonts and CPU.
   tree mounted, as the host user. The recipes always use it.
 - The test `test_branding_logos.py` compares every derived output with a fresh
   render in that image. It skips, with the reason in its message, where the
-  image cannot run (no Docker, no daemon, Windows containers), as on the macOS
-  and Windows runners of `cosmyx-checks.yml`; the Linux runner runs it.
+  image cannot run (no Docker, no daemon, Windows containers, or a non-amd64
+  daemon without linux/amd64 emulation, found by starting the digest-pinned
+  final-stage base image once), as on the macOS and Windows runners of
+  `cosmyx-checks.yml`; the Linux runner runs it. It also skips in the
+  cosmyx-prepare action of a build leg (`COSMYX_TEST_PROFILE=prepare`,
+  decision 0120), so no build leg compiles resvg.
 
 ## Consequences
 

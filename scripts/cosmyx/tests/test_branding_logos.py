@@ -1,7 +1,8 @@
 """Tests of the committed logo overlay (T11b): rows, sources, sizes and derived renders.
 
-The fresh-render test needs the pinned resvg image (linux containers in Docker); it skips, with the reason,
-on a host where that image cannot run.
+The fresh-render test needs the pinned resvg image (linux/amd64 containers in Docker, natively or emulated);
+it skips, with the reason, on a host where that image cannot run, and in the cosmyx-prepare action of a build
+leg, where it would add a resvg compile to every build.
 """
 
 from __future__ import annotations
@@ -21,6 +22,7 @@ if str(COSMYX_DIR) not in sys.path:
 from branding import OVERLAY_DIR, file_sha256  # noqa: E402
 from branding import manifest as manifest_module  # noqa: E402
 from branding.derive import derive, icns, ico, raster  # noqa: E402
+from branding_fixture import skip_in_prepare  # noqa: E402
 
 PREFIX = OVERLAY_DIR + "/"
 # Upstream SVGs whose CosmoSlice replacement is the square master, not the upstream aspect ratio. Both are
@@ -138,6 +140,7 @@ def _svg_tag(row: dict) -> bytes:
 
 
 class FreshRenderTest(unittest.TestCase):
+    @skip_in_prepare("builds the pinned resvg image; runs in cosmyx-checks and `just test-scripts`")
     def test_derived_outputs_equal_a_fresh_render(self) -> None:
         reason = derive.docker_unavailable() if derive.shutil.which("resvg") is None else None
         if reason:
