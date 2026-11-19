@@ -1,0 +1,22 @@
+{
+  "description": "Scheduled workflows of the Cosmyx fork. Every upstream workflow file with a schedule trigger must be listed in allow_scheduled or disable; the upstream sync fails otherwise. Files matching cosmyx_owned_glob are the fork's own: allowed without an entry, never disabled. See wiki/cosmyx/upstream-sync.md.",
+  "cosmyx_owned_glob": "cosmyx-*.yml",
+  "disable": [
+    "stale.yml",
+    "approve_pr_checks.yml",
+    "assign.yml",
+    "auto-close-duplicates.yml"
+  ],
+  "allow_scheduled": [
+    "build_all.yml",
+    "shellcheck.yml",
+    "parity_nightly.yml",
+    "ofl-ota-cronjob.yml",
+    "wait-for-response-label.yml",
+    "doxygen-docs.yml"
+  ],
+  "must_stay_enabled": [
+    "build_all.yml",
+    "cosmyx-upstream-sync.yml"
+  ]
+}
