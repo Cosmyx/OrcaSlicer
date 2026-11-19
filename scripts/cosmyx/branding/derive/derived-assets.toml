@@ -1,0 +1,93 @@
+# Branding rasters derived from the vendored SVG master by `just brand-derive` (derive.py, decisions 0124-0126).
+# Never edit an output by hand: change the source or this list, run `just brand-derive`, then
+# `just brand-refresh PATH` for each rewritten output (its row goes back to to-validate).
+#
+# [[derived]]
+# source = "cosmyx-src/branding/overlay/..."  # repository-relative POSIX path of the SVG master
+# output = "cosmyx-src/branding/overlay/..."  # repository-relative POSIX path of the generated file
+# format = "png"                              # "png" (size: px, square), "ico" (size: list of px) or "icns"
+# size = 154
+# grayscale = false                           # png only: every pixel set to its BT.601 luma, alpha kept
+#
+# Sizes are those of the upstream file each output replaces, so the replacement keeps its dimensions.
+
+# Windows executable and installer icon (OrcaSlicer.rc.in, CPack/NSIS).
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.ico"
+format = "ico"
+size = [16, 32, 48, 64, 128, 256]
+
+# Disabled-state logo in message dialogs (MsgDialog.cpp).
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer_192px_grayscale.png"
+format = "png"
+size = 192
+grayscale = true
+
+# Unreferenced upstream title logo, replaced at its upstream size.
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer_154_title.png"
+format = "png"
+size = 184
+
+# Home page and setup guide header logo.
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/web/image/logo.png"
+format = "png"
+size = 154
+
+# macOS app bundle icon (CFBundleIconFile).
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/Icon.icns"
+format = "icns"
+
+# macOS document icon of .obj, .amf and .3mf files.
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.icns"
+format = "icns"
+
+# macOS document icon of .stl files: the app icon until a dedicated source is provided.
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/images/stl.icns"
+format = "icns"
+
+# macOS document icon of .gcode files: the app icon until a dedicated source is provided.
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/resources/images/gcode.icns"
+format = "icns"
+
+# MSIX medium tile (AppxManifest.xml).
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/scripts/msix/assets/Square150x150Logo.png"
+format = "png"
+size = 150
+
+# MSIX app list icon (AppxManifest.xml).
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/scripts/msix/assets/Square44x44Logo.png"
+format = "png"
+size = 44
+
+# MSIX taskbar icon without plate.
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/scripts/msix/assets/Square44x44Logo.targetsize-44_altform-unplated.png"
+format = "png"
+size = 44
+
+# MSIX Store logo (AppxManifest.xml).
+[[derived]]
+source = "cosmyx-src/branding/overlay/resources/images/OrcaSlicer.svg"
+output = "cosmyx-src/branding/overlay/scripts/msix/assets/StoreLogo.png"
+format = "png"
+size = 50
