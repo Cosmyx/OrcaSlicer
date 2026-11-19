@@ -43,6 +43,9 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T3 -->
 
 <!-- cosmyx-slot: T4 -->
+- Fix the order of a tool change and its fan command: the new tool's part
+  cooling fan speed is now set after its `Tn`, so printers with one fan per
+  tool drive the right fan. Pull request: pending. Decisions: 0040.
 
 ### GUI
 
