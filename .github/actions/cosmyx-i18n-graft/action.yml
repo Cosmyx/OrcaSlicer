@@ -1,0 +1,33 @@
+name: Graft Cosmyx translations
+description: >-
+  Merge the Cosmyx feature catalogues (localization/cosmyx) into the OrcaSlicer
+  catalogues (localization/i18n) in place, before the build compiles them.
+  Runs the graft unit tests first. Works on Linux, macOS and Windows runners.
+
+runs:
+  using: composite
+  steps:
+    # update-environment false: the graft gets its own interpreter and the
+    # build steps after it keep the runner's python on PATH.
+    - name: Set up Python for the graft
+      id: python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+        update-environment: false
+
+    - name: Test the graft
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        COSMYX_PYTHON: ${{ steps.python.outputs.python-path }}
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_i18n_graft.py -t scripts/cosmyx/tests'
+
+    - name: Graft
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        COSMYX_PYTHON: ${{ steps.python.outputs.python-path }}
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/i18n_graft.py'
