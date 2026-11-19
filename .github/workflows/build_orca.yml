@@ -507,6 +507,20 @@ jobs:
           distribution: microsoft
           java-version: '21'
 
+      - name: Cosmyx code signing setup # Cosmyx
+        id: cosmyx_sign # Cosmyx
+        if: runner.os == 'Windows' && github.repository != 'OrcaSlicer/OrcaSlicer' && github.event_name != 'pull_request' && github.ref_name != 'MIXED' && vars.COSMYX_SIGN_ACCOUNT != '' && (github.ref_name == 'DEV' || startsWith(github.ref_name, 'release/') || vars.COSMYX_SIGN_ALL_REFS == 'true') # Cosmyx
+        uses: ./.github/actions/cosmyx-sign # Cosmyx
+        with: # Cosmyx
+          mode: setup # Cosmyx
+          endpoint: ${{ vars.COSMYX_SIGN_ENDPOINT }} # Cosmyx
+          account: ${{ vars.COSMYX_SIGN_ACCOUNT }} # Cosmyx
+          certificate-profile: ${{ vars.COSMYX_SIGN_PROFILE }} # Cosmyx
+          subject: ${{ vars.COSMYX_SIGN_SUBJECT }} # Cosmyx
+          client-id: ${{ vars.COSMYX_AZURE_CLIENT_ID }} # Cosmyx
+          tenant-id: ${{ vars.COSMYX_AZURE_TENANT_ID }} # Cosmyx
+          subscription-id: ${{ vars.COSMYX_AZURE_SUBSCRIPTION_ID }} # Cosmyx
+
       - name: Build slicer Win
         if: runner.os == 'Windows'
         working-directory: ${{ github.workspace }}
@@ -552,6 +566,12 @@ jobs:
             if (Test-Path $extra) { $paths += $extra }
           }
           ./scripts/sign_windows.ps1 -Path $paths
+
+      - name: Cosmyx sign Windows binaries # Cosmyx
+        if: steps.cosmyx_sign.outcome == 'success' # Cosmyx
+        uses: ./.github/actions/cosmyx-sign # Cosmyx
+        with: # Cosmyx
+          mode: sign # Cosmyx
 
       - name: Pack unit tests Win
         if: runner.os == 'Windows'
@@ -605,6 +625,13 @@ jobs:
             $paths += $installer.FullName, $payload, (Join-Path $installed 'Uninstall.exe')
           }
           ./scripts/sign_windows.ps1 -Verify -Path $paths
+
+      - name: Cosmyx verify Windows signatures # Cosmyx
+        if: steps.cosmyx_sign.outcome == 'success' # Cosmyx
+        timeout-minutes: 20 # Cosmyx
+        uses: ./.github/actions/cosmyx-sign # Cosmyx
+        with: # Cosmyx
+          mode: verify # Cosmyx
 
       - name: Pack app
         if: runner.os == 'Windows'

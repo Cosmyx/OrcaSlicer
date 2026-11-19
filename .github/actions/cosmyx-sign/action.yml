@@ -1,0 +1,161 @@
+# Cosmyx Windows code signing with Azure Artifact Signing (wiki/cosmyx/windows-signing.md).
+# build_orca.yml calls it three times, from steps tagged "# Cosmyx":
+#   setup  before "Build slicer Win": downloads Jsign, sets up Java and exports the environment,
+#          including the ORCA_SIGN_KMS_KEY sentinel that makes CMake wire scripts/sign_windows.ps1
+#          into the NSIS installer build.
+#   sign   after the build: logs in to Azure with OIDC, exports a masked access token for the
+#          installer build that runs in the background, and signs the shipped files.
+#   verify after the installer is built: checks the shipped files, the installer, its payload and
+#          the uninstaller a silent install writes.
+# scripts/sign_windows.ps1 hands over to scripts/cosmyx/sign_windows_azure.ps1 because
+# COSMYX_SIGN_BACKEND is 'azure'.
+name: Cosmyx Windows signing
+description: Sign the Windows build with Azure Artifact Signing (setup, sign or verify).
+
+inputs:
+  mode:
+    description: setup, sign or verify.
+    required: true
+  endpoint:
+    description: Artifact Signing account endpoint (setup).
+    required: false
+    default: ''
+  account:
+    description: Artifact Signing account name (setup).
+    required: false
+    default: ''
+  certificate-profile:
+    description: Certificate profile name (setup).
+    required: false
+    default: ''
+  subject:
+    description: Subject of the profile's certificates, as Windows prints it (setup).
+    required: false
+    default: ''
+  client-id:
+    description: Entra application (client) ID with a federated credential for this ref (setup).
+    required: false
+    default: ''
+  tenant-id:
+    description: Entra tenant ID (setup).
+    required: false
+    default: ''
+  subscription-id:
+    description: Azure subscription ID that holds the signing account (setup).
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Check the mode
+      shell: pwsh
+      env:
+        MODE: ${{ inputs.mode }}
+      run: |
+        if ($env:MODE -notin 'setup', 'sign', 'verify') {
+          throw "Unknown mode '$env:MODE': use setup, sign or verify."
+        }
+
+    # JSIGN_VERSION and JSIGN_SHA256 come from build_orca.yml's job environment, so Cosmyx signs
+    # with the same pinned Jsign as upstream.
+    - name: Download Jsign and export the signing environment
+      if: inputs.mode == 'setup'
+      shell: pwsh
+      env:
+        SIGN_ENDPOINT: ${{ inputs.endpoint }}
+        SIGN_ACCOUNT: ${{ inputs.account }}
+        SIGN_PROFILE: ${{ inputs.certificate-profile }}
+        SIGN_SUBJECT: ${{ inputs.subject }}
+        AZURE_CLIENT_ID: ${{ inputs.client-id }}
+        AZURE_TENANT_ID: ${{ inputs.tenant-id }}
+        AZURE_SUBSCRIPTION_ID: ${{ inputs.subscription-id }}
+      run: |
+        foreach ($name in 'JSIGN_VERSION', 'JSIGN_SHA256', 'SIGN_ENDPOINT', 'SIGN_ACCOUNT', 'SIGN_PROFILE',
+            'SIGN_SUBJECT', 'AZURE_CLIENT_ID', 'AZURE_TENANT_ID', 'AZURE_SUBSCRIPTION_ID') {
+          if (-not [Environment]::GetEnvironmentVariable($name)) {
+            throw "$name is empty: see wiki/cosmyx/windows-signing.md for the repository variables."
+          }
+        }
+        $jar = Join-Path $env:RUNNER_TEMP "jsign-$env:JSIGN_VERSION.jar"
+        curl.exe -fsSL --retry 5 --retry-all-errors --retry-delay 15 -o $jar "https://github.com/ebourg/jsign/releases/download/$env:JSIGN_VERSION/jsign-$env:JSIGN_VERSION.jar"
+        if ($LASTEXITCODE -ne 0) { throw "Jsign $env:JSIGN_VERSION download failed." }
+        if ((Get-FileHash $jar -Algorithm SHA256).Hash -ne $env:JSIGN_SHA256) {
+          throw "Jsign $env:JSIGN_VERSION does not match its pinned SHA256."
+        }
+        # ORCA_SIGN_KMS_KEY is only a sentinel: CMakeLists.txt tests that it is defined at configure
+        # time. Upstream's Google Cloud backend never runs, COSMYX_SIGN_BACKEND sends every call to
+        # the Azure script.
+        @(
+          "ORCA_SIGN_JSIGN=$jar"
+          'ORCA_SIGN_KMS_KEY=cosmyx-azure'
+          'COSMYX_SIGN_BACKEND=azure'
+          "COSMYX_SIGN_ENDPOINT=$env:SIGN_ENDPOINT"
+          "COSMYX_SIGN_ACCOUNT=$env:SIGN_ACCOUNT"
+          "COSMYX_SIGN_PROFILE=$env:SIGN_PROFILE"
+          "COSMYX_SIGN_SUBJECT=$env:SIGN_SUBJECT"
+          "COSMYX_AZURE_CLIENT_ID=$env:AZURE_CLIENT_ID"
+          "COSMYX_AZURE_TENANT_ID=$env:AZURE_TENANT_ID"
+          "COSMYX_AZURE_SUBSCRIPTION_ID=$env:AZURE_SUBSCRIPTION_ID"
+        ) | Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+
+    - name: Set up Java for code signing
+      if: inputs.mode == 'setup'
+      uses: actions/setup-java@v6
+      with:
+        distribution: microsoft
+        java-version: '21'
+
+    # Taken after the build, like upstream's Google Cloud token: an access token lasts about an
+    # hour, which covers this signing, the background installer build and the checks.
+    - name: Log in to Azure
+      if: inputs.mode == 'sign'
+      uses: azure/login@v3
+      with:
+        client-id: ${{ env.COSMYX_AZURE_CLIENT_ID }}
+        tenant-id: ${{ env.COSMYX_AZURE_TENANT_ID }}
+        subscription-id: ${{ env.COSMYX_AZURE_SUBSCRIPTION_ID }}
+
+    # "Start installer Win" forces ORCA_SIGN_TOKEN to upstream's (empty) token in its own env, so
+    # the token reaches the background cpack through COSMYX_SIGN_TOKEN in GITHUB_ENV, masked.
+    # ORCA_SIGN_REUSE is the record path that step also uses, so cpack copies these signed files.
+    - name: Sign Windows binaries
+      if: inputs.mode == 'sign'
+      shell: pwsh
+      env:
+        ORCA_SIGN_REUSE: ${{ runner.temp }}/signed-files.json
+      run: |
+        $resource = if ($env:COSMYX_SIGN_RESOURCE) { $env:COSMYX_SIGN_RESOURCE } else { 'https://codesigning.azure.net' }
+        $answer = az account get-access-token --resource $resource --query '{token:accessToken,expires:expires_on}' -o json
+        if ($LASTEXITCODE -ne 0) { throw "No Azure access token for $resource." }
+        $fresh = ($answer -join "`n") | ConvertFrom-Json
+        if (-not $fresh.token) { throw "No Azure access token for $resource." }
+        Write-Host "::add-mask::$($fresh.token)"
+        $env:COSMYX_SIGN_TOKEN = $fresh.token
+        $env:COSMYX_SIGN_TOKEN_EXPIRES = "$($fresh.expires)"
+        "COSMYX_SIGN_TOKEN=$($fresh.token)"           | Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+        "COSMYX_SIGN_TOKEN_EXPIRES=$($fresh.expires)" | Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
+        $paths = @("$env:BUILD_DIR/OrcaSlicer")
+        foreach ($extra in 'build/src/Release/OrcaSlicer_profile_validator.exe', "$env:RUNNER_TEMP/nsis/Plugins") {
+          if (Test-Path $extra) { $paths += $extra }
+        }
+        ./scripts/sign_windows.ps1 -Path $paths
+
+    # Same checks as upstream's "Verify Windows signatures".
+    - name: Verify Windows signatures
+      if: inputs.mode == 'verify'
+      shell: pwsh
+      run: |
+        $paths = @("$env:BUILD_DIR/OrcaSlicer")
+        $validator = 'build/src/Release/OrcaSlicer_profile_validator.exe'
+        if (Test-Path $validator) { $paths += $validator }
+        $installer = Get-ChildItem "$env:BUILD_DIR/OrcaSlicer_Windows_Installer_*.exe" | Select-Object -First 1
+        if ($installer) {
+          $payload = Join-Path $env:RUNNER_TEMP 'installer-payload'
+          & 'C:/Program Files/7-Zip/7z.exe' x -y "-o$payload" $installer.FullName | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip could not unpack $($installer.Name)." }
+          $installed = Join-Path $env:RUNNER_TEMP 'installer-test'
+          Start-Process -Wait -FilePath $installer.FullName -ArgumentList '/S', "/D=$installed"
+          $paths += $installer.FullName, $payload, (Join-Path $installed 'Uninstall.exe')
+        }
+        ./scripts/sign_windows.ps1 -Verify -Path $paths

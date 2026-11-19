@@ -44,6 +44,7 @@ param(
     [switch] $Verify
 )
 $ErrorActionPreference = 'Stop'
+if ($env:COSMYX_SIGN_BACKEND -eq 'azure') { & (Join-Path (Join-Path $PSScriptRoot 'cosmyx') 'sign_windows_azure.ps1') @PSBoundParameters; return } # Cosmyx
 
 # Sectigo issued the certificate; DigiCert's server takes over if Sectigo's does not answer.
 $TimestampUrls = 'http://timestamp.sectigo.com,http://timestamp.digicert.com'
