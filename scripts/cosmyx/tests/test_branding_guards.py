@@ -266,6 +266,34 @@ class G8ProductNameTest(TreeCase):
         write(self.root, "version.inc", 'set(SLIC3R_APP_NAME "CosmoSlice")\nset(SLIC3R_APP_KEY "OrcaSlicer")\n')
         self.assertEqual(guards.g8_product_name(ctx, "post"), [])
 
+    def app_key_case(self, rows, after: str) -> list:
+        write(self.root, "build.sh.in", "Name=@SLIC3R_APP_KEY@\nIcon=@SLIC3R_APP_KEY@\n")
+        self.tables(rows)
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, "build.sh.in", after)
+        return levels(guards.g8_product_name(ctx, "post"))
+
+    def test_a_row_may_rewire_a_line_naming_the_app_key(self) -> None:
+        row = {"file": "build.sh.in", "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1, "reason": "name"}
+        self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_NAME@\nIcon=@SLIC3R_APP_KEY@\n"), [])
+
+    def test_a_line_no_row_names_must_stay(self) -> None:
+        row = {"file": "build.sh.in", "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1, "reason": "name"}
+        self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_NAME@\nIcon=x\n"), ["error"])
+
+    def test_new_lines_naming_the_app_key_are_fine(self) -> None:
+        row = {"file": "build.sh.in", "old": "Icon=", "new": "Icon=", "count": 1, "reason": "same"}
+        self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_KEY@\nIcon=@SLIC3R_APP_KEY@\nX=SLIC3R_APP_KEY\n"), [])
+
+    def test_the_app_key_definition_never_goes(self) -> None:
+        row = {"file": "version.inc", "old": 'set(SLIC3R_APP_KEY "OrcaSlicer")', "new": 'set(SLIC3R_APP_KEY "Other")', "count": 1, "reason": "bad"}
+        self.tables([row])
+        ctx = self.ctx()
+        guards.g8_product_name(ctx, "pre")
+        write(self.root, "version.inc", 'set(SLIC3R_APP_NAME "OrcaSlicer")\nset(SLIC3R_APP_KEY "Other")\n')
+        self.assertEqual(levels(guards.g8_product_name(ctx, "post")), ["error"])
+
 
 class StatusPolicyTest(TreeCase):
     def test_missing_warns_on_development(self) -> None:
