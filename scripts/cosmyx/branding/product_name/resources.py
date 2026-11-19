@@ -13,7 +13,7 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
-from .. import relative_posix, repo_path
+from .. import read_lf, relative_posix, repo_path
 from .tokens import replace_tokens
 
 HINTS_FILE = "resources/data/hints.ini"
@@ -64,7 +64,7 @@ def hint_texts(root: Path) -> dict:
     path = repo_path(root, HINTS_FILE)
     if not path.is_file():
         return {}
-    text = path.read_bytes().decode("utf-8")
+    text = read_lf(path)
     return {section: decode_hint(raw) for _, section, raw in hint_lines(text)}
 
 
@@ -120,7 +120,7 @@ def guide_texts(root: Path) -> list[tuple[str, int, str]]:
     found = []
     for page in sorted(base.rglob("*.html"), key=lambda path: path.as_posix()):
         parser = _GuideParser()
-        parser.feed(page.read_bytes().decode("utf-8"))
+        parser.feed(read_lf(page))
         relative = relative_posix(root, page)
         found += [(relative, line, text) for line, text in parser.texts]
     return found
