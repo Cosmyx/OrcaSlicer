@@ -72,6 +72,7 @@ class Context:
     which: Callable[[str], str | None] = shutil.which
     out: Callable[[str], None] = field(default=lambda line: print(line, flush=True))
     summary: list[str] = field(default_factory=list)
+    notary_profile: str = ""
 
     def redact(self, text: str) -> str:
         for value in sorted(self.settings.secrets(), key=len, reverse=True):
@@ -89,6 +90,14 @@ class Context:
 
     def call(self, args: Sequence[str | Path]) -> subprocess.CompletedProcess:
         return self.run([str(a) for a in args], capture_output=True, text=True, check=False)
+
+    def call_with_input(self, args: Sequence[str | Path], secret: str) -> subprocess.CompletedProcess:
+        """Run a tool that prompts for a secret, answering on its stdin.
+
+        The secret never reaches the argv. A new session has no controlling
+        terminal, so the tool's prompt reads stdin even on a runner with a tty."""
+        return self.run([str(a) for a in args], input=secret + "\n", capture_output=True, text=True, check=False,
+                        start_new_session=True)
 
     def must(self, args: Sequence[str | Path], what: str) -> subprocess.CompletedProcess:
         done = self.call(args)

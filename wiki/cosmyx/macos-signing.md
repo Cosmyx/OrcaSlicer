@@ -3,7 +3,7 @@
 DEV and `release/*` builds of the universal macOS app are signed with the
 Cosmyx Developer ID Application certificate, notarised by Apple and stapled,
 so Gatekeeper opens them without a warning. The DMGs keep their usual names.
-Decisions 0150 to 0158.
+Decisions 0150 to 0159.
 
 ## How it runs
 
@@ -21,6 +21,9 @@ right after "Create DMG without notary" on the macOS combine leg. It calls
      `build/universal/OrcaSlicer/`, inside out, with the hardened runtime, a
      secure timestamp and `scripts/disable_validation.entitlements`, then the
      app (never `--deep`);
+   - stores the notary credentials as a profile in the temporary keychain,
+     the password written to `notarytool`'s prompt on stdin, never on a
+     command line (decision 0159);
    - notarises the apps (zipped), staples them;
    - rebuilds `OrcaSlicer_Mac_universal_<ver>.dmg` and
      `OrcaSlicer_profile_validator_Mac_universal_<ver>.dmg` from the stapled
