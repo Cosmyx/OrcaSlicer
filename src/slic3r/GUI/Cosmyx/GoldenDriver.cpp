@@ -41,6 +41,7 @@
 #include <wx/dialog.h>
 #include <wx/eventfilter.h>
 #include <wx/gdicmn.h>
+#include <wx/glcanvas.h>
 #include <wx/menu.h>
 #include <wx/timer.h>
 #include <wx/toplevel.h>
@@ -252,7 +253,7 @@ private:
         if (main->topbar() != nullptr) {
             // Windows and Linux: the custom top bar pops these up.
             inv.menus = {{"file", "File"}, {"main", "Main"}, {"calibration", "Calibration"}};
-        } else if (wxMenuBar* bar = main->menubar(); bar != nullptr) {
+        } else if (wxMenuBar* bar = main->GetMenuBar(); bar != nullptr) {
             inv.menubar = true;
             for (size_t i = 0; i < bar->GetMenuCount(); ++i) {
                 const std::string label = into_u8(bar->GetMenuLabelText(i));
@@ -296,7 +297,7 @@ private:
             fail("script", error);
         emit(text_event(next_seq(), "surfaces", surfaces_text(m_steps, m_script.excludes)));
 
-        if (wxMenuBar* bar = main->menubar(); bar != nullptr && main->topbar() == nullptr)
+        if (wxMenuBar* bar = main->GetMenuBar(); bar != nullptr && main->topbar() == nullptr)
             for (size_t i = 0; i < bar->GetMenuCount(); ++i)
                 m_menu_tree += menu_tree_text(into_u8(bar->GetMenuLabel(i)), menu_nodes(bar->GetMenu(i)));
         m_index = 0;
