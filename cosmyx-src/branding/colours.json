@@ -15,161 +15,161 @@
       "to": "#8000FF",
       "role": "light base (brand)",
       "source": "user",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#00675B",
       "to": "#A472F5",
       "role": "dark base (brand on dark screens)",
       "source": "user",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#00897B",
       "to": "#8000FF",
       "role": "pressed",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#26A69A",
       "to": "#A472F5",
       "role": "light hover",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#008172",
       "to": "#8000FF",
       "role": "dark hover",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#BFE1DE",
       "to": "#DFBFFF",
       "role": "light tint 25% (checked item)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#E5F0EE",
       "to": "#F2E6FF",
       "role": "light tint 10% (focused item)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#223C3C",
       "to": "#382D43",
       "role": "dark tint 25% (checked item)",
       "source": "user",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#283232",
       "to": "#393444",
       "role": "dark tint 10% (focused item)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#52C7B8",
       "to": "#B4B9DD",
       "role": "accent (hovered checked, SVG green)",
       "source": "user",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#4DB6AC",
       "to": "#B4B9DD",
       "role": "accent (images)",
       "source": "user",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#009687",
       "to": "#8000FF",
       "role": "brand, off by one (links, chips)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#009789",
       "to": "#8000FF",
       "role": "brand, off by one (About link)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#009C88",
       "to": "#8000FF",
       "role": "text selection background (ImGui)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#00BFBF",
       "to": "#8000FF",
       "role": "text selection background (notifications)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#007A74",
       "to": "#8000FF",
       "role": "sketch banner (CAD panel)",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#22BFB0",
       "to": "#A472F5",
       "role": "confirm button focus border, dark",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#00FFD4",
       "to": "#B4B9DD",
       "role": "confirm button focus border, light",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#244945",
       "to": "#382D43",
       "role": "web dark theme selected row",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#5EEAD4",
       "to": "#A472F5",
       "role": "web dark theme link text",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#8DE5D6",
       "to": "#B4B9DD",
       "role": "web dark theme own-source text",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#00FFEA",
       "to": "#A472F5",
       "role": "homepage link button",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     },
     {
       "from": "#00C8B4",
       "to": "#A472F5",
       "role": "texture projector frame border",
       "source": "derived",
-      "status": "to-validate"
+      "status": "validated"
     }
   ],
   "family": {
