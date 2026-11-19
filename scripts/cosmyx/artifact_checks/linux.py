@@ -32,17 +32,20 @@ CRASH_SIGNALS = {11: "SIGSEGV", 6: "SIGABRT", 7: "SIGBUS", 4: "SIGILL", 8: "SIGF
 USAGE_WORDS = ("usage", "--help", "options")
 
 
-def smoke_status(returncode: int | None, output: str, timed_out: bool, timeout: int) -> tuple[str, str]:
+def smoke_status(returncode: int | None, output: str, timed_out: bool, timeout: int,
+                 crash_signals: dict[int, str] | None = None) -> tuple[str, str]:
     """A smoke run passes unless it hangs or crashes; a nonzero exit passes only
-    when the app printed its usage."""
+    when the app printed its usage. crash_signals maps the signal numbers of the
+    OS the app ran on to their names (Linux by default)."""
+    signals = CRASH_SIGNALS if crash_signals is None else crash_signals
     if timed_out:
         return "fail", f"did not exit within {timeout} s"
     if returncode is None:
         return "fail", "did not run"
-    if returncode < 0 and -returncode in CRASH_SIGNALS:
-        return "fail", f"crashed with signal {CRASH_SIGNALS[-returncode]}"
-    if returncode > 128 and returncode - 128 in CRASH_SIGNALS:
-        return "fail", f"crashed with signal {CRASH_SIGNALS[returncode - 128]}"
+    if returncode < 0 and -returncode in signals:
+        return "fail", f"crashed with signal {signals[-returncode]}"
+    if returncode > 128 and returncode - 128 in signals:
+        return "fail", f"crashed with signal {signals[returncode - 128]}"
     if returncode == 0:
         return "pass", "exit 0"
     if any(word in output.lower() for word in USAGE_WORDS):
