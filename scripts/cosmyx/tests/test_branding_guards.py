@@ -201,6 +201,12 @@ class G7OutsideGitTest(TreeCase):
     def test_skipped_with_a_warning(self) -> None:
         self.assertEqual(levels(self.findings(guard="G7")), ["warning"])
 
+    def test_warning_carries_git_message(self) -> None:
+        # git's own text (localized, always led by "fatal") makes a CI skip
+        # diagnosable, for example a container workspace git does not trust.
+        [finding] = self.findings(guard="G7")
+        self.assertRegex(finding.message, r"^skipped: git grep failed: .*fatal")
+
 
 class G8ProductNameTest(TreeCase):
     PATCH = {"file": "version.inc", "old": 'SLIC3R_APP_NAME "OrcaSlicer"', "new": 'SLIC3R_APP_NAME "CosmoSlice"', "count": 1, "reason": "name"}

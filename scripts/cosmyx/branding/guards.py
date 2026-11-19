@@ -223,19 +223,22 @@ def palette(ctx) -> list[str]:
     return sorted({str(item).upper() for item in values if isinstance(item, str) and item.startswith("#")})
 
 
-def git_grep(root: Path, needle: str, ignore_case: bool) -> dict:
-    """{path: count} of `needle` in tracked text files, or None outside git."""
+def git_grep(root: Path, needle: str, ignore_case: bool) -> tuple:
+    """({path: count} of `needle` in tracked text files, ""), or (None, git's
+    error message) when git cannot search the tree (outside git, or a
+    workspace git rejects as owned by another user)."""
     args = ["git", "-C", str(root), "grep", "-I", "-F", "-c", "--full-name"]
     if ignore_case:
         args.append("-i")
     process = subprocess.run([*args, "-e", needle], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     if process.returncode not in (0, 1):
-        return None
+        message = process.stderr.decode("utf-8", "replace").strip()
+        return None, message or f"exit code {process.returncode}"
     counts = {}
     for line in process.stdout.decode("utf-8", "surrogateescape").splitlines():
         path, _, count = line.rpartition(":")
         counts[path] = int(count)
-    return counts
+    return counts, ""
 
 
 def g7_upstream_stays_orca(ctx, phase: str) -> list[Finding]:
@@ -245,9 +248,9 @@ def g7_upstream_stays_orca(ctx, phase: str) -> list[Finding]:
     permits = allowed(ctx)
     findings = []
     for needle, ignore_case in needles:
-        counts = git_grep(ctx.root, needle, ignore_case)
+        counts, error = git_grep(ctx.root, needle, ignore_case)
         if counts is None:
-            return [Finding("G7", "warning", "", "skipped: not a git checkout")]
+            return [Finding("G7", "warning", "", f"skipped: git grep failed: {error}")]
         for path, count in sorted(counts.items()):
             if is_cosmyx_path(path) or permits.get((path, needle.upper())) == count:
                 continue
