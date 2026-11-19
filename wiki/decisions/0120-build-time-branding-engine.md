@@ -29,7 +29,11 @@ inside it would ship next to the originals.
   first, so apply is idempotent.
 - The CI runs it in `.github/actions/cosmyx-prepare`, after the translation
   graft and before the hide step (decision 0087), so a branded build is not
-  marked `-dirty`. The branding tests run in the same action first.
+  marked `-dirty`. The branding tests run in the same action first, with
+  `COSMYX_TEST_PROFILE=prepare`: only fast, hermetic tests run on a build
+  leg, and a test needing Docker, the network or a long build carries
+  `skip_in_prepare` (`scripts/cosmyx/tests/branding_fixture.py`) and runs in
+  `just test-scripts` and the Cosmyx checks workflow instead.
 - The colour and product-name stages apply their table rows with the shared
   counted text patcher, then call an optional plugin module of the package
   (`colours`, `product_name`) exposing `apply(ctx, backup)` and

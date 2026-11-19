@@ -9,10 +9,14 @@ import shutil
 import subprocess
 import unittest
 from pathlib import Path
+from unittest import mock
+
+import branding_fixture
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 JUST_DIR = REPO_ROOT / "scripts" / "cosmyx" / "just"
 BRANDING = JUST_DIR / "branding.just"
+PREPARE_ACTION = REPO_ROOT / ".github" / "actions" / "cosmyx-prepare" / "action.yml"
 
 SUB_TASK_FILES = [
     "branding-logos.just",
@@ -77,6 +81,45 @@ class BrandingRecipeLayoutTests(unittest.TestCase):
             for name in recipes(path):
                 with self.subTest(recipe=name):
                     self.assertIn(name, listed)
+
+
+class PrepareProfileTest(unittest.TestCase):
+    """The build legs run only the hermetic branding tests (see branding_fixture.PROFILE_ENV)."""
+
+    def branding_test_step(self) -> str:
+        steps = PREPARE_ACTION.read_text(encoding="utf-8").split("    - name: ")[1:]
+        found = [step for step in steps if "test_branding_*.py" in step]
+        self.assertEqual(len(found), 1, "exactly one prepare step runs the branding tests")
+        return found[0]
+
+    def test_prepare_action_sets_the_profile_on_the_branding_tests(self) -> None:
+        self.assertRegex(self.branding_test_step(), r"(?m)^\s+COSMYX_TEST_PROFILE: prepare$")
+
+    def test_profile_is_read_from_the_environment(self) -> None:
+        with mock.patch.dict("os.environ", {"COSMYX_TEST_PROFILE": "prepare"}):
+            self.assertTrue(branding_fixture.prepare_profile())
+        with mock.patch.dict("os.environ", {"COSMYX_TEST_PROFILE": "full"}):
+            self.assertFalse(branding_fixture.prepare_profile())
+        with mock.patch.dict("os.environ", {}, clear=True):
+            self.assertFalse(branding_fixture.prepare_profile())
+
+    def test_skip_in_prepare_skips_only_under_the_profile(self) -> None:
+        def run(env: dict) -> unittest.TestResult:
+            with mock.patch.dict("os.environ", env, clear=True):
+
+                class Heavy(unittest.TestCase):
+                    @branding_fixture.skip_in_prepare("needs docker")
+                    def test_heavy(self) -> None:
+                        pass
+
+            result = unittest.TestResult()
+            Heavy("test_heavy").run(result)
+            return result
+
+        skipped = run({"COSMYX_TEST_PROFILE": "prepare"}).skipped
+        self.assertEqual(len(skipped), 1)
+        self.assertIn("needs docker", skipped[0][1])
+        self.assertEqual(run({}).skipped, [])
 
 
 if __name__ == "__main__":
