@@ -338,6 +338,14 @@ class WorkflowPolicyTests(unittest.TestCase):
         self.assertFalse(sync.is_scheduled("on:\n  # schedule:\n  #   - cron: 0 0 * * 1\n  workflow_dispatch:\n"))
         self.assertFalse(sync.is_scheduled("on:\n  push:\n    paths: ['x#schedule:']\n"))
 
+    def test_schedule_detection_in_multi_line_flow_values(self) -> None:
+        # A flow sequence spread over several lines is read up to its closing bracket.
+        self.assertTrue(sync.is_scheduled("on: [\n  push,\n  schedule\n]\njobs: {}\n"))
+        # Brackets inside quoted scalars do not keep the flow value open.
+        self.assertFalse(sync.is_scheduled("on: {push: {branches: ['[x']}}\njobs:\n  schedule-report:\n"))
+        # A flow mapping with no schedule stays unscheduled.
+        self.assertFalse(sync.is_scheduled("on: {\n  push: {branches: [main]},\n  workflow_dispatch: {}\n}\n"))
+
     def test_unknown_scheduled_workflow_fails(self) -> None:
         self.workflow("known.yml", "on:\n  schedule:\n    - cron: '1 1 * * *'\n")
         self.workflow("newbot.yml", "on:\n  schedule:\n    - cron: '2 2 * * *'\n")

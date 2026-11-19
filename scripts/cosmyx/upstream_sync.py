@@ -135,10 +135,15 @@ def redact(text: str) -> str:
 
 def remote_sha(remote: str, branch: str) -> str | None:
     """Tip of a branch on a remote, or None when it does not exist."""
-    out = git(["ls-remote", remote, f"refs/heads/{branch}"]).stdout.strip()
-    if not out:
-        return None
-    return out.splitlines()[0].split()[0]
+    ref = f"refs/heads/{branch}"
+    out = git(["ls-remote", remote, ref]).stdout
+    # ls-remote matches patterns by their tail, so refs/heads/x/refs/heads/<branch>
+    # is listed too: keep only the line whose ref name is exactly the one asked for.
+    for line in out.splitlines():
+        fields = line.split("\t")
+        if len(fields) == 2 and fields[1].strip() == ref:
+            return fields[0].strip()
+    return None
 
 
 def init_work_repo(work_dir: Path | None) -> tuple[Path, Callable[[], None]]:
@@ -330,8 +335,12 @@ def mixed(origin: str, base_branch: str, upstream_branch: str, target: str, dry_
 # workflow-policy
 # ---------------------------------------------------------------------------
 
-_SCHEDULE_KEY_RE = re.compile(r"^\s*-?\s*['\"]?schedule['\"]?\s*:")
+# `schedule` used as a mapping key anywhere: at the line start (block style), or
+# after `{`, `,`, `[`, `-` or `?` (flow style, including a flow mapping behind an
+# anchor that `on:` reaches through an alias). Quoted keys count too.
+_SCHEDULE_KEY_RE = re.compile(r"(^|[\s{,\[?-])['\"]?schedule['\"]?\s*:")
 _ON_FLOW_RE = re.compile(r"^['\"]?on['\"]?\s*:\s*(\[.*\]|\S.*)$")
+_FLOW_OPEN = {"[": "]", "{": "}"}
 
 
 def _strip_comment(line: str) -> str:
@@ -340,16 +349,38 @@ def _strip_comment(line: str) -> str:
     return line[: match.start()] if match else line
 
 
+def _flow_depth(text: str) -> int:
+    """Open minus closed flow brackets, ignoring quoted scalars."""
+    unquoted = re.sub(r"'[^']*'|\"(?:[^\"\\]|\\.)*\"", "", text)
+    return sum(unquoted.count(c) for c in _FLOW_OPEN) - sum(unquoted.count(c) for c in _FLOW_OPEN.values())
+
+
 def is_scheduled(text: str) -> bool:
-    """True when a workflow declares a schedule trigger (comments ignored)."""
-    for raw in text.splitlines():
-        line = _strip_comment(raw).rstrip()
+    """True when a workflow declares a schedule trigger (comments ignored).
+
+    A line scan, not a YAML parser, so it fails closed: any `schedule` key, and
+    any `schedule` word in an `on:` flow value (even one spread over several
+    lines), counts as a schedule trigger. A false positive only asks for a
+    policy entry; a miss would let an upstream bot run on the fork unpoliced.
+    """
+    lines = [_strip_comment(raw).rstrip() for raw in text.splitlines()]
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        index += 1
         if not line.strip():
             continue
-        if _SCHEDULE_KEY_RE.match(line):
+        if _SCHEDULE_KEY_RE.search(line):
             return True
         flow = _ON_FLOW_RE.match(line)
-        if flow and re.search(r"\bschedule\b", flow.group(1)):
+        if not flow:
+            continue
+        value = flow.group(1)
+        # Gather the continuation lines of a flow collection opened on the `on:` line.
+        while _flow_depth(value) > 0 and index < len(lines):
+            value += " " + lines[index]
+            index += 1
+        if re.search(r"\bschedule\b", value):
             return True
     return False
 

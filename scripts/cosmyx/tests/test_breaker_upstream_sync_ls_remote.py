@@ -61,6 +61,11 @@ class RemoteShaSuffixTests(unittest.TestCase):
         self.push(self.origin, new, "0/refs/heads/Orca-Upstream")
         self.assertEqual(sync.remote_sha(str(self.origin), "Orca-Upstream"), old)
 
+    def test_remote_sha_is_none_when_only_a_look_alike_exists(self) -> None:
+        tip = self.commit("only look-alike")
+        self.push(self.origin, tip, "0/refs/heads/Orca-Upstream")
+        self.assertIsNone(sync.remote_sha(str(self.origin), "Orca-Upstream"))
+
     def test_mirror_is_not_fooled_by_a_look_alike_branch(self) -> None:
         """Expected: Orca-Upstream is stale, so mirror moves it to the upstream
         tip. Actual: a branch named 0/refs/heads/Orca-Upstream already at the
