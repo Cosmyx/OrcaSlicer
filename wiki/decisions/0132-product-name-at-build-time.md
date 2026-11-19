@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted.
+Accepted. Amended by decision 0182: the Windows install folder, registry
+key, publisher and installer window title belong to the installer identity
+(`cmake/cosmyx/Packaging.cmake`), no longer to this decision.
 
 ## Context
 
@@ -23,16 +25,17 @@ are all keyed by the name OrcaSlicer.
   built on `SLIC3R_APP_NAME`), the wx display name (`SetAppDisplayName`,
   commented out upstream), the macOS menu bar name (`MACOSX_BUNDLE_BUNDLE_NAME`),
   the installer summary and Apps & features name (`CPACK_NSIS_DISPLAY_NAME`
-  appended), the MSIX package and Start menu display names, the AppImage,
-  Linux and Flatpak menu names, the TLS question title, the dock tooltip, the
+  appended), the Start menu and desktop shortcut label (the label half of
+  `CPACK_PACKAGE_EXECUTABLES`; the executable stays `orca-slicer`), the MSIX package and Start menu display names, the AppImage,
+  Linux and Flatpak menu names, the Flatpak description paragraphs (its
+  `<name>` and the two `<p>` that name the product; id and URLs stay), the TLS question title, the dock tooltip, the
   setup wizard and login window titles, the built-in action source name, the
   desktop entries the Linux desktop integration writes, the default title of
   plugin windows, and the setup guide's fallback text.
 - Kept (`SLIC3R_APP_KEY` and everything named after it): the data folder
   (`SetAppName(SLIC3R_APP_KEY)`), the `.app`, `.exe` and AppImage names, the
-  bundle and Flatpak ids, the MSIX identity, ProgID and AppData exclusion, the
-  registry key and install folder (`CPACK_PACKAGE_NAME`,
-  `CPACK_PACKAGE_INSTALL_REGISTRY_KEY`), icon and desktop file names, and the
+  bundle and Flatpak ids, the MSIX identity, ProgID and AppData exclusion,
+  `CPACK_PACKAGE_NAME`, icon and desktop file names, and the
   `OrcaSlicer_` artifact prefix (the artifact checks rely on it).
 - Beyond the plan's list, the residue scan found more visible names, patched
   the same way, one counted row each: the MSIX package display name, the
@@ -47,8 +50,10 @@ are all keyed by the name OrcaSlicer.
 
 - A build shows CosmoSlice everywhere a user reads the name, and an existing
   OrcaSlicer configuration, project or file association keeps working.
-- Left for later, not renamed: the installer window title and the Start menu
-  shortcut label (`CPACK_NSIS_PACKAGE_NAME`, `CPACK_PACKAGE_EXECUTABLES`), and
-  the Flatpak description paragraphs.
+- The Windows install folder, registry key, publisher and installer window
+  title (`CPACK_NSIS_PACKAGE_NAME`) are set by the installer identity
+  (decision 0182), which keeps the `CPACK_NSIS_DISPLAY_NAME` this branding
+  appends. Until that change is merged, the installer window title and
+  install folder still read OrcaSlicer.
 - Removing it: delete `cosmyx-src/branding/product-name/` and
   `scripts/cosmyx/branding/product_name/`; the build is OrcaSlicer again.

@@ -108,10 +108,13 @@ checks the same on every OS.
 
 ## Product name
 
-The build shows the name CosmoSlice; the app key stays OrcaSlicer, so the
-data folder, registry key, install folder, executable, bundle id, file
-associations and the `OrcaSlicer_` artifact names do not change, and an
-existing OrcaSlicer setup keeps working (decision 0132).
+The build shows the name CosmoSlice, including the installer's Apps &
+features name, the Start menu and desktop shortcut label and the Flatpak
+software centre name and description; the app key stays OrcaSlicer, so the
+executable, bundle id, file associations and the `OrcaSlicer_` artifact
+names do not change (decision 0132). The Windows install folder, registry
+key and installer window title belong to the installer identity
+(`cmake/cosmyx/Packaging.cmake`, decision 0182).
 
 Three tables in `cosmyx-src/branding/product-name/`:
 
