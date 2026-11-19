@@ -8,7 +8,8 @@ The engine (apply.py) applies the `literals` rows of colours.json with
 2. rewrites every `#RRGGBB` (any case, 8-digit keeps its alpha) whose colour
    is the `from` of a `mappings` row, in the files matched by `scopes`. The
    rewrite is explicit: only mapped colours change, always to uppercase, and
-   never inside an `href`, a `url(...)` reference or base64 data.
+   never inside an `href`, a `url(...)` reference, a URL fragment, a
+   numeric character reference (`&#NNNNNN;`) or base64 data.
 
 The teal family recogniser never rewrites anything; it only finds leftovers.
 Hex leftovers are reported by guard G5 of the engine; this plugin adds the
@@ -52,10 +53,12 @@ from pathlib import Path
 
 from . import (
     COLOURS_FILE,
+    HEX_LOOKBACK,
     BrandingError,
     Finding,
     dump_json,
     find_hexes,
+    hex_is_skipped,
     in_family,
     load_json,
     read_lf,
@@ -77,7 +80,6 @@ FLOAT_TOLERANCE = 2
 # ---------------------------------------------------------------- hex rewrite
 
 HEX_BYTES_RE = re.compile(rb"#([0-9A-Fa-f]{6})((?:[0-9A-Fa-f]{2})?)(?![0-9A-Fa-f])")
-_SKIP_BEFORE_BYTES_RE = re.compile(rb"(?:href\s*=\s*[\"']?|url\(\s*[\"']?)$", re.IGNORECASE)
 _BASE64_BYTES_RE = re.compile(rb"base64,[A-Za-z0-9+/=\s]+")
 
 
@@ -95,7 +97,7 @@ def rewrite_hex(data: bytes, table: dict) -> tuple:
         start = match.start()
         if any(low <= start < high for low, high in protected):
             return match.group(0)
-        if _SKIP_BEFORE_BYTES_RE.search(data[max(0, start - 16) : start]):
+        if hex_is_skipped(data[max(0, start - HEX_LOOKBACK) : start].decode("latin-1")):
             return match.group(0)
         colour = "#" + match.group(1).decode("ascii").upper()
         target = table.get(colour)
@@ -278,7 +280,16 @@ def table_problems(colours: dict) -> list:
     """Everything wrong with the colour-specific parts of colours.json."""
     problems = []
     palette = colours.get("palette") or {}
-    palette_values = set(palette.values() if isinstance(palette, dict) else palette)
+    if not isinstance(palette, (dict, list)):
+        problems.append(f"palette: must be an object or a list, got {palette!r}")
+        palette = {}
+    palette_items = list(palette.items() if isinstance(palette, dict) else enumerate(palette))
+    # Guard G7 greps every palette value as a case-insensitive substring of the
+    # tracked files: only a full uppercase #RRGGBB is a safe needle.
+    for name, value in palette_items:
+        if not isinstance(value, str) or not CANONICAL_HEX_RE.match(value):
+            problems.append(f"palette[{name!r}]: must be an uppercase #RRGGBB, got {value!r}")
+    palette_values = {value for _, value in palette_items if isinstance(value, str)}
     ignore = {str(item).upper() for item in colours.get("ignore") or ()}
     seen = set()
     for index, row in enumerate(colours.get("mappings", [])):
