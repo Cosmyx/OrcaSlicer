@@ -22,9 +22,12 @@ void extend_cht_nozzle(PrintConfigDef& def)
     // The GUI stores the selected position of a coEnums combo box as the enum
     // value (Choice::get_value), so "cht" must sit at index int(ntCHT), not at
     // the end of the list. See wiki/decisions/0020-cht-enum-position.md.
-    if (!def.has("nozzle_type"))
+    // ConfigDef::get() only returns a const pointer, so the mutable entry is
+    // taken from the public options map.
+    auto it = def.options.find("nozzle_type");
+    if (it == def.options.end())
         return;
-    ConfigOptionDef* opt = def.get("nozzle_type");
+    ConfigOptionDef* opt = &it->second;
 
     // Idempotent: the extender may run again on a definition that already has it.
     if (std::find(opt->enum_values.begin(), opt->enum_values.end(), "cht") != opt->enum_values.end())
