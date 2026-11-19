@@ -225,16 +225,51 @@ def image_tag(dockerfile: Path = DOCKERFILE) -> str:
     return f"{IMAGE_NAME}:{digest}"
 
 
-def docker_unavailable() -> str | None:
-    """Why the pinned linux/amd64 image cannot run here, or None when it can."""
+# Architectures `docker info` reports for a daemon that runs linux/amd64 natively.
+NATIVE_AMD64 = frozenset({"x86_64", "amd64"})
+
+
+def probe_image(dockerfile: Path = DOCKERFILE) -> str:
+    """The digest-pinned base image of the final stage, the smallest image the render needs anyway."""
+    images = [line.split()[1] for line in dockerfile.read_text(encoding="utf-8").splitlines() if line.startswith("FROM ")]
+    if not images:
+        raise ValueError(f"{dockerfile} has no FROM line")
+    return images[-1]
+
+
+def emulation_unavailable(dockerfile: Path = DOCKERFILE) -> str | None:
+    """Why a non-amd64 daemon cannot run linux/amd64 containers (no binfmt emulation), or None when it can."""
+    result = subprocess.run(
+        ["docker", "run", "--rm", "--platform", PLATFORM, probe_image(dockerfile), "true"],
+        capture_output=True, text=True, check=False,
+    )  # fmt: skip
+    if result.returncode == 0:
+        return None
+    detail = (result.stderr or result.stdout).strip().splitlines()
+    return f"the docker daemon cannot run {PLATFORM} containers ({detail[-1] if detail else 'exit ' + str(result.returncode)})"
+
+
+def docker_unavailable(dockerfile: Path = DOCKERFILE) -> str | None:
+    """Why the pinned linux/amd64 image cannot run here, or None when it can.
+
+    On a daemon that is not amd64 (an arm64 runner, Apple silicon) one tiny container is started to check
+    that linux/amd64 emulation works, so a missing emulator is reported here instead of failing the build.
+    """
     if shutil.which("docker") is None:
         return "docker is not installed"
-    result = subprocess.run(["docker", "info", "--format", "{{.OSType}}"], capture_output=True, text=True, check=False)
+    result = subprocess.run(
+        ["docker", "info", "--format", "{{.OSType}} {{.Architecture}}"], capture_output=True, text=True, check=False
+    )
     if result.returncode != 0:
         return "the docker daemon is not reachable"
-    if result.stdout.strip() != "linux":
-        return f"docker runs {result.stdout.strip() or 'unknown'} containers, not linux"
-    return None
+    fields = result.stdout.split()
+    os_type = fields[0] if fields else ""
+    architecture = fields[1] if len(fields) > 1 else ""
+    if os_type != "linux":
+        return f"docker runs {os_type or 'unknown'} containers, not linux"
+    if architecture.lower() in NATIVE_AMD64:
+        return None
+    return emulation_unavailable(dockerfile)
 
 
 def ensure_image(dockerfile: Path = DOCKERFILE) -> str:
