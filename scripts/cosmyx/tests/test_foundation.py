@@ -162,6 +162,19 @@ class FlatpakTestTargetTests(unittest.TestCase):
         self.assertTrue(hooks & built, f"cosmyx_tests is built by none of {sorted(built)}")
 
 
+class FlatpakTestAssetTests(unittest.TestCase):
+    def test_asset_keeps_the_resources_cosmyx_tests_reads(self) -> None:
+        # The flatpak leg deletes every resources/ folder its filter does not
+        # name; cosmyx_tests reads resources/cosmyx and resources/info.
+        text = (REPO_ROOT / ".github" / "workflows" / "build_flatpak.yml").read_text(encoding="utf-8")
+        filters = [line for line in text.splitlines() if 'find "$d/resources" ' in line and "rm -rf" in line]
+        self.assertEqual(len(filters), 1, "expected one resources/ filter in the test asset step")
+        kept = set(re.findall(r"! -name (\S+)", filters[0]))
+        for folder in ("cosmyx", "info", "profiles", "printers", "images"):
+            with self.subTest(folder=folder):
+                self.assertIn(folder, kept)
+
+
 class DecisionTests(unittest.TestCase):
     def test_register_is_valid(self) -> None:
         found, errors = decisions.list_decisions(decisions.DECISIONS_DIR)
