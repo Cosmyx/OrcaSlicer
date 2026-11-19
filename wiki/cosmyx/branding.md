@@ -86,7 +86,7 @@ The build checks the tables before it writes anything and the tree after:
 | G5 | Colour rewrites match their exact counts, and no teal is left in the colour scopes unless allow-listed. |
 | G6 | The tables are valid, sorted and canonical, and the review tables are up to date. |
 | G7 | No CosmoSlice colour or name is committed in an upstream-owned file. |
-| G8 | Product-name patches and rename rows match, literals and msgids are renamed together, no visible upstream name is left outside the allowlist, and the app key (data folder, registry key) is unchanged. |
+| G8 | Product-name patches and rename rows match, literals and msgids are renamed together, no visible upstream name is left outside the allowlist, the app key (data folder, registry key) is unchanged, and every packaging pin (AppImage desktop name and file names, CPack package and installer names, Flatpak id) is identical after apply. |
 
 A failed check before apply writes nothing; a failure after apply puts every
 file back.

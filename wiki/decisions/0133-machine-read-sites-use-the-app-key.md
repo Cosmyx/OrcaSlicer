@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted.
+Accepted. Amended after integration build 44545583808: no row rewires the
+AppImage desktop entry any more (decision 0132).
 
 ## Context
 
@@ -21,8 +22,9 @@ the producer table of the G-code processor.
   producer row in `GCodeProcessor.cpp`. Each was checked on DEV.
 - Guard G8 keeps the app key safe: after apply, no line naming
   `SLIC3R_APP_KEY` may disappear from a patched file, except a line a patch
-  row names the key in on purpose (the AppImage desktop entry `Name=`, which
-  now uses `SLIC3R_APP_NAME`); the key's definition never changes. Lines
+  row names the key in on purpose; the key's definition never changes. No
+  committed row does so any more: the AppImage desktop entry `Name=` keeps
+  the key, because appimagetool names the file after it (decision 0132). Lines
   that start naming the key (the sites above) are always fine.
 - `tests/cosmyx/test_gcode_header_producer.cpp` checks, on the branded tree
   the CI builds, that the header starts with the app key, contains the
