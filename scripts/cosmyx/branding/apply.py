@@ -7,7 +7,10 @@ GitHub step summary with `--ci`).
 - Nothing is written when a pre-guard fails.
 - Every file is backed up under `build/cosmyx/branding-state/` before its
   first write, so `revert` restores the exact bytes (and deletes the files
-  the overlay created). A stage or post-guard failure reverts at once.
+  the overlay created). A stage failure of any kind (a plugin bug included)
+  or a post-guard failure reverts at once and is written in the report.
+- `revert` updates the state after each file, so an interrupted revert is
+  resumed by running it again.
 - Applying an applied tree reverts it first, so apply is idempotent.
 
 Stages:
@@ -160,17 +163,30 @@ class State:
         self.save()
 
     def restore(self) -> list[str]:
+        """Put back every recorded file. The state is saved after each file
+        and a backup is deleted only once the state no longer lists it, so an
+        interrupted restore leaves a state the next restore completes."""
         restored = []
-        for relative, entry in sorted(self.files.items()):
-            target = repo_path(self.root, relative)
-            if entry.get("created"):
-                if target.exists():
-                    target.unlink()
-            else:
-                shutil.copy2(self.backup_path(relative), target)
-                self.backup_path(relative).unlink()
-            restored.append(relative)
-        clear_skip_worktree(self.root, restored)
+        try:
+            for relative, entry in sorted(self.files.items()):
+                target = repo_path(self.root, relative)
+                backup = self.backup_path(relative)
+                if entry.get("created"):
+                    if target.exists():
+                        target.unlink()
+                elif backup.is_file():
+                    shutil.copy2(backup, target)
+                else:
+                    # Left by an older interrupted revert that deleted the
+                    # backup before updating the state: already restored.
+                    print(f"warning: {relative}: no backup left, taken as already restored", file=sys.stderr)
+                del self.files[relative]
+                self.save()
+                if backup.is_file():
+                    backup.unlink()
+                restored.append(relative)
+        finally:
+            clear_skip_worktree(self.root, restored)
         # The folders are emptied, never removed: on a network share a folder
         # removed and recreated at once can fail.
         if self.file.is_file():
@@ -274,6 +290,9 @@ def apply(root: Path, ci: bool = False, env: dict | None = None, out=print, plug
                 stages[name] = stage(ctx, state)
         except (BrandingError, OSError) as error:
             findings.append(Finding("apply", "error", "", str(error)))
+            result = "failed"
+        except Exception as error:  # noqa: BLE001 - a stage bug must still revert
+            findings.append(Finding("apply", "error", "", f"stage {name} failed: {type(error).__name__}: {error}"))
             result = "failed"
         if result == "applied":
             findings += guards.run(ctx, "post")
