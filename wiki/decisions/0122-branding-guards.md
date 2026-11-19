@@ -36,6 +36,22 @@ merged with upstream) must keep building to show merge problems.
   changelog and the justfile) are exempt.
 - G5 and G8 are inactive until their tables exist, and call the guards of the
   colour and product-name plugins when those exist.
+- A guard never raises: one that cannot run (a malformed row path, an
+  unreadable file, a plugin bug) is an error finding under its own name, so
+  apply refuses with its report. A stage that fails with any exception is
+  reverted at once and reported, like a BrandingError. `allow_residue` rows
+  must have a non-empty `file` and `match`, a positive integer `count` and a
+  `reason`; G6 reports the others and they permit nothing.
+- An overlay file, or a folder above it, that is a symlink is a G2 error and
+  is never copied: git checks a symlink out as a text file on Windows.
+- A text patch writes only a file of the tree under its exact spelling: a
+  path that resolves outside the repository (a symlink) or that differs from
+  the on-disk name only by case is refused on every OS, so macOS and Windows
+  refuse what Linux refuses. Manifest rows whose paths differ only by case
+  are invalid (G6).
+- Revert saves the state after each restored file, so an interrupted revert
+  is completed by running it again; a recorded file whose backup is already
+  gone is taken as restored, with a warning.
 
 ## Consequences
 

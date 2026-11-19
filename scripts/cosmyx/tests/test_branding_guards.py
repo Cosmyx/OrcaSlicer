@@ -167,6 +167,35 @@ class G6TablesTest(TreeCase):
         self.assertEqual(paths, [branding.COLOURS_FILE, f"{branding.PRODUCT_NAME_DIR}/patches.json"])
 
 
+    def test_malformed_row_path_refuses_instead_of_raising(self) -> None:
+        """A row path the engine cannot use (`..`) makes G1 and G3 unable to
+        run: they report an error and apply refuses, with no exception."""
+        self.add_overlay("resources/images/apple.svg", svg("#8000FF"))
+        loaded = manifest.load(self.root)
+        rows = loaded.groups["icons-a-m"]
+        next(row for row in rows if row["path"] == "resources/images/apple.svg")["path"] = "../apple.svg"
+        manifest.save(self.root, loaded)
+        found = self.findings()
+        self.assertTrue(any(f.guard == "G1" and f.level == "error" for f in found), found)
+        code, lines = self.apply()
+        self.assertEqual(code, 1)
+        self.assertIn("refused", lines[-1])
+
+    def test_malformed_allow_residue_rows(self) -> None:
+        rows = [
+            "not an object",
+            {"file": "", "match": "#009688", "count": 1, "reason": "t"},
+            {"file": "README.md", "match": 7, "count": 1, "reason": "t"},
+            {"file": "README.md", "match": "#009688", "count": True, "reason": "t"},
+            {"file": "README.md", "match": "#009688", "count": 0, "reason": "t"},
+            {"file": "README.md", "match": "#009688", "count": 1, "reason": " "},
+        ]
+        self.write_json(branding.COLOURS_FILE, dict(COLOURS, allow_residue=rows))
+        found = [f for f in self.findings(guard="G6") if "allow_residue" in f.message]
+        self.assertEqual(len(found), len(rows), found)
+        self.findings("post")
+
+
 class G7UpstreamStaysOrcaTest(TreeCase):
     use_git = True
 

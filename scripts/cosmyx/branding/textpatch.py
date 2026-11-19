@@ -17,7 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import BrandingError, check_relative, decode_text, encode_text, repo_path
+from . import BrandingError, check_relative, decode_text, encode_text, tree_path
 
 KEYS = ("file", "old", "new", "count", "reason")
 
@@ -55,8 +55,9 @@ def normalise(row: dict) -> Patch:
 
 
 def read_text_eol(root: Path, relative: str) -> tuple[str, str]:
-    """(LF text, the file's line ending)."""
-    path = repo_path(root, relative)
+    """(LF text, the file's line ending). The path must be a file of the tree
+    under its exact spelling (see `tree_path`)."""
+    path = tree_path(root, relative)
     try:
         data = path.read_bytes()
     except OSError as error:
@@ -120,5 +121,5 @@ def apply(root: Path, patches: list[Patch], before_write=None) -> list[str]:
         if before_write is not None:
             before_write(relative)
         _, eol = read_text_eol(root, relative)
-        repo_path(root, relative).write_bytes(encode_text(texts[relative], eol))
+        tree_path(root, relative).write_bytes(encode_text(texts[relative], eol))
     return sorted(texts)

@@ -84,6 +84,20 @@ class ApplyRevertTest(BrandedTreeCase):
         self.assertEqual(snapshot(self.root), self.original)
         self.assertEqual(apply_module.revert(self.root), [])
 
+    def test_revert_tolerates_the_backup_of_a_restored_file(self) -> None:
+        """An older interrupted revert may have deleted a backup before the
+        state dropped its file: the next revert takes it as restored."""
+        self.assertEqual(self.apply()[0], 0)
+        state = apply_module.State(self.root)
+        write(self.root, "version.inc", self.original["version.inc"])
+        state.backup_path("version.inc").unlink()
+        with redirect_stderr(io.StringIO()) as err:
+            restored = apply_module.revert(self.root)
+        self.assertIn("version.inc", restored)
+        self.assertIn("version.inc", err.getvalue())
+        self.assertEqual(snapshot(self.root), self.original)
+        self.assertFalse(apply_module.State(self.root).active)
+
     def test_apply_is_idempotent(self) -> None:
         self.apply()
         once = snapshot(self.root)
