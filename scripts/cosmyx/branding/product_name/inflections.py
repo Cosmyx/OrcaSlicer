@@ -8,7 +8,8 @@ confirmed translation of a renamed msgid that no row of
 `cosmyx-src/branding/product-name/inflections.json` renames yet, with how
 often it appears and one example (msgid and translation). Hyphenated forms
 ("OrcaSlicer-ben") are listed apart: they are renamed to "CosmoSlice-ben"
-today, and need a row only when the suffix must change with the new name.
+by the plain rule, and need a (phrase) row only when the suffix must change
+with the new name; a form a row already renames is not listed.
 
 The output is JSON, for a speaker of each language to write the rows. It
 writes nothing else: the replacement forms are never guessed. Standard
@@ -28,12 +29,12 @@ if __package__ in (None, ""):
     from branding import PRODUCT_NAME_DIR, load_json, repo_path, write_text  # noqa: E402
     from branding import product_name  # noqa: E402
     from branding.product_name import catalogues, tables  # noqa: E402
-    from branding.product_name.tokens import TOKEN, inflection_map, protected_spans, unresolved  # noqa: E402
+    from branding.product_name.tokens import TOKEN, apply_inflections, inflection_map, protected_spans, unresolved  # noqa: E402
 else:
     from .. import PRODUCT_NAME_DIR, load_json, repo_path, write_text
     from .. import product_name
     from . import catalogues, tables
-    from .tokens import TOKEN, inflection_map, protected_spans, unresolved
+    from .tokens import TOKEN, apply_inflections, inflection_map, protected_spans, unresolved
 
 # The name, a hyphen and a lowercase suffix ("OrcaSlicer-ben").
 _HYPHENATED = re.compile(TOKEN.pattern.replace("(?P<suffix>", "-(?P<suffix>", 1).replace("]*)", "]+)", 1))
@@ -55,6 +56,8 @@ def needed(root: Path) -> dict:
         groups = found.setdefault(lang, {"inflected": {}, "hyphenated": {}})
         for form in unresolved(text, lang, inflections):
             groups["inflected"].setdefault(form, _entry(form, msgid, text))["count"] += 1
+        # A hyphenated form a phrase row already renames is not listed.
+        text = apply_inflections(text, lang, inflections)[0]
         spans = protected_spans(text)
         for match in _HYPHENATED.finditer(text):
             if not any(low <= match.start() and match.end() <= high for low, high in spans):
