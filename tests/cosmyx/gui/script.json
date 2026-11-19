@@ -1,0 +1,649 @@
+{
+  "comment": "GUI goldens script (wiki/cosmyx/gui-goldens.md, decisions 0162-0178). Every NativeCommands catalog key is classified in menu_items.",
+  "protocol": 1,
+  "window": {
+    "client_size": [
+      1280,
+      800
+    ]
+  },
+  "language": "en_US",
+  "settle_ms": 800,
+  "step_timeout_s": 30,
+  "fixtures": {
+    "model": "resources:handy_models/OrcaCube_v2.drc"
+  },
+  "steps": [
+    {
+      "id": "00-start",
+      "assert": [
+        "canvas_ready"
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "id": "10-tab-home",
+      "do": [
+        {
+          "tab": "home"
+        }
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "id": "10-tab-project",
+      "do": [
+        {
+          "tab": "project"
+        }
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "id": "10-tab-calibration",
+      "do": [
+        {
+          "tab": "calibration"
+        }
+      ]
+    },
+    {
+      "id": "10-tab-design",
+      "do": [
+        {
+          "tab": "design"
+        }
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "id": "10-tab-preview",
+      "do": [
+        {
+          "tab": "preview"
+        }
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "id": "10-tab-prepare",
+      "do": [
+        {
+          "tab": "prepare"
+        }
+      ]
+    },
+    {
+      "generate": "menus"
+    },
+    {
+      "generate": "commands",
+      "section": "30"
+    },
+    {
+      "generate": "prefs"
+    },
+    {
+      "generate": "commands",
+      "section": "60"
+    },
+    {
+      "id": "50-model-loaded",
+      "do": [
+        {
+          "tab": "prepare"
+        },
+        {
+          "load": "model"
+        }
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "generate": "settings"
+    },
+    {
+      "id": "70-selected",
+      "do": [
+        {
+          "tab": "prepare"
+        },
+        {
+          "select_all": ""
+        }
+      ]
+    },
+    {
+      "id": "70-context-menu",
+      "do": [
+        {
+          "context_menu": "object"
+        }
+      ],
+      "capture": "menu"
+    },
+    {
+      "generate": "commands",
+      "section": "70"
+    },
+    {
+      "id": "90-slice-preview",
+      "do": [
+        {
+          "slice": ""
+        }
+      ],
+      "assert": [
+        "slice_valid"
+      ],
+      "settle_ms": 1500
+    },
+    {
+      "id": "90-slice-layer",
+      "do": [
+        {
+          "command": "go_to_layer",
+          "param": "50"
+        }
+      ]
+    },
+    {
+      "id": "90-slice-gcode",
+      "do": [
+        {
+          "copy_gcode": "plate_1.gcode"
+        }
+      ],
+      "capture": "none"
+    }
+  ],
+  "menu_items": {
+    "add_handy_3dbenchy": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_autodesk_fdm_test": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_cali_cat": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_orca_badge": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_orca_cube": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_orca_string_hell": {
+      "class": "any",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_orca_tolerance_test": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_orcasliced_combo": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_stanford_bunny": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_handy_voron_cube": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "add_primitive_cone": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "add_primitive_cube": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "add_primitive_cylinder": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "add_primitive_disc": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "add_primitive_sphere": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "add_primitive_svg": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "add_primitive_text": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 1500
+    },
+    "add_primitive_torus": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "calib_cornering": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_flow_ratio": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_input_shaping_damp": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_input_shaping_freq": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_max_volumetric": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_pressure_advance": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_retraction": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_temperature": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "calib_vfa": {
+      "class": "dialog",
+      "section": "60"
+    },
+    "export_3mf": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_all_sliced_file": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_config": {
+      "class": "any",
+      "section": "30"
+    },
+    "export_drc_multi": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_drc_single": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_gcode": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_sliced_file": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_stl": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_stl_multi": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "export_toolpaths_obj": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "go_to_layer": {
+      "class": "skip",
+      "reason": "run by 90-slice-layer (needs a sliced plate)"
+    },
+    "go_to_tab": {
+      "class": "skip",
+      "reason": "the 10 tab steps select every tab"
+    },
+    "help_about": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "help_benchmark_3d_scene": {
+      "class": "skip",
+      "reason": "times the renderer: its report changes on every run"
+    },
+    "help_check_updates": {
+      "class": "skip",
+      "reason": "asks the update server, which the seeded config points nowhere"
+    },
+    "help_keyboard_shortcuts": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "help_migrate_filament_presets": {
+      "class": "any",
+      "section": "30"
+    },
+    "help_network_test": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "help_open_config_folder": {
+      "class": "skip",
+      "reason": "opens the system file manager"
+    },
+    "help_setup_wizard": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "help_tip_of_the_day": {
+      "class": "view",
+      "section": "30"
+    },
+    "help_troubleshoot": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "import_configs": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "import_file": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "import_zip_archive": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "install_local_plugin": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "install_plugin": {
+      "class": "skip",
+      "reason": "opens the online plugin hub"
+    },
+    "load_project": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "mode_advanced": {
+      "class": "view",
+      "section": "30",
+      "revert": "mode_expert"
+    },
+    "mode_expert": {
+      "class": "view",
+      "section": "30"
+    },
+    "mode_simple": {
+      "class": "view",
+      "section": "30",
+      "revert": "mode_expert"
+    },
+    "obj_arrange": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "obj_center": {
+      "class": "view",
+      "section": "70"
+    },
+    "obj_delete": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "obj_delete_all": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "obj_drop": {
+      "class": "view",
+      "section": "70"
+    },
+    "obj_fit_volume": {
+      "class": "view",
+      "section": "70",
+      "restore": true
+    },
+    "obj_instances_down": {
+      "class": "skip",
+      "reason": "run as the revert of obj_instances_up",
+      "section": "70"
+    },
+    "obj_instances_up": {
+      "class": "view",
+      "section": "70",
+      "revert": "obj_instances_down"
+    },
+    "obj_mirror_x": {
+      "class": "toggle",
+      "section": "70"
+    },
+    "obj_mirror_y": {
+      "class": "toggle",
+      "section": "70"
+    },
+    "obj_mirror_z": {
+      "class": "toggle",
+      "section": "70"
+    },
+    "obj_orient": {
+      "class": "view",
+      "section": "70",
+      "restore": true,
+      "settle_ms": 2000
+    },
+    "obj_split_objects": {
+      "class": "any",
+      "section": "70",
+      "restore": true
+    },
+    "obj_split_parts": {
+      "class": "any",
+      "section": "70",
+      "restore": true
+    },
+    "open_plugins": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "open_preferences": {
+      "class": "skip",
+      "reason": "the 40 steps open every Preferences tab"
+    },
+    "open_wiki": {
+      "class": "skip",
+      "reason": "opens the system browser"
+    },
+    "open_youtube": {
+      "class": "skip",
+      "reason": "opens the system browser"
+    },
+    "plate_add": {
+      "class": "view",
+      "section": "70",
+      "revert": "plate_delete"
+    },
+    "plate_delete": {
+      "class": "skip",
+      "reason": "run as the revert of plate_add and plate_duplicate",
+      "section": "70"
+    },
+    "plate_duplicate": {
+      "class": "view",
+      "section": "70",
+      "revert": "plate_delete"
+    },
+    "plate_goto": {
+      "class": "view",
+      "section": "70",
+      "param": "0"
+    },
+    "plate_rename": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "plate_toggle_lock": {
+      "class": "toggle",
+      "section": "70"
+    },
+    "preset_bundle": {
+      "class": "dialog",
+      "section": "30"
+    },
+    "refresh_plugins": {
+      "class": "skip",
+      "reason": "rescans the plugin folder: nothing visible changes"
+    },
+    "reset_window_layout": {
+      "class": "view",
+      "section": "30"
+    },
+    "save_project": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "save_project_as": {
+      "class": "skip",
+      "reason": "native file dialog: not a wxWidgets window, so neither the driver nor a golden can hold it"
+    },
+    "slice_and_preview": {
+      "class": "skip",
+      "reason": "run by 90-slice-preview"
+    },
+    "sync_ams": {
+      "class": "skip",
+      "reason": "needs a connected printer (shows a message only)"
+    },
+    "sync_presets": {
+      "class": "skip",
+      "reason": "needs a signed-in Orca Cloud account (shows a message only)"
+    },
+    "toggle_developer_mode": {
+      "class": "toggle",
+      "section": "30"
+    },
+    "view_bottom": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_default": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_fit_bed": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_front": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_iso": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_left": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_rear": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_right": {
+      "class": "view",
+      "section": "70"
+    },
+    "view_toggle_perspective": {
+      "class": "toggle",
+      "section": "70"
+    },
+    "view_top": {
+      "class": "view",
+      "section": "70"
+    }
+  },
+  "exclude": [
+    {
+      "surface": "10-tab-device",
+      "reason": "needs a printer connection (deferred)"
+    },
+    {
+      "surface": "10-tab-multi-device",
+      "reason": "needs printer connections (deferred)"
+    },
+    {
+      "surface": "10-tab-plugins",
+      "reason": "plugin tabs depend on installed plugins (deferred)"
+    },
+    {
+      "surface": "60-calibration-wizards",
+      "reason": "only the first screen of each calibration is captured (deferred)"
+    },
+    {
+      "surface": "50-object-settings",
+      "reason": "per-object settings are deferred"
+    },
+    {
+      "surface": "languages",
+      "reason": "en_US only (decision 0176)"
+    },
+    {
+      "surface": "themes",
+      "reason": "the shipped theme only: the dark mode is forced (decision 0136)"
+    },
+    {
+      "surface": "network-errors",
+      "reason": "network error states are deferred"
+    },
+    {
+      "surface": "high-dpi",
+      "reason": "captures run at 100 percent scale (deferred)"
+    }
+  ]
+}
