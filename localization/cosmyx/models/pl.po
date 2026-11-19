@@ -15,9 +15,12 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ten model kalibracyjny działa najlepiej, gdy kierunki wypełnienia są ustawione na 0 stopni. Dla optymalnych wyników kalibracji zaleca się ustawienie zarówno „Kierunek wzoru wypełnienia”, jak i „Kierunek wzoru pełnego wypełnienia” na 0.\n"
+"Tak - Zmień te ustawienia automatycznie\n"
+"Nie - Nie zmieniaj tych ustawień za mnie"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Sugestia kalibracji"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -30,39 +33,47 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ten model kalibracyjny działa najlepiej z określonymi ustawieniami wypełnienia.\n"
+"Dla optymalnych wyników kalibracji zaleca się ustawienie:\n"
+"- Kierunek wzoru wypełnienia: %.0f°\n"
+"- Kierunek wzoru pełnego wypełnienia: %.0f°\n"
+"- Tylko jedna ściana na pierwszej warstwie: %s\n"
+"\n"
+"Tak - Zmień te ustawienia automatycznie\n"
+"Nie - Nie zmieniaj tych ustawień za mnie"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Modele 3D Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Modele kalibracyjne dla podwójnej głowicy"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Modele kalibracyjne dla pojedynczej głowicy"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Modele podręczne Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Kalibracja 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibracja 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibracja 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Sześcian dwukolorowy"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Kalibracja 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx Sześcian"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Kontrola napięcia paska"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Uchwyt szpuli"
