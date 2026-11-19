@@ -39,6 +39,13 @@
       "status": "validated"
     },
     {
+      "from": "#33ABA1",
+      "to": "#A472F5",
+      "role": "light hover (one-layer icons)",
+      "source": "user",
+      "status": "validated"
+    },
+    {
       "from": "#008172",
       "to": "#8000FF",
       "role": "dark hover",
