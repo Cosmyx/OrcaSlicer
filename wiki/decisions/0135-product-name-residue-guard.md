@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted. Ports CosmoSlice D-005 and D-006.
+Accepted. Ports CosmoSlice D-005 and D-006. Amended: inflected names and
+the inflection table.
 
 ## Context
 
@@ -25,6 +26,16 @@ sync on every new string.
   hints, and the translated elements of the setup-guide pages. That residue is
   drift: a warning on development builds, an error on release builds, like
   G3 and G4.
+- An inflected name (decision 0134) left in a confirmed translation of a
+  renamed msgid because `inflections.json` has no row for it is reported as
+  "needs inflection row (<language>): <form>", at the drift level: a warning
+  on development builds, so the upstream sync keeps building while a speaker
+  writes the row, and an error on release builds. Before apply, an
+  inflection row that matches no such translation in its language is stale
+  (error), and an invalid row (no inflected name in `old`, `new` without the
+  CosmoSlice stem or still naming OrcaSlicer, a duplicate) is an error.
+- Every input is read as UTF-8; a file that is not (hints, a guide page) is a
+  clean G8 error, never a traceback.
 - `allowlist.json` rows are `msgid`, `literal` (file, source text, exact
   count) or `text` (guide page), each with a reason starting with its
   category: `asset`, `cli`, `compared`, `credit`, `dev-tool`, `external`,
