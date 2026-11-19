@@ -125,8 +125,9 @@ The build turns the Orca teal into the Cosmyx violets. Everything is in
    form (`fill:#...`) of the SVG icons.
 3. **The hex rewrite** changes every `#RRGGBB` (any case; an 8-digit colour
    keeps its alpha) whose colour is the `from` of a mapping, to its `to`, in
-   uppercase. It never touches an `href`, a `url(...)` reference or base64
-   data, and nothing outside the scopes.
+   uppercase. It never touches an `href`, a `url(...)` reference, a URL
+   fragment (`https://...#009688`), a numeric character reference
+   (`&#009688;`) or base64 data, and nothing outside the scopes.
 4. **The leftover check** runs on the branded tree. Any teal left in the
    scopes (hex, colour tuple or `0xRRGGBB`), and any mapped colour, fails the
    build unless an `allow_residue` row permits that exact count in that file.

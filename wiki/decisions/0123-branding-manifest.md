@@ -17,7 +17,8 @@ list changes with upstream, and a hand-written list would go stale.
     the teal family (HSL hue 160-190, saturation at least 0.25, lightness at
     least 0.15, `#00AE42` and `#1F8EEA` excluded), with the hex rule of the
     frozen contract (`#RRGGBB` in any case, not followed by a hex digit, never
-    in an `href`, a `url(...)` or base64 data);
+    in an `href`, a `url(...)`, a URL fragment, a numeric character reference
+    `&#NNNNNN;` or base64 data);
   - every branding image matching the name patterns of `manifest.py`
     (`resources/images/OrcaSlicer*`, `splash_logo*`, `studio_logo*`,
     `stl.icns`, `gcode.icns`, `resources/Icon.icns`,

@@ -73,6 +73,25 @@ class HexRewriteTest(unittest.TestCase):
         ):
             self.assertEqual(self.rewrite(text), text)
 
+    def test_url_fragments_and_character_references_are_untouched(self) -> None:
+        for text in (
+            '<a href="https://example.org/page#009688">',
+            "see https://example.org/page.html#009688 for details",
+            "<p>&#009688;</p>",
+        ):
+            self.assertEqual(self.rewrite(text), text)
+            self.assertEqual(find_hexes(text), [])
+
+    def test_colours_next_to_a_url_are_still_colours(self) -> None:
+        """Only the URL itself is protected: a colour after the link, a quote
+        or whitespace away, is rewritten."""
+        self.assertEqual(
+            self.rewrite('<a href="https://example.org/x" style="color:#009688">'),
+            '<a href="https://example.org/x" style="color:#8000FF">',
+        )
+        self.assertEqual(self.rewrite("https://example.org/x #009688"), "https://example.org/x #8000FF")
+        self.assertEqual(self.rewrite("a&b:#009688"), "a&b:#8000FF")
+
     def test_unmapped_and_ignored_colours_stay(self) -> None:
         self.assertEqual(self.rewrite("#00AE42 #26A69A #FFFFFF"), "#00AE42 #26A69A #FFFFFF")
 
@@ -194,6 +213,12 @@ class TableTest(unittest.TestCase):
         self.assertTrue(self.row(role=""))
         self.assertTrue(self.row(**{"from": "#00AE42"}))
         self.assertTrue(self.problems(mappings=[TABLE["mappings"][0]] * 2))
+
+    def test_bad_palette(self) -> None:
+        self.assertEqual(self.problems(palette=["#8000FF", "#A472F5"]), [])
+        self.assertTrue(self.problems(palette={"brand": "#8000ff", "dark": "#A472F5"}))
+        self.assertTrue(self.problems(palette=["#8000FF", 42]))
+        self.assertTrue(self.problems(palette="#8000FF"))
 
     def test_bad_snippets(self) -> None:
         good = {"file": WIDGET, "anchor": "a", "insert": "b", "count": 1, "reason": "r"}
