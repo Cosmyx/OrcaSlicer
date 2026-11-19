@@ -64,8 +64,8 @@ catalogues the T8 graft has already merged.
   by the plain rule ("CosmoSlice-ben") and listed apart, for a speaker to add
   a row only where the suffix must change.
 - Refresh against DEV: 48 of CosmoSlice's 76 pairs still match (28 dropped:
-  their text is gone upstream); 64 msgid rows and 10 literal rows were added
-  for text upstream added since, 122 rows in all. `just brand-name-candidates`
+  their text is gone upstream); 64 msgid rows and 9 literal rows were added
+  for text upstream added since, 121 rows in all. `just brand-name-candidates`
   proposes rows for what later upstream merges bring.
 - The renamed catalogues compile with `msgfmt --check-format` (checked on a
   scratch copy of DEV).

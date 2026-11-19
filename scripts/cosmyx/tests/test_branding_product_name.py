@@ -875,6 +875,22 @@ class CommittedTablesTest(unittest.TestCase):
         self.assertTrue(all(row.get("source") for row in rows), "every inflection row says where it comes from")
         self.assertEqual(sum(1 for row in rename if row["source"] == "cosmoslice"), 48)
 
+    def test_rename_keeps_texts_asserted_by_upstream_tests(self) -> None:
+        # An upstream test that asserts a text the rename rewrites fails on
+        # every branded build: such a text is kept (allowlisted), never renamed.
+        rename = branding.load_json(REPO_ROOT / PN / "rename.json")["rows"]
+        olds = [row["old"] for row in rename]
+        tests_dir = REPO_ROOT / "tests"
+        hits = []
+        for path in sorted(tests_dir.rglob("*.cpp")):
+            if branding.is_cosmyx_path(branding.relative_posix(REPO_ROOT, path)):
+                continue
+            text = path.read_bytes().decode("utf-8", "replace")
+            if "Orc" not in text:
+                continue
+            hits += [(branding.relative_posix(REPO_ROOT, path), old[:60]) for old in olds if old in text]
+        self.assertEqual(hits, [])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,7 +3,7 @@
 ## Status
 
 Accepted. Ports CosmoSlice D-005 and D-006. Amended: inflected names and
-the inflection table.
+the inflection table; texts asserted by upstream tests are kept.
 
 ## Context
 
@@ -42,10 +42,18 @@ sync on every new string.
 - `allowlist.json` rows are `msgid`, `literal` (file, source text, exact
   count) or `text` (guide page), each with a reason starting with its
   category: `asset`, `cli`, `compared`, `credit`, `dev-tool`, `external`,
-  `internal`, `kept-name`, `persisted`, `url`. 60 rows today: the About
+  `internal`, `kept-name`, `persisted`, `url`. 62 rows today: the About
   credits and copyright, the upstream releases named in messages, the CLI
   `result.json` texts, compared and persisted tags, client ids sent to
-  third-party services, icon names, developer tools.
+  third-party services, icon names, developer tools, and the plugin host's
+  "OrcaSlicer application is not initialized" exception.
+- A text that an upstream test under `tests/` asserts literally is never a
+  rename target: renaming it breaks that test on every branded build, and
+  the test is upstream's, so it cannot be changed without a conflict. Such a
+  text is allowlisted instead (`compared`). The plugin host's exception
+  texts are seen by plugins, not shown as interface text, so keeping them
+  costs nothing visible. A script test fails when a rename row's old text
+  appears in a non-Cosmyx `tests/**/*.cpp` file.
 
 ## Consequences
 
