@@ -76,8 +76,10 @@ here; see the upstream release notes.
   application is not initialized") are kept, and a test fails if the rename
   ever rewrites a text an upstream test asserts.
   A guard reports any new upstream text naming OrcaSlicer; recipe
-  `just brand-name-candidates` proposes the rows. Pull request: pending.
-  Decisions: 0132, 0133, 0134, 0135.
+  `just brand-name-candidates` proposes the rows. The cloud web pane and
+  the plugin hub fall back to CosmoCloud (orca-cloud.cosmyx3d.fr) instead of
+  cloud.orcaslicer.com. Pull request: pending.
+  Decisions: 0132, 0133, 0134, 0135, 0201.
 
 <!-- cosmyx-slot: T11f -->
 
