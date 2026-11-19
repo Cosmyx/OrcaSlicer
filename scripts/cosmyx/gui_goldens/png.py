@@ -17,6 +17,9 @@ from pathlib import Path
 from . import GoldenError
 
 SIGNATURE = b"\x89PNG\r\n\x1a\n"
+# Largest image the decoder accepts (decision 0179): 64 Mpx, 256 MiB of RGBA. Real captures are a few
+# Mpx; the cap stops a damaged or hostile IHDR from asking for gigabytes before any pixel is checked.
+MAX_PIXELS = 1 << 26
 
 
 @dataclass
@@ -92,6 +95,8 @@ def _paeth(a: int, b: int, c: int) -> int:
 
 def _unfilter(data: bytes, width: int, height: int, bpp: int) -> bytes:
     stride = width * bpp
+    if len(data) != height * (1 + stride):
+        raise GoldenError(f"PNG pixel data is {len(data)} bytes, {height * (1 + stride)} expected for {width}x{height}")
     out = bytearray(height * stride)
     previous = bytearray(stride)
     pos = 0
@@ -121,32 +126,65 @@ def _unfilter(data: bytes, width: int, height: int, bpp: int) -> bytes:
     return bytes(out)
 
 
+def _chunks(blob: bytes):
+    """(type, data) of each chunk up to IEND, with its length and CRC checked."""
+    pos = len(SIGNATURE)
+    while True:
+        if pos + 8 > len(blob):
+            raise GoldenError("PNG file ends before its IEND chunk")
+        length, kind = struct.unpack(">I4s", blob[pos:pos + 8])
+        end = pos + 8 + length
+        if end + 4 > len(blob):
+            raise GoldenError(f"PNG chunk {kind!r} is truncated")
+        data = blob[pos + 8:end]
+        (crc,) = struct.unpack(">I", blob[end:end + 4])
+        if crc != zlib.crc32(kind + data) & 0xFFFFFFFF:
+            raise GoldenError(f"PNG chunk {kind!r} has a bad CRC")
+        yield kind, data
+        if kind == b"IEND":
+            return
+        pos = end + 4
+
+
+def _inflate(data: bytes, expected: int) -> bytes:
+    """The zlib stream of the IDAT chunks, never inflated past the size IHDR implies."""
+    inflater = zlib.decompressobj()
+    try:
+        out = inflater.decompress(data, expected + 1)
+    except zlib.error as error:
+        raise GoldenError(f"PNG pixel data is not a valid zlib stream: {error}") from error
+    if not inflater.eof:
+        raise GoldenError("PNG pixel data is truncated or larger than its IHDR says")
+    return out
+
+
 def decode(blob: bytes) -> Image:
     if not blob.startswith(SIGNATURE):
         raise GoldenError("not a PNG file")
-    pos, idat, palette, header = len(SIGNATURE), bytearray(), b"", None
-    while pos + 8 <= len(blob):
-        length, kind = struct.unpack(">I4s", blob[pos:pos + 8])
-        data = blob[pos + 8:pos + 8 + length]
-        pos += 12 + length
+    idat, palette, header = bytearray(), b"", None
+    for kind, data in _chunks(blob):
         if kind == b"IHDR":
+            if len(data) != 13:
+                raise GoldenError(f"PNG IHDR is {len(data)} bytes, 13 expected")
             header = struct.unpack(">IIBBBBB", data)
         elif kind == b"PLTE":
             palette = data
         elif kind == b"IDAT":
             idat += data
-        elif kind == b"IEND":
-            break
     if header is None:
         raise GoldenError("PNG without IHDR")
     width, height, depth, colour, _, _, interlace = header
+    if width == 0 or height == 0 or width * height > MAX_PIXELS:
+        raise GoldenError(f"PNG size {width}x{height} is outside 1 to {MAX_PIXELS} pixels")
     if interlace:
         raise GoldenError("interlaced PNG files are not supported")
     channels = {0: 1, 2: 3, 3: 1, 4: 2, 6: 4}.get(colour)
     if channels is None or depth not in (8, 16) or (colour == 3 and depth != 8):
         raise GoldenError(f"unsupported PNG: colour type {colour}, depth {depth}")
+    if colour == 3 and (not palette or len(palette) % 3):
+        raise GoldenError("palette PNG without a valid PLTE chunk")
     bpp = channels * depth // 8
-    pixels = _unfilter(zlib.decompress(bytes(idat)), width, height, bpp)
+    pixels = _unfilter(_inflate(bytes(idat), height * (1 + width * bpp)), width, height, bpp)
     if depth == 16:
         pixels = pixels[0::2]
     out = bytearray(width * height * 4)
@@ -162,6 +200,8 @@ def decode(blob: bytes) -> Image:
         out[0::4] = out[1::4] = out[2::4] = pixels[0::2]
         out[3::4] = pixels[1::2]
     else:
+        if max(pixels) * 3 + 3 > len(palette):
+            raise GoldenError(f"PNG palette index {max(pixels)} is past its {len(palette) // 3} entries")
         for i, index in enumerate(pixels):
             out[i * 4:i * 4 + 3] = palette[index * 3:index * 3 + 3]
             out[i * 4 + 3] = 255

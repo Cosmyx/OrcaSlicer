@@ -67,6 +67,9 @@ class Pass:
         self.hello: dict | None = None
         self.fails: list[dict] = []
         self.done: dict | None = None
+        # Surface ids already written in this pass: a second event with the same id would overwrite the
+        # first file and lose that state silently (decision 0179).
+        self.stored: set[str] = set()
 
     def handle(self, event: dict) -> None:
         kind = event["event"]
@@ -75,18 +78,30 @@ class Pass:
             self.capturer.park_pointer()
         elif kind == "capture":
             try:
+                self.claim(protocol.image_file_name(event["id"]))
                 self.store(event)
             except GoldenError as error:
                 self.fails.append({"id": event["id"], "reason": f"capture failed: {error}"})
             protocol.ack(self.driver_dir, event["seq"])
         elif kind == "text":
-            name = "surfaces.txt" if event["id"] == "surfaces" else protocol.text_file_name(event["id"])
+            try:
+                name = self.claim(protocol.text_file_name(event["id"]))
+            except GoldenError as error:
+                self.fails.append({"id": event["id"], "reason": f"text failed: {error}"})
+                return
             self.images.mkdir(parents=True, exist_ok=True)
             (self.images / name).write_text(event["content"], encoding="utf-8", newline="\n")
         elif kind == "fail":
             self.fails.append({"id": event["id"], "reason": event["reason"]})
         elif kind == "done":
             self.done = event
+
+    def claim(self, name: str) -> str:
+        """The file name, once per pass; GoldenError when an earlier event already wrote it."""
+        if name in self.stored:
+            raise GoldenError(f"duplicate surface: {name} was already written in this pass")
+        self.stored.add(name)
+        return name
 
     def store(self, event: dict) -> None:
         kind = event["kind"]
