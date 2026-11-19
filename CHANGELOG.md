@@ -53,6 +53,13 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T7 -->
 
 <!-- cosmyx-slot: T11b -->
+- Ship the CosmoSlice logos in Cosmyx builds: 22 files vendored from
+  CosmoSlice (app logos, About banner, splash, bed texture) and 12 rasters
+  derived from the CosmoSlice SVG master by `just brand-derive` in a pinned
+  resvg image (multi-size Windows icon, macOS icons, MSIX tiles, grayscale
+  and title logos), all waiting for review. The horizontal Troubleshoot
+  logos and `web/image/logo2.png` are still missing. Pull request: pending.
+  Decisions: 0124, 0125, 0126.
 
 <!-- cosmyx-slot: T11c -->
 
