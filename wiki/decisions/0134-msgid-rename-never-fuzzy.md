@@ -2,7 +2,9 @@
 
 ## Status
 
-Accepted. Replaces CosmoSlice D-004's fuzzy marking for this fork.
+Accepted. Replaces CosmoSlice D-004's fuzzy marking for this fork. Amended:
+the token rule (all capitals, combining marks, names tied to the app key)
+and the inflection table.
 
 ## Context
 
@@ -31,7 +33,28 @@ catalogues the T8 graft has already merged.
   Orca Badge, OrcaSliced Combo, Orca Preset Bundle, Orca Filament Library
   (they name an upstream service, a built-in model or calibration, or a
   format). Identifiers the name runs into (`OrcaSlicerVersion`,
-  `ORCA_CAD_GLYPH`) never match.
+  `ORCA_CAD_GLYPH`) never match, and neither does a name followed by a
+  combining mark ("Orca" + U+0301 is another word). All capitals count as
+  one name: "ORCA SLICER" and "ORCASLICER" become "CosmoSlice".
+- Names derived from the app key point at real files and folders, which keep
+  the key (decision 0133): `OrcaSlicer.conf`, `OrcaSlicer.app`,
+  `OrcaSlicer.AppImage` and a Windows folder after a backslash
+  (`%APPDATA%\OrcaSlicer`, `...\Roaming\OrcaSlicer`) are never renamed.
+- Inflected languages glue a suffix to the name (cs "OrcaSliceru", hu
+  "OrcaSlicerrel", eu "OrcaSlicerren", sv "OrcaSlicers"). In a translation, a
+  name followed by lowercase Latin letters is an inflected name (a Korean or
+  Japanese particle is not: it is not Latin). The suffix depends on the new
+  name, so it is never guessed: `inflections.json` rows
+  `{"language", "old", "new", "source"}` give, per catalogue language, the
+  exact text `old` (the inflected form, or a longer phrase when a word next
+  to it must change too, such as the Hungarian article) and its `new` text,
+  written by a speaker of that language. They are applied before the plain
+  rule; an inflected name without a row stays and G8 reports it (decision
+  0135). In English text (C++ sources, msgids) "Orcas" stays another word.
+  `just brand-name-inflections` lists every form still without a row, per
+  language, with an example. Hyphenated forms ("OrcaSlicer-ben") are renamed
+  by the plain rule ("CosmoSlice-ben") and listed apart, for a speaker to add
+  a row only where the suffix must change.
 - Refresh against DEV: 48 of CosmoSlice's 76 pairs still match (28 dropped:
   their text is gone upstream); 64 msgid rows and 10 literal rows were added
   for text upstream added since, 122 rows in all. `just brand-name-candidates`
