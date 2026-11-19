@@ -91,6 +91,12 @@ The build checks the tables before it writes anything and the tree after:
 A failed check before apply writes nothing; a failure after apply puts every
 file back.
 
+Line endings never matter. A Windows checkout (`core.autocrlf`, the default on
+the runners) has CRLF text files: every match and count is made on LF text, a
+patched file is written back with its own line ending (never a mix), and the
+canonical-form checks and SVG hashes compare LF content, so a tree brands and
+checks the same on every OS.
+
 ## Local use
 
 - `just brand-apply` brands your checkout; `just brand-revert` restores every
