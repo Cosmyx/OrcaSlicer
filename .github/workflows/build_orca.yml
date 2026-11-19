@@ -44,9 +44,9 @@ jobs:
         with:
           lfs: 'false'
 
-      - name: Graft Cosmyx translations # Cosmyx
+      - name: Prepare Cosmyx sources # Cosmyx
         if: ${{ !(runner.os == 'macOS' && inputs.macos-combine-only) }} # Cosmyx
-        uses: ./.github/actions/cosmyx-i18n-graft # Cosmyx
+        uses: ./.github/actions/cosmyx-prepare # Cosmyx
 
       - name: load cached deps
         if: ${{ !(runner.os == 'macOS' && inputs.macos-combine-only) }}
