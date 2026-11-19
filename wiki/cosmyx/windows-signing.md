@@ -25,55 +25,81 @@ The build steps, in order:
 3. `verify` (after the installer): checks every file, the installer, its
    payload and the uninstaller a silent install writes.
 
-Builds that are signed: DEV and `release/*`, never pull requests or MIXED
-(decision 0093). `build_all` does not run on DEV pushes; start it by hand with
+Builds that are signed: DEV and `release/*`, never pull requests or MIXED,
+and only when the `AZURE_*` signing secrets are set (decision 0098).
+`build_all` does not run on DEV pushes; start it by hand with
 `just build-all DEV`.
-
-## What to set up in Azure
-
-1. An Artifact Signing account and a certificate profile (public trust), with
-   its identity validation done. Note the account's region endpoint, for
-   example `https://weu.codesigning.azure.net/` (it must match the account's
-   region).
-2. An Entra application registration (or a user-assigned managed identity) for
-   GitHub Actions.
-3. On that application, one federated credential per signed ref:
-   - Issuer `https://token.actions.githubusercontent.com`
-   - Audience `api://AzureADTokenExchange`
-   - Subject `repo:Cosmyx/OrcaSlicer:ref:refs/heads/DEV`
-   - Subject `repo:Cosmyx/OrcaSlicer:ref:refs/heads/release/<name>`, one per
-     release branch, or a single flexible federated credential matching
-     `repo:Cosmyx/OrcaSlicer:ref:refs/heads/release/*`.
-   - Any feature branch tested with `COSMYX_SIGN_ALL_REFS` needs its own
-     subject too.
-4. A role assignment: "Artifact Signing Certificate Profile Signer" for that
-   application, on the certificate profile (or the signing account).
 
 ## What to set in GitHub
 
-Repository variables (Settings, Secrets and variables, Actions, Variables). No
-secret is needed.
+Repository secrets (Settings, Secrets and variables, Actions, Secrets). These
+are the ones the previous Cosmyx pipeline already used, so they are in place.
+With none of them set, the build runs unsigned; with only some, the setup step
+fails and names the missing ones.
+
+| Secret | Value |
+|--------|-------|
+| `AZURE_CLIENT_ID` | Application (client) ID of the Entra application. |
+| `AZURE_TENANT_ID` | Directory (tenant) ID. |
+| `AZURE_SUBSCRIPTION_ID` | Subscription that holds the signing account. |
+| `AZURE_TRUSTED_SIGNING_ENDPOINT` | Account endpoint, for example `https://weu.codesigning.azure.net/`. |
+| `AZURE_CODE_SIGNING_NAME` | Artifact Signing account name. |
+| `AZURE_CERT_PROFILE_NAME` | Certificate profile name. |
+
+Optional repository variables (Variables tab), none needed to sign:
 
 | Variable | Value |
 |----------|-------|
-| `COSMYX_AZURE_CLIENT_ID` | Application (client) ID of the Entra application. |
-| `COSMYX_AZURE_TENANT_ID` | Directory (tenant) ID. |
-| `COSMYX_AZURE_SUBSCRIPTION_ID` | Subscription that holds the signing account. |
-| `COSMYX_SIGN_ENDPOINT` | Account endpoint, for example `https://weu.codesigning.azure.net/`. |
-| `COSMYX_SIGN_ACCOUNT` | Signing account name. Signing is off while it is empty. |
-| `COSMYX_SIGN_PROFILE` | Certificate profile name. |
-| `COSMYX_SIGN_SUBJECT` | Certificate subject as Windows prints it, for example `CN=Cosmyx, O=Cosmyx, L=City, C=FR`. If the first verify fails with "signed by ..., not ...", the subject it prints is the value to set. |
-| `COSMYX_SIGN_ALL_REFS` | Optional. `true` signs every non-PR, non-MIXED ref (for tests). |
+| `COSMYX_SIGN_EKU` | Pin: the EKU of our identity validation, `1.3.6.1.4.1.311.97.<...>` (not `.97.1.0`). Stable across certificate renewals; preferred. |
+| `COSMYX_SIGN_SUBJECT` | Pin: the certificate subject as Windows prints it, for example `CN=Cosmyx, O=Cosmyx, L=City, C=FR`. |
+| `COSMYX_SIGN_ALL_REFS` | `true` signs every non-PR, non-MIXED ref (for tests; each ref needs its federated credential). |
+
+Without pins, the verify step accepts any Artifact Signing certificate
+(decision 0099). Each run prints `Signer of the files named directly: Subject
+'...', EKU ...` in "Cosmyx verify Windows signatures": copy the
+`1.3.6.1.4.1.311.97.` EKU other than `.97.1.0` into `COSMYX_SIGN_EKU`, or the
+subject into `COSMYX_SIGN_SUBJECT`.
+
+## What to set up in Azure
+
+The account, the certificate profile, the Entra application and its role come
+from the previous pipeline. What changes is the OIDC subject: the build job has
+no GitHub environment any more (decision 0098), so the federated credential
+for `environment:azure-signing` no longer matches.
+
+1. In Entra ID, open the application whose client ID is `AZURE_CLIENT_ID`,
+   then Certificates & secrets, Federated credentials, Add credential, scenario
+   "GitHub Actions deploying Azure resources":
+   - Organization `Cosmyx`, repository `OrcaSlicer`, entity type Branch,
+     branch `DEV`. That gives:
+     - Issuer `https://token.actions.githubusercontent.com`
+     - Subject `repo:Cosmyx/OrcaSlicer:ref:refs/heads/DEV`
+     - Audience `api://AzureADTokenExchange`
+   - The same for each release branch, for example branch `release/2.4`
+     (subject `repo:Cosmyx/OrcaSlicer:ref:refs/heads/release/2.4`). Entra
+     does not match wildcards in a plain federated credential; a flexible
+     federated credential matching `repo:Cosmyx/OrcaSlicer:ref:refs/heads/release/*`
+     can replace them where the tenant offers it. An application holds at most
+     20 federated credentials.
+   - Any branch tested with `COSMYX_SIGN_ALL_REFS` needs its own credential.
+   - The `environment:azure-signing` credential can stay; nothing uses it.
+2. Check that the application still has the role "Artifact Signing
+   Certificate Profile Signer" (formerly "Trusted Signing Certificate Profile
+   Signer") on the certificate profile or the signing account.
+3. If the repository customised its OIDC subject template
+   (`gh api repos/Cosmyx/OrcaSlicer/actions/oidc/customization/sub` shows
+   `use_default: false`), the subject follows that template instead.
 
 ## Checking locally
 
 - `just test-scripts` runs the Pester tests of the script (when `pwsh` is
-  installed).
+  installed) and the checks of the workflow and action wiring.
 - `just sign-dryrun <path>` prints the Jsign command and the files that would
   be signed. It needs `COSMYX_SIGN_ENDPOINT`, `COSMYX_SIGN_ACCOUNT`,
   `COSMYX_SIGN_PROFILE` and `ORCA_SIGN_JSIGN` in the environment (any values).
 
 ## Decisions
 
-0090 Jsign backend, 0091 OIDC per ref, 0092 token resource, 0093 signed refs,
-0094 token lifetime, 0095 upstream hooks, 0096 verify by subject, 0097 tests.
+0090 Jsign backend, 0092 token resource, 0094 token lifetime, 0095 upstream
+hooks, 0097 tests, 0098 settings from secrets and OIDC by ref (supersedes 0091
+and 0093), 0099 verify by Artifact Signing EKU (supersedes 0096).
