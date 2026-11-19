@@ -69,6 +69,12 @@ here; see the upstream release notes.
 ### CI-release
 
 <!-- cosmyx-slot: T9 -->
+- Sign Windows builds of DEV and `release/*` with Azure Artifact Signing:
+  the app, the installer's payload, the uninstaller and the installer are
+  signed and timestamped, then checked. Off until the `COSMYX_AZURE_*` and
+  `COSMYX_SIGN_*` repository variables are set (see
+  `wiki/cosmyx/windows-signing.md`). Pull request: pending. Decisions: 0090,
+  0091, 0092, 0093, 0094, 0095, 0096, 0097.
 
 <!-- cosmyx-slot: T10 -->
 
