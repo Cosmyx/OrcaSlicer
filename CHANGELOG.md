@@ -68,8 +68,9 @@ here; see the upstream release notes.
 - Translate the Cosmyx strings: per-feature catalogues under
   `localization/cosmyx/` (cht-nozzle, ironing-temperature, models) for every
   OrcaSlicer language, seeded from the previous Cosmyx branch, grafted into
-  the OrcaSlicer catalogues by every desktop build, Flatpak included, without
-  marking the build "-dirty" (the edited files are hidden from git diff).
+  the OrcaSlicer catalogues by every desktop build, Flatpak included (its
+  container workspace is trusted for git), without marking the build "-dirty"
+  (the edited files are hidden from git diff).
   Recipes `just i18n-extract`, `i18n-seed`, `i18n-graft`, `i18n-ungraft`,
   `worktree-hidden`. Pull request: pending. Decisions: 0080, 0081, 0082
   (superseded), 0083, 0084, 0085, 0086, 0087.
