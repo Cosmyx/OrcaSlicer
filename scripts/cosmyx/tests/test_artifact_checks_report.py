@@ -61,6 +61,13 @@ class ReportTests(unittest.TestCase):
         self.assertIn("**Result: failed**", text)
         self.assertIn("nothing was checked", report.markdown([], "report", False))
 
+    def test_markdown_escapes_untrusted_text(self) -> None:
+        self.assertEqual(report.md_code("a``b"), "```a``b```")
+        self.assertEqual(report.md_code("`x"), "`` `x ``")
+        self.assertEqual(report.md_safe("a\nb\x1b"), "a\\x0ab\\x1b")
+        self.assertEqual(report.md_cell("a|b"), "a\\|b")
+        self.assertEqual(report.xml_safe("a\x01\ud800\tb"), "a\\x01\\ud800\tb")
+
     def test_job_records(self) -> None:
         records = [Record("windows", "a", "", "signature", "pass")]
         extra = report.job_records({"windows": "failure", "macos": "failure", "linux": "success"}, records)

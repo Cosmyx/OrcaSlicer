@@ -16,6 +16,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from artifact_checks import allowlist, inventory, policy_windows as pw  # noqa: E402
+from undecodable_output import UNDECODABLE, run_printing  # noqa: E402
 from artifact_checks.signing_policy import ENFORCE, NOT_CONFIGURED, REPORT  # noqa: E402
 
 OUR_SUBJECT = "CN=Cosmyx, O=Cosmyx, C=FR"
@@ -292,6 +293,18 @@ class CollectTests(unittest.TestCase):
         self.assertTrue(any(r.check == "payload" and r.status == "fail" and "23.01" in r.reason
                             for r in collected.records))
         self.assertFalse(any(i.role == "payload" for i in collected.items))
+
+    def test_undecodable_seven_zip_banner_is_read(self) -> None:
+        plain = self.fake_run
+
+        def run(args, **kwargs):
+            if [str(a) for a in args] == [str(self.seven_zip)]:
+                self.calls.append([str(self.seven_zip)])
+                return run_printing(args, kwargs, b"7-Zip 24.09 (x64) " + UNDECODABLE + b"\n")
+            return plain(args, **kwargs)
+        self.fake_run = run
+        collected = self.collect()
+        self.assertTrue(any(i.role == "payload" for i in collected.items), collected.records)
 
     def test_local_run_never_installs(self) -> None:
         collected = self.collect(install=False)

@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from artifact_checks import allowlist, inventory, macos  # noqa: E402
+from undecodable_output import UNDECODABLE, run_printing  # noqa: E402
 
 TAG = "2.6.0-dev-8_aa9dac8"
 EXPECTATIONS = inventory.load_expectations()
@@ -59,6 +60,13 @@ class FakeTools:
         if args[0] == "hdiutil":
             return subprocess.CompletedProcess(args, 0, "", "")
         raise AssertionError(f"unexpected {args}")
+
+
+class OutputDecodingTests(unittest.TestCase):
+    def test_undecodable_tool_output_is_replaced_not_raised(self) -> None:
+        done = macos._run(lambda args, **kwargs: run_printing(args, kwargs, b"bad " + UNDECODABLE + b"\n", 1),
+                          ["codesign", "--verify", "x"])
+        self.assertIn("\ufffd", macos._last_line(done))
 
 
 class ScanTests(unittest.TestCase):

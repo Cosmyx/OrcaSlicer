@@ -80,5 +80,8 @@ here; see the upstream release notes.
   files with a smoke run and a slice, plus the build tag in the names and the
   shipped translations and models. Posts the commit status
   `cosmyx/artifact-checks`; signatures are enforced only on signed builds (see
-  `wiki/cosmyx/artifact-checks.md`). Pull request: pending. Decisions: 0140,
-  0141, 0142, 0143, 0144, 0145, 0146, 0147, 0148, 0149.
+  `wiki/cosmyx/artifact-checks.md`). File names and tool output from a build
+  cannot forge the summary or break junit.xml, and a damaged package or
+  undecodable output is a failed check, not a crashed job. Pull request:
+  pending. Decisions: 0140, 0141, 0142, 0143, 0144, 0145, 0146, 0147, 0148,
+  0149.

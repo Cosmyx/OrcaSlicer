@@ -27,7 +27,7 @@ TreeHook = Callable[[Artifact, Path], list[Record]]
 
 
 def _run(run: Runner, args: list[str]) -> subprocess.CompletedProcess:
-    return run(args, capture_output=True, text=True, check=False)
+    return run(args, capture_output=True, text=True, errors="replace", check=False)
 
 
 def _last_line(done: subprocess.CompletedProcess) -> str:

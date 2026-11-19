@@ -258,7 +258,9 @@ def export_subject(sha: str, target: Path) -> bool:
     if git("cat-file", "-e", f"{sha}^{{commit}}").returncode != 0:
         print(f"commit {sha} is not in the local history: run `git fetch origin {sha}` first", file=sys.stderr)
         return False
-    listing = git("ls-tree", "-r", "--name-only", sha, "--", *SUBJECT_PATHS).stdout.splitlines()
+    # -z gives the raw names: without it git C-quotes non-ASCII names (core.quotePath).
+    raw = git("ls-tree", "-r", "-z", "--name-only", sha, "--", *SUBJECT_PATHS, text=False).stdout
+    listing = [entry.decode("utf-8", "surrogateescape") for entry in raw.split(b"\0") if entry]
     for name in listing:
         blob = git("show", f"{sha}:{name}", text=False).stdout
         path = target.joinpath(*name.split("/"))
