@@ -1,4 +1,5 @@
 #include "CloudProvider.hpp"
+#include "Cosmyx/logic/CosmyxVersion.hpp" // Cosmyx
 #include "ExportPresetBundleDialog.hpp"
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
@@ -7014,7 +7015,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = SoftFever_VERSION;
+    version_display = Cosmyx::display_version(); // Cosmyx
     return version_display;
 }
 
