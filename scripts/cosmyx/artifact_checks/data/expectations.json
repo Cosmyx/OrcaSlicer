@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "families": [
+    {"id": "windows-msix", "os": "windows", "kind": "msix",
+     "regex": "^OrcaSlicer_Windows_MSIX_(?P<tag>.+?)_(?P<arch>x64|arm64)(?P<msvc>_msvc)?$"},
+    {"id": "windows-portable", "os": "windows", "kind": "portable",
+     "regex": "^OrcaSlicer_Windows_(?P<tag>.+?)_(?P<arch>x64|arm64)(?P<msvc>_msvc)?_portable$"},
+    {"id": "windows-installer", "os": "windows", "kind": "installer",
+     "regex": "^OrcaSlicer_Windows_(?P<tag>.+?)_(?P<arch>x64|arm64)(?P<msvc>_msvc)?$"},
+    {"id": "windows-validator", "os": "windows", "kind": "validator",
+     "regex": "^OrcaSlicer_profile_validator_Windows_(?P<tag>.+)$"},
+    {"id": "mac-bundle", "os": "macos", "kind": "ignored",
+     "regex": "^OrcaSlicer_Mac_bundle_"},
+    {"id": "mac-universal", "os": "macos", "kind": "dmg", "app": true, "mac_archs": ["arm64", "x86_64"],
+     "regex": "^OrcaSlicer_Mac_universal_(?P<tag>.+)$"},
+    {"id": "mac-arm64", "os": "macos", "kind": "dmg", "app": true, "mac_archs": ["arm64"],
+     "regex": "^OrcaSlicer_Mac_arm64_(?P<tag>.+)$"},
+    {"id": "mac-x86_64", "os": "macos", "kind": "dmg", "app": true, "mac_archs": ["x86_64"],
+     "regex": "^OrcaSlicer_Mac_x86_64_(?P<tag>.+)$"},
+    {"id": "mac-validator", "os": "macos", "kind": "dmg", "app": false, "mac_archs": ["arm64", "x86_64"],
+     "regex": "^OrcaSlicer_profile_validator_Mac_universal_DMG_(?P<tag>.+)$"},
+    {"id": "linux-appimage", "os": "linux", "kind": "appimage", "default_arch": "x86_64",
+     "regex": "^OrcaSlicer_Linux_ubuntu_(?P<ubuntu>[0-9]+)(?P<arch>_aarch64)?_(?P<tag>.+)$"},
+    {"id": "linux-validator", "os": "linux", "kind": "elf", "elf_arch": "x86_64",
+     "regex": "^OrcaSlicer_profile_validator_Linux_ubuntu_(?P<ubuntu>[0-9]+)_(?P<tag>.+)$"}
+  ],
+  "name_check_excludes": ["^OrcaSlicer_Mac_bundle_", "^[0-9a-f]{40}-tests-"],
+  "required": {
+    "branches": ["^DEV$", "^release/"],
+    "events": ["push", "workflow_dispatch", "schedule"],
+    "artifacts": [
+      {"family": "windows-portable", "arch": "x64", "events": ["push", "workflow_dispatch", "schedule"]},
+      {"family": "windows-installer", "arch": "x64", "events": ["push", "workflow_dispatch", "schedule"]},
+      {"family": "mac-universal", "arch": "", "events": ["push", "workflow_dispatch"]},
+      {"family": "linux-appimage", "arch": "x86_64", "events": ["push", "workflow_dispatch", "schedule"]}
+    ]
+  },
+  "windows": {
+    "seven_zip_min": "23.01",
+    "own_names": ["OrcaSlicer*.exe", "orca-slicer.exe", "Uninstall.exe", "OrcaSlicer_profile_validator.exe"],
+    "nsis_prefixes": ["$INSTDIR"]
+  },
+  "linux": {
+    "smoke_timeout": 60,
+    "slice_timeout": 300
+  },
+  "slice": {
+    "model": "cosmyx/models/cosmyx_cube.3mf",
+    "load_settings": [],
+    "min_g1_moves": 100
+  }
+}

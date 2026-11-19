@@ -1,0 +1,256 @@
+# Cosmyx artifact checks: inspects what a finished "Build all" run produced
+# (signatures, payload, architectures, ELF files, smoke run, slice, names,
+# translations, models) and posts the commit status cosmyx/artifact-checks.
+# See wiki/cosmyx/artifact-checks.md and decisions 0140-0149.
+#
+# The scripts and the allowlist always come from this workflow's own commit
+# (the default branch for workflow_run); the built commit only provides data
+# files (decision 0141). Binaries are run only when the build came from this
+# repository, never from a fork.
+name: Cosmyx artifact checks
+
+on:
+  workflow_run:
+    workflows: ["Build all"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'ID of the finished "Build all" run to check'
+        required: true
+        type: string
+      strict:
+        description: 'Strict: a skipped check fails (release candidates)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: cosmyx-artifact-checks-${{ github.event.workflow_run.id || inputs.run_id }}
+  cancel-in-progress: false
+
+env:
+  RUN_ID: ${{ github.event.workflow_run.id || inputs.run_id }}
+  STRICT: ${{ github.event_name == 'workflow_dispatch' && inputs.strict && 'true' || 'false' }}
+  CLI: tools/scripts/cosmyx/artifact_checks/cli.py
+
+jobs:
+  resolve:
+    name: Resolve the build run
+    if: github.repository != 'OrcaSlicer/OrcaSlicer'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      statuses: write
+    outputs:
+      skip: ${{ steps.resolve.outputs.skip }}
+      head_sha: ${{ steps.resolve.outputs.head_sha }}
+      head_repo: ${{ steps.resolve.outputs.head_repo }}
+      mode: ${{ steps.resolve.outputs.mode }}
+      exec_ok: ${{ steps.resolve.outputs.exec_ok }}
+      strict: ${{ steps.resolve.outputs.strict }}
+      tag: ${{ steps.resolve.outputs.tag }}
+      run_url: ${{ steps.resolve.outputs.run_url }}
+      matrix: ${{ steps.resolve.outputs.matrix }}
+      checked_oses: ${{ steps.resolve.outputs.checked_oses }}
+    steps:
+      - name: Check out the check scripts
+        uses: actions/checkout@v7
+        with:
+          path: tools
+          sparse-checkout: scripts/cosmyx
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Read the build run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID" > run.json
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$RUN_ID/artifacts?per_page=100" --jq '.artifacts[]' > artifacts.jsonl
+
+      - name: Plan the checks
+        id: resolve
+        # Only whether each signing secret is set reaches the script, never
+        # its value (decision 0098: the build signs when all six are set).
+        env:
+          COSMYX_SIGN_ALL_REFS: ${{ vars.COSMYX_SIGN_ALL_REFS }}
+          COSMYX_HAS_AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID != '' }}
+          COSMYX_HAS_AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID != '' }}
+          COSMYX_HAS_AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID != '' }}
+          COSMYX_HAS_AZURE_TRUSTED_SIGNING_ENDPOINT: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT != '' }}
+          COSMYX_HAS_AZURE_CODE_SIGNING_NAME: ${{ secrets.AZURE_CODE_SIGNING_NAME != '' }}
+          COSMYX_HAS_AZURE_CERT_PROFILE_NAME: ${{ secrets.AZURE_CERT_PROFILE_NAME != '' }}
+        run: python -I "$CLI" resolve --run run.json --artifacts-list artifacts.jsonl --strict "$STRICT" --out out --github-output "$GITHUB_OUTPUT"
+
+      - name: Post the pending status
+        if: steps.resolve.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.resolve.outputs.head_sha }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$HEAD_SHA" -f state=pending -f context=cosmyx/artifact-checks \
+            -f description="Checking the artifacts of run $RUN_ID" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            || echo "::warning::Could not post the pending status on $HEAD_SHA"
+
+      - name: Keep the resolve records
+        if: steps.resolve.outputs.skip != 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: cosmyx-checks-resolve
+          path: out/report-resolve.jsonl
+          retention-days: 30
+
+  check:
+    name: Check ${{ matrix.os }} artifacts
+    needs: resolve
+    if: needs.resolve.outputs.skip != 'true' && needs.resolve.outputs.matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 60
+    steps:
+      - name: Check out the check scripts
+        uses: actions/checkout@v7
+        with:
+          path: tools
+          sparse-checkout: scripts/cosmyx
+          persist-credentials: false
+
+      - name: Check out the data files of the built commit
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ needs.resolve.outputs.head_repo }}
+          ref: ${{ needs.resolve.outputs.head_sha }}
+          path: subject
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /version.inc
+            /src/slic3r/GUI/Cosmyx/logic/CosmyxVersion.hpp
+            /localization/cosmyx/
+            /resources/cosmyx/
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Install the Linux tools
+        if: matrix.os == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends xvfb xauth squashfs-tools \
+            libgtk-3-0t64 libwebkit2gtk-4.1-0 libegl1 libgl1 libglu1-mesa libopengl0 \
+            libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 libsecret-1-0
+
+      - name: Download the artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NAMES: ${{ toJSON(matrix.names) }}
+        run: python -I "$CLI" download --run-id "$RUN_ID" --repo "$GITHUB_REPOSITORY" --names "$NAMES" --dest artifacts
+
+      - name: Check the artifacts
+        shell: bash
+        env:
+          COSMYX_SIGN_SUBJECT: ${{ vars.COSMYX_SIGN_SUBJECT }}
+          COSMYX_SIGN_EKU: ${{ vars.COSMYX_SIGN_EKU }}
+          OS_NAME: ${{ matrix.os }}
+          MODE: ${{ needs.resolve.outputs.mode }}
+          STRICT_RUN: ${{ needs.resolve.outputs.strict }}
+          EXEC_OK: ${{ needs.resolve.outputs.exec_ok }}
+          HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
+        run: |
+          python -I "$CLI" "$OS_NAME" --tools tools --subject subject --artifacts artifacts \
+            --mode "$MODE" --strict "$STRICT_RUN" --exec-ok "$EXEC_OK" --out out --work "$RUNNER_TEMP/cosmyx-work"
+          python -I "$CLI" content --os "$OS_NAME" --tools tools --subject subject --artifacts artifacts \
+            --head-sha "$HEAD_SHA" --out out
+
+      - name: Keep the records and checksums
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cosmyx-checksums-${{ matrix.os }}-${{ needs.resolve.outputs.tag }}
+          path: |
+            out/report-*.jsonl
+            out/SHA256SUMS
+            out/manifest.json
+          retention-days: 30
+          if-no-files-found: ignore
+
+  report:
+    name: Report
+    needs: [resolve, check]
+    if: always() && needs.resolve.result == 'success' && needs.resolve.outputs.skip != 'true'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the check scripts
+        uses: actions/checkout@v7
+        with:
+          path: tools
+          sparse-checkout: scripts/cosmyx
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Download the records
+        uses: actions/download-artifact@v8
+        with:
+          pattern: cosmyx-check*
+          path: records
+
+      - name: Merge the records
+        env:
+          MODE: ${{ needs.resolve.outputs.mode }}
+          STRICT_RUN: ${{ needs.resolve.outputs.strict }}
+          RUN_URL: ${{ needs.resolve.outputs.run_url }}
+          CHECK_RESULT: ${{ needs.check.result }}
+          CHECKED_OSES: ${{ needs.resolve.outputs.checked_oses }}
+        run: |
+          mkdir -p records
+          jobs=()
+          for os_name in $CHECKED_OSES; do jobs+=(--job "$os_name=$CHECK_RESULT"); done
+          python -I "$CLI" report --in records --out out --mode "$MODE" --strict "$STRICT_RUN" --run-url "$RUN_URL" \
+            "${jobs[@]}" --step-summary "$GITHUB_STEP_SUMMARY"
+
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cosmyx-artifact-checks-report
+          path: |
+            out/junit.xml
+            out/report.md
+          retention-days: 30
+          if-no-files-found: ignore
+
+  status:
+    name: Commit status
+    needs: [resolve, report]
+    if: always() && needs.resolve.result == 'success' && needs.resolve.outputs.skip != 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      statuses: write
+    steps:
+      - name: Post the final status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
+          STATE: ${{ needs.report.result == 'success' && 'success' || 'failure' }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$HEAD_SHA" -f state="$STATE" -f context=cosmyx/artifact-checks \
+            -f description="Artifact checks of run $RUN_ID: $STATE" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
