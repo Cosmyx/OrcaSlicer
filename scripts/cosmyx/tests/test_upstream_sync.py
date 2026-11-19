@@ -353,6 +353,37 @@ class WorkflowPolicyTests(unittest.TestCase):
         code, _ = self.run_policy(self.policy(allow_scheduled=["allowed.yml"], disable=["bot.yaml"]))
         self.assertEqual(code, sync.EXIT_OK)
 
+    def test_cosmyx_owned_scheduled_workflow_needs_no_entry(self) -> None:
+        self.workflow("cosmyx-foo.yml", "on:\n  schedule:\n    - cron: '3 3 * * 1'\n")
+        self.workflow("upstream-new.yml", "on:\n  schedule:\n    - cron: '4 4 * * *'\n")
+        code, out = self.run_policy(self.policy(allow_scheduled=[], disable=[]))
+        self.assertEqual(code, sync.EXIT_ERROR)
+        self.assertIn("::error title=Workflow policy::upstream-new.yml", out)
+        self.assertNotIn("cosmyx-foo.yml has a schedule trigger", out)
+        (self.workflows / "upstream-new.yml").unlink()
+        code, out = self.run_policy(self.policy(allow_scheduled=[], disable=[]))
+        self.assertEqual(code, sync.EXIT_OK, out)
+
+    def test_owned_glob_is_configurable_and_case_sensitive(self) -> None:
+        self.workflow("Cosmyx-foo.yml", "on:\n  schedule:\n    - cron: '3 3 * * 1'\n")
+        code, _ = self.run_policy(self.policy())
+        self.assertEqual(code, sync.EXIT_ERROR)
+        code, _ = self.run_policy(self.policy(cosmyx_owned_glob="Cosmyx-*.yml"))
+        self.assertEqual(code, sync.EXIT_OK)
+        # An empty glob turns the exemption off.
+        self.workflow("cosmyx-bar.yml", "on:\n  schedule:\n    - cron: '3 3 * * 1'\n")
+        code, _ = self.run_policy(self.policy(cosmyx_owned_glob=""))
+        self.assertEqual(code, sync.EXIT_ERROR)
+
+    def test_cosmyx_owned_workflow_is_never_disabled(self) -> None:
+        code, out = self.run_policy(self.policy(disable=["cosmyx-foo.yml"]))
+        self.assertEqual(code, sync.EXIT_ERROR)
+        self.assertIn("cosmyx-foo.yml is Cosmyx-owned", out)
+        fake = FakeGh({"cosmyx-foo.yml": "active"})
+        lines = sync.apply_policy(sync.Policy(["cosmyx-foo.yml"], [], []), "o/r", fake)
+        self.assertEqual(lines, ["cosmyx-foo.yml: Cosmyx-owned, never disabled"])
+        self.assertEqual(fake.calls, [])
+
     def test_both_lists_or_must_stay_enabled_conflicts_fail(self) -> None:
         code, _ = self.run_policy(self.policy(allow_scheduled=["a.yml"], disable=["a.yml"]))
         self.assertEqual(code, sync.EXIT_ERROR)
@@ -400,7 +431,8 @@ class WorkflowPolicyTests(unittest.TestCase):
         policy = sync.load_policy(sync.DEFAULT_POLICY)
         self.assertIn("build_all.yml", policy.must_stay_enabled)
         self.assertNotIn("build_all.yml", policy.disable)
-        self.assertIn("cosmyx-upstream-sync.yml", policy.allow_scheduled)
+        self.assertTrue(policy.is_owned("cosmyx-upstream-sync.yml"))
+        self.assertIn("cosmyx-upstream-sync.yml", policy.must_stay_enabled)
 
 
 class WorkflowFileTests(unittest.TestCase):
