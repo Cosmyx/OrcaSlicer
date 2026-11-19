@@ -15,7 +15,10 @@ Commands (run from anywhere inside the repository, or pass --repo):
   left alone: git never counts them as dirty.
 - `show`: list the skip-worktree files.
 - `unhide [PATHSPEC...]`: clear the bit and restore the committed content of
-  those files. Without a pathspec it acts on every skip-worktree file.
+  those files. Without a pathspec it acts on every skip-worktree file. The
+  pathspecs select the files with git's usual patterns; the files found are
+  then restored by their exact names, so a name holding `[`, `*` or `?` never
+  restores another file.
 
 Pathspecs are relative to the repository root. Exit codes: 0 done, 1 the tree
 is still dirty after `hide`, 2 git failed.
@@ -24,6 +27,7 @@ is still dirty after `hide`, 2 git failed.
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -33,11 +37,17 @@ class GitError(Exception):
     pass
 
 
-def git(root: Path, *args: str, stdin: bytes | None = None, check: bool = True) -> subprocess.CompletedProcess:
-    """Run git in `root` and return the completed process (stdout as bytes)."""
+def git(root: Path, *args: str, stdin: bytes | None = None, check: bool = True, literal: bool = False) -> subprocess.CompletedProcess:
+    """Run git in `root` and return the completed process (stdout as bytes).
+    With `literal`, every pathspec is a plain file name: `[`, `*` or `?` in a
+    name never match other files."""
+    env = None
+    if literal:
+        env = dict(os.environ, GIT_LITERAL_PATHSPECS="1")
     process = subprocess.run(
         ["git", "-C", str(root), *args],
         input=stdin,
+        env=env,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
@@ -98,7 +108,8 @@ def unhide(root: Path, pathspecs: list[str]) -> int:
     if files:
         listing = b"\0".join(files) + b"\0"
         git(root, "update-index", "--no-skip-worktree", "-z", "--stdin", stdin=listing)
-        git(root, "checkout", "--pathspec-from-file=-", "--pathspec-file-nul", "--", stdin=listing)
+        # The listing holds exact file names, not patterns.
+        git(root, "checkout", "--pathspec-from-file=-", "--pathspec-file-nul", "--", stdin=listing, literal=True)
     print(f"Restored {len(files)} file(s).")
     return 0
 
