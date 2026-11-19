@@ -13,6 +13,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 COSMYX_DIR = Path(__file__).resolve().parents[1]
+REPO_ROOT = COSMYX_DIR.parents[1]
 
 
 def load_module(name: str):
@@ -153,6 +154,23 @@ class WorktreeCleanTest(unittest.TestCase):
             with redirect_stdout(out), redirect_stderr(err):
                 code = wc.main(["--repo", other, "show"])
         self.assertEqual(code, 2)
+        # git's own message (localized, but always led by "fatal") reaches the
+        # log after the failed command, so a CI failure says why.
+        self.assertRegex(err.getvalue(), r"git rev-parse --show-toplevel failed: fatal")
+
+
+class PrepareActionTests(unittest.TestCase):
+    def test_workspace_is_trusted_before_any_git_use(self) -> None:
+        # In a job container git rejects the workspace as owned by another user
+        # unless it is listed in safe.directory, so the trust step comes first.
+        action = REPO_ROOT / ".github" / "actions" / "cosmyx-prepare" / "action.yml"
+        steps = action.read_text(encoding="utf-8").split("    - name: ")[1:]
+        self.assertTrue(steps, "the prepare action has no steps")
+        self.assertIn('git config --global --add safe.directory "$GITHUB_WORKSPACE"', steps[0])
+        self.assertIn("/.dockerenv", steps[0])
+        for step in steps[1:]:
+            with self.subTest(step=step.splitlines()[0]):
+                self.assertNotIn("safe.directory", step)
 
 
 if __name__ == "__main__":

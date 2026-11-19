@@ -9,6 +9,18 @@ description: >-
 runs:
   using: composite
   steps:
+    # In a job container the workspace belongs to another uid than the one that
+    # runs git, so git refuses it ("dubious ownership", exit 128) and every git
+    # call of the Cosmyx scripts and tests fails. actions/checkout trusts the
+    # workspace for its own calls only, so it is trusted here for the job.
+    - name: Trust the workspace for git in a container
+      shell: bash
+      run: |
+        if { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; } && command -v git >/dev/null 2>&1; then
+          git config --global --get-all safe.directory 2>/dev/null | grep -qxF "$GITHUB_WORKSPACE" \
+            || git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        fi
+
     # setup-python ships Ubuntu builds only, so inside a job container (the
     # Flatpak job runs in a Fedora image) the container's own python3 is used
     # when it is recent enough.
