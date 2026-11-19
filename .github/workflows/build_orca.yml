@@ -378,6 +378,21 @@ jobs:
             create_dmg "OrcaSlicer Profile Validator" ${{ github.workspace }}/build/universal/OrcaSlicer_profile_validator_dmg OrcaSlicer_profile_validator_Mac_universal_${{ env.ver }}.dmg
           fi
 
+      - name: Cosmyx sign and notarize macOS # Cosmyx
+        if: runner.os == 'macOS' && inputs.macos-combine-only && github.repository != 'OrcaSlicer/OrcaSlicer' && github.event_name != 'pull_request' && github.ref_name != 'MIXED' && (github.ref_name == 'DEV' || startsWith(github.ref_name, 'release/') || vars.COSMYX_SIGN_ALL_REFS == 'true') # Cosmyx
+        timeout-minutes: 90 # Cosmyx
+        uses: ./.github/actions/cosmyx-sign-macos # Cosmyx
+        with: # Cosmyx
+          version: ${{ env.ver }} # Cosmyx
+          self-hosted: ${{ vars.SELF_HOSTED }} # Cosmyx
+          certificate-base64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }} # Cosmyx
+          p12-password: ${{ secrets.P12_PASSWORD }} # Cosmyx
+          keychain-password: ${{ secrets.KEYCHAIN_PASSWORD }} # Cosmyx
+          certificate-id: ${{ secrets.MACOS_CERTIFICATE_ID }} # Cosmyx
+          apple-id: ${{ secrets.APPLE_DEV_ACCOUNT }} # Cosmyx
+          app-password: ${{ secrets.APP_PWD }} # Cosmyx
+          team-id: ${{ secrets.TEAM_ID }} # Cosmyx
+
       # Delete the per-arch bundles only after signing/DMG creation succeeded, so a
       # failed run keeps them available for a re-run instead of forcing a full rebuild.
       - name: Delete intermediate per-arch artifacts
