@@ -1,4 +1,5 @@
 #include "Technologies.hpp"
+#include "Cosmyx/ColorModeDefault.hpp" // Cosmyx
 #include "Config.hpp"
 #include "PrintConfig.hpp"
 #include "calib.hpp"
@@ -443,6 +444,7 @@ void AppConfig::set_defaults()
     if (get("show_center_of_mass").empty())
         set_bool("show_center_of_mass", false);
 
+    Cosmyx::force_dark_color_mode(*this); // Cosmyx
 #ifdef _WIN32
 
 //#ifdef SUPPORT_3D_CONNEXION
