@@ -1,4 +1,5 @@
 #include "ArcFitter.hpp"
+#include "Cosmyx/GCodeHooks.hpp" // Cosmyx
 #include <tuple>
 #include "BoundingBox.hpp"
 #include "Circle.hpp"
@@ -4054,6 +4055,7 @@ void GCode::_do_export(Print& print, GCodeOutputStream &file, ThumbnailsGenerato
 
         // SoftFever: support variables `first_layer_temperature` and `first_layer_bed_temperature`
         this->placeholder_parser().set("first_layer_bed_temperature", new ConfigOptionInts(*first_bed_temp_opt));
+        Cosmyx::clamp_bed_temperature_placeholders(this->placeholder_parser()); // Cosmyx
         this->placeholder_parser().set("first_layer_temperature", new ConfigOptionInts(m_config.nozzle_temperature_initial_layer));
         this->placeholder_parser().set("max_print_height",new ConfigOptionInt(m_config.printable_height));
         this->placeholder_parser().set("z_offset", new ConfigOptionFloat(m_config.z_offset));

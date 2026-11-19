@@ -375,6 +375,7 @@ std::string GCodeWriter::set_temperature(unsigned int temperature, bool wait, in
 // BBS
 std::string GCodeWriter::set_bed_temperature(int temperature, bool wait)
 {
+    if (temperature < 0) { if (m_last_bed_temperature_reached) m_last_bed_temperature = -1; temperature = 0; wait = false; } // Cosmyx: -1 = bed off, M140 S0 once, never wait (decision 0010)
     if (temperature == m_last_bed_temperature && (! wait || m_last_bed_temperature_reached))
         return std::string();
 
