@@ -550,6 +550,22 @@ class RealTreeTest(unittest.TestCase):
         self.assertIn('set (CPACK_NSIS_DISPLAY_NAME "CosmoSlice")', read(self.root, "CMakeLists.txt").decode())
         self.assertIn('set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "OrcaSlicer")', read(self.root, "CMakeLists.txt").decode())
 
+    def test_shortcut_label_is_renamed_and_the_executable_stays(self) -> None:
+        cmake = read(self.root, "CMakeLists.txt").decode()
+        self.assertIn('set(CPACK_PACKAGE_EXECUTABLES "orca-slicer;CosmoSlice")', cmake)
+        self.assertNotIn("orca-slicer;OrcaSlicer", cmake)
+        self.assertIn('set(CPACK_CREATE_DESKTOP_LINKS "orca-slicer")', cmake)
+
+    def test_flatpak_texts_name_the_product_and_keep_the_id(self) -> None:
+        text = read(self.root, "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml").decode()
+        self.assertIn("<id>com.orcaslicer.OrcaSlicer</id>", text)
+        self.assertIn("<name>CosmoSlice</name>", text)
+        description = text.split("<description>", 1)[1].split("</description>", 1)[0]
+        self.assertIn("CosmoSlice is a powerful", description)
+        self.assertIn("CosmoSlice also provides", description)
+        self.assertNotIn("OrcaSlicer", description)
+        self.assertNotIn("Orca Slicer", description)
+
     def test_catalogues_never_get_fuzzy(self) -> None:
         for relative in catalogues.catalogue_files(self.root):
             with self.subTest(relative=relative):
