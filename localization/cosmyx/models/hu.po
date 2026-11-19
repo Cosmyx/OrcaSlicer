@@ -14,9 +14,14 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ez a kalibrációs modell akkor működik a legjobban, ha a kitöltés iránya 0 "
+"fokra van állítva. Az optimális kalibrációs eredményhez érdemes mind a "
+"\"Kitöltés iránya\", mind a \"Tömör kitöltés iránya\" értékét 0-ra állítani.\n"
+"Igen - A beállítások automatikus módosítása\n"
+"Nem  - Ne módosítsa a beállításokat"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Kalibrációs javaslat"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +34,48 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ez a kalibrációs modell meghatározott kitöltési beállításokkal működik a "
+"legjobban.\n"
+"Az optimális kalibrációs eredményhez érdemes beállítani:\n"
+"- Kitöltés iránya: %.0f°\n"
+"- Tömör kitöltés iránya: %.0f°\n"
+"- Csak egy fal az első rétegen: %s\n"
+"\n"
+"Igen - A beállítások automatikus módosítása\n"
+"Nem  - Ne módosítsa a beállításokat"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Cosmyx 3D modellek"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Kalibrációs modellek – dupla fej"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Kalibrációs modellek – egy fej"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Cosmyx hasznos modellek"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Illesztés 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Illesztés 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Illesztés 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Kéttónusú kocka"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Illesztés 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx kocka"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Szíjfeszesség-ellenőrzés"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Tekercstartó"
