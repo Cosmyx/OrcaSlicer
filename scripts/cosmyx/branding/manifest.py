@@ -175,6 +175,8 @@ def validate(root: Path, manifest: Manifest | None = None) -> list[str]:
     """
     problems = []
     seen = {}
+    # Paths that differ only by case name one file on macOS and Windows.
+    folded: dict = {}
     for group in GROUPS:
         path = manifest_file(root, group)
         if not path.is_file():
@@ -198,6 +200,11 @@ def validate(root: Path, manifest: Manifest | None = None) -> list[str]:
             if isinstance(row, dict) and isinstance(row.get("path"), str):
                 if row["path"] in seen:
                     own.append(f"{row['path']} is listed in {seen[row['path']]} and {group}")
+                else:
+                    other = folded.get(row["path"].casefold())
+                    if other is not None:
+                        own.append(f"{row['path']} ({group}) and {other[0]} ({other[1]}) differ only by case")
+                    folded[row["path"].casefold()] = (row["path"], group)
                 seen[row["path"]] = group
         paths = [row.get("path") for row in rows if isinstance(row, dict)]
         if paths != sorted(paths, key=str):

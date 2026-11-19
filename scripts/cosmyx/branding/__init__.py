@@ -121,6 +121,37 @@ def repo_path(root: Path, relative: str) -> Path:
     return root.joinpath(*check_relative(relative).split("/"))
 
 
+def tree_path(root: Path, relative: str) -> Path:
+    """The on-disk path of `relative`, checked to be a real file of the tree
+    under that exact spelling, for a file the engine writes into.
+
+    Refused: a path that resolves outside `root` (a symlink escaping the
+    tree), and a path whose on-disk name differs only by case (`src/file.txt`
+    for `src/File.txt`): a case-insensitive macOS or Windows disk would open
+    it while Linux would not, so every OS refuses it. Missing files are left
+    to the caller.
+    """
+    path = repo_path(root, relative)
+    base = root.resolve()
+    try:
+        path.resolve().relative_to(base)
+    except ValueError:
+        raise BrandingError(f"{relative}: resolves outside the repository (symlink?)") from None
+    current = root
+    for part in relative.split("/"):
+        try:
+            names = os.listdir(current)
+        except OSError:
+            break
+        if part not in names:
+            folded = [name for name in names if name.casefold() == part.casefold()]
+            if folded:
+                raise BrandingError(f"{relative}: the file on disk is spelled {folded[0]!r}, not {part!r}")
+            break
+        current = current / part
+    return path
+
+
 def relative_posix(root: Path, path: Path) -> str:
     return PurePosixPath(*path.relative_to(root).parts).as_posix()
 
