@@ -13,6 +13,12 @@ on:
       - 'scripts/cosmyx/**'
       - 'wiki/**'
       - '.github/workflows/cosmyx-checks.yml'
+      - 'cosmyx/**'
+      - '.github/actions/**'
+      - '.github/cosmyx/**'
+      - '.github/workflows/cosmyx-*.yml'
+      - 'localization/cosmyx/**'
+      - 'scripts/sign_windows.ps1'
   push:
     branches:
       - DEV
@@ -22,6 +28,12 @@ on:
       - 'scripts/cosmyx/**'
       - 'wiki/**'
       - '.github/workflows/cosmyx-checks.yml'
+      - 'cosmyx/**'
+      - '.github/actions/**'
+      - '.github/cosmyx/**'
+      - '.github/workflows/cosmyx-*.yml'
+      - 'localization/cosmyx/**'
+      - 'scripts/sign_windows.ps1'
   workflow_dispatch:
 
 permissions:
