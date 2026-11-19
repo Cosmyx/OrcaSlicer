@@ -2080,6 +2080,7 @@ static std::vector<Vec2d> get_path_of_change_filament(const Print& print)
     std::string WipeTowerIntegration::tool_change(GCode &gcodegen, int extruder_id, bool finish_layer)
     {
         std::string gcode;
+        gcode += Cosmyx::ironing_temperature_toolchange_gcode(gcodegen, gcodegen.m_print->full_print_config(), gcodegen.m_last_extrusion_role, gcodegen.on_first_layer()); // Cosmyx
 
         assert(m_layer_idx >= 0);
         if (m_layer_idx >= (int) m_tool_changes.size())
@@ -9967,6 +9968,7 @@ std::string GCode::_extrude_piece(const ExtrusionPath &path, const std::string &
       }
     }
 
+    gcode += Cosmyx::ironing_temperature_gcode(*this, m_print->full_print_config(), m_last_extrusion_role, path.role(), this->on_first_layer()); // Cosmyx
     m_last_extrusion_role = path.role();
 
     // adds processor tags and updates processor tracking data
@@ -11199,6 +11201,7 @@ std::string GCode::set_extruder(unsigned int new_filament_id, double print_z, bo
 
     // prepend retraction on the current extruder
     std::string gcode = this->retract(true, false);
+    gcode += Cosmyx::ironing_temperature_toolchange_gcode(*this, m_print->full_print_config(), m_last_extrusion_role, this->on_first_layer()); // Cosmyx
 
     // Always reset the extrusion path, even if the tool change retract is set to zero.
     m_wipe.reset_path();
