@@ -166,7 +166,7 @@ TEST_CASE("filament_ironing_temperature is a filament option, off by default", "
 TEST_CASE("The ironing temperature is read per filament id", "[cosmyx]")
 {
     DynamicPrintConfig config = DynamicPrintConfig::full_print_config();
-    config.set_deserialize_strict({{key, "0,185"}});
+    config.set_deserialize_strict(key, "0,185");
     CHECK(Cosmyx::ironing_temperature(config, 0) == 0);
     CHECK(Cosmyx::ironing_temperature(config, 1) == 185);
     CHECK(Cosmyx::any_ironing_temperature(config));
