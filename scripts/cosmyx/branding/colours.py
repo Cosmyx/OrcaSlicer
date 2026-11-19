@@ -58,6 +58,7 @@ from . import (
     find_hexes,
     in_family,
     load_json,
+    read_lf,
     repo_path,
     write_text,
 )
@@ -355,7 +356,9 @@ def scope_paths(ctx) -> list:
 
 
 def read_scope_text(root: Path, relative: str) -> str:
-    return repo_path(root, relative).read_bytes().decode("utf-8", "replace")
+    """A scope file's text with LF line endings, so a literal row spanning a
+    line break has the same text and count on a CRLF (Windows) checkout."""
+    return read_lf(repo_path(root, relative), "replace")
 
 
 def tuple_key(rgb) -> str:
