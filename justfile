@@ -10,9 +10,12 @@ python := if os_family() == "windows" { "python" } else { "python3" }
 repo := env("COSMYX_REPO", "Cosmyx/OrcaSlicer")
 
 # Feature recipes, one file per task, loaded when present.
+import? 'scripts/cosmyx/just/branding.just'
 import? 'scripts/cosmyx/just/i18n.just'
 import? 'scripts/cosmyx/just/signing.just'
 import? 'scripts/cosmyx/just/sync.just'
+import? 'scripts/cosmyx/just/tests.just'
+import? 'scripts/cosmyx/just/version.just'
 
 # List every recipe.
 default:
