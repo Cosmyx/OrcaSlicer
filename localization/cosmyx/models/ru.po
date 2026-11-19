@@ -14,10 +14,12 @@ msgid ""
 "direction' and 'Solid infill direction' to 0.\n"
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
-msgstr ""
+msgstr "Эта калибровочная модель лучше всего работает при угле заполнения 0 градусов. Для оптимального результата калибровки рекомендуется установить для параметров «Угол шаблона заполнения» и «Угол шаблона сплошного заполнения» значение 0.\n"
+"Да - изменить эти настройки автоматически\n"
+"Нет - не менять эти настройки"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Рекомендация по калибровке"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,40 +31,47 @@ msgid ""
 "\n"
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
-msgstr ""
+msgstr "Эта калибровочная модель лучше всего работает с определёнными настройками заполнения.\n"
+"Для оптимального результата калибровки рекомендуется установить:\n"
+"- Угол шаблона заполнения: %.0f°\n"
+"- Угол шаблона сплошного заполнения: %.0f°\n"
+"- Только один периметр на первом слое: %s\n"
+"\n"
+"Да - изменить эти настройки автоматически\n"
+"Нет - не менять эти настройки"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "3D-модели Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Калибровочные модели для двух экструдеров"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Калибровочные модели для одного экструдера"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Полезные модели Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Калибровка 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Калибровка 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Калибровка 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Двухцветный куб"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Калибровка 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Куб Cosmyx"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Контроль натяжения ремня"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Держатель катушки"
