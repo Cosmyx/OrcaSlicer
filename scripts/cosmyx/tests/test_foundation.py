@@ -143,6 +143,25 @@ class ChecksWorkflowTests(unittest.TestCase):
         self.assertNotIn("      - 'cosmyx/**'\n", text)
 
 
+class FlatpakTestTargetTests(unittest.TestCase):
+    def test_cosmyx_tests_hangs_on_a_target_the_flatpak_builds(self) -> None:
+        # The flatpak leg builds an explicit target list; a registered suite
+        # outside it shows up in ctest as <target>_NOT_BUILT and fails the leg.
+        cmake = (REPO_ROOT / "tests" / "cosmyx" / "CMakeLists.txt").read_text(encoding="utf-8")
+        manifest = (REPO_ROOT / "scripts" / "flatpak" / "com.orcaslicer.OrcaSlicer.yml").read_text(encoding="utf-8")
+        built = {
+            name
+            for targets in re.findall(r"--target\s+((?:[\w-]+\s+)+)", manifest)
+            for name in targets.split()
+            if name.endswith("_tests")
+        }
+        self.assertTrue(built, "the flatpak manifest lists no test targets")
+        if "cosmyx_tests" in built:
+            return
+        hooks = set(re.findall(r"add_dependencies\((\w+)\s+\$\{_TEST_NAME\}_tests\)", cmake))
+        self.assertTrue(hooks & built, f"cosmyx_tests is built by none of {sorted(built)}")
+
+
 class DecisionTests(unittest.TestCase):
     def test_register_is_valid(self) -> None:
         found, errors = decisions.list_decisions(decisions.DECISIONS_DIR)

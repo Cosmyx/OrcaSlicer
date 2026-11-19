@@ -32,3 +32,12 @@ set_property(TARGET ${_TEST_NAME}_tests PROPERTY FOLDER "tests")
 orcaslicer_copy_test_dlls()
 
 orcaslicer_discover_tests(${_TEST_NAME}_tests)
+
+# The flatpak manifest builds an explicit list of upstream test targets, and
+# ctest reports cosmyx_tests_NOT_BUILT for a registered suite left out of it.
+# Hanging cosmyx_tests on libslic3r_tests builds it wherever that suite is
+# built, without editing the upstream list. Removing it means adding
+# cosmyx_tests to the manifest's --target list instead.
+if (TARGET libslic3r_tests)
+    add_dependencies(libslic3r_tests ${_TEST_NAME}_tests)
+endif ()
