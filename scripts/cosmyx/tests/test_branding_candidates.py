@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import base64
 import copy
+import json
 import re
 import tempfile
 import unittest
@@ -299,7 +300,21 @@ class RealTreeCandidatesTest(unittest.TestCase):
     def tearDown(self) -> None:
         self._tmp.cleanup()
 
+    def test_every_teal_svg_is_accepted(self) -> None:
+        # The user approved every candidate: the committed tables have none left to propose.
+        self.assertEqual(candidates.candidate_rows(self.root), [])
+        self.assertEqual(candidates.unlisted_teal(self.root, branding.load_json(REPO_ROOT / branding.COLOURS_FILE)), [])
+
     def test_generate_and_review_run_clean(self) -> None:
+        # Turn the accepted rows back to missing so generate runs over every real teal SVG.
+        for manifest_file in sorted((self.root / "cosmyx-src/branding/manifest").glob("*.json")):
+            table = json.loads(manifest_file.read_text(encoding="utf-8"))
+            if table["group"] not in candidates.CANDIDATE_GROUPS:
+                continue
+            for row in table["rows"]:
+                if row["source"] == "candidate":
+                    row["status"] = "missing"
+            manifest_file.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
         index = candidates.generate(self.root)
         rows = candidates.candidate_rows(self.root)
         self.assertGreater(len(index["candidates"]), 0)
