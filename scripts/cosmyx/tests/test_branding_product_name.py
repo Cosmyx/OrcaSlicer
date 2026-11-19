@@ -18,6 +18,7 @@ from branding_fixture import (
     apply_module,
     branding,
     copy_real_tree,
+    guards,
     read,
     snapshot,
     write,
@@ -570,6 +571,15 @@ class RealTreeTest(unittest.TestCase):
         self.assertIn("CosmoSlice also provides", description)
         self.assertNotIn("OrcaSlicer", description)
         self.assertNotIn("Orca Slicer", description)
+
+    def test_packaging_names_stay(self) -> None:
+        # Every pinned packaging identifier exists in this checkout and survives
+        # the rename: the build scripts and CI find the packages by these names.
+        for relative, text, _ in guards.PACKAGING_PINS:
+            with self.subTest(file=relative, pin=text.strip()):
+                self.assertIn(text, read(self.root, relative).decode("utf-8").replace("\r\n", "\n"))
+        appimage = read(self.root, "src/dev-utils/platform/unix/build_appimage.sh.in").decode()
+        self.assertNotIn("SLIC3R_APP_NAME", appimage)
 
     def test_catalogues_never_get_fuzzy(self) -> None:
         for relative in catalogues.catalogue_files(self.root):

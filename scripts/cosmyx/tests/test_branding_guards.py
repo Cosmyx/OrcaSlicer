@@ -286,6 +286,46 @@ class G8ProductNameTest(TreeCase):
         row = {"file": "build.sh.in", "old": "Icon=", "new": "Icon=", "count": 1, "reason": "same"}
         self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_KEY@\nIcon=@SLIC3R_APP_KEY@\nX=SLIC3R_APP_KEY\n"), [])
 
+    APPIMAGE = "src/dev-utils/platform/unix/build_appimage.sh.in"
+    APPIMAGE_TEXT = (
+        'APP_IMAGE="@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"\n'
+        "cat <<EOF > com.orcaslicer.@SLIC3R_APP_KEY@.desktop\n[Desktop Entry]\nName=@SLIC3R_APP_KEY@\nEOF\n"
+        "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}\n"
+    )
+    APPIMAGE_ROW = {"file": APPIMAGE, "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1,
+                    "reason": "AppImage desktop entry name"}
+
+    def test_renaming_the_appimage_desktop_name_is_an_error(self) -> None:
+        # Integration build 44545583808: appimagetool named the AppImage after
+        # the renamed desktop entry, and the script's mv of
+        # @SLIC3R_APP_KEY@-<arch>.AppImage found nothing.
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables([self.APPIMAGE_ROW])
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@", "Name=@SLIC3R_APP_NAME@"))
+        [finding] = guards.g8_product_name(ctx, "post")
+        self.assertEqual((finding.level, finding.path), ("error", self.APPIMAGE))
+        self.assertIn("packaging identifier", finding.message)
+
+    def test_untouched_packaging_pins_pass(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables([self.PATCH])
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        self.assertEqual(guards.g8_product_name(ctx, "post"), [])
+
+    def test_a_pinned_file_without_its_pin_is_drift(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("mv @SLIC3R_APP_KEY@-", "mv X-"))
+        self.tables([self.PATCH])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(), "pre")), ["warning"])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(RELEASE), "pre")), ["error"])
+
+    def test_crlf_pinned_file_still_matches(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("\n", "\r\n"))
+        self.tables([self.PATCH])
+        self.assertEqual(guards.g8_product_name(self.ctx(), "pre"), [])
+
     def test_the_app_key_definition_never_goes(self) -> None:
         row = {"file": "version.inc", "old": 'set(SLIC3R_APP_KEY "OrcaSlicer")', "new": 'set(SLIC3R_APP_KEY "Other")', "count": 1, "reason": "bad"}
         self.tables([row])
