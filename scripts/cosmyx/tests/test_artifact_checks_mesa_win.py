@@ -165,6 +165,16 @@ class PrepareTests(unittest.TestCase):
         self.assertEqual(opener.calls, 1)
         self.assertEqual((cache / pin.asset).read_bytes(), ARCHIVE)
 
+    def test_fetch_fills_the_given_mesa_folder(self) -> None:
+        from unittest import mock
+        with mock.patch.object(mesa_win, "load_pin", return_value=mesa_win.load_pin(expectations())):
+            found = mesa_win.fetch(self.app / "mesa", self.work, {}, run=SevenZip(FILES), opener=Opener([ARCHIVE]),
+                                   seven_zip="7z", pause=0)
+        self.assertEqual(found, self.app / "mesa")
+        self.assertTrue((self.app / "mesa" / "opengl32.dll").is_file())
+        with self.assertRaises(ValueError):
+            mesa_win.fetch(self.app / "other")
+
 
 if __name__ == "__main__":
     unittest.main()
