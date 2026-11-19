@@ -398,6 +398,20 @@
       "literal": "OrcaSlicer",
       "count": 1,
       "reason": "internal: embedded Python program name"
+    },
+    {
+      "kind": "literal",
+      "file": "src/slic3r/plugin/host/PluginHostApp.cpp",
+      "literal": "OrcaSlicer application is not initialized",
+      "count": 3,
+      "reason": "compared: plugin-facing exception text asserted by the upstream plugin host tests (tests/slic3rutils)"
+    },
+    {
+      "kind": "literal",
+      "file": "src/slic3r/plugin/host/PluginHostUi.cpp",
+      "literal": "OrcaSlicer application is not initialized",
+      "count": 3,
+      "reason": "compared: plugin-facing exception text asserted by the upstream plugin host tests (tests/slic3rutils)"
     }
   ]
 }
