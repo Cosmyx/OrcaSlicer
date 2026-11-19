@@ -43,6 +43,11 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T4 -->
 
+<!-- cosmyx-slot: T12 -->
+- Cosmyx code logs to its own file, `cosmyx_<session>.log` next to Orca's
+  debug log, through `COSMYX_LOG(level)`; upstream log records and files are
+  unchanged. Pull request: pending. Decisions: 0110, 0111.
+
 ### GUI
 
 <!-- cosmyx-slot: T5 -->
