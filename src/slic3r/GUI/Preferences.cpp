@@ -1,4 +1,5 @@
 #include "Preferences.hpp"
+#include "Cosmyx/CloudServerPrefs.hpp" // Cosmyx
 #include "slic3r/plugin/host/PluginPages.hpp"
 #include "CloudProvider.hpp"
 #include "ColorPickerDialog.hpp"
@@ -2461,6 +2462,7 @@ void PreferencesDialog::create_items()
         dlg.ShowModal();
     });
     g_sizer->Add(item_network_test);
+    g_sizer->Add(Cosmyx::create_cloud_server_prefs(m_parent), 0, wxEXPAND); // Cosmyx: custom orca-cloud instance (decision 0203)
 
     //// ONLINE > Cloud Providers
     g_sizer->Add(create_item_title(_L("Cloud Providers")), 1, wxEXPAND);
