@@ -92,7 +92,7 @@ def run_slice(artifact: str, app_run: Path, resources: Path, subject: Path, work
     args = command(app_run, model, datadir, outputdir, settings.get("load_settings", []), xvfb)
     timeout = expectations["linux"]["slice_timeout"]
     try:
-        done = run(args, capture_output=True, text=True, check=False, timeout=timeout)
+        done = run(args, capture_output=True, text=True, errors="replace", check=False, timeout=timeout)
     except subprocess.TimeoutExpired:
         return Record("linux", artifact, settings["model"], "slice", "fail", f"slicing took more than {timeout} s")
     problems, details = output_problems(outputdir, identity[0], identity[1], settings["min_g1_moves"])
