@@ -13,12 +13,16 @@ on:
       - 'scripts/cosmyx/**'
       - 'wiki/**'
       - '.github/workflows/cosmyx-checks.yml'
-      - 'cosmyx/**'
+      - 'cosmyx-src/**'
       - '.github/actions/**'
       - '.github/cosmyx/**'
       - '.github/workflows/cosmyx-*.yml'
       - 'localization/cosmyx/**'
       - 'scripts/sign_windows.ps1'
+      # Upstream build workflows carry Cosmyx hooks whose wiring tests must
+      # run when upstream edits them.
+      - '.github/workflows/build_orca.yml'
+      - '.github/workflows/build_flatpak.yml'
   push:
     branches:
       - DEV
@@ -28,12 +32,16 @@ on:
       - 'scripts/cosmyx/**'
       - 'wiki/**'
       - '.github/workflows/cosmyx-checks.yml'
-      - 'cosmyx/**'
+      - 'cosmyx-src/**'
       - '.github/actions/**'
       - '.github/cosmyx/**'
       - '.github/workflows/cosmyx-*.yml'
       - 'localization/cosmyx/**'
       - 'scripts/sign_windows.ps1'
+      # Upstream build workflows carry Cosmyx hooks whose wiring tests must
+      # run when upstream edits them.
+      - '.github/workflows/build_orca.yml'
+      - '.github/workflows/build_flatpak.yml'
   workflow_dispatch:
 
 permissions:
