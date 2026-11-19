@@ -59,7 +59,9 @@ class JustfileTests(unittest.TestCase):
                 self.assertTrue(lines[index - 1].startswith("# "))
 
     def test_planned_feature_imports_are_present(self) -> None:
-        for name in ("branding", "i18n", "signing", "sync", "tests", "version"):
+        for name in (
+            "branding", "goldens", "i18n", "macos-signing", "signing", "sync", "tests", "version",
+        ):
             with self.subTest(name=name):
                 self.assertTrue(self.text_has_optional_import(f"scripts/cosmyx/just/{name}.just"))
 
@@ -125,14 +127,20 @@ class ChecksWorkflowTests(unittest.TestCase):
         text = (REPO_ROOT / ".github" / "workflows" / "cosmyx-checks.yml").read_text(encoding="utf-8")
         required = (
             "justfile", "CHANGELOG.md", "scripts/cosmyx/**", "wiki/**",
-            ".github/workflows/cosmyx-checks.yml", "cosmyx/**", ".github/actions/**",
+            ".github/workflows/cosmyx-checks.yml", "cosmyx-src/**", ".github/actions/**",
             ".github/cosmyx/**", ".github/workflows/cosmyx-*.yml",
             "localization/cosmyx/**", "scripts/sign_windows.ps1",
+            ".github/workflows/build_orca.yml", ".github/workflows/build_flatpak.yml",
         )
         for path in required:
             with self.subTest(path=path):
                 # Listed once under pull_request and once under push.
                 self.assertEqual(text.count(f"      - '{path}'\n"), 2)
+
+    def test_paths_drop_the_unused_root_cosmyx_folder(self) -> None:
+        # No branch ships a root cosmyx/ folder; Cosmyx sources live in cosmyx-src/.
+        text = (REPO_ROOT / ".github" / "workflows" / "cosmyx-checks.yml").read_text(encoding="utf-8")
+        self.assertNotIn("      - 'cosmyx/**'\n", text)
 
 
 class DecisionTests(unittest.TestCase):

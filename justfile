@@ -11,7 +11,9 @@ repo := env("COSMYX_REPO", "Cosmyx/OrcaSlicer")
 
 # Feature recipes, one file per task, loaded when present.
 import? 'scripts/cosmyx/just/branding.just'
+import? 'scripts/cosmyx/just/goldens.just'
 import? 'scripts/cosmyx/just/i18n.just'
+import? 'scripts/cosmyx/just/macos-signing.just'
 import? 'scripts/cosmyx/just/signing.just'
 import? 'scripts/cosmyx/just/sync.just'
 import? 'scripts/cosmyx/just/tests.just'
