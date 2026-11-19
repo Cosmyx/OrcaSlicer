@@ -183,6 +183,12 @@ class HookTests(unittest.TestCase):
                 '#include "Cosmyx/DataDir.hpp" // Cosmyx',
                 "    return xdg_config_dir(Cosmyx::vendor_app_subdir(SLIC3R_APP_KEY)); // Cosmyx",
             ],
+            # Upstream's Linux default_data_dir test expects the Cosmyx folder (decision 0185).
+            "tests/libslic3r/test_utils.cpp": [
+                '#include "libslic3r/Cosmyx/DataDir.hpp" // Cosmyx',
+                '    CHECK(Slic3r::default_data_dir() == "/tmp/xdg-test/"'
+                ' + Slic3r::Cosmyx::vendor_app_subdir(SLIC3R_APP_KEY)); // Cosmyx',
+            ],
         }
         for path, hooks in expected.items():
             lines = (REPO_ROOT / path).read_text(encoding="utf-8").splitlines()

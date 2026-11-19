@@ -5,7 +5,8 @@ A Cosmyx build keeps everything it installs and everything it writes under a
 on the same machine without sharing presets, sign-in or plugins.
 
 Decisions: 0180 (data folder), 0181 (hooks), 0182 (Windows installer),
-0183 (removal of an earlier Cosmyx install), 0184 (no legacy data migration).
+0183 (removal of an earlier Cosmyx install), 0184 (no legacy data migration),
+0185 (upstream data folder test hook).
 
 ## User data folder
 
@@ -94,4 +95,4 @@ These still carry the upstream names, so the two apps share them:
 - `cmake/cosmyx/Packaging.cmake` and `cmake/cosmyx/remove_legacy_install.nsh`:
   the installer (tests: `scripts/cosmyx/tests/test_install_paths.py`, run by
   `just test-scripts`).
-- The upstream hook lines are listed in decision 0181.
+- The upstream hook lines are listed in decisions 0181 and 0185.
