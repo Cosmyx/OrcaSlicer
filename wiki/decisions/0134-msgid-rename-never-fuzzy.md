@@ -46,11 +46,19 @@ catalogues the T8 graft has already merged.
   Japanese particle is not: it is not Latin). The suffix depends on the new
   name, so it is never guessed: `inflections.json` rows
   `{"language", "old", "new", "source"}` give, per catalogue language, the
-  exact text `old` (the inflected form, or a longer phrase when a word next
-  to it must change too, such as the Hungarian article) and its `new` text,
-  written by a speaker of that language. They are applied before the plain
-  rule; an inflected name without a row stays and G8 reports it (decision
-  0135). In English text (C++ sources, msgids) "Orcas" stays another word.
+  exact text `old` and its `new` text, written by a speaker of that language.
+  `old` is the inflected form (cs "OrcaSliceru"), or a phrase around the
+  name, inflected, plain or hyphenated, when a word next to it must change
+  too: the Hungarian article ("az OrcaSlicer" -> "a CosmoSlice", since az
+  only goes before a vowel) or a Basque suffix that follows the new name's
+  sound ("Orca-ren" -> "CosmoSlice-en", "OrcaSlicer-etik" ->
+  "CosmoSlice-tik"). The bare plain name is never a row: the plain rule
+  renames it. Rows match whole words only (never after or before another
+  letter or digit, never through part of a longer name or across a URL,
+  file or kept name) and only in their language; they are applied longest
+  first, so "az OrcaSlicerrel" goes before "az OrcaSlicer" and no text is
+  renamed twice, then the plain rule runs. An inflected name without a row
+  stays and G8 reports it (decision 0135). In English text (C++ sources, msgids) "Orcas" stays another word.
   `just brand-name-inflections` lists every form still without a row, per
   language, with an example. Hyphenated forms ("OrcaSlicer-ben") are renamed
   by the plain rule ("CosmoSlice-ben") and listed apart, for a speaker to add

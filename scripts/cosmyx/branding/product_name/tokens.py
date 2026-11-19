@@ -20,7 +20,8 @@
   (`KEPT_NAMES`: things upstream calls that, such as the Orca Cloud service
   or the Orca Cube model), so a link to the upstream wiki, an icon name, a
   real file or a built-in model keeps working. With a language, the
-  inflection rows of that language are applied first.
+  inflection rows of that language are applied first (`apply_inflections`),
+  longest first and as whole words.
 - `visible_name` is the residue test: the text still names the upstream
   product somewhere `replace_tokens` would rewrite, or where only a missing
   inflection row keeps it.
@@ -150,19 +151,51 @@ def _inside(spans: list, start: int, end: int) -> bool:
     return any(low <= start and end <= high for low, high in spans)
 
 
-def _rewrite(text: str, language: str | None, new: str, inflections: dict | None) -> tuple[str, list[str]]:
-    """(renamed text, inflected forms left because no row renames them)."""
+def _overlaps(span: tuple[int, int], start: int, end: int) -> bool:
+    return span[0] < end and start < span[1]
+
+
+def _row_pattern(old: str) -> re.Pattern:
+    """`old` as a whole-word match: a row starting (ending) with a letter or
+    digit never matches after (before) another one, so hu "az OrcaSlicer"
+    leaves "az OrcaSlicerrel" and "haz OrcaSlicer" alone. A row may follow an
+    escaped newline (`\\nOrca`), like the name itself."""
+    head = r"(?:(?<!\w)|(?<=\\n))" if re.match(r"\w", old) else ""
+    tail = rf"(?![\w{_COMBINING}])" if re.search(r"\w$", old) else ""
+    return re.compile(head + re.escape(old) + tail)
+
+
+def apply_inflections(text: str, language: str | None, inflections: dict | None = None) -> tuple[str, set[str]]:
+    """(text with the inflection rows of `language` applied, the `old` of
+    every row that renamed something). Rows go longest first, so a phrase row
+    ("az OrcaSlicerrel") is applied before a shorter one it contains
+    ("az OrcaSlicer"), and a text is never renamed twice."""
     pairs = (default_inflections() if inflections is None else inflections).get(language or "", [])
+    fired: set[str] = set()
     for old, replacement in pairs:
         spans = protected_spans(text)
-        pieces, last, start = [], 0, text.find(old)
-        while start >= 0:
-            end = start + len(old)
-            if not _inside(spans, start, end):
-                pieces += [text[last:start], replacement]
-                last = end
-            start = text.find(old, end)
-        text = "".join(pieces) + text[last:]
+        names = [match.span() for match in TOKEN.finditer(text)]
+        pieces, last = [], 0
+        for match in _row_pattern(old).finditer(text):
+            start, end = match.span()
+            # Never inside or across a URL, file or kept name ("az Orca
+            # Cloud"), and never through part of a name: hu "az Orca" leaves
+            # "az Orca Slicerrel" (one name, "Orca Slicerrel") alone.
+            if any(_overlaps(span, start, end) for span in spans) or any(
+                _overlaps(span, start, end) and not (start <= span[0] and span[1] <= end) for span in names
+            ):
+                continue
+            pieces += [text[last : match.start()], replacement]
+            last = match.end()
+        if pieces:
+            fired.add(old)
+            text = "".join(pieces) + text[last:]
+    return text, fired
+
+
+def _rewrite(text: str, language: str | None, new: str, inflections: dict | None) -> tuple[str, list[str]]:
+    """(renamed text, inflected forms left because no row renames them)."""
+    text = apply_inflections(text, language, inflections)[0]
 
     unresolved: list[str] = []
     spans = protected_spans(text)

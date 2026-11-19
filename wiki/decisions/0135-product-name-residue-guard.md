@@ -31,9 +31,12 @@ sync on every new string.
   "needs inflection row (<language>): <form>", at the drift level: a warning
   on development builds, so the upstream sync keeps building while a speaker
   writes the row, and an error on release builds. Before apply, an
-  inflection row that matches no such translation in its language is stale
-  (error), and an invalid row (no inflected name in `old`, `new` without the
-  CosmoSlice stem or still naming OrcaSlicer, a duplicate) is an error.
+  inflection row that renames no such translation in its language, applied
+  as it is at apply time (whole words, after the longer rows of its
+  language), is stale (error): a row always shadowed by a longer one is
+  stale too. An invalid row is an error: `old` that does not name OrcaSlicer,
+  is the bare plain name or has leading or trailing space; `new` without the
+  CosmoSlice stem or still naming OrcaSlicer; a duplicate (language, old).
 - Every input is read as UTF-8; a file that is not (hints, a guide page) is a
   clean G8 error, never a traceback.
 - `allowlist.json` rows are `msgid`, `literal` (file, source text, exact
