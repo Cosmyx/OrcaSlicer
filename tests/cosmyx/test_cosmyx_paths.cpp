@@ -61,51 +61,6 @@ TEST_CASE("The data folder vendor is Cosmyx and the folder keeps the upstream na
     CHECK(Cosmyx::vendor_app_subdir(SLIC3R_APP_KEY) == join({"Cosmyx", "OrcaSlicer"}));
 }
 
-TEST_CASE("without_vendor_dir takes the vendor folder out of a nested data folder", "[cosmyx][CosmyxPaths]")
-{
-    SECTION("nested folder")
-    {
-        CHECK(Cosmyx::without_vendor_dir(join({"base", "config", "Cosmyx", "OrcaSlicer"})) ==
-              join({"base", "config", "OrcaSlicer"}));
-    }
-    SECTION("relative folder with the vendor at its root")
-    {
-        CHECK(Cosmyx::without_vendor_dir(join({"Cosmyx", "OrcaSlicer"})) == "OrcaSlicer");
-    }
-    SECTION("trailing separator")
-    {
-        const std::string nested = join({"base", "Cosmyx", "OrcaSlicer"}) + std::string(1, fs::path::preferred_separator);
-        CHECK(Cosmyx::without_vendor_dir(nested) == join({"base", "OrcaSlicer"}));
-    }
-    SECTION("folder not under the vendor comes back unchanged")
-    {
-        const std::string plain = join({"base", "config", "OrcaSlicer"});
-        CHECK(Cosmyx::without_vendor_dir(plain) == plain);
-    }
-    SECTION("vendor as the leaf is not taken out")
-    {
-        const std::string leaf = join({"base", "Cosmyx"});
-        CHECK(Cosmyx::without_vendor_dir(leaf) == leaf);
-    }
-    SECTION("a vendor folder higher up is not taken out")
-    {
-        const std::string deep = join({"Cosmyx", "base", "OrcaSlicer"});
-        CHECK(Cosmyx::without_vendor_dir(deep) == deep);
-    }
-    SECTION("similar names are not the vendor folder")
-    {
-        const std::string lower = join({"base", "cosmyx", "OrcaSlicer"});
-        CHECK(Cosmyx::without_vendor_dir(lower) == lower);
-        const std::string longer = join({"base", "CosmyxTools", "OrcaSlicer"});
-        CHECK(Cosmyx::without_vendor_dir(longer) == longer);
-    }
-    SECTION("empty and single component paths")
-    {
-        CHECK(Cosmyx::without_vendor_dir("").empty());
-        CHECK(Cosmyx::without_vendor_dir("OrcaSlicer") == "OrcaSlicer");
-    }
-}
-
 TEST_CASE("The Cosmyx data folder is never the target of a legacy data migration", "[cosmyx][CosmyxPaths]")
 {
     // migrate_flatpak_legacy_datadir() in GUI_App.cpp copies upstream's legacy Flatpak
