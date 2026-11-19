@@ -41,6 +41,11 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T2 -->
 
 <!-- cosmyx-slot: T3 -->
+- Add a per-filament ironing temperature (Filament > Print temperature): the
+  nozzle switches to it while ironing and goes back to the print temperature
+  afterwards, including for a tool left after ironing on multi-tool printers.
+  0, the default, changes nothing. Pull request: pending. Decisions: 0030,
+  0031, 0032, 0033, 0034.
 
 <!-- cosmyx-slot: T4 -->
 
