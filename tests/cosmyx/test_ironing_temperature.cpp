@@ -14,6 +14,7 @@
 #include "libslic3r/Config.hpp"
 #include "libslic3r/GCodeReader.hpp"
 #include "libslic3r/Preset.hpp"
+#include "libslic3r/PresetBundle.hpp"
 #include "libslic3r/PrintConfig.hpp"
 #include "libslic3r/Cosmyx/ConfigDefExtensions.hpp"
 #include "libslic3r/Cosmyx/IroningTemperature.hpp"
@@ -88,6 +89,44 @@ DynamicPrintConfig one_tool_config(int ironing_temperature, int first_layer, int
     return config;
 }
 
+// Two tools on two nozzles, filament 1 ironing at 190 and filament 2 at second_ironing,
+// with or without a prime tower.
+DynamicPrintConfig two_tool_config(bool prime_tower, int second_ironing)
+{
+    DynamicPrintConfig config = Test::multifilament_config(2, {
+        {"nozzle_diameter", "0.4,0.4"},
+        {"printer_extruder_id", "1,2"},
+        {"printer_extruder_variant", "Direct Drive Standard,Direct Drive Standard"},
+        {"extruder_printable_height", "0,0"},
+        {"filament_self_index", "1,2"},
+        {"single_extruder_multi_material", 0},
+        {"enable_prime_tower", prime_tower ? 1 : 0},
+        {"prime_tower_width", 35},
+        {"wipe_tower_x", "50"},
+        {"wipe_tower_y", "50"},
+        {"nozzle_temperature_initial_layer", "225,235"},
+        {"nozzle_temperature", "220,230"},
+        {key, "190," + std::to_string(second_ironing)},
+        {"skirt_loops", 0},
+        {"brim_type", "no_brim"},
+        {"machine_end_gcode", ""},
+        // The preheat pass would raise the incoming tool on its own and hide a tool left
+        // at the ironing temperature.
+        {"preheat_time", 0},
+    });
+    Test::size_flush_to_nozzles(config);
+    return config;
+}
+
+// One filament per object, so both tools print on every layer. Every solid layer is ironed,
+// so each tool comes back after ironing on the layers above.
+std::string slice_two_tools(const DynamicPrintConfig& config)
+{
+    return Test::slice_with_object_overrides(
+        {Test::cube(20), Test::cube(20)}, config,
+        {{{"extruder", "1"}, {"ironing_type", "solid"}}, {{"extruder", "2"}, {"ironing_type", "solid"}}});
+}
+
 } // namespace
 
 TEST_CASE("filament_ironing_temperature is a filament option, off by default", "[cosmyx]")
@@ -109,8 +148,16 @@ TEST_CASE("filament_ironing_temperature is a filament option, off by default", "
     // One value per filament, never one per extruder variant.
     CHECK(filament_options_with_variant.count(key) == 0);
 
-    // The full config every print starts from carries it, at 0.
-    const DynamicPrintConfig full = DynamicPrintConfig::full_print_config();
+    // The default filament preset stores it, at 0. PresetBundle::full_fff_config() applies
+    // that preset over FullPrintConfig defaults, so the full config of every print carries
+    // the option. DynamicPrintConfig::full_print_config() alone does not: it only holds the
+    // static FullPrintConfig keys, and the option is not one of them.
+    const PresetBundle bundle;
+    const DynamicPrintConfig& filament_defaults = bundle.filaments.default_preset().config;
+    REQUIRE(filament_defaults.has(key));
+    CHECK(filament_defaults.opt_serialize(key) == "0");
+    DynamicPrintConfig full = DynamicPrintConfig::full_print_config();
+    full.apply(filament_defaults);
     REQUIRE(full.has(key));
     CHECK(Cosmyx::ironing_temperature(full, 0) == 0);
     CHECK_FALSE(Cosmyx::any_ironing_temperature(full));
@@ -170,34 +217,8 @@ TEST_CASE("A tool selected again after ironing prints at its print temperature",
     const int second_ironing = GENERATE(0, 180);
     DYNAMIC_SECTION("prime tower " << prime_tower << ", filament 2 ironing temperature " << second_ironing)
     {
-        DynamicPrintConfig config = Test::multifilament_config(2, {
-            {"nozzle_diameter", "0.4,0.4"},
-            {"printer_extruder_id", "1,2"},
-            {"printer_extruder_variant", "Direct Drive Standard,Direct Drive Standard"},
-            {"extruder_printable_height", "0,0"},
-            {"filament_self_index", "1,2"},
-            {"single_extruder_multi_material", 0},
-            {"enable_prime_tower", prime_tower ? 1 : 0},
-            {"prime_tower_width", 35},
-            {"wipe_tower_x", "50"},
-            {"wipe_tower_y", "50"},
-            {"nozzle_temperature_initial_layer", "225,235"},
-            {"nozzle_temperature", "220,230"},
-            {key, "190," + std::to_string(second_ironing)},
-            {"skirt_loops", 0},
-            {"brim_type", "no_brim"},
-            {"machine_end_gcode", ""},
-            // The preheat pass would raise the incoming tool on its own and hide a tool left
-            // at the ironing temperature.
-            {"preheat_time", 0},
-        });
-        Test::size_flush_to_nozzles(config);
-
-        // One filament per object, so both tools print on every layer. Every solid layer is
-        // ironed, so each tool comes back after ironing on the layers above.
-        const std::string gcode = Test::slice_with_object_overrides(
-            {Test::cube(20), Test::cube(20)}, config,
-            {{{"extruder", "1"}, {"ironing_type", "solid"}}, {{"extruder", "2"}, {"ironing_type", "solid"}}});
+        const DynamicPrintConfig config = two_tool_config(prime_tower, second_ironing);
+        const std::string gcode = slice_two_tools(config);
 
         const std::map<int, int> ironing{{0, 190}, {1, second_ironing > 0 ? second_ironing : 230}};
         std::set<int>            ironed;
@@ -221,5 +242,60 @@ TEST_CASE("A tool selected again after ironing prints at its print temperature",
         REQUIRE(tools_seen == std::set<int>{0, 1});
         REQUIRE(ironed.count(0) == 1);
         REQUIRE(moves_after_ironing[0] > 0);
+    }
+}
+
+TEST_CASE("A tool left after ironing is back at its print temperature before the tool change", "[cosmyx]")
+{
+    // With pre-heating on (multi-nozzle printers), the G-code processor anchors the
+    // "Multi extruder pre cooling" M104 of the outgoing tool on the tool change itself: the
+    // T or M1020 line, or the tower's NOZZLE_CHANGE_START / NOZZLE_CHANGE_END markers, and
+    // inserts it after that line. The restore of a tool that ironed last therefore has to
+    // come before the tool change, or it would undo the pre-cooling (decision 0036).
+    const bool prime_tower = GENERATE(false, true);
+    DYNAMIC_SECTION("prime tower " << prime_tower)
+    {
+        const std::string gcode = slice_two_tools(two_tool_config(prime_tower, 180));
+
+        std::map<int, int>         target;
+        std::map<int, std::string> last_model_type; // feature of each tool's last model extrusion
+        int                        tool = 0, layer = -1, changes_after_ironing = 0;
+        std::string                type;
+        GCodeReader                reader;
+        reader.parse_buffer(gcode, [&](GCodeReader& self, const GCodeReader::GCodeLine& line) {
+            const std::string& raw = line.raw();
+            if (raw.rfind(";TYPE:", 0) == 0) {
+                type = raw.substr(6);
+                return;
+            }
+            if (raw.rfind(";LAYER_CHANGE", 0) == 0) {
+                ++layer;
+                return;
+            }
+            const std::string cmd(line.cmd());
+            if (cmd.size() >= 2 && cmd[0] == 'T' && std::all_of(cmd.begin() + 1, cmd.end(), [](char c) { return std::isdigit((unsigned char) c) != 0; })) {
+                const int next = std::stoi(cmd.substr(1));
+                if (next != tool && last_model_type[tool] == "Ironing") {
+                    ++changes_after_ironing;
+                    INFO("layer " << layer << ", tool " << tool << " to " << next);
+                    const int expected = tool == 0 ? (layer <= 0 ? 225 : 220) : (layer <= 0 ? 235 : 230);
+                    REQUIRE(target.count(tool) == 1);
+                    CHECK(target.at(tool) == expected);
+                }
+                tool = next;
+                return;
+            }
+            if (cmd == "M104" || cmd == "M109") {
+                float s = 0.f, t = 0.f;
+                if (line.has_value('S', s))
+                    target[line.has_value('T', t) ? int(t) : tool] = int(s);
+                return;
+            }
+            // Prime tower extrusions (ramming, wiping) are not model features: skip them, so the
+            // tool still counts as having ironed last.
+            if (line.extruding(self) && line.dist_XY(self) > EPSILON && type != "Prime tower")
+                last_model_type[tool] = type;
+        });
+        REQUIRE(changes_after_ironing > 0);
     }
 }
