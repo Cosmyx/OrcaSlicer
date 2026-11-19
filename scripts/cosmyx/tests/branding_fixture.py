@@ -224,6 +224,23 @@ def to_crlf(root: Path) -> list[str]:
     return converted
 
 
+def to_lf(root: Path) -> list[str]:
+    """Turn `root` into what a Linux or macOS checkout holds, whatever the
+    line endings of this checkout: every text file (no NUL byte) with CRLF
+    gets LF, except *.bat, which .gitattributes keeps CRLF. Returns the
+    converted paths, sorted."""
+    converted = []
+    for path in sorted(root.rglob("*")):
+        if not path.is_file() or path.suffix == ".bat":
+            continue
+        data = path.read_bytes()
+        if b"\0" in data or b"\r\n" not in data:
+            continue
+        path.write_bytes(data.replace(b"\r\n", b"\n"))
+        converted.append(path.relative_to(root).as_posix())
+    return converted
+
+
 def lf_snapshot(root: Path) -> dict:
     """`snapshot` with CRLF turned into LF in every file."""
     return {relative: data.replace(b"\r\n", b"\n") for relative, data in snapshot(root).items()}
@@ -252,5 +269,6 @@ __all__ = [
     "svg",
     "textpatch",
     "to_crlf",
+    "to_lf",
     "write",
 ]

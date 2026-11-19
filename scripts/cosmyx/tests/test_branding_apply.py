@@ -30,6 +30,7 @@ from branding_fixture import (
     snapshot,
     svg,
     to_crlf,
+    to_lf,
     write,
 )
 
@@ -299,12 +300,22 @@ class CrlfRealTreeTest(unittest.TestCase):
     """A Windows checkout (core.autocrlf) of the real tree brands exactly like
     an LF one, keeps CRLF in every file it patches, and reverts byte for byte."""
 
+    # True when this checkout already holds CRLF (Windows, core.autocrlf).
+    checkout_crlf = False
+
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()
         self.lf = Path(self._tmp.name) / "lf"
         self.crlf = Path(self._tmp.name) / "crlf"
         copy_real_tree(self.lf)
         copy_real_tree(self.crlf)
+        if self.checkout_crlf:
+            to_crlf(self.lf)
+            to_crlf(self.crlf)
+        # Start from true LF copies whatever this checkout holds, so the CRLF
+        # copy below really differs from the LF one.
+        to_lf(self.lf)
+        to_lf(self.crlf)
 
     def tearDown(self) -> None:
         self._tmp.cleanup()
@@ -330,6 +341,13 @@ class CrlfRealTreeTest(unittest.TestCase):
         self.assertEqual(mixed, [], "mixed line endings after apply")
         apply_module.revert(self.crlf)
         self.assertEqual(snapshot(self.crlf), before)
+
+
+class CrlfRealTreeFromCrlfCheckoutTest(CrlfRealTreeTest):
+    """The same test run from a checkout that is already CRLF, as on the
+    Windows runners: the copies must still start as true LF and true CRLF."""
+
+    checkout_crlf = True
 
 
 if __name__ == "__main__":
