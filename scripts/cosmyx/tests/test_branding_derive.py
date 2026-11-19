@@ -347,7 +347,7 @@ class DockerTest(unittest.TestCase):
     def test_docker_unavailable_reasons(self) -> None:
         with mock.patch.object(derive.shutil, "which", return_value=None):
             self.assertEqual(derive.docker_unavailable(), "docker is not installed")
-        done = subprocess.CompletedProcess([], 0, stdout="windows\n")
+        done = subprocess.CompletedProcess([], 0, stdout="windows x86_64\n")
         with (
             mock.patch.object(derive.shutil, "which", return_value="docker"),
             mock.patch.object(derive.subprocess, "run", return_value=done),
@@ -359,6 +359,48 @@ class DockerTest(unittest.TestCase):
             mock.patch.object(derive.subprocess, "run", return_value=failed),
         ):
             self.assertIn("not reachable", derive.docker_unavailable())
+
+    def docker_runs(self, *results: subprocess.CompletedProcess) -> tuple[str | None, mock.MagicMock]:
+        with (
+            mock.patch.object(derive.shutil, "which", return_value="docker"),
+            mock.patch.object(derive.subprocess, "run", side_effect=list(results)) as run,
+        ):
+            return derive.docker_unavailable(), run
+
+    def test_native_amd64_daemon_needs_no_probe(self) -> None:
+        reason, run = self.docker_runs(subprocess.CompletedProcess([], 0, stdout="linux x86_64\n"))
+        self.assertIsNone(reason)
+        self.assertEqual(run.call_count, 1)
+
+    def test_arm64_daemon_without_emulation_is_unavailable(self) -> None:
+        # An arm64 runner without binfmt fails the first amd64 binary with this error.
+        reason, run = self.docker_runs(
+            subprocess.CompletedProcess([], 0, stdout="linux aarch64\n"),
+            subprocess.CompletedProcess([], 1, stdout="", stderr="exec /usr/bin/true: exec format error\n"),
+        )
+        self.assertIn("cannot run linux/amd64 containers", reason)
+        self.assertIn("exec format error", reason)
+        probe = run.call_args_list[1].args[0]
+        self.assertEqual(probe[:5], ["docker", "run", "--rm", "--platform", "linux/amd64"])
+        self.assertEqual(probe[-2:], [derive.probe_image(), "true"])
+
+    def test_arm64_daemon_with_emulation_is_available(self) -> None:
+        reason, run = self.docker_runs(
+            subprocess.CompletedProcess([], 0, stdout="linux aarch64\n"),
+            subprocess.CompletedProcess([], 0, stdout="", stderr=""),
+        )
+        self.assertIsNone(reason)
+        self.assertEqual(run.call_count, 2)
+
+    def test_probe_image_is_the_pinned_final_stage(self) -> None:
+        image = derive.probe_image()
+        self.assertIn("@sha256:", image)
+        self.assertIn(f"FROM {image} AS final", derive.DOCKERFILE.read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as tmp:
+            empty = Path(tmp) / "Dockerfile"
+            empty.write_text("# nothing\n", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                derive.probe_image(empty)
 
 
 if __name__ == "__main__":
