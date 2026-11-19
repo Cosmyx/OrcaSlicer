@@ -1,4 +1,7 @@
-"""Slice the shipped Cosmyx cube with the Linux x64 AppImage (decision 0147).
+"""Slice the shipped Cosmyx cube with the built app (decisions 0147, 0160).
+
+Used for the Linux x64 AppImage, the Windows x64 portable folder and the macOS
+app of the disk image.
 
 The app is run headless (`--slice 0` slices every plate) with a fresh data
 folder, and its G-code must look like a real print: the header block with the
@@ -77,29 +80,36 @@ def output_problems(outputdir: Path, app_name: str, version: str, min_g1: int) -
 
 
 def run_slice(artifact: str, app_run: Path, resources: Path, subject: Path, work: Path, expectations: dict,
-              run: Runner = subprocess.run, xvfb: bool = True) -> Record:
+              run: Runner = subprocess.run, xvfb: bool = True, os_name: str = "linux", timeout: int | None = None,
+              env: dict | None = None) -> Record:
+    """Slice the model with app_run and judge result.json and the G-code.
+    timeout defaults to expectations[os_name]["slice_timeout"]; env, when
+    given, replaces the environment of the app."""
     settings = expectations["slice"]
     model = resources / settings["model"]
     if not model.is_file():
-        return Record("linux", artifact, settings["model"], "slice", "skip", "T5 not merged: the model is not shipped")
+        return Record(os_name, artifact, settings["model"], "slice", "skip", "T5 not merged: the model is not shipped")
     version_inc = subject / "version.inc"
     identity = header_identity(version_inc.read_text(encoding="utf-8")) if version_inc.is_file() else None
     if identity is None:
-        return Record("linux", artifact, "", "slice", "fail", "version.inc of the built commit has no app name or version")
+        return Record(os_name, artifact, "", "slice", "fail", "version.inc of the built commit has no app name or version")
     datadir, outputdir = work / "slice-data", work / "slice-out"
     datadir.mkdir(parents=True, exist_ok=True)
     outputdir.mkdir(parents=True, exist_ok=True)
     args = command(app_run, model, datadir, outputdir, settings.get("load_settings", []), xvfb)
-    timeout = expectations["linux"]["slice_timeout"]
+    timeout = timeout or expectations[os_name]["slice_timeout"]
+    extra = {"env": env} if env is not None else {}
     try:
-        done = run(args, capture_output=True, text=True, errors="replace", check=False, timeout=timeout)
+        done = run(args, capture_output=True, text=True, errors="replace", check=False, timeout=timeout, **extra)
+    except OSError as error:
+        return Record(os_name, artifact, settings["model"], "slice", "fail", f"could not start: {error}")
     except subprocess.TimeoutExpired:
-        return Record("linux", artifact, settings["model"], "slice", "fail", f"slicing took more than {timeout} s")
+        return Record(os_name, artifact, settings["model"], "slice", "fail", f"slicing took more than {timeout} s")
     problems, details = output_problems(outputdir, identity[0], identity[1], settings["min_g1_moves"])
     details["exit"] = done.returncode
     if problems:
         tail = (done.stderr or done.stdout or "").strip().splitlines()[-3:]
         details["tail"] = tail
-        return Record("linux", artifact, settings["model"], "slice", "fail", "; ".join(problems[:5]), details)
-    return Record("linux", artifact, settings["model"], "slice", "pass",
+        return Record(os_name, artifact, settings["model"], "slice", "fail", "; ".join(problems[:5]), details)
+    return Record(os_name, artifact, settings["model"], "slice", "pass",
                   f"{len(details['plates'])} plate(s) sliced", details)
