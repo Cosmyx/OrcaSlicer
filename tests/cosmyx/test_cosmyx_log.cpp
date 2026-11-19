@@ -145,7 +145,11 @@ TEST_CASE("Cosmyx log file name is paired with Orca's", "[cosmyx][CosmyxLog]")
     CHECK(Cosmyx::paired_log_file_name("orca.log.0") == "cosmyx_orca.log");
     CHECK(Cosmyx::paired_log_file_name("orca.log.x1") == "cosmyx_orca.log.x1");
     CHECK(Cosmyx::paired_log_file_name(fs::path()).empty());
-    CHECK(Cosmyx::paired_log_file_name(folder / "").empty());
+    // A folder, not a file: Boost filesystem v3 gives "." as the file name of a
+    // path with a trailing separator ("/" is a separator on every OS).
+    CHECK(Cosmyx::paired_log_file_name(fs::path("data/log/")).empty());
+    CHECK(Cosmyx::paired_log_file_name(folder / ".").empty());
+    CHECK(Cosmyx::paired_log_file_name(folder / "..").empty());
 }
 
 TEST_CASE("Cosmyx log channel is named Cosmyx", "[cosmyx][CosmyxLog]")
