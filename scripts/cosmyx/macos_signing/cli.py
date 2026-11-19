@@ -9,7 +9,8 @@ the environment, never from the command line, so no secret reaches a process
 listing of this script:
 
     COSMYX_MAC_SIGN_IDENTITY   codesign identity ("-" for an ad-hoc dry run)
-    COSMYX_MAC_KEYCHAIN        keychain holding the identity (optional)
+    COSMYX_MAC_KEYCHAIN        keychain holding the identity (needed to notarise:
+                               it holds the notary profile, decision 0159)
     COSMYX_MAC_TEAM_ID         Apple team (notarisation and verification)
     COSMYX_MAC_APPLE_ID        Apple ID of the notarisation account
     COSMYX_MAC_APP_PASSWORD    its app-specific password

@@ -68,11 +68,14 @@ class FakeRunner:
 
     def __init__(self, handlers=None) -> None:
         self.calls: list[list[str]] = []
+        self.inputs: list[tuple[list[str], dict]] = []
         self.handlers = handlers or {}
 
-    def __call__(self, args, **_kwargs):
+    def __call__(self, args, **kwargs):
         args = [str(a) for a in args]
         self.calls.append(args)
+        if "input" in kwargs:
+            self.inputs.append((args, kwargs))
         key = " ".join(args[:3]) if args[0] == "xcrun" else args[0]
         handler = self.handlers.get(key)
         if handler is not None:
@@ -201,6 +204,23 @@ def notary_handlers(wait_answers, submit_answers=None, log=None):
 
 
 class NotarizeTests(TempCase):
+    def test_profile_needs_the_temporary_keychain(self) -> None:
+        runner = FakeRunner()
+        ctx, _ = context(runner)
+        ctx.settings.keychain = ""
+        with self.assertRaises(SigningError) as raised:
+            notarize.notarize(ctx, [self.root / "a.zip"], None)
+        self.assertIn("COSMYX_MAC_KEYCHAIN", str(raised.exception))
+        self.assertEqual(runner.calls, [])
+
+    def test_failed_profile_store_is_redacted(self) -> None:
+        handlers = {"xcrun notarytool store-credentials": lambda a: done(a, 1, "", f"bad {APPLE_ID} {PASSWORD}")}
+        ctx, _ = context(FakeRunner(handlers))
+        with self.assertRaises(SigningError) as raised:
+            notarize.notarize(ctx, [self.root / "a.zip"], None)
+        self.assertNotIn(PASSWORD, str(raised.exception))
+        self.assertNotIn(APPLE_ID, str(raised.exception))
+
     def test_submit_all_then_wait(self) -> None:
         handlers, _ = notary_handlers([])
         runner = FakeRunner(handlers)
@@ -208,12 +228,23 @@ class NotarizeTests(TempCase):
         result = notarize.notarize(ctx, [self.root / "a.zip", self.root / "b.zip"], None)
         self.assertEqual([s.status for s in result], ["Accepted", "Accepted"])
         kinds = [c[2] for c in runner.calls]
-        self.assertEqual(kinds, ["submit", "submit", "wait", "wait"])
-        submit = runner.calls[0]
-        for flag, value in (("--apple-id", APPLE_ID), ("--team-id", TEAM), ("--password", PASSWORD)):
-            self.assertEqual(submit[submit.index(flag) + 1], value)
+        self.assertEqual(kinds, ["store-credentials", "submit", "submit", "wait", "wait"])
+        store = runner.calls[0]
+        self.assertEqual(store[3], notarize.PROFILE)
+        for flag, value in (("--apple-id", APPLE_ID), ("--team-id", TEAM), ("--keychain", "/tmp/k.keychain-db")):
+            self.assertEqual(store[store.index(flag) + 1], value)
+        self.assertNotIn("--password", store)
+        # The password is the answer to the prompt, on stdin, with no terminal.
+        self.assertEqual(len(runner.inputs), 1)
+        self.assertEqual(runner.inputs[0][1]["input"], PASSWORD + "\n")
+        self.assertTrue(runner.inputs[0][1]["start_new_session"])
+        for call in runner.calls[1:]:
+            self.assertEqual(call[call.index("--keychain-profile") + 1], notarize.PROFILE)
+            self.assertEqual(call[call.index("--keychain") + 1], "/tmp/k.keychain-db")
+            self.assertNotIn("--password", call)
+        submit = runner.calls[1]
         self.assertIn("--no-wait", submit)
-        wait = runner.calls[2]
+        wait = runner.calls[3]
         self.assertEqual(wait[wait.index("--timeout") + 1], "40m")
 
     def test_network_errors_are_retried_three_times(self) -> None:
@@ -271,6 +302,11 @@ class DmgTests(TempCase):
         self.assertEqual(dmg.volume_name(app), "OrcaSlicer")
         (app / "Contents" / "Info.plist").write_text("broken", encoding="utf-8")
         self.assertEqual(dmg.volume_name(app), "OrcaSlicer")
+        for damaged in ("<?xml version=\"1.0\"?><plist><dict><key>a</key>",
+                        "<plist><date>x</date></plist>", "<plist><integer>zz</integer></plist>",
+                        "<plist><dict><key>CFBundleName</key><integer>5</integer></dict></plist>"):
+            (app / "Contents" / "Info.plist").write_text(damaged, encoding="utf-8")
+            self.assertEqual(dmg.volume_name(app), "OrcaSlicer", damaged)
 
     def test_build_reuses_upstream_helpers(self) -> None:
         app = make_app(self.root, "OrcaSlicer_profile_validator")
@@ -393,10 +429,13 @@ class CliTests(TempCase):
             self.assertEqual(cli.cmd_run(args, env=self.ENV, run=runner), 0)
         order = [c[2] if c[0] == "xcrun" else c[0] for c in runner.calls
                  if c[0] in ("xcrun", "ditto", "bash") and (c[0] != "xcrun" or c[1] != "stapler" or c[2] == "staple")]
-        # apps: zip x2, submit x2, wait x2, staple x2; dmgs: (ditto + bash) x2, submit x2, wait x2, staple x2
-        self.assertEqual(order[:8], ["ditto", "ditto", "submit", "submit", "wait", "wait", "staple", "staple"])
-        self.assertEqual(order[8:12], ["ditto", "bash", "ditto", "bash"])
-        self.assertEqual(order[12:18], ["submit", "submit", "wait", "wait", "staple", "staple"])
+        # apps: zip x2, notary profile stored once, submit x2, wait x2, staple x2;
+        # dmgs: (ditto + bash) x2, submit x2, wait x2, staple x2 (same profile)
+        self.assertEqual(order[:9], ["ditto", "ditto", "store-credentials", "submit", "submit", "wait", "wait",
+                                     "staple", "staple"])
+        self.assertEqual(order[9:13], ["ditto", "bash", "ditto", "bash"])
+        self.assertEqual(order[13:19], ["submit", "submit", "wait", "wait", "staple", "staple"])
+        self.assertEqual(len(runner.of("xcrun notarytool store-credentials")), 1)
         submitted = [Path(c[3]).name for c in runner.of("xcrun notarytool submit")]
         self.assertEqual(submitted[2:], ["OrcaSlicer_Mac_universal_9.9.dmg",
                                          "OrcaSlicer_profile_validator_Mac_universal_9.9.dmg"])

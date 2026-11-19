@@ -1,4 +1,4 @@
-"""Notarise with notarytool and staple the tickets (decision 0153).
+"""Notarise with notarytool and staple the tickets (decisions 0153, 0159).
 
 Every file of a round is submitted first, then waited for, so Apple's queue
 works on them together. A tool error (network, service) is retried 3 times;
@@ -30,9 +30,31 @@ class Submission:
     status: str = ""
 
 
-def credentials(ctx: Context) -> list[str]:
+PROFILE = "cosmyx-notary"
+
+
+def store_profile(ctx: Context) -> str:
+    """Save the notary credentials as a profile in the run's temporary keychain.
+
+    notarytool store-credentials prompts for the app-specific password when
+    --password is left out; the answer goes to its stdin, so the password is
+    never on a command line (decision 0159). The profile dies with the keychain
+    in the action's clean-up step."""
     s = ctx.settings
-    return ["--apple-id", s.apple_id, "--team-id", s.team_id, "--password", s.app_password]
+    if not s.keychain:
+        raise SigningError("notarisation needs the temporary keychain (COSMYX_MAC_KEYCHAIN) to hold its profile")
+    done = ctx.call_with_input(["xcrun", "notarytool", "store-credentials", PROFILE, "--apple-id", s.apple_id,
+                                "--team-id", s.team_id, "--keychain", s.keychain, "--no-validate"], s.app_password)
+    if done.returncode != 0:
+        raise SigningError(ctx.redact(f"notarytool store-credentials failed (exit {done.returncode}): {tail(done)}"))
+    ctx.notary_profile = PROFILE
+    return PROFILE
+
+
+def credentials(ctx: Context) -> list[str]:
+    """The notarytool options that select the stored profile (stored on first use)."""
+    profile = ctx.notary_profile or store_profile(ctx)
+    return ["--keychain-profile", profile, "--keychain", ctx.settings.keychain]
 
 
 def _json(done: subprocess.CompletedProcess) -> dict | None:
