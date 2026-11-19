@@ -128,13 +128,6 @@
       "reason": "Start menu name of the MSIX application; Application Id stays"
     },
     {
-      "file": "src/dev-utils/platform/unix/build_appimage.sh.in",
-      "old": "Name=@SLIC3R_APP_KEY@\n",
-      "new": "Name=@SLIC3R_APP_NAME@\n",
-      "count": 1,
-      "reason": "AppImage desktop entry name; its file, icon and executable names stay SLIC3R_APP_KEY"
-    },
-    {
       "file": "src/dev-utils/platform/unix/com.orcaslicer.OrcaSlicer.desktop",
       "old": "\nName=OrcaSlicer\n",
       "new": "\nName=CosmoSlice\n",

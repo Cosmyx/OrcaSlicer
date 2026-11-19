@@ -68,7 +68,10 @@ here; see the upstream release notes.
   such as the Hungarian article), and reported until their row exists;
   "ORCA SLICER" is renamed
   whole; texts naming the config file, the .app, the AppImage or the Windows
-  data folder keep pointing at their real OrcaSlicer names.
+  data folder keep pointing at their real OrcaSlicer names. Package file
+  names never change: the AppImage keeps its OrcaSlicer desktop entry name,
+  from which its file name is made, and a guard fails the build if the
+  rename would change a packaging name.
   A guard reports any new upstream text naming OrcaSlicer; recipe
   `just brand-name-candidates` proposes the rows. Pull request: pending.
   Decisions: 0132, 0133, 0134, 0135.
