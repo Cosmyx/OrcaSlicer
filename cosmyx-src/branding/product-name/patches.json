@@ -210,6 +210,34 @@
       "new": "{ EProducer::OrcaSlicer, SLIC3R_APP_KEY },",
       "count": 1,
       "reason": "machine-read: producer detection of the G-code header"
+    },
+    {
+      "file": "src/slic3r/GUI/WebViewDialog.cpp",
+      "old": "static const char *const kCloudUrl = \"https://cloud.orcaslicer.com\";",
+      "new": "static const char *const kCloudUrl = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 1,
+      "reason": "cloud web pane fallback page and reset_browser target; it ignores the app config, so it points at CosmoCloud (decision 0201)"
+    },
+    {
+      "file": "src/slic3r/GUI/Plater.cpp",
+      "old": "cloud_url = \"https://cloud.orcaslicer.com\";",
+      "new": "cloud_url = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 1,
+      "reason": "cloud web URL fallback used only when the agent has none; CosmoCloud like the agent defaults (decision 0201)"
+    },
+    {
+      "file": "src/slic3r/GUI/PluginsDialog.cpp",
+      "old": "cloud_base_url = \"https://cloud.orcaslicer.com\";",
+      "new": "cloud_base_url = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 2,
+      "reason": "plugin hub web URL fallbacks used only when the agent has none; CosmoCloud like the agent defaults (decision 0201)"
+    },
+    {
+      "file": "src/slic3r/plugin/PluginResolver.cpp",
+      "old": "std::string cloud_base_url = \"https://cloud.orcaslicer.com\";",
+      "new": "std::string cloud_base_url = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 1,
+      "reason": "plugin resolver web URL fallback used only when the agent has none; CosmoCloud like the agent defaults (decision 0201)"
     }
   ]
 }
