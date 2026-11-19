@@ -75,3 +75,10 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+- Check every "Build all" run's artifacts on their own OS: Windows signatures
+  and installer payload, macOS architectures and arm64 signatures, Linux ELF
+  files with a smoke run and a slice, plus the build tag in the names and the
+  shipped translations and models. Posts the commit status
+  `cosmyx/artifact-checks`; signatures are enforced only on signed builds (see
+  `wiki/cosmyx/artifact-checks.md`). Pull request: pending. Decisions: 0140,
+  0141, 0142, 0143, 0144, 0145, 0146, 0147, 0148, 0149.
