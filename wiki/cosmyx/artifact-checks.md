@@ -56,8 +56,9 @@ name patterns, limits and the Mesa pin are in `data/expectations.json`.
   [mesa-dist-win](https://github.com/pal1000/mesa-dist-win) release (MIT), checks
   the archive's SHA-256, unpacks `opengl32.dll`, `libgallium_wgl.dll` and
   `dxil.dll` from its `x64/` folder with the runner's 7-Zip, checks each file's
-  SHA-256, and runs the app with that folder first on `PATH` and
-  `GALLIUM_DRIVER=llvmpipe`. Mesa is test-only and never reaches an artifact.
+  SHA-256, puts them in `mesa/` and next to the exe (the launcher's OpenGL
+  check finds them there), and runs the app with `mesa/` first on `PATH` and
+  `GALLIUM_DRIVER=llvmpipe`. `--sw-renderer` is never passed: the app rejects it. Mesa is test-only and never reaches an artifact.
   A hash mismatch or a failed download fails both runs; no 7-Zip skips them
   with that reason (a failure in strict mode). The archive is cached between
   runs (`actions/cache`, keyed on `data/expectations.json`; the hash is checked

@@ -25,9 +25,8 @@ check.
 - Windows: `orca-slicer.exe` of a temporary copy of each x64 portable folder
   (the downloaded artifact is never changed), with the pinned Mesa of 0161.
   arm64 folders are skipped by design. `--sw-renderer` is not passed: the
-  command line parser of the app does not know it, and the launcher already
-  loads Mesa when the default OpenGL is older than 2.0, which is the case on
-  the GPU-less hosted runner.
+  launcher forwards it to the command line parser, which rejects it as an
+  invalid option (0161 says how Mesa is picked up instead).
 - Crashes are named in the record: the signal on macOS, the NTSTATUS of the
   exit code on Windows (`STATUS_ACCESS_VIOLATION`, `STATUS_DLL_NOT_FOUND`...).
 - Limits live in `data/expectations.json` (`windows`, `macos`), so they can be
