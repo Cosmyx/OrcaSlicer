@@ -211,6 +211,7 @@ def copy_real_tree(destination: Path) -> None:
         patches = product_name_path / "patches.json"
         if patches.is_file():
             files += [row["file"] for row in branding.load_json(patches)["rows"]]
+        files += [pin[0] for pin in guards.PACKAGING_PINS]
     for top in sorted(set(tops)):
         if top and (REPO_ROOT / top).is_dir() and not (destination / top).exists():
             shutil.copytree(REPO_ROOT / top, destination / top, ignore=ignore)
