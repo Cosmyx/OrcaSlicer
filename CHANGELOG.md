@@ -72,8 +72,10 @@ here; see the upstream release notes.
   container workspace is trusted for git), without marking the build "-dirty"
   (the edited files are hidden from git diff).
   Recipes `just i18n-extract`, `i18n-seed`, `i18n-graft`, `i18n-ungraft`,
-  `worktree-hidden`. Pull request: pending. Decisions: 0080, 0081, 0082
-  (superseded), 0083, 0084, 0085, 0086, 0087.
+  `worktree-hidden`. The graft accepts UTF-8 catalogues only, reads strings
+  holding Unicode line separators, and never glues an entry to a catalogue
+  without a final newline. Pull request: pending. Decisions: 0080, 0081, 0082
+  (superseded), 0083, 0084, 0085, 0086, 0087, 0088.
 
 ### CI-release
 
