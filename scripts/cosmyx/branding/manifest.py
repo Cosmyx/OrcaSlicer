@@ -46,6 +46,7 @@ from . import (
     load_json,
     relative_posix,
     repo_path,
+    same_text,
     write_text,
 )
 
@@ -201,7 +202,7 @@ def validate(root: Path, manifest: Manifest | None = None) -> list[str]:
         paths = [row.get("path") for row in rows if isinstance(row, dict)]
         if paths != sorted(paths, key=str):
             own.append(f"{group}.json: rows are not sorted by path")
-        if not own and path.read_bytes() != serialise(group, rows).encode("utf-8"):
+        if not own and not same_text(path, serialise(group, rows)):
             own.append(f"{group}.json is not in canonical form (run `just brand-sync`)")
         problems.extend(own)
     return problems

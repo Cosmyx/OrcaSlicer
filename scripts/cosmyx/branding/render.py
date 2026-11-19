@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from . import GROUPS, MANIFEST_DIR, TABLES_DIR, repo_path, write_text
+from . import GROUPS, MANIFEST_DIR, TABLES_DIR, repo_path, same_text, write_text
 from .manifest import STATUSES, Manifest
 
 COLUMNS = ("path", "format", "size", "kind", "source", "status", "usage")
@@ -56,7 +56,6 @@ def stale(root: Path, manifest: Manifest) -> list[str]:
     result = []
     for group in GROUPS:
         path = table_path(root, group)
-        expected = table(group, manifest.groups.get(group, [])).encode("utf-8")
-        if not path.is_file() or path.read_bytes() != expected:
+        if not path.is_file() or not same_text(path, table(group, manifest.groups.get(group, []))):
             result.append(f"{TABLES_DIR}/{group}.md")
     return result

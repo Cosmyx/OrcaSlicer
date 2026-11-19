@@ -67,12 +67,24 @@ class TextPatchTest(TreeCase):
         textpatch.apply(self.root, rows)
         self.assertEqual(read(self.root, "version.inc"), b'set(SLIC3R_APP_NAME K "X")\n')
 
-    def test_refuses_crlf_and_missing_files(self) -> None:
-        write(self.root, "crlf.txt", b"OrcaSlicer\r\n")
-        for row in (self.patch(file="crlf.txt", count=1), self.patch(file="absent.txt", count=1)):
-            with self.subTest(file=row.file):
-                with self.assertRaises(branding.BrandingError):
-                    textpatch.apply(self.root, [row])
+    def test_refuses_missing_files(self) -> None:
+        with self.assertRaises(branding.BrandingError):
+            textpatch.apply(self.root, [self.patch(file="absent.txt", count=1)])
+
+    def test_crlf_file_patches_like_lf_and_stays_crlf(self) -> None:
+        # A Windows checkout (core.autocrlf) has CRLF files: a row spanning a
+        # line break matches on LF text, and the file keeps CRLF throughout.
+        lf = read(self.root, "version.inc")
+        write(self.root, "version.inc", lf.replace(b"\n", b"\r\n"))
+        rows = [self.patch(old='"OrcaSlicer"', new='"X"', count=2), self.patch(old='"X")\nset(SLIC3R_APP_KEY', new="K\nY", count=1)]
+        self.assertEqual(textpatch.mismatches(self.root, rows), [])
+        textpatch.apply(self.root, rows)
+        self.assertEqual(read(self.root, "version.inc"), b'set(SLIC3R_APP_NAME K\r\nY "X")\r\n')
+
+    def test_mixed_file_is_written_with_its_dominant_line_ending(self) -> None:
+        write(self.root, "mixed.txt", b"OrcaSlicer\r\nb\r\nc\n")
+        textpatch.apply(self.root, [self.patch(file="mixed.txt", old="OrcaSlicer", new="A", count=1)])
+        self.assertEqual(read(self.root, "mixed.txt"), b"A\r\nb\r\nc\r\n")
 
     def test_rejects_malformed_rows(self) -> None:
         bad = [

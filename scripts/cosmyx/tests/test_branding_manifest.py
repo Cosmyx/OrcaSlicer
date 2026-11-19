@@ -276,8 +276,18 @@ class TableValidationTest(TreeCase):
 
     def test_non_canonical_form(self) -> None:
         path = self.root / branding.MANIFEST_DIR / "web.json"
-        path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+        path.write_bytes(path.read_bytes().replace(b"\n  ", b"\n    "))
         self.assert_problem("canonical")
+
+    def test_crlf_checkout_is_canonical(self) -> None:
+        # A Windows checkout (core.autocrlf) turns the committed LF into CRLF.
+        for group in branding.GROUPS:
+            path = self.root / branding.MANIFEST_DIR / f"{group}.json"
+            path.write_bytes(path.read_bytes().replace(b"\n", b"\r\n"))
+            table = render.table_path(self.root, group)
+            table.write_bytes(table.read_bytes().replace(b"\n", b"\r\n"))
+        self.assertEqual(manifest.validate(self.root), [])
+        self.assertEqual(render.stale(self.root, manifest.load(self.root)), [])
 
     def test_missing_group_file(self) -> None:
         (self.root / branding.MANIFEST_DIR / "web.json").unlink()

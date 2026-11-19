@@ -7,7 +7,9 @@ shape with `find` / `replace` keys; `normalise` maps them.
 
 `plan` checks every row and computes every new file content in memory;
 nothing is written unless every row matches, so a failed patch leaves the
-tree as it was. Patched files must be UTF-8 with LF line endings.
+tree as it was. Patched files must be UTF-8. Matching is done on LF text
+and a patched file is written back with its own dominant line ending, so a
+CRLF checkout (Windows, core.autocrlf) patches exactly like an LF one.
 """
 
 from __future__ import annotations
@@ -15,7 +17,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import BrandingError, check_relative, repo_path
+from . import BrandingError, check_relative, decode_text, encode_text, repo_path
 
 KEYS = ("file", "old", "new", "count", "reason")
 
@@ -52,18 +54,22 @@ def normalise(row: dict) -> Patch:
     return Patch(check_relative(data["file"]), data["old"], data["new"], count, data["reason"])
 
 
-def read_text(root: Path, relative: str) -> str:
+def read_text_eol(root: Path, relative: str) -> tuple[str, str]:
+    """(LF text, the file's line ending)."""
     path = repo_path(root, relative)
     try:
         data = path.read_bytes()
     except OSError as error:
         raise BrandingError(f"{relative}: cannot read: {error}") from error
-    if b"\r\n" in data:
-        raise BrandingError(f"{relative}: has CRLF line endings; patched files must be LF")
     try:
-        return data.decode("utf-8")
+        return decode_text(data)
     except UnicodeDecodeError as error:
         raise BrandingError(f"{relative}: not UTF-8: {error}") from error
+
+
+def read_text(root: Path, relative: str) -> str:
+    """The file's text with LF line endings."""
+    return read_text_eol(root, relative)[0]
 
 
 def mismatches(root: Path, patches: list[Patch]) -> list[str]:
@@ -113,5 +119,6 @@ def apply(root: Path, patches: list[Patch], before_write=None) -> list[str]:
     for relative in sorted(texts):
         if before_write is not None:
             before_write(relative)
-        repo_path(root, relative).write_bytes(texts[relative].encode("utf-8"))
+        _, eol = read_text_eol(root, relative)
+        repo_path(root, relative).write_bytes(encode_text(texts[relative], eol))
     return sorted(texts)

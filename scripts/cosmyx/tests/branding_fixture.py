@@ -208,6 +208,27 @@ def copy_real_tree(destination: Path) -> None:
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, target)
 
+def to_crlf(root: Path) -> list[str]:
+    """Turn `root` into what a Windows checkout with core.autocrlf holds: every
+    text file (no NUL byte, LF only) gets CRLF, except *.sh, which
+    .gitattributes keeps LF. Returns the converted paths, sorted."""
+    converted = []
+    for path in sorted(root.rglob("*")):
+        if not path.is_file() or path.suffix == ".sh":
+            continue
+        data = path.read_bytes()
+        if b"\0" in data or b"\r" in data or b"\n" not in data:
+            continue
+        path.write_bytes(data.replace(b"\n", b"\r\n"))
+        converted.append(path.relative_to(root).as_posix())
+    return converted
+
+
+def lf_snapshot(root: Path) -> dict:
+    """`snapshot` with CRLF turned into LF in every file."""
+    return {relative: data.replace(b"\r\n", b"\n") for relative, data in snapshot(root).items()}
+
+
 __all__ = [
     "BINARY",
     "DEV",
@@ -221,6 +242,7 @@ __all__ = [
     "copy_real_tree",
     "git",
     "guards",
+    "lf_snapshot",
     "manifest",
     "overlay",
     "png",
@@ -229,5 +251,6 @@ __all__ = [
     "snapshot",
     "svg",
     "textpatch",
+    "to_crlf",
     "write",
 ]
