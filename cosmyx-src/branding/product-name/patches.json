@@ -41,7 +41,14 @@
       "old": "set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY \"OrcaSlicer\")\n",
       "new": "set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY \"OrcaSlicer\")\nset (CPACK_NSIS_DISPLAY_NAME \"CosmoSlice\")\n",
       "count": 1,
-      "reason": "Windows Apps & features name; the registry key and the install folder stay OrcaSlicer"
+      "reason": "Windows Apps & features name; the installer identity (cmake/cosmyx/Packaging.cmake, decision 0182) owns the install folder, registry key and installer window title and keeps this value"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set(CPACK_PACKAGE_EXECUTABLES \"orca-slicer;OrcaSlicer\")",
+      "new": "set(CPACK_PACKAGE_EXECUTABLES \"orca-slicer;CosmoSlice\")",
+      "count": 1,
+      "reason": "label of the Start menu and desktop shortcuts; the executable orca-slicer.exe stays"
     },
     {
       "file": "src/slic3r/GUI/GUI_App.cpp",
@@ -140,6 +147,20 @@
       "new": "<name>CosmoSlice</name>",
       "count": 1,
       "reason": "software centre name; the Flatpak id stays"
+    },
+    {
+      "file": "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml",
+      "old": "<p>OrcaSlicer is a powerful",
+      "new": "<p>CosmoSlice is a powerful",
+      "count": 1,
+      "reason": "software centre description; the Flatpak id and upstream URLs stay"
+    },
+    {
+      "file": "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml",
+      "old": "            OrcaSlicer also provides",
+      "new": "            CosmoSlice also provides",
+      "count": 1,
+      "reason": "software centre description; the Flatpak id and upstream URLs stay"
     },
     {
       "file": "resources/web/guide/1/index.html",
