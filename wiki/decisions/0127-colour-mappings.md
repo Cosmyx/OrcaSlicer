@@ -28,7 +28,10 @@ user approves what ships.
   `#009789`, `#009C88`, `#00BFBF`, `#007A74`) take the brand, bright accents
   take `#A472F5` or the lavender.
 - `to` must be a palette colour, `from` must be unique and not ignored, and
-  both are uppercase `#RRGGBB`. Unvalidated mappings warn on development
+  both are uppercase `#RRGGBB`. Every palette value is an uppercase
+  `#RRGGBB` too: guard G7 searches each one as a case-insensitive substring
+  of the tracked files, so a short `#80F` or a non-colour would match
+  unrelated upstream text. Unvalidated mappings warn on development
   builds and fail release builds, like the image rows (decision 0121).
 
 ## Consequences
