@@ -26,6 +26,12 @@ SECRETS = {
 }
 
 
+SETUP = "Cosmyx code signing setup"
+SIGN = "Cosmyx sign Windows binaries"
+VERIFY = "Cosmyx verify Windows signatures"
+SIGNING_STEPS = (SETUP, SIGN, VERIFY)
+
+
 def cosmyx_steps(text: str) -> list[list[str]]:
     """Return the lines of each "# Cosmyx" step of the workflow, in order."""
     steps: list[list[str]] = []
@@ -42,20 +48,35 @@ def cosmyx_steps(text: str) -> list[list[str]]:
     return steps
 
 
+def step_name(step: list[str]) -> str:
+    return step[0].split("- name:", 1)[1].split("#", 1)[0].strip()
+
+
 class WorkflowHookTests(unittest.TestCase):
+    # Other tasks add their own "# Cosmyx" steps to build_orca.yml (sources
+    # preparation, build naming, macOS signing), so the signing steps are
+    # picked by name and only their own content and order are pinned.
+
     def setUp(self) -> None:
         self.text = WORKFLOW.read_text(encoding="utf-8")
         self.steps = cosmyx_steps(self.text)
+        self.names = [step_name(step) for step in self.steps]
+        self.by_name = {name: "\n".join(step) for name, step in zip(self.names, self.steps)}
 
-    def test_three_cosmyx_steps(self) -> None:
-        names = [step[0].split("- name:", 1)[1].split("#", 1)[0].strip() for step in self.steps]
-        self.assertEqual(
-            names,
-            ["Cosmyx code signing setup", "Cosmyx sign Windows binaries", "Cosmyx verify Windows signatures"],
-        )
+    def test_signing_steps_present_once_and_in_order(self) -> None:
+        for name in SIGNING_STEPS:
+            self.assertEqual(self.names.count(name), 1, name)
+        positions = [self.names.index(name) for name in SIGNING_STEPS]
+        self.assertEqual(positions, sorted(positions))
+
+    def test_only_the_setup_step_has_the_signing_id(self) -> None:
+        owners = [name for name, body in self.by_name.items() if re.search(r"\n\s+id: cosmyx_sign # Cosmyx", body)]
+        self.assertEqual(owners, [SETUP])
 
     def test_setup_passes_the_signing_secrets(self) -> None:
-        setup = "\n".join(self.steps[0])
+        setup = self.by_name[SETUP]
+        self.assertIn("uses: ./.github/actions/cosmyx-sign # Cosmyx", setup)
+        self.assertIn("mode: setup # Cosmyx", setup)
         for name, secret in SECRETS.items():
             self.assertRegex(setup, rf"\n\s+{re.escape(name)}: \$\{{\{{ secrets\.{secret} \}}\}} # Cosmyx")
         self.assertIn("subject: ${{ vars.COSMYX_SIGN_SUBJECT }}", setup)
@@ -69,7 +90,8 @@ class WorkflowHookTests(unittest.TestCase):
                     self.assertNotIn("secrets.", line)
 
     def test_setup_condition_keeps_the_signed_refs(self) -> None:
-        condition = next(line for line in self.steps[0] if line.strip().startswith("if:"))
+        conditions = [line for line in self.by_name[SETUP].splitlines() if line.strip().startswith("if:")]
+        self.assertEqual(len(conditions), 1)
         for part in (
             "runner.os == 'Windows'",
             "github.repository != 'OrcaSlicer/OrcaSlicer'",
@@ -78,11 +100,11 @@ class WorkflowHookTests(unittest.TestCase):
             "github.ref_name == 'DEV'",
             "startsWith(github.ref_name, 'release/')",
         ):
-            self.assertIn(part, condition)
+            self.assertIn(part, conditions[0])
 
     def test_sign_and_verify_follow_the_enabled_output(self) -> None:
-        for step in self.steps[1:]:
-            self.assertIn("if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx", "\n".join(step))
+        for name in (SIGN, VERIFY):
+            self.assertIn("if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx", self.by_name[name])
 
     def test_no_job_environment(self) -> None:
         # Decision 0098: the OIDC subject is the ref, not an environment.
