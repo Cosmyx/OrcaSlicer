@@ -463,7 +463,12 @@ class WorkflowFileTests(unittest.TestCase):
         self.assertIn("secrets.UPSTREAM_SYNC_TOKEN", self.text)
 
     def test_is_ascii_and_lf(self) -> None:
-        raw = (REPO_ROOT / ".github" / "workflows" / "cosmyx-upstream-sync.yml").read_bytes()
+        # The committed blob, not the checkout: a Windows checkout (core.autocrlf)
+        # turns every line into CRLF while the repository keeps it LF.
+        raw = subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "cat-file", "blob", ":.github/workflows/cosmyx-upstream-sync.yml"],
+            capture_output=True, check=True,
+        ).stdout
         self.assertNotIn(b"\r", raw)
         raw.decode("ascii")
 
