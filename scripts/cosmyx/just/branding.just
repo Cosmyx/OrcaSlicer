@@ -27,3 +27,10 @@ brand-validate GLOB *FLAGS:
 # Regenerate the review tables under wiki/cosmyx/branding-assets from the manifest.
 brand-table:
     {{python}} scripts/cosmyx/branding/cli.py render
+
+# Each branding sub-task keeps its recipes in its own file, loaded when present,
+# so the sub-task branches never edit this file (decision 0120).
+import? 'branding-logos.just'
+import? 'branding-colours.just'
+import? 'branding-candidates.just'
+import? 'branding-product-name.just'

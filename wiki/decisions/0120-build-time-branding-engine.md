@@ -36,6 +36,12 @@ inside it would ship next to the originals.
   `guards(ctx, phase)`.
 - Local checkouts keep the Orca branding: `just brand-apply` and
   `just brand-revert` brand and restore a checkout by hand.
+- `scripts/cosmyx/just/branding.just` holds the engine recipes and ends with
+  one `import?` line per branding sub-task (`branding-logos.just`,
+  `branding-colours.just`, `branding-candidates.just`,
+  `branding-product-name.just`). A sub-task adds its recipes in its own file
+  and never edits `branding.just`, so its branch merges with the others in
+  any order without a conflict; a missing file is simply not loaded.
 
 ## Consequences
 
@@ -45,5 +51,5 @@ inside it would ship next to the originals.
   files on a CI checkout.
 - Removing it: delete the "Apply Cosmyx branding" step and the test line in
   the prepare action, `scripts/cosmyx/branding/`, `cosmyx-src/branding/`,
-  `scripts/cosmyx/just/branding.just` and the wiki pages; builds then ship
+  `scripts/cosmyx/just/branding*.just` and the wiki pages; builds then ship
   the OrcaSlicer branding.
