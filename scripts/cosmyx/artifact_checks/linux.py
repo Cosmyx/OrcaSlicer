@@ -50,7 +50,8 @@ def smoke_status(returncode: int | None, output: str, timed_out: bool, timeout: 
 def smoke(artifact: str, app_run: Path, timeout: int, run: Runner, xvfb: bool = True) -> Record:
     args = (["xvfb-run", "-a"] if xvfb else []) + [str(app_run), "--help"]
     try:
-        done = run(args, capture_output=True, text=True, check=False, timeout=timeout)
+        # The app output is untrusted bytes: a strict decode would end the job.
+        done = run(args, capture_output=True, text=True, errors="replace", check=False, timeout=timeout)
         status, reason = smoke_status(done.returncode, (done.stdout or "") + (done.stderr or ""), False, timeout)
     except subprocess.TimeoutExpired:
         status, reason = smoke_status(None, "", True, timeout)
@@ -79,13 +80,13 @@ def extract(appimage: Path, target: Path, exec_ok: bool, run: Runner) -> tuple[P
     root = target / "squashfs-root"
     if exec_ok:
         appimage.chmod(appimage.stat().st_mode | stat.S_IXUSR)
-        done = run([str(appimage), "--appimage-extract"], cwd=target, capture_output=True, text=True, check=False)
+        done = run([str(appimage), "--appimage-extract"], cwd=target, capture_output=True, text=True, errors="replace", check=False)
         return (root, "") if done.returncode == 0 and root.is_dir() else (None, f"--appimage-extract exit {done.returncode}")
     offset = binfmt.elf_end(appimage)
     if offset is None or shutil.which("unsquashfs") is None:
         return None, "unsquashfs or the AppImage runtime offset is not available"
     done = run(["unsquashfs", "-no-progress", "-o", str(offset), "-d", str(root), str(appimage)],
-               capture_output=True, text=True, check=False)
+               capture_output=True, text=True, errors="replace", check=False)
     return (root, "") if done.returncode == 0 and root.is_dir() else (None, f"unsquashfs exit {done.returncode}")
 
 

@@ -276,8 +276,15 @@ def collect(artifacts_dir: Path, artifacts: list[Artifact], work: Path, expectat
         elif artifact.kind == "msix":
             for package in sorted(root.glob("*.msix")):
                 target = work / artifact.name / package.stem
-                with zipfile.ZipFile(package) as archive:
-                    archive.extractall(target)
+                try:
+                    with zipfile.ZipFile(package) as archive:
+                        archive.extractall(target)
+                except (zipfile.BadZipFile, OSError, EOFError) as error:
+                    # A truncated or broken package is a finding for this
+                    # artifact, not a reason to drop every other record.
+                    out.records.append(Record("windows", artifact.name, package.name, "payload", "fail",
+                                              f"the MSIX package is not a readable zip ({error})"))
+                    continue
                 out.items.append(Item(artifact.name, package.name, package.name, "msix-package", artifact.arch, artifact.msvc))
                 out.items += _pe_items(target, artifact, "msix", f"{package.name}/", prefixes)
         elif artifact.kind == "installer":
@@ -290,7 +297,7 @@ def collect(artifacts_dir: Path, artifacts: list[Artifact], work: Path, expectat
                                   artifact.msvc, installer))
             if seven_zip is None:
                 seven_zip = find_seven_zip(env) or ""
-                probe = run([seven_zip], capture_output=True, text=True, check=False) if seven_zip else None
+                probe = run([seven_zip], capture_output=True, text=True, errors="replace", check=False) if seven_zip else None
                 ok, why = seven_zip_ok(probe.stdout if probe else "", settings["seven_zip_min"])
                 if not ok:
                     out.records.append(Record("windows", artifact.name, "", "payload", "fail",
@@ -298,7 +305,7 @@ def collect(artifacts_dir: Path, artifacts: list[Artifact], work: Path, expectat
                     seven_zip = ""
             if seven_zip:
                 payload = work / artifact.name / "payload"
-                done = run([seven_zip, "x", "-y", f"-o{payload}", str(installer)], capture_output=True, text=True, check=False)
+                done = run([seven_zip, "x", "-y", f"-o{payload}", str(installer)], capture_output=True, text=True, errors="replace", check=False)
                 if done.returncode != 0:
                     out.records.append(Record("windows", artifact.name, installer.name, "payload", "fail",
                                               f"7-Zip could not unpack the installer (exit {done.returncode})"))
