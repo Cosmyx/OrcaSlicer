@@ -474,13 +474,6 @@
       "reason": "tuple #009688 -> #8000FF"
     },
     {
-      "file": "src/slic3r/GUI/Gizmos/GLGizmoPaintedModifier.cpp",
-      "find": "ImVec4(0.f, .59f, .53f",
-      "replace": "ImVec4(0.502f, 0.00f, 1.00f",
-      "count": 3,
-      "reason": "tuple #009688 -> #8000FF"
-    },
-    {
       "file": "src/slic3r/GUI/Gizmos/GLGizmoSeam.cpp",
       "find": "ImVec4(0.f, .59f, .53f",
       "replace": "ImVec4(0.502f, 0.00f, 1.00f",
