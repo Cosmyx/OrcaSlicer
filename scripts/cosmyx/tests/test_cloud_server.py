@@ -44,7 +44,9 @@ class StealthHookTests(unittest.TestCase):
         self.assertTrue(self.lines[index + 2].startswith("    return Cosmyx::stealth_mode(*this); // Cosmyx"))
 
     def test_only_two_hook_lines(self) -> None:
-        self.assertEqual(len(cosmyx_lines(self.lines)), 2)
+        # Other Cosmyx features hook this file too, so count the stealth ones only.
+        stealth = [line for line in cosmyx_lines(self.lines) if "StealthMode" in line or "stealth_mode" in line]
+        self.assertEqual(len(stealth), 2)
 
 
 class CloudServerHookTests(unittest.TestCase):
