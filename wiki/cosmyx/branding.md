@@ -56,6 +56,37 @@ is there and only warn about `missing` and `to-validate` rows. Release builds
    approval is not one.
 4. **Check.** `just brand-check` runs every guard and writes nothing.
 
+## Logos
+
+The `logos` rows come from two sources (decisions 0124-0126):
+
+- **Vendored from CosmoSlice** (source `cosmoslice`): the files CosmoSlice
+  already ships under the OrcaSlicer names, copied byte for byte. The
+  `source_ref` names the CosmoSlice commit.
+- **Derived** (source `derived`): rasters rendered from the vendored master
+  `overlay/resources/images/OrcaSlicer.svg`, as listed in
+  `scripts/cosmyx/branding/derive/derived-assets.toml`: the multi-size Windows
+  icon, the macOS `.icns` files, the four MSIX tiles, the grayscale and title
+  logos, and the web header logo. Never edit one by hand. To change them,
+  change the master or the list, then:
+
+  ```text
+  just brand-derive              # re-render, rewrite only what changed
+  just brand-refresh <path>      # for each rewritten file: back to to-validate
+  ```
+
+  `just brand-derive-check` fails when a committed output differs from a
+  fresh render, `just brand-derive-stable` renders twice and compares. They
+  render in the pinned resvg image (`scripts/cosmyx/branding/derive/Dockerfile`),
+  so they need Docker with Linux containers.
+
+Still missing, to be provided (never drawn here):
+
+- `resources/images/OrcaSlicer_horizontal_light.svg` and
+  `OrcaSlicer_horizontal_dark.svg`: SVG, 214x80 viewBox, the logo and the
+  CosmoSlice wordmark for light and dark backgrounds (Troubleshoot dialog).
+- `resources/web/image/logo2.png`: PNG 339x406, unreferenced upstream.
+
 ## After an upstream merge
 
 Upstream may add, change or remove images. The build reports it (warnings on
