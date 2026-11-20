@@ -2187,18 +2187,6 @@
       "override_sha256": null
     },
     {
-      "path": "resources/images/menu_add_painted_modifier.svg",
-      "format": "svg",
-      "size": "16x16",
-      "usage": "icon",
-      "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
-      "upstream_sha256": "c5d6acd91741411fa177bb84b5322595103b7318e7df7c648be96264d081e344",
-      "override_sha256": null
-    },
-    {
       "path": "resources/images/menu_add_part.svg",
       "format": "svg",
       "size": "16x16",

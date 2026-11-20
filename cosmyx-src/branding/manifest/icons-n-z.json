@@ -3291,30 +3291,6 @@
       "override_sha256": null
     },
     {
-      "path": "resources/images/toolbar_painted_modifier.svg",
-      "format": "svg",
-      "size": "40x40",
-      "usage": "icon",
-      "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
-      "upstream_sha256": "16bc774b3bff08846711d95ca6eb7f32b1f96a88db636e9e11b3cd98261ed998",
-      "override_sha256": null
-    },
-    {
-      "path": "resources/images/toolbar_painted_modifier_dark.svg",
-      "format": "svg",
-      "size": "40x40",
-      "usage": "icon",
-      "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
-      "upstream_sha256": "7d79fc5f6fdc4467b692e0a2fcb59f669c7408bb4de6e4e0e9d29acffc3e4ad7",
-      "override_sha256": null
-    },
-    {
       "path": "resources/images/toolbar_rotate.svg",
       "format": "svg",
       "size": "40x40",
