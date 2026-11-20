@@ -33,7 +33,7 @@ feature lives in two Cosmyx-owned files and needs no upstream hook of its own (d
 | `wiki/decisions/0110-cosmyx-log-channel.md`, `0111-cosmyx-log-lazy-registration.md` | data (docs) | Decision register entries. |
 | `CHANGELOG.md` | data | One line under `<!-- cosmyx-slot: T12 -->` in the `### libslic3r` area (see Shared files). |
 | `scripts/cosmyx/tests/test_foundation.py` | test | Registers the T12 changelog slot in the slot checks (`815eb444b0`). |
-| Foundation files (inherited from #86, not feature work) | Cosmyx-owned / CI / upstream hook | `src/libslic3r/Cosmyx/*.cmake/BedTemperatureOff/ChtNozzle/ConfigDefExtensions/GCodeHooks/IroningTemperature`, `src/slic3r/GUI/Cosmyx/Cosmyx.cmake/Cosmyx.hpp`, `tests/cosmyx/CMakeLists.txt`, `cosmyx_tests.cpp`, `test_cosmyx_foundation.cpp`, `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/decisions.py`, `run_script_tests.py`, decisions 0001-0004. See upstream hooks below. |
+| Foundation files (inherited from #86, not feature work) | Cosmyx-owned / CI / upstream hook | `src/libslic3r/Cosmyx/*.cmake/BedTemperatureOff/ChtNozzle/ConfigDefExtensions/GCodeHooks/IroningTemperature`, `src/slic3r/GUI/Cosmyx/Cosmyx.cmake/Cosmyx.hpp`, `tests/cosmyx/CMakeLists.txt`, `cosmyx_tests.cpp`, `test_cosmyx_foundation.cpp`, `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/decisions.py`, `run_script_tests.py`, decisions 0001-0005. See upstream hooks below. |
 
 Upstream hooks present in this branch's range (all inherited from the foundation, none added by the log feature):
 
@@ -110,7 +110,7 @@ is still a non-static global of the same type, so the link works unchanged.
 
 - `CHANGELOG.md`: every feature edits it, each under its own `cosmyx-slot` marker (T12 here). Conflicts are avoided by
   the slots, not by luck: never move markers.
-- `wiki/decisions/0001-0004`, `wiki/decisions/README.md`, `scripts/cosmyx/tests/test_foundation.py`, `justfile`,
+- `wiki/decisions/0001-0005`, `wiki/decisions/README.md`, `scripts/cosmyx/tests/test_foundation.py`, `justfile`,
   `.github/workflows/cosmyx-checks.yml`: foundation files shared by every branch.
 - `tests/cosmyx/CMakeLists.txt` globs `test_*.cpp`, so adding tests needs no shared edit.
 - `src/libslic3r/Cosmyx/Cosmyx.cmake` globs `*.cpp`/`*.hpp`, no shared edit for new sources.

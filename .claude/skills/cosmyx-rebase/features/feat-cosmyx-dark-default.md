@@ -63,6 +63,9 @@ The native appearance call is not unit tested (needs a running wxApp); the build
 ## Shared files with other branches
 
 - `src/slic3r/GUI/GUI_App.cpp`: include block (line 2 version, line 3 this, line 4 goldens) and `dark_mode()` (goldens carries the same hook). `feat/cosmyx-install-paths` avoids this block on purpose.
-- `src/libslic3r/AppConfig.cpp`: only this branch edits it.
+- `src/libslic3r/AppConfig.cpp`: also hooked by `feat/cosmyx-stealth-mode` (one line, first statement of
+  `get_stealth_mode()`) and `feat/cosmyx-cloud-server` (rewrites that line, adds an include after `#include "AppConfig.hpp"`).
+  Integration total: 4 `Cosmyx` lines (dark 2, cloud 2). The three branches touch different lines, so they merge without
+  conflict in the `branches.md` order.
 - `test/cosmyx-gui-goldens` duplicates the four commits and `tests/cosmyx/test_color_mode.cpp`, and decisions 0136 to 0139 (byte-identical); merge dark-default first, then rebase goldens, which drops the duplicates.
 - `CHANGELOG.md` (slot T11f; goldens' diff also contains this line, then adds T16), `wiki/decisions` numbers 0136 to 0139 (reserved range for T11 sub-tasks, see decision 0003).

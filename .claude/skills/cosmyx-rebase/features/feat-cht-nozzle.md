@@ -23,7 +23,7 @@ Adds the CHT nozzle (hardness HRC 65) as a selectable `nozzle_type` in printer s
 | `src/libslic3r/Cosmyx/ChtNozzle.cpp` | Cosmyx-owned | `extend_cht_nozzle(def)`: finds `nozzle_type` in `def.options` (mutable; `ConfigDef::get()` returns const), returns if "cht" already in `enum_values`, else inserts `"cht"` and label `"CHT"` at index `min(int(ntCHT), size)`. |
 | `src/libslic3r/Cosmyx/{BedTemperatureOff.*,IroningTemperature.*,ConfigDefExtensions.*,GCodeHooks.hpp,Cosmyx.cmake}`, `src/slic3r/GUI/Cosmyx/*` | Cosmyx-owned (foundation) | Foundation module; other features are stubs here. |
 | `tests/cosmyx/test_cht_nozzle.cpp` | test | 7 cases (see Verification). |
-| `wiki/decisions/0020..0022`, foundation `0001..0004`, `README.md` | docs | |
+| `wiki/decisions/0020..0022`, foundation `0001..0005`, `README.md` | docs | |
 | `CHANGELOG.md`, `justfile`, `scripts/cosmyx/*`, `.github/workflows/cosmyx-checks.yml` | CI / docs (foundation) | Feature line under slot T2. |
 
 ## Rebase risk zones

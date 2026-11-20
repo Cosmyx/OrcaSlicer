@@ -38,7 +38,7 @@ opts out". Both must be rebased together and the final state of the line is the 
 | `tests/cosmyx/test_cosmyx_stealth.cpp` | test | Getter and guide policy cases (see Verification). |
 | `wiki/decisions/0070..0073-*.md` | data (docs) | 0070 forced at the getter; 0071 Preferences checkbox and "Quit Stealth Mode" button left visible (they write the ignored stored value); 0072 vendor updates blocked on purpose; 0073 guide policy. |
 | `CHANGELOG.md` | data | Line under `<!-- cosmyx-slot: T7 -->` in `### GUI`. |
-| Foundation (from #86) | Cosmyx-owned / CI / upstream hooks | Same files and hooks as in `feat-cosmyx-logs.md`: `include(Cosmyx/Cosmyx.cmake) # Cosmyx` in `src/libslic3r/CMakeLists.txt`, `include(GUI/Cosmyx/Cosmyx.cmake) # Cosmyx` in `src/slic3r/CMakeLists.txt`, `#include "Cosmyx/GCodeHooks.hpp" // Cosmyx` in `GCode.cpp`, include plus `Cosmyx::extend_print_config_def(*this); // Cosmyx` in `PrintConfig.cpp`, `add_subdirectory(cosmyx) # Cosmyx` in `tests/CMakeLists.txt`, plus `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/*`, `tests/cosmyx/*`, decisions 0001-0004. |
+| Foundation (from #86) | Cosmyx-owned / CI / upstream hooks | Same files and hooks as in `feat-cosmyx-logs.md`: `include(Cosmyx/Cosmyx.cmake) # Cosmyx` in `src/libslic3r/CMakeLists.txt`, `include(GUI/Cosmyx/Cosmyx.cmake) # Cosmyx` in `src/slic3r/CMakeLists.txt`, `#include "Cosmyx/GCodeHooks.hpp" // Cosmyx` in `GCode.cpp`, include plus `Cosmyx::extend_print_config_def(*this); // Cosmyx` in `PrintConfig.cpp`, `add_subdirectory(cosmyx) # Cosmyx` in `tests/CMakeLists.txt`, plus `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/*`, `tests/cosmyx/*`, decisions 0001-0005. |
 
 ## Rebase risk zones
 
@@ -96,8 +96,8 @@ The hook lines are inert to upstream changes elsewhere in those files; the risk 
   Merge order matters: stealth-mode first, then cloud-server.
 - `src/slic3r/GUI/WebGuideDialog.cpp`: only this branch (cloud-server's integration branch counts 2 `// Cosmyx` lines there,
   both from this branch).
-- `src/slic3r/GUI/GUI_App.cpp`: not hooked here but by cloud-server, dark-default, install-paths, version; the line count
-  in `ci/cosmyx-integration` is 12.
+- `src/slic3r/GUI/GUI_App.cpp`: not hooked here but by version (2 lines), dark-default (2), gui-goldens (2),
+  install-paths (4) and cloud-server (2); the integration total is 12.
 - `CHANGELOG.md` (slot T7, GUI area), `scripts/cosmyx/tests/test_foundation.py`, `wiki/decisions/0003-changelog-slots.md`,
   `wiki/decisions/README.md`, `justfile`, `.github/workflows/cosmyx-checks.yml`: shared with every branch.
 - `src/slic3r/GUI/Cosmyx/logic/GuidePolicy.hpp` is edited again by `feat/cosmyx-cloud-server` (comment only).
