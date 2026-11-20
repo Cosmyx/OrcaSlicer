@@ -7,6 +7,7 @@
 #include "libslic3r/Utils.hpp"
 #include "libslic3r/Format/DRC.hpp"
 #include "AppConfig.hpp"
+#include "Cosmyx/StealthMode.hpp" // Cosmyx
 //BBS
 #include "Preset.hpp"
 #include "Exception.hpp"
@@ -108,6 +109,7 @@ std::string AppConfig::get_hms_host()
 
 bool AppConfig::get_stealth_mode()
 {
+    return Cosmyx::stealth_mode(*this); // Cosmyx: on until the user opts out (decision 0200)
     // always return true when user did not finish setup wizard yet
     if (!get_bool("firstguide","finish")) {
         return true;
