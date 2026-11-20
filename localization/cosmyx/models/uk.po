@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 "
+"&& n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 "
+"&& n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Ця калібрувальна модель найкраще працює, коли напрямок заповнення має значення 0 градусів. "
+"Для оптимальних результатів калібрування радимо встановити для «Напрямок "
+"часткового заповнення» та «Напрямок суцільного заповнення» значення 0.\n"
+"Так - змінити ці налаштування автоматично\n"
+"Ні  - не змінювати ці налаштування"
+
+msgid "Calibration Suggestion"
+msgstr "Рекомендація щодо калібрування"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Ця калібрувальна модель найкраще працює з певними налаштуваннями заповнення.\n"
+"Для оптимальних результатів калібрування радимо встановити:\n"
+"- Напрямок часткового заповнення: %.0f°\n"
+"- Напрямок суцільного заповнення: %.0f°\n"
+"- Тільки одна стінка на першому шарі: %s\n"
+"\n"
+"Так - змінити ці налаштування автоматично\n"
+"Ні  - не змінювати ці налаштування"
+
+msgid "Cosmyx 3D Models"
+msgstr "3D-моделі Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "Калібрувальні моделі для двоголового принтера"
+
+msgid "Calibration Models Single Head"
+msgstr "Калібрувальні моделі для одноголового принтера"
+
+msgid "Cosmyx Handy Models"
+msgstr "Корисні моделі Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "Калібрування 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Калібрування 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Калібрування 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Двоколірний куб"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Калібрування 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Куб Cosmyx"
+
+msgid "Control Tension Belt"
+msgstr "Перевірка натягу ременя"
+
+msgid "Support Bobine"
+msgstr "Тримач котушки"

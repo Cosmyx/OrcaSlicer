@@ -1,0 +1,84 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
+"Language: lt_LT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && (n%100<11 || n%100>19) ? 0 : "
+"n%10>=2 && n%10<=9 && (n%100<11 || n%100>19) ? 1 : 2);\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Šis kalibravimo modelis geriausiai veikia, kai užpildo kryptys nustatytos į 0 "
+"laipsnių. Kad kalibravimo rezultatai būtų optimalūs, rekomenduojama abi "
+"nuostatas „Reto užpildo kryptis“ ir „Vientiso užpildo kryptis“ nustatyti į 0.\n"
+"Taip – pakeisti šias nuostatas automatiškai\n"
+"Ne  – nekeisti šių nuostatų"
+
+msgid "Calibration Suggestion"
+msgstr "Kalibravimo pasiūlymas"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Šis kalibravimo modelis geriausiai veikia su tam tikromis užpildo "
+"nuostatomis.\n"
+"Kad kalibravimo rezultatai būtų optimalūs, rekomenduojama nustatyti:\n"
+"- Reto užpildo kryptis: %.0f°\n"
+"- Vientiso užpildo kryptis: %.0f°\n"
+"- Tik viena sienelė pirmajame sluoksnyje: %s\n"
+"\n"
+"Taip – pakeisti šias nuostatas automatiškai\n"
+"Ne  – nekeisti šių nuostatų"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D modeliai"
+
+msgid "Calibration Models Dual Head"
+msgstr "Kalibravimo modeliai (dviguba galvutė)"
+
+msgid "Calibration Models Single Head"
+msgstr "Kalibravimo modeliai (viena galvutė)"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx patogūs modeliai"
+
+msgid "Calage 1 SNDT"
+msgstr "Sulygiavimas 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx sulygiavimas 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx sulygiavimas 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Dviejų spalvų kubas"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx sulygiavimas 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx kubas"
+
+msgid "Control Tension Belt"
+msgstr "Diržo įtempimo patikra"
+
+msgid "Support Bobine"
+msgstr "Ritės laikiklis"

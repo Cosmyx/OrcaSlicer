@@ -1,0 +1,79 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Ten model kalibracyjny działa najlepiej, gdy kierunki wypełnienia są ustawione na 0 stopni. Dla optymalnych wyników kalibracji zaleca się ustawienie zarówno „Kierunek wzoru wypełnienia”, jak i „Kierunek wzoru pełnego wypełnienia” na 0.\n"
+"Tak - Zmień te ustawienia automatycznie\n"
+"Nie - Nie zmieniaj tych ustawień za mnie"
+
+msgid "Calibration Suggestion"
+msgstr "Sugestia kalibracji"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Ten model kalibracyjny działa najlepiej z określonymi ustawieniami wypełnienia.\n"
+"Dla optymalnych wyników kalibracji zaleca się ustawienie:\n"
+"- Kierunek wzoru wypełnienia: %.0f°\n"
+"- Kierunek wzoru pełnego wypełnienia: %.0f°\n"
+"- Tylko jedna ściana na pierwszej warstwie: %s\n"
+"\n"
+"Tak - Zmień te ustawienia automatycznie\n"
+"Nie - Nie zmieniaj tych ustawień za mnie"
+
+msgid "Cosmyx 3D Models"
+msgstr "Modele 3D Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "Modele kalibracyjne dla podwójnej głowicy"
+
+msgid "Calibration Models Single Head"
+msgstr "Modele kalibracyjne dla pojedynczej głowicy"
+
+msgid "Cosmyx Handy Models"
+msgstr "Modele podręczne Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "Kalibracja 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Kalibracja 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Kalibracja 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Sześcian dwukolorowy"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Kalibracja 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx Sześcian"
+
+msgid "Control Tension Belt"
+msgstr "Kontrola napięcia paska"
+
+msgid "Support Bobine"
+msgstr "Uchwyt szpuli"

@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Dieses Kalibrierungsmodell funktioniert am besten, wenn die Füllrichtungen "
+"auf 0 Grad eingestellt sind. Für optimale Kalibrierungsergebnisse empfiehlt "
+"es sich, sowohl „Füllrichtung“ als auch „Richtung des massiven Füllmusters“ "
+"auf 0 zu setzen.\n"
+"Ja – Diese Einstellungen automatisch ändern\n"
+"Nein – Diese Einstellungen nicht für mich ändern"
+
+msgid "Calibration Suggestion"
+msgstr "Kalibrierungsvorschlag"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Dieses Kalibrierungsmodell funktioniert am besten mit bestimmten "
+"Fülleinstellungen.\n"
+"Für optimale Kalibrierungsergebnisse empfiehlt es sich, Folgendes "
+"einzustellen:\n"
+"- Füllrichtung: %.0f°\n"
+"- Richtung des massiven Füllmusters: %.0f°\n"
+"- Nur eine Wand in der ersten Schicht: %s\n"
+"\n"
+"Ja – Diese Einstellungen automatisch ändern\n"
+"Nein – Diese Einstellungen nicht für mich ändern"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D-Modelle"
+
+msgid "Calibration Models Dual Head"
+msgstr "Kalibrierungsmodelle Dual-Kopf"
+
+msgid "Calibration Models Single Head"
+msgstr "Kalibrierungsmodelle Einzelkopf"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx Praktische Modelle"
+
+msgid "Calage 1 SNDT"
+msgstr "Kalibrierung 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Kalibrierung 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Kalibrierung 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Zweifarbiger Würfel"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Kalibrierung 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx Würfel"
+
+msgid "Control Tension Belt"
+msgstr "Riemenspannungsprüfung"
+
+msgid "Support Bobine"
+msgstr "Spulenhalter"
