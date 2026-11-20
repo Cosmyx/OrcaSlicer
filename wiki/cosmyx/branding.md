@@ -13,7 +13,7 @@ branding unless you run `just brand-apply`.
 | `cosmyx-src/branding/manifest/<group>.json` | One row per upstream image the build replaces. Groups: `logos`, `icons-a-m`, `icons-n-z`, `web`. |
 | `cosmyx-src/branding/overlay/<path>` | The vendored replacement for the upstream file at `<path>` (for example `overlay/resources/images/OrcaSlicer.svg`). |
 | `cosmyx-src/branding/colours.json` | The colour palette, mappings, literal rows, snippets, scopes and allowed residue (see [Colours](#colours)). |
-| `cosmyx-src/branding/product-name/` | The product name: `patches.json`, `rename.json`, `allowlist.json` (see [Product name](#product-name)). |
+| `cosmyx-src/branding/product-name/` | The product name: `patches.json`, `rename.json`, `allowlist.json`, `inflections.json` (see [Product name](#product-name)). |
 | `wiki/cosmyx/branding-assets/<group>.md` | The review tables, generated from the manifest. |
 | `scripts/cosmyx/branding/` | The engine: guards, apply, revert, sync. |
 
@@ -117,7 +117,7 @@ The build checks the tables before it writes anything and the tree after:
 | G5 | Colour rewrites match their exact counts, and no teal is left in the colour scopes unless allow-listed. |
 | G6 | The tables are valid, sorted and canonical, and the review tables are up to date. |
 | G7 | No CosmoSlice colour or name is committed in an upstream-owned file. |
-| G8 | Product-name patches match their exact counts, and the app key (data folder, registry key) is unchanged. |
+| G8 | Product-name patches and rename rows match, literals and msgids are renamed together, no visible upstream name is left outside the allowlist, the app key (data folder, registry key) is unchanged, and every packaging pin (AppImage desktop name and file names, CPack package and installer names, Flatpak id) is identical after apply. |
 
 A failed check before apply writes nothing; a failure after apply puts every
 file back.
@@ -127,6 +127,54 @@ the runners) has CRLF text files: every match and count is made on LF text, a
 patched file is written back with its own line ending (never a mix), and the
 canonical-form checks and SVG hashes compare LF content, so a tree brands and
 checks the same on every OS.
+
+## Product name
+
+The build shows the name CosmoSlice, including the installer's Apps &
+features name, the Start menu and desktop shortcut label and the Flatpak
+software centre name and description; the app key stays OrcaSlicer, so the
+executable, bundle id, file associations and the `OrcaSlicer_` artifact
+names do not change (decision 0132). The Windows install folder, registry
+key and installer window title belong to the installer identity
+(`cmake/cosmyx/Packaging.cmake`, decision 0182).
+
+Four tables in `cosmyx-src/branding/product-name/`:
+
+| Table | Rows | What it does |
+|-------|------|--------------|
+| `patches.json` | `{file, old, new, count, reason}` | Exact text patches, applied first: `SLIC3R_APP_NAME`, the display-name macros, packaging names, window titles, and the machine-read sites rewired to `SLIC3R_APP_KEY` (decision 0133). |
+| `rename.json` | `{kind, old, new, source}` | Whole texts: a `msgid` row renames the C++ literal (or hint) and the msgid in the template and every catalogue together, translations included, never fuzzy; a `literal` row renames a visible text without a msgid (decision 0134). |
+| `allowlist.json` | `msgid`, `literal` or `text` rows with a `reason` | Texts that keep the upstream name on purpose: credits, upstream releases, CLI output, compared or persisted tags, ids sent to other services, icon names (decision 0135). |
+| `inflections.json` | `{language, old, new, source}` | Per catalogue language, an inflected name (cs "OrcaSliceru", hu "OrcaSlicerrel", eu "OrcaSlicerren") or a phrase around the inflected, plain or hyphenated name (hu "az OrcaSlicer" -> "a CosmoSlice", eu "Orca-ren" -> "CosmoSlice-en"), and its CosmoSlice form, written by a speaker of that language, never guessed; sorted by language, then `old` (decision 0134). |
+
+Names that name an upstream thing are never rewritten: Orca Cloud, Orca Cube,
+Orca String Hell, Orca Tolerance Test, Orca YOLO, Orca Arena, Orca Palette,
+Orca Badge, OrcaSliced Combo, Orca Preset Bundle, Orca Filament Library, and
+any name inside a URL, file or path name, or dotted id. Names tied to the app
+key stay too, because they point at real files: `OrcaSlicer.conf`,
+`OrcaSlicer.app`, `OrcaSlicer.AppImage` and the Windows data folder
+(`%APPDATA%\OrcaSlicer`). "ORCA SLICER" and "ORCASLICER" become "CosmoSlice".
+
+After an upstream merge, `just brand-check` (or the next build) reports:
+
+- a **stale** row (its text is gone upstream): an error; drop or update the row;
+- **residue** (a new text naming OrcaSlicer): a warning on development
+  builds, an error on release builds. Run `just brand-name-candidates`: it
+  prints proposed rename rows and the other literals; add each one to
+  `rename.json`, `patches.json`, or `allowlist.json` with its reason.
+
+Translations of renamed strings get CosmoSlice in place of the name,
+including the native spellings in Chinese and Korean; nothing else in the
+translations changes. An inflected name (the name with a grammatical suffix
+glued to it) is renamed only by its `inflections.json` row; a row may also
+be a phrase around the name when a word next to it changes with the new name
+(the Hungarian article az becomes a; a Basque suffix follows the new name's
+sound). Rows match whole words, in their language only, longest first, before
+the plain rule. Without a row an inflected name stays, and G8 reports "needs inflection row" (a warning on development
+builds, an error on release builds). `just brand-name-inflections` lists every
+form still without a row, per language, with an example msgid and
+translation (`just brand-name-inflections OUT=<file>` writes it to a file);
+hand each language to a speaker of it.
 
 ## Local use
 
