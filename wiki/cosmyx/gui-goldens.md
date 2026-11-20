@@ -42,7 +42,7 @@ harness (scripts/cosmyx/gui_goldens)            application (GoldenDriver)
 | 10 | main tabs: Home, Project, Calibration, Design, Preview, Prepare |
 | 20 | every menu (top bar popups on Windows and Linux, menu bar on macOS) and `20-menu-tree.txt` |
 | 30 | catalog commands that open a dialog on an empty plate |
-| 40 | the six Preferences tabs |
+| 40 | every Preferences tab (`PreferencesTab` order) |
 | 50 | the loaded cube and every visible settings page |
 | 60 | the first screen of each calibration |
 | 70 | selection, context menu, view and object commands |

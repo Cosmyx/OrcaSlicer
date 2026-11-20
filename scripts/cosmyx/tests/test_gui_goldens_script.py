@@ -11,11 +11,19 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 GUI = ROOT / "src" / "slic3r" / "GUI"
+
 SCRIPT = ROOT / "tests" / "cosmyx" / "gui" / "script.json"
 CLASSES = {"dialog", "view", "toggle", "any", "skip"}
 ACTIONS = {"tab", "command", "prefs_tab", "settings", "load", "reset", "select_all", "context_menu", "menu", "wait", "slice",
            "copy_gcode", "close_tips"}
 SURFACE = re.compile(r"^[0-9]{2}-[a-z0-9]+(-[a-z0-9]+)*$")
+
+
+def _preferences_tabs() -> list[str]:
+    # The driver maps a tab name to PreferencesTab by its index in this list.
+    text = (GUI / "Cosmyx" / "logic" / "GoldenScript.cpp").read_text(encoding="utf-8")
+    body = re.search(r"preferences_tabs\(\)\s*\{[^}]*tabs\{([^}]*)\}", text).group(1)
+    return re.findall(r'"([a-z]+)"', body)
 
 
 def slug(text: str) -> str:
@@ -112,7 +120,8 @@ class ScriptTests(unittest.TestCase):
         header = (GUI / "Preferences.hpp").read_text(encoding="utf-8")
         enum = re.search(r"enum class PreferencesTab \{([^}]*)\}", header).group(1)
         names = [name.strip().lower() for name in enum.split(",") if name.strip()]
-        self.assertEqual(names, ["general", "files", "behaviour", "control", "graphics", "online"])
+        # The driver casts the index of a tab name to PreferencesTab, so both lists must match.
+        self.assertEqual(names, _preferences_tabs())
 
     def test_main_tabs_exist(self) -> None:
         header = (GUI / "MainFrame.hpp").read_text(encoding="utf-8")

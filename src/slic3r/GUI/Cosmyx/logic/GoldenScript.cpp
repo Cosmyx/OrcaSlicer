@@ -336,7 +336,7 @@ const std::vector<std::string>& command_classes()
 
 const std::vector<std::string>& preferences_tabs()
 {
-    static const std::vector<std::string> tabs{"general", "files", "behaviour", "control", "graphics", "online"};
+    static const std::vector<std::string> tabs{"general", "control", "graphics", "online"};
     return tabs;
 }
 

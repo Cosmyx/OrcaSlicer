@@ -174,8 +174,8 @@ TEST_CASE("Generators expand to the surfaces the application reports", "[cosmyx]
     for (const Step& step : steps)
         ids.push_back(step.id);
     CHECK(ids == std::vector<std::string>{"00-start", "20-menu-file", "20-menu-main", "20-menu-tree", "30-help-about",
-                                          "40-preferences-general", "40-preferences-files", "40-preferences-behaviour",
-                                          "40-preferences-control", "40-preferences-graphics", "40-preferences-online",
+                                          "40-preferences-general", "40-preferences-control", "40-preferences-graphics",
+                                          "40-preferences-online",
                                           "50-settings-process-quality", "50-settings-printer-machine-g-code", "70-view-top",
                                           "70-obj-mirror-x", "70-plate-add", "70-plate-delete", "70-obj-delete", "99-export-stl"});
 
