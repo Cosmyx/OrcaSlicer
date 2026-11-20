@@ -51,8 +51,8 @@
     },
     {
       "kind": "literal",
-      "old": "Request permissions while OrcaSlicer loads your module.\n\nEach bucket takes the target strings the plugin expects the corresponding audit event to\nreport: filesystem paths for fs_read and fs_readwrite, URLs for network_http, socket addresses\nfor network_socket, and commands for process. threading=True requests permission to start\nthreads. Targets already granted to the plugin are not asked for again.\n\nfs_create and fs_delete take folders rather than files. A literal folder entry grants creating\nor deleting entries directly inside that folder, not inside its subfolders. An entry ending in\n\"/*\" is a tree grant: it grants the same for that folder and for every folder below it, at any\ndepth, for example \"/path/to/folder/*\". A tree rooted at a filesystem, drive, or network share\nroot, such as \"/*\", \"C:\\\\*\", or a UNC share root, covers that entire filesystem, drive, or\nnetwork share. A relative folder or tree root is\nresolved against the working directory when the request is made. Pass \"*\" on its own for\nunrestricted create or delete access; a \"*\" mixed with other entries is rejected, and a \"*\"\nanywhere other than the final /* of a folder tree is rejected. At runtime, approving a create or\ndelete prompt stores the parent folder of the approved target as a direct grant, and the prompt\nlists that canonical folder; a parent folder whose own name contains \"*\" is refused rather than\nstored. On the main thread the operation then proceeds; a request raised on a worker thread\ndenies the current operation, so the plugin has to retry it after approval.\n\nA recursive delete (shutil.rmtree) is a subtree operation. A literal folder grant is not\nenough, even when it names the target folder or its parent. A saved fs_delete tree grant covers\nthe entries inside its root; deleting the root folder itself is covered only when the folder\ncontaining that root is also granted. Otherwise the user is asked for one-time consent for the\ncanonical target subtree before the walk starts. That consent is never saved, covers only that\noperation, and a prompt that has to be posted to a worker thread applies to one matching retry\nwithin its short lifetime. Nested deletes inside the approved subtree proceed without another\nprompt; denied paths stay blocked. A permission edit, revocation, or reinstall discards any\npending recursive-delete consent, so an old prompt cannot grant access to the reinstalled code.\n\nA filesystem target may end in \"/*\" to grant a whole directory tree, for example\n\"/path/to/folder/*\". That covers the folder itself and every path beneath it, at any depth.\n\"*\" is the only wildcard and is recognized only as the final path component; a \"*\" anywhere\nelse in a target is an ordinary character. Tree grants apply to fs_read, fs_readwrite,\nfs_create and fs_delete, and a grant in one bucket never authorizes another direction. For\nfs_delete, the tree covers deleting entries inside the folder and below, not deleting the\nfolder root itself; that removal needs the parent folder granted. Tree\ngrants are matched on canonical paths, so a symlink below the granted folder does not extend\nthe grant outside it. Paths the host denies by name or keyword stay denied even when a\nwildcard covers them.\n\n`network` also lists http(s) URLs, but each is reduced to its scheme and host, so one grant covers\nevery path, query and port on that host and also authorizes raw socket events for it. The host\npresents one request to the user after register_capabilities() returns and before any capability\ninstance is created. Denying the request aborts the plugin load.",
-      "new": "Request permissions while CosmoSlice loads your module.\n\nEach bucket takes the target strings the plugin expects the corresponding audit event to\nreport: filesystem paths for fs_read and fs_readwrite, URLs for network_http, socket addresses\nfor network_socket, and commands for process. threading=True requests permission to start\nthreads. Targets already granted to the plugin are not asked for again.\n\nfs_create and fs_delete take folders rather than files. A literal folder entry grants creating\nor deleting entries directly inside that folder, not inside its subfolders. An entry ending in\n\"/*\" is a tree grant: it grants the same for that folder and for every folder below it, at any\ndepth, for example \"/path/to/folder/*\". A tree rooted at a filesystem, drive, or network share\nroot, such as \"/*\", \"C:\\\\*\", or a UNC share root, covers that entire filesystem, drive, or\nnetwork share. A relative folder or tree root is\nresolved against the working directory when the request is made. Pass \"*\" on its own for\nunrestricted create or delete access; a \"*\" mixed with other entries is rejected, and a \"*\"\nanywhere other than the final /* of a folder tree is rejected. At runtime, approving a create or\ndelete prompt stores the parent folder of the approved target as a direct grant, and the prompt\nlists that canonical folder; a parent folder whose own name contains \"*\" is refused rather than\nstored. On the main thread the operation then proceeds; a request raised on a worker thread\ndenies the current operation, so the plugin has to retry it after approval.\n\nA recursive delete (shutil.rmtree) is a subtree operation. A literal folder grant is not\nenough, even when it names the target folder or its parent. A saved fs_delete tree grant covers\nthe entries inside its root; deleting the root folder itself is covered only when the folder\ncontaining that root is also granted. Otherwise the user is asked for one-time consent for the\ncanonical target subtree before the walk starts. That consent is never saved, covers only that\noperation, and a prompt that has to be posted to a worker thread applies to one matching retry\nwithin its short lifetime. Nested deletes inside the approved subtree proceed without another\nprompt; denied paths stay blocked. A permission edit, revocation, or reinstall discards any\npending recursive-delete consent, so an old prompt cannot grant access to the reinstalled code.\n\nA filesystem target may end in \"/*\" to grant a whole directory tree, for example\n\"/path/to/folder/*\". That covers the folder itself and every path beneath it, at any depth.\n\"*\" is the only wildcard and is recognized only as the final path component; a \"*\" anywhere\nelse in a target is an ordinary character. Tree grants apply to fs_read, fs_readwrite,\nfs_create and fs_delete, and a grant in one bucket never authorizes another direction. For\nfs_delete, the tree covers deleting entries inside the folder and below, not deleting the\nfolder root itself; that removal needs the parent folder granted. Tree\ngrants are matched on canonical paths, so a symlink below the granted folder does not extend\nthe grant outside it. Paths the host denies by name or keyword stay denied even when a\nwildcard covers them.\n\n`network` also lists http(s) URLs, but each is reduced to its scheme and host, so one grant covers\nevery path, query and port on that host and also authorizes raw socket events for it. The host\npresents one request to the user after register_capabilities() returns and before any capability\ninstance is created. Denying the request aborts the plugin load.",
+      "old": "Request permissions while OrcaSlicer loads your module.\n\nEach bucket takes the target strings the plugin expects the corresponding audit event to\nreport: filesystem paths for fs_read and fs_readwrite, URLs for network_http, socket addresses\nfor network_socket, and commands for process. threading=True requests permission to start\nthreads. Targets already granted to the plugin are not asked for again.\n\nA filesystem target may end in \"/*\" to grant a whole directory tree, for example\n\"/path/to/folder/*\". That covers the folder itself and every path beneath it, at any depth.\n\"*\" is the only wildcard and is recognized only as the final path component; a \"*\" anywhere\nelse in a target is an ordinary character. Wildcards apply to fs_read and fs_readwrite only,\nand a grant in one of those buckets never authorizes the other direction. Tree grants are\nmatched on canonical paths, so a symlink below the granted folder does not extend the grant\noutside it. Paths the host denies by name or keyword stay denied even when a wildcard covers\nthem.\n\n`network` also lists http(s) URLs, but each is reduced to its scheme and host, so one grant covers\nevery path, query and port on that host and also authorizes raw socket events for it. The host\npresents one request to the user after register_capabilities() returns and before any capability\ninstance is created. Denying the request aborts the plugin load.",
+      "new": "Request permissions while CosmoSlice loads your module.\n\nEach bucket takes the target strings the plugin expects the corresponding audit event to\nreport: filesystem paths for fs_read and fs_readwrite, URLs for network_http, socket addresses\nfor network_socket, and commands for process. threading=True requests permission to start\nthreads. Targets already granted to the plugin are not asked for again.\n\nA filesystem target may end in \"/*\" to grant a whole directory tree, for example\n\"/path/to/folder/*\". That covers the folder itself and every path beneath it, at any depth.\n\"*\" is the only wildcard and is recognized only as the final path component; a \"*\" anywhere\nelse in a target is an ordinary character. Wildcards apply to fs_read and fs_readwrite only,\nand a grant in one of those buckets never authorizes the other direction. Tree grants are\nmatched on canonical paths, so a symlink below the granted folder does not extend the grant\noutside it. Paths the host denies by name or keyword stay denied even when a wildcard covers\nthem.\n\n`network` also lists http(s) URLs, but each is reduced to its scheme and host, so one grant covers\nevery path, query and port on that host and also authorizes raw socket events for it. The host\npresents one request to the user after register_capabilities() returns and before any capability\ninstance is created. Denying the request aborts the plugin load.",
       "source": "cosmyx"
     },
     {
@@ -185,12 +185,6 @@
       "kind": "msgid",
       "old": "Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic go-klipper).\n\nNote: the G-code file will no longer contain slicer settings, so importing it back into OrcaSlicer will not restore the configuration.",
       "new": "Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic go-klipper).\n\nNote: the G-code file will no longer contain slicer settings, so importing it back into CosmoSlice will not restore the configuration.",
-      "source": "cosmyx"
-    },
-    {
-      "kind": "msgid",
-      "old": "Each object in the file is loaded on its own, as OrcaSlicer always loaded AMF files.",
-      "new": "Each object in the file is loaded on its own, as CosmoSlice always loaded AMF files.",
       "source": "cosmyx"
     },
     {
@@ -513,12 +507,6 @@
     },
     {
       "kind": "msgid",
-      "old": "Some original names contain characters that OrcaSlicer cannot use. Choose how to change them before importing.",
-      "new": "Some original names contain characters that CosmoSlice cannot use. Choose how to change them before importing.",
-      "source": "cosmyx"
-    },
-    {
-      "kind": "msgid",
       "old": "Something went wrong. Please return to OrcaSlicer and try again.",
       "new": "Something went wrong. Please return to CosmoSlice and try again.",
       "source": "cosmyx"
@@ -609,18 +597,6 @@
     },
     {
       "kind": "msgid",
-      "old": "The following settings refer to plugins Orca Slicer can't identify on this computer:\n\n%1%\n\nIf you save anyway, the preset won't keep the plugin references for these settings. On another computer, Orca Slicer won't know which plugins to offer, and the settings may not work there.",
-      "new": "The following settings refer to plugins CosmoSlice can't identify on this computer:\n\n%1%\n\nIf you save anyway, the preset won't keep the plugin references for these settings. On another computer, CosmoSlice won't know which plugins to offer, and the settings may not work there.",
-      "source": "cosmyx"
-    },
-    {
-      "kind": "msgid",
-      "old": "The following settings refer to plugins Orca Slicer can't identify on this computer:\n\n%1%\n\nIf you save anyway, the project won't keep the plugin references for these settings. On another computer, Orca Slicer won't know which plugins to offer, and the settings may not work there.",
-      "new": "The following settings refer to plugins CosmoSlice can't identify on this computer:\n\n%1%\n\nIf you save anyway, the project won't keep the plugin references for these settings. On another computer, CosmoSlice won't know which plugins to offer, and the settings may not work there.",
-      "source": "cosmyx"
-    },
-    {
-      "kind": "msgid",
       "old": "The intersecting move is at G-code line %1%. Its Z position is unknown after homing, so Orca checked it against every height.",
       "new": "The intersecting move is at G-code line %1%. Its Z position is unknown after homing, so CosmoSlice checked it against every height.",
       "source": "cosmyx"
@@ -630,12 +606,6 @@
       "old": "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\nOrca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the maximum jerk setting in your printer's configuration to get higher speeds.",
       "new": "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\nCosmoSlice will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the maximum jerk setting in your printer's configuration to get higher speeds.",
       "source": "cosmoslice"
-    },
-    {
-      "kind": "msgid",
-      "old": "The presets being saved refer to plugins Orca Slicer can't identify on this computer:\n\n%1%\n\nIf you save anyway, the presets won't keep the plugin references for these settings. On another computer, Orca Slicer won't know which plugins to offer, and the settings may not work there.",
-      "new": "The presets being saved refer to plugins CosmoSlice can't identify on this computer:\n\n%1%\n\nIf you save anyway, the presets won't keep the plugin references for these settings. On another computer, CosmoSlice won't know which plugins to offer, and the settings may not work there.",
-      "source": "cosmyx"
     },
     {
       "kind": "msgid",
@@ -695,12 +665,6 @@
       "kind": "msgid",
       "old": "Updating your OrcaSlicer could enable all functionality in the 3MF file.",
       "new": "Updating your CosmoSlice could enable all functionality in the 3MF file.",
-      "source": "cosmyx"
-    },
-    {
-      "kind": "msgid",
-      "old": "Use the body names stored in the file, when there are any. When disabled, the usual OrcaSlicer names are used; existing project names are kept.",
-      "new": "Use the body names stored in the file, when there are any. When disabled, the usual CosmoSlice names are used; existing project names are kept.",
       "source": "cosmyx"
     },
     {
