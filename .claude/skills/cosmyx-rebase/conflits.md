@@ -16,78 +16,93 @@ Entry format:
 ## Expected on v2.5.1 (not yet confirmed by a run)
 
 Upstream `v2.5.1` (`eef7710cb1`) is not an ancestor of `DEV` (185 commits only in the tag, 310 only in DEV;
-merge-base `65aab6bcf7`). The sheets checked every anchor against the tag; these are the places expected to
-need work. Move each item to the log once a run confirms it.
+merge-base `65aab6bcf7`). The dry run of 2026-11-20 confirmed and fixed every source-level item (see the log). What is
+left needs the build of `integration/v2.5.1` (run 44716244843) or the artifact checks:
 
-- **`chore/cosmyx-foundation`, `be423c6998`: modify/delete on `.github/workflows/build_flatpak.yml`.** The file
-  does not exist in v2.5.1 (DEV split it out of `build_all.yml` later, `a4de8cb891`). Do not recreate it:
-  `git rm` it and add `! -name cosmyx ! -name info` plus the comment
-  `# Cosmyx: cosmyx_tests also reads resources/cosmyx and resources/info.` to the
-  `find "$d/resources" -mindepth 1 -maxdepth 1 ! -name profiles ! -name printers ! -name images -exec rm -rf {} +`
-  line of `.github/workflows/build_all.yml` (line ~489 on the tag). Point `FlatpakTestAssetTests` and
-  `FlatpakTestTargetTests` in `scripts/cosmyx/tests/test_foundation.py` at `build_all.yml`. Check that
-  `libslic3r_tests` is still in the target list of `scripts/flatpak/com.orcaslicer.OrcaSlicer.yml`.
-  `cosmyx-checks.yml` lists `build_flatpak.yml` in `paths:`: harmless; change it only if `ChecksWorkflowTests`
-  fails.
-- **`feat/cosmyx-translations`: Flatpak prepare hook anchor gone.** Same cause. Move the two lines
-  `- name: Prepare Cosmyx sources # Cosmyx` / `uses: ./.github/actions/cosmyx-prepare # Cosmyx` into the inline
-  `flatpak:` job of `build_all.yml`, directly after its `    - uses: actions/checkout@v7` (line ~299 on the tag,
-  before "Get the version and date"), with the job's indentation. The `build_orca.yml` hook (after `Checkout`,
-  before `load cached deps`) applies as is.
-- **`ci/cosmyx-branding-engine` and `feat/cosmyx-svg-candidates`: three icons absent from v2.5.1**
-  (`resources/images/menu_add_painted_modifier.svg`, `toolbar_painted_modifier.svg`,
-  `toolbar_painted_modifier_dark.svg`, DEV-only). On the engine branch the rows are `missing`: run
-  `just brand-sync` (drops them) and `just brand-table`, commit. On svg-candidates the rows carry overlays:
-  `git rm` the three files under `cosmyx-src/branding/overlay/resources/images/`, then `just brand-sync` and
-  `just brand-table`, commit. Until then
-  `test_branding_manifest.CommittedTablesTest.test_every_row_points_at_a_real_file` fails and G3 warns (dev) or
-  fails (release).
-- **`feat/cosmyx-colours`: literal row on a missing file.** `src/slic3r/GUI/Gizmos/GLGizmoPaintedModifier.cpp`
-  (`ImVec4(0.f, .59f, .53f` x3) does not exist in v2.5.1, so G5 errors ("cannot read") and the build is refused
-  on every build kind. Run `just brand-colour-literals`; the diff of `colours.json` must only drop that row
-  (114 rows remain). Statuses untouched.
-- **`feat/cosmyx-product-name`: stale msgid rows.** 7 `rename.json` msgid rows and 1 `allowlist.json` msgid row
-  are not in the v2.5.1 `OrcaSlicer.pot` (stale row = G8 error on every build). Known ones: "Each object in the
-  file is loaded on its own, as OrcaSlicer always loaded AMF files.", "Objects (%1%) have duplicated
-  connectors. ...", "Some original names contain characters that OrcaSlicer cannot use...", "The following
-  settings refer to plugins Orca Slicer can't identify on this computer...", "The presets being saved refer to
-  plugins Orca Slicer can't identify...", "Use the body names stored in the file, when there are any...".
-  Remove them (or rewrite to the tag's wording) and run `just brand-name-candidates` for new texts. The 34 patch
-  rows match v2.5.1 exactly.
-- **`feat/cosmyx-windows-signing`: older signing flow in v2.5.1.** No `ORCA_SIGN_REUSE`, no "Restore/Save signed
-  NSIS plugins", no "Start installer Win" (the installer is built by a foreground "Create installer Win" with
-  `cpack -G NSIS`). Place "Cosmyx sign Windows binaries" right before "Pack unit tests Win" (there is a "Build
-  system preset cache (Windows)" step between "Build slicer Win" and the Google auth on the tag); setup before
-  "Build slicer Win"; verify after "Verify Windows signatures". The installer payload is signed twice (valid,
-  slower). The `sign_windows.ps1` dispatch line after `$ErrorActionPreference = 'Stop'` applies.
-- **`ci/cosmyx-upstream-sync`: workflow set.** v2.5.1 lacks `stale.yml` and `wait-for-response-label.yml`;
-  `workflow-policy.json` lists a superset (tolerated). Run
-  `test_repository_policy_covers_every_scheduled_workflow`; add any new scheduled workflow of the tag to the
-  JSON. The sync keeps tracking `main`, never the tag.
 - **`ci/cosmyx-artifact-checks`: artifact names.** Tag names the PDB artifact `PDB` (DEV `PDB_msvc` for MSVC)
   and has no per-arch `OrcaSlicer_Mac_<arch>_<ver>` DMG. The `mac-arm64`/`mac-x86_64` regexes match nothing
   (harmless); check `data/expectations.json` against a real run's artifact list and `content.py`'s version
   parsing of `version.inc`.
-- **`feat/cosmyx-version`: display version.** `version.inc` says `2.5.1`, so the display version is `2.5.1-8`
-  (patch 8) and the build tag `2.5.1-8_<hash>`; `python3 scripts/cosmyx/cosmyx_version.py version` must print
-  it. The step goes after "Get the version and date on Windows" (ends `shell: pwsh`, then `#   Mac`).
-- **`feat/cosmyx-install-paths`: context of the Flatpak migration hook.** On the tag the guard is
-  `if(!boost::filesystem::exists("/.flatpak-info")) return;` (DEV: `if (!is_running_in_flatpak()) return;`). The
-  hook is a pure insertion after that `return;` line; resolve by keeping the tag's line and adding the hook below.
+- **`feat/cosmyx-version`:** artifacts must be named `..._2.5.1-8_<hash>` (script side confirmed: `2.5.1-8`).
 - **`feat/cosmyx-dark-default`: wxWidgets API.** `wxApp::SetAppearance` needs the wxWidgets 3.3 fork; check the
   tag's `deps` wx pin if macOS or Linux fails to compile `ColorMode.cpp`.
 - **`test/cosmyx-gui-goldens`:** goldens are base-specific (none committed yet); `pick_artifacts` must still find
-  the tag's Linux AppImage, macOS DMG and Windows x64 portable artifacts.
+  the tag's Linux AppImage, macOS DMG and Windows x64 portable artifacts. `GoldenDriver.cpp` compile on the tag.
 - **`ci/cosmyx-exec-smoke`:** re-check `--help` and the slice command line of `slice.py` against the tag's CLI
   (`src/OrcaSlicer.cpp`).
-- **`feat/cosmyx-cloud-server`:** `Preferences.cpp` differs 241/415 lines from DEV: check that
-  `g_sizer->Add(item_network_test);` and the "Cloud Providers" title still adjoin.
-- Low risk, hooks apply with line offsets only: bed-temp-off, cht-nozzle, ironing-temperature (4 `GCode.cpp`
-  hooks, statements unchanged), toolchange-fan-order, models, stealth-mode, logs (`g_log_sink` still a global of
-  the same type), macos-signing ("Create DMG without notary" then "Delete intermediate per-arch artifacts"
-  present), logos (37/37 hashes match), translations-fill.
+- **`feat/cosmyx-cloud-server`:** `CloudServerPrefs.cpp` compile against the tag's `Preferences.cpp` neighbourhood.
+- **`feat/cosmyx-windows-signing`:** on the tag the installer payload is signed twice (no `ORCA_SIGN_REUSE` in the
+  foreground cpack); valid but slower. Only visible on a signed ref.
 
 ## Log
+
+### 2026-11 integration/v2.5.1 - slot lists and shared lines collide between siblings
+- Symptom: merging install-paths, gui-goldens and cloud-server into `integration/v2.5.1` conflicted in
+  `scripts/cosmyx/tests/test_foundation.py` (`SLOTS_BY_AREA`), `wiki/decisions/0003-changelog-slots.md`, and for
+  goldens also `CHANGELOG.md` (T16 next to T11f) and `GUI_App.cpp` (GoldenDriver include on line 4).
+- Cause: sibling branches each add their own slot or line at the same place; no feature branch can carry the other's.
+- Resolution: union in the merge commit (repo T0, T17; libslic3r adds T12; GUI adds T16, T18; includes version,
+  ColorMode, GoldenDriver). `rerere` records it. Integration script tests green afterwards.
+- Commit: merge commits of `integration/v2.5.1` (`f9025dc30d`).
+
+### 2026-11 test/cosmyx-gui-goldens - four Preferences tabs on v2.5.1
+- Symptom: `test_gui_goldens_script.ScriptTests.test_preferences_tabs_follow_the_upstream_enum` failed on the tag.
+- Cause: v2.5.1 `PreferencesTab` is `General, Control, Graphics, Online`; the driver's six names (DEV layout) map by
+  index, so wrong tabs and out-of-range values were opened.
+- Resolution: `preferences_tabs()` follows the tag's enum, expansion test expects four surfaces, the script test
+  compares the enum with the driver list.
+- Commit: `124e62829c` (dry-run copy).
+
+### 2026-11 feat/cosmyx-svg-candidates - sync keeps rows that still have an override
+- Symptom: after `git rm` of the 3 painted-modifier overlays and `just brand-sync`, the rows stayed (0 dropped),
+  and the accept commits conflicted on `icons-*.json` / `icons-*.md` when restacked on the adapted colours.
+- Cause: `manifest.sync` never touches a row whose `override_sha256` is set.
+- Resolution: per conflicting accept commit, take the replayed side, `git rm` the overlay, `just brand-refresh
+  <path>` (override becomes null), then `just brand-sync` and `just brand-table`. 521 overlays remain.
+- Commit: none added (resolved inside the accept commits; copy tip `e3f21df2ea`).
+
+### 2026-11 feat/cosmyx-product-name - stale rows on v2.5.1
+- Symptom: `brand-check` 13 G8 errors on the tag.
+- Cause: 6 msgid rows name DEV-only texts; the plugin permission docstring literal row carries DEV's longer text.
+  "Objects (%1%) have duplicated connectors" was wrongly expected stale.
+- Resolution: 6 rows dropped, literal row rewritten to the tag's text; `brand-name-candidates` empty.
+- Commit: `bbded5e02d` (dry-run copy).
+
+### 2026-11 feat/cosmyx-colours - literal row on a missing file
+- Symptom: G5 "cannot read" on `GLGizmoPaintedModifier.cpp` (absent from v2.5.1).
+- Cause: DEV-only file.
+- Resolution: `just brand-colour-literals` dropped only that row (114 rows); statuses unchanged.
+- Commit: `2b46a70b77` (dry-run copy).
+
+### 2026-11 ci/cosmyx-branding-engine - painted-modifier rows on v2.5.1
+- Symptom: `CommittedTablesTest.test_every_row_points_at_a_real_file` failed (3 paths); G3 warnings; the same
+  failure in every branding child until restacked.
+- Cause: three DEV-only icons.
+- Resolution: `just brand-sync` (3 dropped), `just brand-table`; logos, colours, product-name restacked on the new
+  engine tip, svg-candidates on the new colours tip.
+- Commit: `f94c18ee95` (dry-run copy).
+
+### 2026-11 feat/cosmyx-cloud-server - Preferences include block
+- Symptom: `88d9f1d0b5` conflicted at the top of `Preferences.cpp`.
+- Cause: DEV's line 2 `#include "slic3r/plugin/host/PluginPages.hpp"` is absent from the tag.
+- Resolution: keep only the Cosmyx include on line 2; the panel anchor still adjoins the Cloud Providers title.
+- Commit: none added.
+
+### 2026-11 feat/cosmyx-windows-signing - DEV-only step context in build_orca.yml
+- Symptom: `137f9674b6` conflicted twice in `build_orca.yml`.
+- Cause: DEV's "Save signed NSIS plugins" step (above our sign step) and DEV's step order after "Verify Windows
+  signatures" do not exist on the tag ("Pack app" and "Pack PDB" sit before "Upload artifacts Win zip").
+- Resolution: sign step before "Pack unit tests Win"; verify step directly after upstream's verify. Later commits
+  replayed clean; wiring test green.
+- Commit: none added.
+
+### 2026-11 chore/cosmyx-foundation, feat/cosmyx-translations - build_flatpak.yml absent from v2.5.1
+- Symptom: modify/delete conflicts on `.github/workflows/build_flatpak.yml` (`be423c6998`, `abcf9e2295`).
+- Cause: DEV split the Flatpak job out of `build_all.yml` after the release (`a4de8cb891`).
+- Resolution: `git rm`; asset hook on the `find "$d/resources"` line of `build_all.yml`, prepare hook after the
+  `flatpak:` job's checkout; foundation test reads `build_all.yml`; decision 0005 names both files.
+  `build_all.yml` is CRLF upstream: edit as bytes, keep CRLF.
+- Commit: none added.
 
 ### 2026-11 feat/cosmyx-cloud-server - hook-count test broken by another feature
 - Symptom: `test_cloud_server.StealthHookTests.test_only_two_hook_lines` failed on the combined tree.
@@ -193,3 +208,29 @@ need work. Move each item to the log once a run confirms it.
 - Cause: not investigated.
 - Resolution: none yet; Flatpak is excluded from the RDY2MERGE gate and reported separately.
 - Commit: unknown.
+
+## Skill gaps found
+
+Found on the v2.5.1 dry run (2026-11-20); what `SKILL.md` and the sheets did not say:
+
+- Step 1's `git fetch ... "refs/tags/$TAG:refs/tags/upstream/$TAG"` breaks under zsh: `$TAG:r` is a modifier and
+  the refspec becomes `refs/tags/v2.5efs/...`. Write `${TAG}:refs/...` (the zsh note only mentions `$b:path`).
+- Upstream `build_all.yml` (and other workflows) are committed with CRLF; a text-mode edit rewrites every line.
+  Hooks in CRLF files must be edited as bytes.
+- Branding children are stacked: after an adaptation commit on the engine (or colours), every child must be rebased
+  again onto the new parent tip, and the step order (rebase all, then adapt) should be "rebase and adapt each parent,
+  then its children".
+- `brand-sync` does not drop a row that has an override; dropping an overlay row needs `git rm`, `brand-refresh
+  <path>`, then `brand-sync` (the previous expectation said `brand-sync` alone).
+- Step 7 says every integration conflict is fixed in a feature branch, but union conflicts between siblings
+  (slot lists, decision 0003, CHANGELOG neighbours, `GUI_App.cpp` include block) can only be resolved in the merge
+  commit; `branches.md` now says so for the slot lists.
+- The product-name stale rows were not the expected list (6 msgid + 1 literal, not 7 msgid); expectations derived
+  from a DEV snapshot drift as DEV moves: recheck with `cli.py check` instead of trusting the list.
+- Step 5 runs the full script suite per branch: about 3 minutes each on the share; `timeout(1)` does not exist on
+  macOS. Running the 25 suites in one background loop works.
+- The worktree per branch costs about 3 s here (no need to reuse one worktree).
+- The skill gives no way to check Flatpak hooks: no test pins the translations prepare hook in `build_all.yml`.
+- Artifact checks and goldens need a finished build; the dry-run brief stops at dispatch, so these stay open.
+- The report template says "save REPORT.md"; a subagent cannot write report files, the report goes in the final
+  message only.

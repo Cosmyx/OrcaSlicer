@@ -49,7 +49,7 @@ Version feature:
 | `wiki/decisions/0060` to `0064` | data (docs) | Display version format, kept pre-release suffix, CI build tag, hooks and patch source, number syntax. |
 | `CHANGELOG.md` | data (docs) | New file (foundation) with slots; this branch adds the GUI line under `<!-- cosmyx-slot: T6 -->`. |
 
-Foundation-owned Cosmyx files carried unchanged: `src/libslic3r/Cosmyx/{Cosmyx.cmake, GCodeHooks.hpp, ConfigDefExtensions.{hpp,cpp}, BedTemperatureOff.*, ChtNozzle.cpp, IroningTemperature.*}`, `src/slic3r/GUI/Cosmyx/{Cosmyx.cmake, Cosmyx.hpp, logic/.gitkeep}`, `tests/cosmyx/{CMakeLists.txt, cosmyx_tests.cpp, test_cosmyx_foundation.cpp}`, `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/{decisions.py, run_script_tests.py, tests/test_foundation.py}`, `wiki/decisions/0001` to `0004` and `README.md`.
+Foundation-owned Cosmyx files carried unchanged: `src/libslic3r/Cosmyx/{Cosmyx.cmake, GCodeHooks.hpp, ConfigDefExtensions.{hpp,cpp}, BedTemperatureOff.*, ChtNozzle.cpp, IroningTemperature.*}`, `src/slic3r/GUI/Cosmyx/{Cosmyx.cmake, Cosmyx.hpp, logic/.gitkeep}`, `tests/cosmyx/{CMakeLists.txt, cosmyx_tests.cpp, test_cosmyx_foundation.cpp}`, `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/{decisions.py, run_script_tests.py, tests/test_foundation.py}`, `wiki/decisions/0001` to `0005` and `README.md`.
 
 ## Rebase risk zones
 

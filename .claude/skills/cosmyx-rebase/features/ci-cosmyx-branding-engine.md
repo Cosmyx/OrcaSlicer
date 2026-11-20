@@ -85,6 +85,7 @@ From the repository root, after the rebase:
 - `9d2d565821` the colour and product-name branches both replaced the real-tree test setup at the same lines; the engine now owns one `copy_real_tree` helper. `d1a70f716c` they also rewrote adjacent rows of the "What lives where" table in `branding.md`; the table is now written in its final form here. `cdd2ac9e18` sub-task recipes moved to their own `import?` files so branches never edit `branding.just`.
 - The PR body says "560 rows, all missing"; once logos land the count is 561 (one extra row for the Custom bed texture).
 - Do not run `just brand-sync`, `brand-refresh` or `brand-validate` on a branded tree: they refuse; revert first.
+- v2.5.1 pass: adapted with `f94c18ee95` (`just brand-sync` dropped the 3 painted-modifier rows, `just brand-table`). Children (logos, colours, product-name) must then be rebased again onto the new engine tip (`git rebase rebase/<tag>/ci/cosmyx-branding-engine` in each worktree), and svg-candidates onto the new colours tip.
 
 ## Shared files with other branches
 

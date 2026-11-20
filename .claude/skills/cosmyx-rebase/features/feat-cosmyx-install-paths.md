@@ -33,7 +33,7 @@ A Cosmyx build must live side by side with an upstream OrcaSlicer install withou
 | `wiki/cosmyx/install-and-data-paths.md`, `wiki/decisions/0180` to `0185` | docs | Paths per OS, fresh start, installer identity, legacy removal, no migration, test hook. |
 | `CHANGELOG.md` | docs | T17 line (repo area, under `<!-- cosmyx-slot: T17 -->`) flagged **Breaking:**; says "Pull request: pending". Also the T17 slot marker. |
 
-Foundation (shared): the five hooks listed in decision 0002 (`src/libslic3r/CMakeLists.txt`, `src/slic3r/CMakeLists.txt`, `tests/CMakeLists.txt`, `PrintConfig.cpp`, `GCode.cpp`), the Cosmyx modules, `cosmyx_tests`, `justfile`, `cosmyx-checks.yml`, `scripts/cosmyx/{decisions.py,run_script_tests.py}`, decisions 0001 to 0004, `wiki/decisions/README.md`.
+Foundation (shared): the five hooks listed in decision 0002 (`src/libslic3r/CMakeLists.txt`, `src/slic3r/CMakeLists.txt`, `tests/CMakeLists.txt`, `PrintConfig.cpp`, `GCode.cpp`), the Cosmyx modules, `cosmyx_tests`, `justfile`, `cosmyx-checks.yml`, `scripts/cosmyx/{decisions.py,run_script_tests.py}`, decisions 0001 to 0005, `wiki/decisions/README.md`.
 
 ## Rebase risk zones
 
@@ -72,10 +72,11 @@ Manual after rebase: on Linux `XDG_CONFIG_HOME=/tmp/x orca-slicer` creates `/tmp
 - CMake backslashes: `CPACK_PACKAGE_INSTALL_DIRECTORY` needs `\\\\` and the `.nsh` path needs doubled backslashes because CPack writes values unescaped into `CPackConfig.cmake`.
 - The Cosmyx build made on the upstream values (key `OrcaSlicer`, publisher `SoftFever`) cannot be told from upstream and is deliberately not removed.
 - The file association ProgID, D-Bus names, bundle id and Flatpak app id are still shared with upstream.
+- v2.5.1 pass: rebased clean (3-way merge absorbed the Flatpak guard difference). In the integration merge it conflicts with logs (T12) on `SLOTS_BY_AREA` and decision 0003; resolved by union at merge time.
 
 ## Shared files with other branches
 
 - `GUI_App.cpp`: includes of version (line 2), dark (line 3), goldens (line 4) are in the other stack; this branch is placed after `Downloader.hpp` to avoid them. `SetAppName` neighbourhood is also patched by the product-name branding (it edits the commented `SetAppDisplayName` line).
 - `CMakeLists.txt` (top level): CPack block also touched by the branding (appends `CPACK_NSIS_DISPLAY_NAME`) and by signing (upstream's `CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS`).
-- `CHANGELOG.md` (slot T17, repo area), `wiki/decisions` 0180 to 0185 (and whichever of 0001 to 0004 the foundation owns), `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/{decisions.py,run_script_tests.py,tests/test_foundation.py}`, `tests/libslic3r/test_utils.cpp` (only this branch).
+- `CHANGELOG.md` (slot T17, repo area), `wiki/decisions` 0180 to 0185 (and whichever of 0001 to 0005 the foundation owns), `justfile`, `.github/workflows/cosmyx-checks.yml`, `scripts/cosmyx/{decisions.py,run_script_tests.py,tests/test_foundation.py}`, `tests/libslic3r/test_utils.cpp` (only this branch).
 - Foundation hooks and Cosmyx modules are identical in every Cosmyx branch.

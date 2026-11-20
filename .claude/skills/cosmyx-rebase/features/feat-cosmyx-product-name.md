@@ -14,7 +14,7 @@ artifact names (all keyed by `SLIC3R_APP_KEY`, still `OrcaSlicer`), and the G-co
 ## Parent and dependencies
 
 - Parent: `ci/cosmyx-branding-engine` (PR #103's base). The PR body says "Depends on #86, #95 and #99": the foundation, the
-  build-time translation graft (T8, per-feature catalogues, decisions 0080-0088) and the engine/colours chain. Own range =
+  build-time translation graft (T8, per-feature catalogues, decisions 0080-0088) and the branding engine. It does not depend on `feat/cosmyx-colours` (a sibling under the engine). Own range =
   14 commits, oldest first: `790ec89cfb` (stage), `a71e221469` (tables), `07c82982ad` (tests), `a3c95da978` (docs),
   `9c5f42c3bf` (shortcuts, Flatpak), `5582952b19` (CRLF), `3d1ad36e31` (breaker tests), `0c61ef1d21` (token holes),
   `5156495071` (docs), `e6d245538b` (phrase inflections), `9af4ed8f4c` (AppImage name), `4199d85961` (plugin host texts),
@@ -131,6 +131,7 @@ Re-run `just brand-name-candidates` to propose the rows; it writes nothing.
   executable label half only (`orca-slicer;CosmoSlice`).
 - Decision 0182 (installer identity, `cmake/cosmyx/Packaging.cmake`) owns the Windows install folder, registry key, publisher
   and installer window title; this branch only appends `CPACK_NSIS_DISPLAY_NAME`.
+- v2.5.1 pass: adapted with `bbded5e02d`. The real stale set on the tag was 6 msgid rows (AMF load, original names, two plugin-identification rows, presets referring to plugins, body names) plus 1 literal row: the `PythonPluginBridge.cpp` permission docstring, whose DEV text grew the `fs_create`/`fs_delete` paragraphs (DEV `3838002bc8`); it was rewritten to the tag's text. "Objects (%1%) have duplicated connectors" is NOT stale on the tag. The allowlist msgid row absent from the template is not reported by G8. `just brand-name-candidates` proposed nothing after the fix (115 rename rows).
 
 ## Shared files with other branches
 
