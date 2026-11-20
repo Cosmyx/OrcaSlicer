@@ -60,6 +60,8 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(text.count("- **windows/signature**"), 200)
         self.assertIn("**Result: failed**", text)
         self.assertIn("nothing was checked", report.markdown([], "report", False))
+        self.assertIn("macOS signing mode: **not-configured**", report.markdown([], "enforce", False, "", "not-configured"))
+        self.assertNotIn("macOS signing mode", report.markdown([], "enforce", False))
 
     def test_markdown_escapes_untrusted_text(self) -> None:
         self.assertEqual(report.md_code("a``b"), "```a``b```")
@@ -116,6 +118,7 @@ class CliTests(unittest.TestCase):
         self.assertEqual(matrix[0]["runner"], "windows-latest")
         self.assertEqual(values["checked_oses"], "windows linux")
         self.assertIn(values["mode"], ("enforce", "not-configured"))
+        self.assertIn(values["mac_mode"], ("enforce", "not-configured"))
         records = {r.artifact: r.status for r in read_jsonl(self.root / "out" / "report-resolve.jsonl")}
         self.assertEqual(records["windows-installer x64"], "fail")
         self.assertEqual(records["mac-universal"], "fail")
@@ -173,12 +176,17 @@ class WorkflowTests(unittest.TestCase):
     def test_checkouts_never_keep_credentials(self) -> None:
         self.assertEqual(self.text.count("uses: actions/checkout@"), self.text.count("persist-credentials: false"))
 
+    # The one secret value the checks read: the Apple team ID, on the macOS leg
+    # only, to compare it with the signatures (decision 0156).
+    TEAM_LINE = "          COSMYX_MAC_TEAM_ID: ${{ matrix.os == 'macos' && secrets.TEAM_ID || '' }}"
+
     def test_secrets_only_as_presence_flags(self) -> None:
         for line in self.text.splitlines():
-            if "secrets." in line and not line.lstrip().startswith("#"):
+            if "secrets." in line and not line.lstrip().startswith("#") and line != self.TEAM_LINE:
                 with self.subTest(line=line):
-                    self.assertRegex(line, r"COSMYX_HAS_[A-Z_]+: \$\{\{ secrets\.[A-Z_]+ != '' \}\}$")
-        for name in cli.signing_policy.SIGNING_SECRETS:
+                    self.assertRegex(line, r"COSMYX_HAS_[A-Z0-9_]+: \$\{\{ secrets\.[A-Z0-9_]+ != '' \}\}$")
+        self.assertEqual(self.text.splitlines().count(self.TEAM_LINE), 1)
+        for name in cli.signing_policy.SIGNING_SECRETS + cli.signing_policy.MAC_SIGNING_SECRETS:
             with self.subTest(secret=name):
                 self.assertIn(f"COSMYX_HAS_{name}: ${{{{ secrets.{name} != '' }}}}", self.text)
 

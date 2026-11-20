@@ -113,9 +113,10 @@ def _line(record: Record) -> str:
     return f"- **{md_safe(record.os)}/{md_safe(record.check)}** {where}: {md_safe(record.reason)}"
 
 
-def markdown(records: list[Record], mode: str, strict: bool, run_url: str = "") -> str:
+def markdown(records: list[Record], mode: str, strict: bool, run_url: str = "", mac_mode: str = "") -> str:
     lines = ["# Cosmyx artifact checks", ""]
-    lines.append(f"Windows signing mode: **{mode}**; strict: **{'yes' if strict else 'no'}**."
+    mac = f"; macOS signing mode: **{mac_mode}**" if mac_mode else ""
+    lines.append(f"Windows signing mode: **{mode}**{mac}; strict: **{'yes' if strict else 'no'}**."
                  + (f" Build run: {run_url}" if run_url else ""))
     lines += ["", "| OS | Check | Pass | Fail | Warn | Skip |", "|----|-------|------|------|------|------|"]
     counts: dict[tuple[str, str], Counter] = defaultdict(Counter)
@@ -137,9 +138,9 @@ def markdown(records: list[Record], mode: str, strict: bool, run_url: str = "") 
     return "\n".join(lines)
 
 
-def write(records: list[Record], out: Path, mode: str, strict: bool, run_url: str = "") -> bool:
+def write(records: list[Record], out: Path, mode: str, strict: bool, run_url: str = "", mac_mode: str = "") -> bool:
     """Write junit.xml and report.md; True when the run passes."""
     out.mkdir(parents=True, exist_ok=True)
     (out / "junit.xml").write_text(junit(records, strict), encoding="utf-8", newline="\n")
-    (out / "report.md").write_text(markdown(records, mode, strict, run_url), encoding="utf-8", newline="\n")
+    (out / "report.md").write_text(markdown(records, mode, strict, run_url, mac_mode), encoding="utf-8", newline="\n")
     return not any(failing(r, strict) for r in records)
