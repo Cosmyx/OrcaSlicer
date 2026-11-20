@@ -8,11 +8,13 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import os
 import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 COSMYX_DIR = Path(__file__).resolve().parents[1]
 
@@ -36,6 +38,11 @@ def header(charset: str = "UTF-8") -> str:
 
 class TreeMixin:
     def setUp(self) -> None:
+        # Keep main() away from the CI job summary of the run hosting the tests.
+        env = mock.patch.dict(os.environ)
+        env.start()
+        self.addCleanup(env.stop)
+        os.environ.pop("GITHUB_STEP_SUMMARY", None)
         self._tmp = tempfile.TemporaryDirectory()
         self.root = Path(self._tmp.name)
         self.i18n = self.root / "i18n"

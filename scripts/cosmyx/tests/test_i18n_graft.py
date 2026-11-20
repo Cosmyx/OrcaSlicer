@@ -6,11 +6,14 @@ from __future__ import annotations
 import difflib
 import importlib.util
 import io
+import os
+import subprocess
 import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
+from unittest import mock
 
 COSMYX_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = COSMYX_DIR.parents[1]
@@ -113,6 +116,12 @@ class TreeCase(unittest.TestCase):
     """A temporary localization/i18n + localization/cosmyx pair."""
 
     def setUp(self) -> None:
+        # Never inherit the job summary of the CI run hosting the tests: main()
+        # would append fake graft tables to it.
+        env = mock.patch.dict(os.environ)
+        env.start()
+        self.addCleanup(env.stop)
+        os.environ.pop("GITHUB_STEP_SUMMARY", None)
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
         self.i18n = self.root / "i18n"
@@ -260,8 +269,6 @@ class GraftErrorTests(TreeCase):
     def test_github_actions_annotations(self) -> None:
         self.orca("fr", ORCA_FR)
         self.feature("feature-a", "xx", 'msgid "A"\nmsgstr "?"\n')
-        import os
-
         old = os.environ.get("GITHUB_ACTIONS")
         os.environ["GITHUB_ACTIONS"] = "true"
         try:
@@ -339,6 +346,22 @@ class GraftCliTests(TreeCase):
         self.orca("fr", ORCA_FR)
         code, _, _ = self.run_main()
         self.assertEqual(code, 0)
+
+
+class JobSummaryIsolationTests(unittest.TestCase):
+    def test_graft_tests_do_not_write_the_ci_job_summary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            summary = Path(tmp) / "summary.md"
+            env = {**os.environ, "GITHUB_STEP_SUMMARY": str(summary)}
+            result = subprocess.run(
+                [sys.executable, "-m", "unittest", "test_i18n_graft.GraftCliTests", "test_i18n_graft.GraftRulesTests"],
+                cwd=Path(__file__).resolve().parent,
+                env=env,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(summary.exists() and summary.read_text(encoding="utf-8"), "tests leaked into the job summary")
 
 
 class PoFormatTests(unittest.TestCase):
