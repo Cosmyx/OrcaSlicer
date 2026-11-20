@@ -82,10 +82,11 @@ Manual or CI: run `build_all` on the branch (`just build-all <branch>`), then `j
 - `6ee87da92f`: `MainFrame` has no public `menubar()` accessor; use `wxFrame::GetMenuBar`. Dispatching events to the 3D canvas needs the complete `wxGLCanvas` type (`#include <wx/glcanvas.h>`). The driver did not compile on CI until then.
 - `8c3b40c84c` (breaker round): surface ids like `../x`, `CON`, `a:b` wrote outside the images folder or failed on Windows; repeated ids overwrote images; wrong-shaped events and damaged PNGs escaped as raw exceptions; PNG chunk CRCs were never checked. Fixed by strict id pattern, `protocol.validate`, strict PNG decoder (decision 0179). Never loosen.
 - `e57b431160`: the Windows launcher reads `--sw-renderer` but also passes it to the command line parser, which rejects it ("Invalid option"). The harness now copies the pinned Mesa DLLs next to the executable and starts with `mesa_win.run_env()` (depends on T13's `artifact_checks.mesa_win`).
-- Root `justfile` imports only `branding`, `i18n`, `signing`, `sync`, `tests`, `version` `.just` files; no import of `goldens.just` was found in this branch's `justfile` or `scripts/cosmyx/just` (verified with `git grep goldens`). The recipes may be unreachable through bare `just` until the import is added (or `tests.just` imports it). Check this after rebase; if missing, add `import? 'scripts/cosmyx/just/goldens.just'` to the justfile and let `test_foundation` list it.
+- The `import? 'scripts/cosmyx/just/goldens.just'` line is in the foundation tip's justfile (commit `92830e0a8b`), not in the older foundation copy this branch carries. After the rebase onto the full foundation the recipes are reachable through `just`; never add the import in this branch (the justfile is foundation-only).
 - CRLF on Windows checkouts: read text fixtures EOL-agnostically (see the install-paths pitfall `7f51119c40`); goldens `.gitattributes` forces `*.txt text eol=lf`.
 - Windows runner must be 1920x1080 at 96 DPI (the workflow throws otherwise); macOS needs Screen Recording permission.
 - The workflow's changed-files check calls `compare/DEV...<sha>`; if DEV is renamed, adapt.
+- v2.5.1 pass: adapted with `124e62829c`. The tag's `PreferencesTab` enum has 4 values (General, Control, Graphics, Online); DEV has 6. The driver casts the index of a tab name to `PreferencesTab`, so `preferences_tabs()` in `GoldenScript.cpp` must match the upstream enum exactly; the script test now compares the enum with that list. Restore the six names on a base that has them.
 
 ## Shared files with other branches
 

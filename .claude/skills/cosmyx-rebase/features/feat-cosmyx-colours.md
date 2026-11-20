@@ -88,6 +88,7 @@ From the repository root, after the rebase:
 - Tuple rows keep each file's notation; regenerating with `just brand-colour-literals` keeps hand-written rows (reason not starting with `tuple `) so do not give a hand-written row a reason starting with `tuple `.
 - The engine's `copy_real_tree` test helper copies the colour scopes and rows whenever `colours.json` exists; do not replace it with a per-stage copy (it caused conflicts with the product-name branch).
 - Icons drawn by OpenGL/ImGui stay teal until their SVG is replaced; this is expected (decision 0130), not a bug of the colour stage.
+- v2.5.1 pass: adapted with `2b46a70b77`; `just brand-colour-literals` removed exactly the `GLGizmoPaintedModifier.cpp` row (114 rows), mappings and statuses unchanged, `brand-check` 0 errors.
 
 ## Shared files with other branches
 

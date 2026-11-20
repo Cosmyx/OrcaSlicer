@@ -32,7 +32,7 @@ A Cosmyx printer needs filament profiles that print with the bed heater off. Ups
 | `src/libslic3r/Cosmyx/{ConfigDefExtensions.*,Cosmyx.cmake,ChtNozzle.cpp,IroningTemperature.*}`, `src/slic3r/GUI/Cosmyx/*` | Cosmyx-owned (foundation) | Dispatcher `extend_print_config_def()` and empty extender stubs for the other features. |
 | `tests/cosmyx/test_bed_temperature_off.cpp` | test | 8 Catch2 cases, tag `[cosmyx][BedTemperatureOff]` (see Verification). |
 | `tests/cosmyx/{CMakeLists.txt,cosmyx_tests.cpp,test_cosmyx_foundation.cpp}` | test (foundation) | Suite wiring, foundation checks. |
-| `wiki/decisions/0010..0012` | docs | Decisions of this feature. `0001..0004` and `README.md` are foundation. |
+| `wiki/decisions/0010..0012` | docs | Decisions of this feature. `0001..0005` and `README.md` are foundation. |
 | `CHANGELOG.md`, `justfile`, `scripts/cosmyx/*`, `.github/workflows/cosmyx-checks.yml` | CI / docs (foundation) | Shared tooling. Feature line under `<!-- cosmyx-slot: T1 -->`. |
 
 ## Rebase risk zones

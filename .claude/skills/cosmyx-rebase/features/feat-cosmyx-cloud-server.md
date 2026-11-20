@@ -123,12 +123,13 @@ branch changing the same `AppConfig.cpp` include block (dark-default).
 - The foundation slot test lists every changelog slot; adding or reordering slots (T18) requires editing `SLOTS_BY_AREA` in
   `test_foundation.py` and decision 0003 in the same change.
 - Stacked history: the foundation (PR #86) and the stealth-mode commits sit under this range's parent.
+- v2.5.1 pass: `88d9f1d0b5` conflicted on the `Preferences.cpp` include block because DEV has `#include "slic3r/plugin/host/PluginPages.hpp"` on line 2 and the tag does not. Keep only the Cosmyx include on line 2; `g_sizer->Add(item_network_test);` and the "Cloud Providers" title still adjoin (lines 2229-2233 on the tag).
 
 ## Shared files with other branches
 
 - `src/libslic3r/AppConfig.cpp`: parent stealth-mode (rewritten line) and `feat/cosmyx-dark-default` (2 hook lines).
-- `src/slic3r/GUI/GUI_App.cpp`: also hooked by dark-default (4 lines), install-paths (4), version (2); the integration
-  branch `ci/cosmyx-integration` totals 12 `// Cosmyx` lines there, so resolve includes at the top by keeping all.
+- `src/slic3r/GUI/GUI_App.cpp`: also hooked by version (2 lines), dark-default (2), gui-goldens (2), install-paths (4);
+  with this branch's 2 the integration totals 12 `// Cosmyx` lines there, so resolve includes at the top by keeping all.
 - `src/slic3r/GUI/Preferences.cpp`: this branch only (2 lines).
 - `cosmyx-src/branding/product-name/patches.json` (branch `feat/cosmyx-product-name`): carries the cloud URL fallback rows
   that complete this feature; decision 0201 points at them.

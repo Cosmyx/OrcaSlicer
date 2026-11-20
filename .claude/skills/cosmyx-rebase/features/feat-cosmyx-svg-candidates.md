@@ -51,7 +51,7 @@ The only upstream surface is the set of 524 SVG files. Checked with the recorded
 | Rows whose upstream hash equals the recorded one (guard G3 passes) | 524 of 524 | 521 of 524 |
 | Rows whose upstream file is absent | 0 | 3: `resources/images/menu_add_painted_modifier.svg`, `resources/images/toolbar_painted_modifier.svg`, `resources/images/toolbar_painted_modifier_dark.svg` (added to DEV after the release; `git diff --name-status origin/DEV upstream/v2.5.1` shows them as deletions) |
 | Rows whose upstream file exists with a different hash | 0 | 0 |
-| Teal SVGs without a manifest row (guard G4) | 3 by a rough scan on mapping sources (`canvas_menu_dark_hover.svg`, `canvas_section_dark_hover.svg`, `canvas_zoom_dark_hover.svg`) | same 3, so not new; confirm with `just brand-check` |
+| Teal SVGs without a manifest row (guard G4) | 0 (`just brand-check`); a rough scan on mapping sources also hits `canvas_menu_dark_hover.svg`, `canvas_section_dark_hover.svg`, `canvas_zoom_dark_hover.svg`, but they are outside the teal family G4 uses | 0, confirmed by `just brand-check` on the v2.5.1 pass |
 | SVG count under `resources/images` and `resources/web` | 1201 | 1198 |
 
 Upstream churn: 116 DEV commits since 2026-01-01 touch `resources/**/*.svg`. Colours engine files (`BitmapCache.cpp`)
@@ -99,10 +99,14 @@ icon change. The hash anchors make any upstream change to an SVG loud (G3).
   of the real-tree test (`5404934bbb`) checks that no teal SVG is left to propose, so a new mapping hole fails the test.
 - The accept step is all or nothing and refuses stale candidates; the three accept commits are per group. Reverting them means
   reverting `5404934bbb` too.
-- Overlay SVGs for icons present in DEV but not in the release (the three `painted_modifier` icons) become G3 errors on a
-  release-tag base. Drop them with their rows.
+- Overlay SVGs for icons present in DEV but not in the release (the three `painted_modifier` icons) trip guard G3 on a
+  v2.5.1 base: a warning on development builds, an error on release builds (G3 severity follows the build ref, not the
+  base), and `test_every_row_points_at_a_real_file` fails on every build. Drop them with their rows: `git rm` the overlay
+  file, `just brand-refresh <path>` (override becomes null, row `missing`), then `just brand-sync` (drops it) and
+  `just brand-table`. `brand-sync` alone never drops a row that still has an `override_sha256`.
 - Windows checkouts use CRLF: the engine reads text as LF (fixes `2b0c26555e`, `c9a1d85718` on the parent branches); an overlay
   file that is committed with CRLF changes the recorded hash.
+- v2.5.1 pass (copy tip `e3f21df2ea`): restacking on the adapted colours conflicted in the icons-a-m and icons-n-z accept commits (`icons-*.json`, `icons-*.md`). Resolution per commit: take the replayed side of the manifest and table, `git rm` the painted-modifier overlay files of that group, `just brand-refresh <path>`, `just brand-sync`, `just brand-table`, `git add -A`, continue. Result: 521 overlay files, all `to-validate`.
 
 ## Shared files with other branches
 

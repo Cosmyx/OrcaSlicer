@@ -72,6 +72,7 @@ Real proof only in CI: start `build_all` on DEV (`just build-all DEV`) with the 
 - NSIS plugins are re-signed on every signed run (upstream caches them per certificate; Azure certificates change every few days).
 - Without pins, any Artifact Signing certificate passes verify, including another customer's; set `COSMYX_SIGN_EKU`.
 - CRLF/Windows: Pester and PowerShell files must stay LF in the repository (shared line-ending rule).
+- v2.5.1 pass (copy tip `a55da7f26c`): `137f9674b6` conflicted in `build_orca.yml` twice: the sign step's DEV context ("Save signed NSIS plugins") does not exist on the tag, so the step goes right before "Pack unit tests Win" with no upstream line taken from DEV; the verify step's context differs because the tag has "Pack app" and "Pack PDB" between "Verify Windows signatures" and "Upload artifacts Win zip". Verify was placed right after upstream's verify step (before "Pack app"). The later commits replayed clean and the wiring test passes.
 
 ## Shared files with other branches
 
