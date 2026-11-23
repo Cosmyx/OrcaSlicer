@@ -30,8 +30,9 @@ constexpr const char* K1_PUBLIC = "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50
 
 constexpr const char* CUSTOM = "https://plugins.example.org";
 
-// The user's opt-in and pinned key stored for url never apply to it: it is the
-// Cosmyx server (or refused), checked against the build's keys only.
+// The user's opt-in and pinned key stored for url never apply to it: it is
+// either refused as unrecognised (no key at all, not even the build's), or the
+// Cosmyx server, checked against the build's keys only.
 void check_never_custom(const std::string& url)
 {
     INFO(url);
@@ -39,11 +40,12 @@ void check_never_custom(const std::string& url)
     CC::set_server_pins(config, url, {"", true});
     CC::ServerTrust trust = CC::server_trust(config, url);
     CHECK_FALSE(trust.allow_unverified);
-    CHECK(trust.keys == CC::built_in_keys());
+    CHECK(trust.keys == (trust.unrecognised ? CC::KeyTable{} : CC::built_in_keys()));
 
     CC::set_server_pins(config, url, {K1_PUBLIC, false});
     trust = CC::server_trust(config, url);
-    CHECK(trust.keys == CC::built_in_keys());
+    CHECK_FALSE(trust.allow_unverified);
+    CHECK(trust.keys == (trust.unrecognised ? CC::KeyTable{} : CC::built_in_keys()));
 }
 
 } // namespace
