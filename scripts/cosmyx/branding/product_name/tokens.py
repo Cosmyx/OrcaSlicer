@@ -15,8 +15,9 @@
   Without a row the name stays and `unresolved` reports it.
 - `NATIVE_TOKENS` are the spellings some translations use for the name.
 - `replace_tokens` rewrites the name to CosmoSlice outside URLs, file names,
-  the names tied to the app key (`OrcaSlicer.conf`, `.app`, `.AppImage`, the
-  Windows data folder `...\\OrcaSlicer`, decision 0133) and the kept names
+  the names tied to the app key (`OrcaSlicer.conf` and the Windows data folder
+  `...\\OrcaSlicer`, decision 0133; `OrcaSlicer.app` and `.AppImage` follow
+  the CosmoSlice package names, decision 0210) and the kept names
   (`KEPT_NAMES`: things upstream calls that, such as the Orca Cloud service
   or the Orca Cube model), so a link to the upstream wiki, an icon name, a
   real file or a built-in model keeps working. With a language, the
@@ -80,7 +81,9 @@ _PROTECTED = re.compile(
     r"(?:" + "|".join(KEPT_NAMES) + r")(?![a-z])|"
     r"(?:[a-z][a-z0-9+.-]*://|www\.)[^\s\"'<>)\]]*"  # URLs
     r"|[\w.%-]*[Oo]rca[\w%-]*\.(?:png|svg|ico|icns|3mf|stl|step|dll|exe|desktop|json|html|js|css)\b"  # file names
-    r"|[\w.%-]*[Oo]rca[\w%-]*\.(?:conf|app|AppImage)\b"  # names derived from the app key (decision 0133)
+    # The config file keeps the app key (decision 0133); the .app and the
+    # AppImage are named CosmoSlice (decision 0210), so their names follow.
+    r"|[\w.%-]*[Oo]rca[\w%-]*\.conf\b"
     r"|[\w-]+/[\w./-]*[Oo]rca[\w./-]*"  # paths such as orca/OrcaCube_v2.3mf
     # Paths such as OrcaSlicer/build: a slash, a doubled (C source) backslash,
     # or a backslash that does not start an escape sequence.

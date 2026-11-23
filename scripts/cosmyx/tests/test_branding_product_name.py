@@ -556,11 +556,55 @@ class RealTreeTest(unittest.TestCase):
         self.assertIn('set (CPACK_NSIS_DISPLAY_NAME "CosmoSlice")', read(self.root, "CMakeLists.txt").decode())
         self.assertIn('set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY "OrcaSlicer")', read(self.root, "CMakeLists.txt").decode())
 
-    def test_shortcut_label_is_renamed_and_the_executable_stays(self) -> None:
+    def test_shortcuts_run_the_renamed_executable(self) -> None:
         cmake = read(self.root, "CMakeLists.txt").decode()
-        self.assertIn('set(CPACK_PACKAGE_EXECUTABLES "orca-slicer;CosmoSlice")', cmake)
-        self.assertNotIn("orca-slicer;OrcaSlicer", cmake)
-        self.assertIn('set(CPACK_CREATE_DESKTOP_LINKS "orca-slicer")', cmake)
+        self.assertIn('set(CPACK_PACKAGE_EXECUTABLES "CosmoSlice;CosmoSlice")', cmake)
+        self.assertIn('set(CPACK_CREATE_DESKTOP_LINKS "CosmoSlice")', cmake)
+        self.assertIn('set (CPACK_PACKAGE_FILE_NAME "CosmoSlice_Windows_Installer_V${SoftFever_VERSION}")', cmake)
+        self.assertNotIn("orca-slicer", cmake.split("set (CPACK_PACKAGE_NAME", 1)[1])
+
+    def test_every_windows_executable_consumer_agrees(self) -> None:
+        # Decision 0210: the Windows executable is CosmoSlice.exe, and every
+        # place that names it (build, version resource, installer, MSIX,
+        # runtime lookups) says the same name.
+        import re
+
+        def text(relative):
+            return read(self.root, relative).decode("utf-8").replace("\r\n", "\n")
+
+        gui = re.search(r'set_target_properties\(OrcaSlicer_app_gui PROPERTIES\s+OUTPUT_NAME "([^"]+)"', text("src/CMakeLists.txt"))
+        exe = gui.group(1) + ".exe"
+        self.assertEqual(exe, "CosmoSlice.exe")
+        cmake = text("CMakeLists.txt")
+        found = {
+            "rc OriginalFilename": re.search(r'"OriginalFilename", "([^"]+)"', text("src/dev-utils/platform/msw/OrcaSlicer.rc.in")).group(1),
+            "NSIS icon": re.search(r'CPACK_NSIS_INSTALLED_ICON_NAME "([^"]+)"', cmake).group(1),
+            "Start menu": re.search(r'CPACK_PACKAGE_EXECUTABLES "([^";]+);', cmake).group(1) + ".exe",
+            "desktop link": re.search(r'CPACK_CREATE_DESKTOP_LINKS "([^"]+)"', cmake).group(1) + ".exe",
+            "MSIX Executable": re.search(r'Executable="([^"]+)"', text("scripts/msix/AppxManifest.xml")).group(1),
+            "MSIX build check": re.search(r"Join-Path \$InstallDir '([^']+\.exe)'", text("scripts/msix/build_msix.ps1")).group(1),
+        }
+        plugin = text("src/slic3r/Utils/BBLNetworkPlugin.cpp")
+        lookup = re.search(r'file_name_string\.find\("([^"]+)"\);\n\s*if \(found == \(file_name_string\.size\(\) - (\d+)\)\)', plugin)
+        found["network plugin"] = lookup.group(1)
+        for where, name in found.items():
+            with self.subTest(where=where):
+                self.assertEqual(name, exe)
+        # The magic length is the name plus one, as upstream wrote it for orca-slicer.exe.
+        self.assertEqual(int(lookup.group(2)), len(exe) + 1)
+        self.assertIn(f"replace(found, {len(exe) + 1}, lib_path)", plugin)
+        self.assertIn('Alias="cosmoslice.exe"', text("scripts/msix/AppxManifest.xml"))
+        process = text("src/slic3r/Utils/Process.cpp")
+        self.assertNotIn('"orca-slicer.exe"', process)
+        self.assertIn("wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetFullName()", process)
+        # The Linux binary stays.
+        self.assertIn('set_target_properties(OrcaSlicer PROPERTIES OUTPUT_NAME "orca-slicer")', text("src/CMakeLists.txt"))
+
+    def test_appimage_launcher_and_its_file_agree(self) -> None:
+        script = read(self.root, "src/dev-utils/platform/unix/build_appimage.sh.in").decode()
+        self.assertIn("\nName=CosmoSlice\n", script)
+        self.assertIn("mv CosmoSlice-$(uname -m).AppImage ${APP_IMAGE}", script)
+        self.assertEqual(guards.appimage_pair(self.root), ("CosmoSlice", "CosmoSlice"))
 
     def test_flatpak_texts_name_the_product_and_keep_the_id(self) -> None:
         text = read(self.root, "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml").decode()
@@ -580,6 +624,11 @@ class RealTreeTest(unittest.TestCase):
                 self.assertIn(text, read(self.root, relative).decode("utf-8").replace("\r\n", "\n"))
         appimage = read(self.root, "src/dev-utils/platform/unix/build_appimage.sh.in").decode()
         self.assertNotIn("SLIC3R_APP_NAME", appimage)
+
+    def test_upstream_tree_has_every_pin_and_a_matching_appimage_pair(self) -> None:
+        for relative, text, _ in guards.PACKAGING_PINS:
+            with self.subTest(file=relative):
+                self.assertIn(text, self.before[relative].decode("utf-8").replace("\r\n", "\n"))
 
     def test_catalogues_never_get_fuzzy(self) -> None:
         for relative in catalogues.catalogue_files(self.root):
@@ -874,6 +923,24 @@ class CommittedTablesTest(unittest.TestCase):
         self.assertEqual(keys, sorted(keys), "inflection rows are sorted by language, then old")
         self.assertTrue(all(row.get("source") for row in rows), "every inflection row says where it comes from")
         self.assertEqual(sum(1 for row in rename if row["source"] == "cosmoslice"), 48)
+
+    def test_appimage_name_and_move_rows_go_together(self) -> None:
+        # Decision 0210 (and 0132's history): renaming the AppImage desktop
+        # Name= without its mv row breaks the Linux packaging, and the other
+        # way round.
+        rows = branding.load_json(REPO_ROOT / PN / "patches.json")["rows"]
+        script = "src/dev-utils/platform/unix/build_appimage.sh.in"
+        name = [row for row in rows if row["file"] == script and "Name=" in row["old"]]
+        move = [row for row in rows if row["file"] == script and row["old"].startswith("mv ")]
+        self.assertEqual(len(name), len(move))
+        for row_name, row_move in zip(name, move):
+            new_name = row_name["new"].strip("\n").split("=", 1)[1]
+            self.assertTrue(row_move["new"].startswith(f"mv {new_name}-$(uname -m).AppImage"))
+
+    def test_build_win_bat_is_never_patched(self) -> None:
+        # Upstream's scripts/test_build_win.ps1 asserts build_win.bat's text.
+        rows = branding.load_json(REPO_ROOT / PN / "patches.json")["rows"]
+        self.assertEqual([row for row in rows if row["file"] == "build_win.bat"], [])
 
     def test_rename_keeps_texts_asserted_by_upstream_tests(self) -> None:
         # An upstream test that asserts a text the rename rewrites fails on
