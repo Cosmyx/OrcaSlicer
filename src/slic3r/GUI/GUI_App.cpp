@@ -1,4 +1,7 @@
 #include "CloudProvider.hpp"
+#include "Cosmyx/logic/CosmyxVersion.hpp" // Cosmyx
+#include "Cosmyx/ColorMode.hpp" // Cosmyx
+#include "Cosmyx/GoldenDriver.hpp" // Cosmyx
 #include "ExportPresetBundleDialog.hpp"
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
@@ -3882,6 +3885,7 @@ bool GUI_App::on_init_inner()
             this->mainframe->register_win32_callbacks();
 #endif
             this->post_init();
+            Cosmyx::start_golden_driver_if_requested(); // Cosmyx
 
             update_publish_status();
         }
@@ -4541,6 +4545,7 @@ void GUI_App::select_machine(const std::string& agent_id)
 bool GUI_App::dark_mode()
 {
 #ifdef SUPPORT_DARK_MODE
+    if (Cosmyx::force_dark_mode()) return true; // Cosmyx
 #if __APPLE__
     // The check for dark mode returns false positive on 10.12 and 10.13,
     // which allowed setting dark menu bar and dock area, which is
@@ -7024,7 +7029,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = SoftFever_VERSION;
+    version_display = Cosmyx::display_version(); // Cosmyx
     return version_display;
 }
 
