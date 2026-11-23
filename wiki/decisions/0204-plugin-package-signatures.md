@@ -232,7 +232,12 @@ own key, or none at all.
   `wxModule` in `PluginVerify.cpp` that wxWidgets initialises right after the
   app object is installed and before its `OnInit()`, so before any install can
   start: even the first download of the process cannot outlive the app
-  unchecked. A plain `wxApp` (`wxInitializer` in the tests) never sets it. The
+  unchecked. The latch is set for any `GUI_App` instance, including one that
+  `wxInitializer` builds in the tests through the app factory that
+  `IMPLEMENT_APP(GUI_App)` registers. The upstream test cases each run in
+  their own ctest process (`catch_discover_tests`), so a latch set by one case
+  never reaches another; running `slic3rutils_tests` as one process could make
+  a later cloud-install case refuse with `app_gone`, which fails closed. The
   decision of both hooks lives in wx-free logic (`decide_download()`,
   `commit_cloud_install()`), which `cosmyx_tests` drive end to end; the hooks
   only read the app, the platform and the installed record. This is not a
