@@ -382,6 +382,11 @@ jobs:
             create_dmg "OrcaSlicer Profile Validator" ${{ github.workspace }}/build/universal/OrcaSlicer_profile_validator_dmg OrcaSlicer_profile_validator_Mac_universal_${{ env.ver }}.dmg
           fi
 
+      - name: Cosmyx package names mac-app # Cosmyx
+        uses: ./.github/actions/cosmyx-package-names # Cosmyx
+        with: # Cosmyx
+          stage: mac-app # Cosmyx
+
       # Delete the per-arch bundles only after signing/DMG creation succeeded, so a
       # failed run keeps them available for a re-run instead of forcing a full rebuild.
       - name: Delete intermediate per-arch artifacts
@@ -406,6 +411,11 @@ jobs:
           name: OrcaSlicer_profile_validator_Mac_universal_DMG_${{ env.ver }}
           path: ${{ github.workspace }}/OrcaSlicer_profile_validator_Mac_universal_${{ env.ver }}.dmg
           if-no-files-found: ignore
+
+      - name: Cosmyx package names mac-upload # Cosmyx
+        uses: ./.github/actions/cosmyx-package-names # Cosmyx
+        with: # Cosmyx
+          stage: mac-upload # Cosmyx
 
       - name: Deploy Mac release
         if: github.repository == 'OrcaSlicer/OrcaSlicer' && github.ref == 'refs/heads/main' && runner.os == 'macOS' && inputs.macos-combine-only && !vars.SELF_HOSTED
@@ -694,6 +704,11 @@ jobs:
             -Publisher "${{ vars.ORCA_MSIX_PUBLISHER || 'CN=38F7EA55-C73B-4072-B3B2-C8E0EA15BB82' }}" `
             -PublisherDisplayName "${{ vars.ORCA_MSIX_PUBLISHER_DISPLAY_NAME || 'OrcaSlicer' }}"
 
+      - name: Cosmyx package names windows # Cosmyx
+        uses: ./.github/actions/cosmyx-package-names # Cosmyx
+        with: # Cosmyx
+          stage: windows # Cosmyx
+
       - name: Upload artifacts Win MSIX
         if: runner.os == 'Windows' && !vars.SELF_HOSTED
         uses: actions/upload-artifact@v7
@@ -782,6 +797,11 @@ jobs:
           ./OrcaSlicer_profile_validator -p ${{ github.workspace }}/resources/profiles -g 1
           cd ${{ github.workspace }}/resources/profiles
           zip -r orca_custom_preset_tests.zip user/
+
+      - name: Cosmyx package names linux # Cosmyx
+        uses: ./.github/actions/cosmyx-package-names # Cosmyx
+        with: # Cosmyx
+          stage: linux # Cosmyx
 
       - name: Upload artifacts Ubuntu
         if: ${{ ! env.ACT && runner.os == 'Linux' }}
