@@ -41,6 +41,9 @@ constexpr const char* PLUGIN_TRUST_KEY = "cosmyx_plugin_trust";
 
 // Client-side refusal reason: the address is unrecognised (decision 0204).
 constexpr const char* SIGN_UNRECOGNISED_SERVER = "unrecognised_server";
+// Client-side refusal reason: the app closed before the download could be
+// checked against its settings (package_gate(), decision 0204).
+constexpr const char* SIGN_APP_GONE = "app_gone";
 
 // One spelling per server address, so a pin is found whatever the user typed:
 // parse_server_address() then ServerAddress::url(), so scheme and host in
@@ -94,27 +97,50 @@ ServerTrust server_trust(const AppConfig& config, const std::string& server_url)
 
 // --- Without the app ------------------------------------------------------------
 
-// Whether cloud installs are checked in this process. app_running is false
-// when no OrcaSlicer app runs: the upstream plugin tests drive the plugin
-// manager headless, with fake servers over plain http and packages that carry
-// no signature. There are no trust settings to read then (no app config, no
-// Preferences), so the check is off: both hooks behave as upstream, and the
-// download hook logs each package it did not check. In the app, the check is
-// always on (decision 0204, "Without the app").
-bool package_check_on(bool app_running);
+// How the cloud installs of this process are checked (decision 0204, "Without
+// the app").
+enum class PackageGate
+{
+    // No OrcaSlicer app was ever seen in this process: the upstream plugin
+    // tests drive the plugin manager headless, with fake servers over plain
+    // http and packages that carry no signature. There are no trust settings
+    // to read, so both hooks behave as upstream (the download is logged as
+    // not checked).
+    Unchecked,
+    // The app runs: the download is checked against its trust settings.
+    Checked,
+    // The app was seen but is gone (shutdown, while a detached install
+    // worker still runs): its settings cannot be read, so the download is
+    // refused. A commit still matches the installed bytes against the checked
+    // record, which needs no setting.
+    AppGone,
+};
+
+// The gate for a hook running now. app_running_now is whether the OrcaSlicer
+// app runs at this moment. Once it was true, the check stays on for the rest
+// of the process: a process-wide latch, set here or by note_app_seen(), never
+// cleared outside tests. Thread-safe.
+PackageGate package_gate(bool app_running_now);
+
+// Sets the latch: called as soon as the app is created, before any install
+// can start, so a download that ends after the app is gone is never let
+// through. Thread-safe.
+void note_app_seen();
+
+// Clears the latch. For tests only: the app process never calls it.
+void reset_package_gate_for_tests();
 
 // What one cloud download is checked against.
 struct DownloadCheck
 {
-    bool        on = false; // package_check_on(): false leaves the download unchecked
-    std::string server;     // the API address the agent uses
+    std::string server; // the API address the agent uses
     ServerTrust trust;
 };
 
 // config is the app config, or null before it is loaded: the Cosmyx server is
 // then assumed, with the build's keys only, so a missing config never relaxes
 // the check.
-DownloadCheck download_check(bool app_running, const AppConfig* config);
+DownloadCheck download_check(const AppConfig* config);
 
 // The result of the whole check of one download.
 struct PackageVerdict
@@ -140,6 +166,35 @@ PackageVerdict check_plugin_package(const nlohmann::json* row,
                                     const KeyIdSet&       revoked,
                                     const std::string&    installed_version,
                                     bool                  allow_downgrade);
+
+// What the download hook is given, all of it read outside the app config.
+struct DownloadInput
+{
+    std::string           plugin_id;
+    std::string           requested_version; // as the installer asked: empty (latest) or X.Y.Z
+    const nlohmann::json* row = nullptr;     // the row as served, or null
+    std::string           body;
+    std::string           installed_version; // from the installed package's record, or empty
+    std::string           platform_os;       // platform_os_type()
+    std::string           platform_arch;     // platform_architecture()
+    KeyIdSet              revoked;
+};
+
+// The decision of the download hook.
+struct DownloadDecision
+{
+    PackageGate    gate = PackageGate::Unchecked;
+    DownloadCheck  check;   // filled when gate is Checked
+    PackageVerdict verdict; // SIGN_APP_GONE when gate is AppGone
+    // The body may be installed: unchecked (no app ever seen) or passed.
+    bool install() const { return gate == PackageGate::Unchecked || verdict.ok(); }
+};
+
+// The whole download hook, wx-free: the gate (package_gate()), then, with the
+// check on, the requested version, the client slot and check_plugin_package().
+// A package that passed is remembered (remember_checked_package()) for its
+// commit. config is read only when the gate is Checked (see download_check()).
+DownloadDecision decide_download(bool app_running_now, const AppConfig* config, const DownloadInput& input);
 
 // --- Record -------------------------------------------------------------------
 
@@ -179,6 +234,20 @@ bool commit_checked_install(const std::string&                       plugin_id,
                             std::string&                             error,
                             const PackageRecord*                     floor = nullptr);
 
+// The whole commit hook, wx-free. With the gate Unchecked (no app ever seen)
+// the install goes on as upstream: no record, nothing refused. Otherwise, the
+// app running or gone, commit_checked_install(): the installed bytes must be
+// the ones a check passed, so a download checked while the app ran and
+// committed after it closed still gets its record, and bytes never checked
+// are refused.
+bool commit_cloud_install(bool                                     app_running_now,
+                          const std::string&                       plugin_id,
+                          const boost::filesystem::path&           plugin_dir,
+                          const boost::filesystem::path&           package_file,
+                          const std::function<bool(std::string&)>& metadata_matches,
+                          std::string&                             error,
+                          const PackageRecord*                     floor = nullptr);
+
 // Removes package_file and the record in plugin_dir. With floor (the record of
 // the package the refused install replaced), writes floor there instead, so
 // the version floor of the downgrade check survives the refusal.
@@ -197,9 +266,11 @@ bool check_entry_package_name(const std::string& name, std::string& error);
 
 // The entry package of a wheel is safe to extract to and import: a plain
 // module name (check_entry_package_name()) that the wheel holds at its top, as
-// a package folder or a module, so the import never picks a module of the
-// same name from elsewhere on the path. Error messages are English, like the
-// upstream wheel checks they join.
+// a package folder or a module. The plugin folder is first on sys.path, so a
+// regular package or a module held there is the one imported; a namespace
+// folder can still lose to a regular package of that name later on the path
+// (decision 0204, "Entry package guard"). Error messages are English, like
+// the upstream wheel checks they join.
 bool check_wheel_import_name(const boost::filesystem::path& wheel, const std::string& name, std::string& error);
 
 // The entry is a wheel: its extension is .whl in any case.

@@ -7,6 +7,7 @@
 #include <boost/log/trivial.hpp>
 #include <nlohmann/json.hpp>
 #include <wx/app.h>
+#include <wx/module.h>
 
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Platform.hpp"
@@ -48,16 +49,18 @@ std::string refusal_message(const std::string& reason, const ServerTrust& trust,
     return GUI::format(_u8L("The plugin package failed its signature check (%1%). The plugin was not installed."), reason);
 }
 
-// True when the OrcaSlicer app runs. wxGetApp() casts wxTheApp unchecked, so
-// it is only called once this holds: a process without the app (the upstream
-// plugin tests) has no wxTheApp, or a plain wxApp (wxInitializer).
-bool app_running() { return dynamic_cast<GUI_App*>(wxTheApp) != nullptr; }
+// The OrcaSlicer app when it runs, or null. wxGetApp() casts wxTheApp
+// unchecked, so the hooks never call it: a process without the app (the
+// upstream plugin tests) has no wxTheApp, or a plain wxApp (wxInitializer),
+// and during shutdown wxTheApp becomes null while an install worker may still
+// run. Read once per hook, so one hook never sees the app come and go.
+GUI_App* current_app() { return dynamic_cast<GUI_App*>(wxTheApp); }
 
-void notify_unverified(const std::string& name)
+void notify_unverified(GUI_App& app, const std::string& name)
 {
     // TRN %1% is the plugin name.
     const std::string text = GUI::format(_u8L("Plugin %1% was installed unverified: this server may serve unverified plugins."), name);
-    wxGetApp().CallAfter([text]() {
+    app.CallAfter([text]() {
         if (wxGetApp().is_closing())
             return;
         Plater* plater = wxGetApp().plater();
@@ -102,61 +105,88 @@ bool same_package_metadata(const PluginDescriptor& installed, std::string& reaso
 
 } // namespace
 
+// Sets the package check latch (note_app_seen()) when wxWidgets initialises
+// its modules: right after the app object is installed, before its OnInit and
+// so before any install can start. The hooks set it too whenever they see the
+// app; this makes sure a download that ends after the app closed is refused
+// even when it is the first one of the process.
+class PackageGateModule : public wxModule
+{
+public:
+    bool OnInit() override
+    {
+        if (current_app() != nullptr)
+            note_app_seen();
+        return true;
+    }
+    void OnExit() override {}
+
+private:
+    wxDECLARE_DYNAMIC_CLASS(PackageGateModule);
+};
+
+wxIMPLEMENT_DYNAMIC_CLASS(PackageGateModule, wxModule);
+
 bool verify_cloud_plugin_package(const PluginDescriptor& entry,
                                  const std::string&      requested_version,
                                  const nlohmann::json*   row,
                                  const std::string&      body,
                                  std::string&            error)
 {
-    const bool          running = app_running();
-    const DownloadCheck check   = download_check(running, running ? wxGetApp().app_config : nullptr);
-    ClientRequest       request;
-    request.plugin_id = entry.cloud_uuid();
-    if (!check.on) {
-        // No app, so no trust settings: the download is installed as upstream
-        // does, unchecked and without a record (decision 0204, "Without the app").
-        BOOST_LOG_TRIVIAL(warning) << "Cosmyx plugin package NOT CHECKED (no OrcaSlicer app in this process): plugin "
-                                   << request.plugin_id;
-        return true;
-    }
-    // The request carries a strict X.Y.Z or none (latest); any other version is refused.
-    const bool request_ok = request_version(requested_version, request.version);
+    GUI_App* const app = current_app();
+
+    DownloadInput input;
+    input.plugin_id         = entry.cloud_uuid();
+    input.requested_version = requested_version;
+    input.row               = row;
+    input.body              = body;
+    const std::optional<PackageRecord> installed = installed_record(entry);
+    input.installed_version = installed ? installed->version : std::string();
+    input.platform_os       = platform_os_type();
+    input.platform_arch     = platform_architecture();
+    input.revoked           = revoked_key_ids();
+
+    const DownloadDecision decision = decide_download(app != nullptr, app != nullptr ? app->app_config : nullptr, input);
 
     std::string row_version;
     if (row != nullptr && row->is_object() && row->contains("version") && row->at("version").is_string())
         row_version = row->at("version").get<std::string>();
 
-    const std::optional<PackageRecord> installed         = installed_record(entry);
-    const std::string                  installed_version = installed ? installed->version : std::string();
+    switch (decision.gate) {
+    case PackageGate::Unchecked:
+        // No app was ever seen, so no trust settings: the download is
+        // installed as upstream does, unchecked and without a record
+        // (decision 0204, "Without the app").
+        BOOST_LOG_TRIVIAL(warning) << "Cosmyx plugin package NOT CHECKED (no OrcaSlicer app in this process): plugin "
+                                   << input.plugin_id;
+        return true;
+    case PackageGate::AppGone:
+        // The app closed while the download ran: nothing of it may be read
+        // any more, the translations included, so the message is English.
+        BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused: plugin " << input.plugin_id << " version " << row_version
+                                 << ": " << decision.verdict.reason;
+        error = "The application closed before the plugin package could be checked. The plugin was not installed.";
+        return false;
+    case PackageGate::Checked: break;
+    }
 
-    const std::string& server = check.server;
-    const ServerTrust& trust  = check.trust;
-
-    PackageVerdict verdict;
-    if (!request_ok)
-        verdict.reason = SIGN_WRONG_VERSION;
-    else if (!client_slot(platform_os_type(), platform_architecture(), request.os, request.arch))
-        verdict.reason = SIGN_UNKNOWN_SLOT;
-    else
-        verdict = check_plugin_package(row, body, request, trust, revoked_key_ids(), installed_version,
-                                       /*allow_downgrade=*/false);
-
+    const std::string& server = decision.check.server;
+    const PackageVerdict& verdict = decision.verdict;
     if (!verdict.ok()) {
-        BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused: plugin " << request.plugin_id << " version " << row_version
+        BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused: plugin " << input.plugin_id << " version " << row_version
                                  << " from " << server << ": " << verdict.reason;
-        error = refusal_message(verdict.reason, trust, row_version, installed_version);
+        error = refusal_message(verdict.reason, decision.check.trust, row_version, input.installed_version);
         return false;
     }
 
     if (verdict.verified()) {
-        BOOST_LOG_TRIVIAL(info) << "Cosmyx plugin package verified: plugin " << request.plugin_id << " version "
+        BOOST_LOG_TRIVIAL(info) << "Cosmyx plugin package verified: plugin " << input.plugin_id << " version "
                                 << verdict.record.version << " key " << verdict.record.key_id;
     } else {
         BOOST_LOG_TRIVIAL(warning) << "Cosmyx plugin package UNVERIFIED (allowed for " << server << "): plugin "
-                                   << request.plugin_id << " version " << verdict.record.version;
-        notify_unverified(entry.name.empty() ? request.plugin_id : entry.name);
+                                   << input.plugin_id << " version " << verdict.record.version;
+        notify_unverified(*app, entry.name.empty() ? input.plugin_id : entry.name);
     }
-    remember_checked_package(verdict.record);
     return true;
 }
 
@@ -166,22 +196,24 @@ CloudInstallScope::CloudInstallScope(const PluginDescriptor& previous)
 
 bool CloudInstallScope::commit(const PluginDescriptor& installed, std::string& error) const
 {
-    // Without the app the download was not checked, so there is no record to
-    // match: the install goes on as upstream. With the app, a missing record
-    // still refuses it.
-    if (!package_check_on(app_running()))
-        return true;
+    // Never seen the app: the download was not checked, so there is no record
+    // to match and the install goes on as upstream. Once the app was seen,
+    // even if it is gone now, the installed bytes must match a checked record.
+    const bool                    running = current_app() != nullptr;
     const boost::filesystem::path plugin_dir(installed.plugin_root);
     const boost::filesystem::path package_file(installed.entry_path);
     const PackageRecord*          floor = m_floor ? &*m_floor : nullptr;
     std::string                   reason;
     // The metadata reader may throw (a filesystem error): that refuses the install too.
-    if (commit_checked_install(installed.cloud_uuid(), plugin_dir, package_file,
-                               [&installed](std::string& why) { return same_package_metadata(installed, why); }, reason, floor))
+    if (commit_cloud_install(running, installed.cloud_uuid(), plugin_dir, package_file,
+                             [&installed](std::string& why) { return same_package_metadata(installed, why); }, reason, floor))
         return true;
     BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused after install: plugin " << installed.cloud_uuid() << ": " << reason;
-    error = _u8L("The installed plugin package could not be recorded as the one whose signature was checked, so it was removed. "
-                 "The plugin was not installed.");
+    // Without the app, its translations may be gone too: the message is English.
+    error = running ? _u8L("The installed plugin package could not be recorded as the one whose signature was checked, so it "
+                           "was removed. The plugin was not installed.") :
+                      "The installed plugin package could not be recorded as the one whose signature was checked, so it was "
+                      "removed. The plugin was not installed.";
     return false;
 }
 

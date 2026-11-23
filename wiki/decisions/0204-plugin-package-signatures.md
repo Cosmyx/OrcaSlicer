@@ -206,28 +206,57 @@ own key, or none at all.
   upstream plugin tests (`slic3rutils_tests`) drive the plugin manager with no
   app: they download through `CloudPluginService` from loopback fakes over
   plain http, with packages that carry no signature, and expect updates to
-  succeed. So the check is on only when the OrcaSlicer app runs
-  (`dynamic_cast<GUI_App*>(wxTheApp)`, `package_check_on()`): without it,
-  `verify_cloud_plugin_package()` logs a warning naming the plugin as not
-  checked and lets it through, and `CloudInstallScope::commit()` writes no
-  record and refuses nothing, which is upstream's behaviour. Refusing instead
-  would fail upstream tests that must pass; checking against the build's keys
-  would refuse the same unsigned packages. This is not a trust decision a user
-  can reach: every cloud install goes through `download_cloud_plugin()`, only
-  the GUI app runs the plugin manager (the command line does not), and in the
-  app the check is always on. In the app, a config not loaded yet checks
-  against the Cosmyx server's built-in keys (`download_check()`), and a commit
-  with no checked record is refused: "refuse bytes other than the checked
-  ones" applies whenever a check ran, which in the app is always.
+  succeed. So the check depends on whether an OrcaSlicer app was ever seen in
+  the process (`dynamic_cast<GUI_App*>(wxTheApp)`), through a process-wide
+  latch in `package_gate()`:
+  - **never seen** (`Unchecked`): `verify_cloud_plugin_package()` logs a
+    warning naming the plugin as not checked and lets it through, and
+    `CloudInstallScope::commit()` writes no record and refuses nothing, which
+    is upstream's behaviour. Refusing instead would fail upstream tests that
+    must pass; checking against the build's keys would refuse the same
+    unsigned packages;
+  - **running** (`Checked`): the download is checked against the app's
+    settings; a config not loaded yet checks against the Cosmyx server's
+    built-in keys (`download_check()`), and a commit with no checked record is
+    refused;
+  - **seen, now gone** (`AppGone`): during shutdown `wxTheApp` becomes null
+    while a detached install worker (`resolve_missing_plugins()`) may still
+    finish a download. The latch keeps the check on: the download is refused
+    (`app_gone`, fail closed, since its settings can no longer be read), and a
+    commit still matches the installed bytes against the checked record, which
+    needs no setting, so a download checked while the app ran is recorded and
+    any other bytes are removed. Neither hook touches `wxGetApp()` then, and
+    their messages are English, since the translations may be gone too.
+
+  The latch is set by every hook that sees the app and, first, by a
+  `wxModule` in `PluginVerify.cpp` that wxWidgets initialises right after the
+  app object is installed and before its `OnInit()`, so before any install can
+  start: even the first download of the process cannot outlive the app
+  unchecked. A plain `wxApp` (`wxInitializer` in the tests) never sets it. The
+  decision of both hooks lives in wx-free logic (`decide_download()`,
+  `commit_cloud_install()`), which `cosmyx_tests` drive end to end; the hooks
+  only read the app, the platform and the installed record. This is not a
+  trust decision a user can reach: every cloud install goes through
+  `download_cloud_plugin()`, only the GUI app runs the plugin manager (the
+  command line does not), and in the app the check is always on.
 - **Entry package guard.** Where the entry package is chosen
   (`read_wheel_plugin_metadata()`), `Cosmyx::check_entry_package_name()`
   applies the name rule only: upstream accepts a resource-only wheel there
   (dist-info and data, no Python package), and the name rule alone closes the
   path escape. Right before the import, for a wheel entry,
   `plugin_loader::import_plugin_module()` runs `check_wheel_import_name()`,
-  which also asks the wheel to hold the package, so the import never picks a
-  module of that name from elsewhere on the path; the catalog sets the entry
-  package of a cloud plugin after the metadata check. The second hook is not in
+  which also asks the wheel to hold the package; the catalog sets the entry
+  package of a cloud plugin after the metadata check, and for a cloud plugin
+  that metadata is part of the signed package. What this guarantees: the
+  plugin folder is put first on `sys.path` (`add_sys_path_entry()` inserts it
+  at index 0 unless it is there already), so a regular package or a module of
+  that name in the wheel is the one imported, unless a module of that name is
+  already imported (`sys.modules`). What it does not: a namespace package
+  folder (no `__init__.py`) is only a portion, and Python lets a regular
+  package or a module of the same name anywhere later on `sys.path` (the
+  standard library, shared site packages) win over it. That residual risk is a plugin loading
+  another installed module in its place, never a path outside the plugin
+  folder being written or read through the name. The second hook is not in
   `PythonInterpreter::load_module_from_whl()`, where the name becomes a path:
   upstream main removes that function (wheels installed with uv, with its own
   `is_valid_entry_package()`), so a hook there would conflict. The name must
@@ -240,7 +269,8 @@ own key, or none at all.
   escape.
 - **Fork-only reasons**, outside the server vectors: `downgrade`,
   `no_pinned_key`, `unrecognised_server` (see above), `no_row` (the row did
-  not reach the check) and
+  not reach the check), `app_gone` (the app closed before the download could
+  be checked, see "Without the app") and
   `unknown_slot` (the build cannot name its os/arch in the protocol's
   vocabulary, so it cannot verify).
 
