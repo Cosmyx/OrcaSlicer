@@ -82,8 +82,8 @@ bool same_package_metadata(const PluginDescriptor& installed, std::string& reaso
     const boost::filesystem::path file(installed.entry_path);
     PluginDescriptor              read;
     std::string                   error;
-    const bool                    ok = file.extension() == ".whl" ? read_wheel_plugin_metadata(file, read, error) :
-                                                                    read_python_plugin_metadata(file, read, error);
+    const bool ok = is_wheel_path(installed.entry_path) ? read_wheel_plugin_metadata(file, read, error) :
+                                                          read_python_plugin_metadata(file, read, error);
     if (!ok) {
         reason = "the installed package cannot be read: " + error;
         return false;

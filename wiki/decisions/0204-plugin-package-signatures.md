@@ -76,7 +76,10 @@ own key, or none at all.
   so an address is read only when it is plainly `scheme://host[:port][/path]`
   (`parse_server_address()` in `logic/CloudServer.*`): an explicit http or
   https scheme, an ASCII host of letters, digits, `-`, `_` and dots or an
-  `[IPv6]` literal, an optional port 1-65535, a path with no `.` or `..`
+  `[IPv6]` literal that `inet_pton()` would read (checked by hand, so the
+  logic needs no OS socket header; `[1.2.3.4]`, `[::1::2]` or `[abc]` are
+  refused, and the literal is kept in its RFC 5952 spelling, so `[::1]` and
+  `[0:0:0:0:0:0:0:1]` are one address), an optional port 1-65535, a path with no `.` or `..`
   segment, and no `%`, `@`, `?`, `#`, backslash, whitespace, control or
   non-ASCII character anywhere. Its one spelling (`normalize_server_url()`)
   has the scheme and host in lower case and drops the host's trailing dot,
@@ -93,10 +96,28 @@ own key, or none at all.
   opt-in never applies to a package fetched from the Cosmyx host, and a
   package from it never travels over plain http. Another host, even under
   the same domain, is a custom server.
-- **Preferences agree.** `check_cloud_url()` also requires
-  `parse_server_address()` to accept the address (`Invalid` otherwise), so
-  Preferences never takes an address whose plugins would all be refused; a
-  query or fragment, accepted before, is now refused. An `orca_api_url`
+- **Preferences agree.** Both the plugin check (`server_trust()`) and
+  `check_cloud_url()` read an address through one function,
+  `server_kind()` in `logic/CloudServer.*`: Cosmyx, custom or unrecognised.
+  Preferences refuses (`Invalid`) every address that function calls
+  unrecognised, so it never takes an address whose plugins would all be
+  refused: neither a spelling `parse_server_address()` refuses (a query or
+  fragment, accepted before, is now refused) nor another port or plain http
+  on the Cosmyx host. An empty `orca_api_url` is the Cosmyx server, since
+  `apply_cloud_server()` fills an empty key with `CLOUD_SERVER_URL` before
+  the agent reads it; a blank (whitespace-only) one is kept by
+  `apply_cloud_server()` and used as it is by the agent, so it is
+  unrecognised.
+- **Loopback is spelled so that libcurl never resolves it.** Plain http is
+  allowed on a loopback host only (decision 0203). libcurl reads an IPv4
+  part with a leading zero as octal, and hands a host it cannot read as an
+  address (`127.0.0.08`) to the resolver, which may send it to DNS; plain
+  http to it would then leave the machine. So only `localhost`, names under
+  `.localhost`, `127.0.0.0/8` in plain dotted decimal with no leading zero
+  and `::1` in any IPv6 spelling are loopback. `localhost.` (a name the
+  resolver may send to DNS) and IPv4-mapped addresses such as
+  `[::ffff:127.0.0.1]` (whether they reach 127.0.0.1 depends on the OS
+  socket options) are refused with http, as is any other spelling. An `orca_api_url`
   written by hand in the app config can still be anything, and is then
   refused for plugins by the rule above.
   The settings do not fetch `/pkg/v1/keys`: the user pastes the key from it,

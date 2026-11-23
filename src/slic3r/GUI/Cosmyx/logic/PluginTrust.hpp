@@ -147,6 +147,9 @@ void refuse_installed_package(const boost::filesystem::path& plugin_dir,
 // wheel checks they join.
 bool check_wheel_import_name(const boost::filesystem::path& wheel, const std::string& name, std::string& error);
 
+// The entry is a wheel: its extension is .whl in any case.
+bool is_wheel_path(const std::string& path);
+
 // The same check right before a plugin is imported, since the catalog may set
 // the entry package of a cloud plugin: applied when entry_path is a wheel
 // (any case of .whl), true for any other entry.

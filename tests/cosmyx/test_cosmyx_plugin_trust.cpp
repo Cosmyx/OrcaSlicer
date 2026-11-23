@@ -598,3 +598,26 @@ TEST_CASE("The plugin check uses the API address the agent was created with", "[
     CC::apply_cloud_server(config);
     CHECK(CC::active_api_url(config) == CC::CLOUD_SERVER_URL);
 }
+
+// apply_cloud_server() fills an empty orca_api_url with the Cosmyx address,
+// but keeps a blank one, which the agent then uses as it is.
+TEST_CASE("A blank API address is unrecognised, an empty one is the Cosmyx server", "[cosmyx]")
+{
+    AppConfig config;
+    CHECK(CC::server_trust(config, "").cosmyx_server);
+    for (const std::string url : {" ", "\t", " \n "}) {
+        INFO(url);
+        const CC::ServerTrust trust = CC::server_trust(config, url);
+        CHECK(trust.unrecognised);
+        CHECK_FALSE(trust.cosmyx_server);
+        CHECK(trust.keys.empty());
+    }
+}
+
+TEST_CASE("A wheel entry is told by its extension in any case", "[cosmyx]")
+{
+    for (const std::string path : {"a/plugin.whl", "a/PLUGIN.WHL", "plugin.Whl"})
+        CHECK(CC::is_wheel_path(path));
+    for (const std::string path : {"a/plugin.py", "a/plugin.whl.py", "a/whl", "a/plugin.whlx", ""})
+        CHECK_FALSE(CC::is_wheel_path(path));
+}
