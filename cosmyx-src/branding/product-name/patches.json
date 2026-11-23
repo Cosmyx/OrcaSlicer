@@ -30,6 +30,48 @@
       "reason": "macOS menu bar name (CFBundleName); the .app folder and bundle id stay"
     },
     {
+      "file": "src/CMakeLists.txt",
+      "old": "        OUTPUT_NAME \"orca-slicer\"\n        WIN32_EXECUTABLE",
+      "new": "        OUTPUT_NAME \"CosmoSlice\"\n        WIN32_EXECUTABLE",
+      "count": 1,
+      "reason": "Windows executable CosmoSlice.exe (decision 0210); OrcaSlicer.dll and the Linux binary orca-slicer stay"
+    },
+    {
+      "file": "src/dev-utils/platform/msw/OrcaSlicer.rc.in",
+      "old": "VALUE \"OriginalFilename\", \"orca-slicer.exe\"",
+      "new": "VALUE \"OriginalFilename\", \"CosmoSlice.exe\"",
+      "count": 1,
+      "reason": "file name recorded in the Windows executable's version resource (decision 0210)"
+    },
+    {
+      "file": "src/slic3r/Utils/Process.cpp",
+      "old": "path += (instance_type == NewSlicerInstanceType::Slicer) ? \"orca-slicer.exe\" : \"bambu-gcodeviewer.exe\";",
+      "new": "path += (instance_type == NewSlicerInstanceType::Slicer) ? wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetFullName() : \"bambu-gcodeviewer.exe\";",
+      "count": 1,
+      "reason": "a new instance starts the running executable by its own file name, so it follows the Windows executable name (decision 0210)"
+    },
+    {
+      "file": "src/slic3r/Utils/BBLNetworkPlugin.cpp",
+      "old": "    std::size_t found = file_name_string.find(\"orca-slicer.exe\");\n    if (found == (file_name_string.size() - 16)) {\n        lib_path = library_name + \".dll\";\n        lib_path = file_name_string.replace(found, 16, lib_path);",
+      "new": "    std::size_t found = file_name_string.find(\"CosmoSlice.exe\");\n    if (found == (file_name_string.size() - 15)) {\n        lib_path = library_name + \".dll\";\n        lib_path = file_name_string.replace(found, 15, lib_path);",
+      "count": 1,
+      "reason": "network library next to the Windows executable: its name and length (one more than the name, as upstream) follow CosmoSlice.exe (decision 0210)"
+    },
+    {
+      "file": "src/dev-utils/platform/unix/build_appimage.sh.in",
+      "old": "\nName=@SLIC3R_APP_KEY@\n",
+      "new": "\nName=CosmoSlice\n",
+      "count": 1,
+      "reason": "AppImage launcher name; appimagetool names its output after it, so it always goes with the mv row below (decision 0210)"
+    },
+    {
+      "file": "src/dev-utils/platform/unix/build_appimage.sh.in",
+      "old": "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}",
+      "new": "mv CosmoSlice-$(uname -m).AppImage ${APP_IMAGE}",
+      "count": 1,
+      "reason": "the file appimagetool writes after the Name= row above; APP_IMAGE stays, the CI hook renames the package (decision 0210)"
+    },
+    {
       "file": "CMakeLists.txt",
       "old": "set (CPACK_PACKAGE_DESCRIPTION_SUMMARY \"Orca Slicer is an open source slicer for FDM printers\")",
       "new": "set (CPACK_PACKAGE_DESCRIPTION_SUMMARY \"CosmoSlice is an open source slicer for FDM printers\")",
@@ -45,10 +87,31 @@
     },
     {
       "file": "CMakeLists.txt",
-      "old": "set(CPACK_PACKAGE_EXECUTABLES \"orca-slicer;OrcaSlicer\")",
-      "new": "set(CPACK_PACKAGE_EXECUTABLES \"orca-slicer;CosmoSlice\")",
+      "old": "set (CPACK_PACKAGE_FILE_NAME \"OrcaSlicer_Windows_Installer_V${SoftFever_VERSION}\")",
+      "new": "set (CPACK_PACKAGE_FILE_NAME \"CosmoSlice_Windows_Installer_V${SoftFever_VERSION}\")",
       "count": 1,
-      "reason": "label of the Start menu and desktop shortcuts; the executable orca-slicer.exe stays"
+      "reason": "Windows installer file name (decision 0210); CPACK_PACKAGE_NAME stays"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set (CPACK_NSIS_INSTALLED_ICON_NAME \"orca-slicer.exe\")",
+      "new": "set (CPACK_NSIS_INSTALLED_ICON_NAME \"CosmoSlice.exe\")",
+      "count": 1,
+      "reason": "Apps & features icon: the renamed Windows executable (decision 0210)"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set(CPACK_PACKAGE_EXECUTABLES \"orca-slicer;OrcaSlicer\")",
+      "new": "set(CPACK_PACKAGE_EXECUTABLES \"CosmoSlice;CosmoSlice\")",
+      "count": 1,
+      "reason": "Start menu and desktop shortcuts: the Windows executable CosmoSlice.exe and its label (decision 0210)"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set(CPACK_CREATE_DESKTOP_LINKS \"orca-slicer\")",
+      "new": "set(CPACK_CREATE_DESKTOP_LINKS \"CosmoSlice\")",
+      "count": 1,
+      "reason": "desktop shortcut of the renamed Windows executable (decision 0210)"
     },
     {
       "file": "src/slic3r/GUI/GUI_App.cpp",
@@ -126,6 +189,27 @@
       "new": "        DisplayName=\"CosmoSlice\"\n",
       "count": 1,
       "reason": "Start menu name of the MSIX application; Application Id stays"
+    },
+    {
+      "file": "scripts/msix/AppxManifest.xml",
+      "old": "Executable=\"orca-slicer.exe\"",
+      "new": "Executable=\"CosmoSlice.exe\"",
+      "count": 1,
+      "reason": "MSIX application executable: the renamed Windows executable (decision 0210)"
+    },
+    {
+      "file": "scripts/msix/AppxManifest.xml",
+      "old": "<desktop:ExecutionAlias Alias=\"orca-slicer.exe\" />",
+      "new": "<desktop:ExecutionAlias Alias=\"cosmoslice.exe\" />",
+      "count": 1,
+      "reason": "command line alias of the MSIX package (decision 0210)"
+    },
+    {
+      "file": "scripts/msix/build_msix.ps1",
+      "old": "if (-not (Test-Path (Join-Path $InstallDir 'orca-slicer.exe'))) {\n    throw \"orca-slicer.exe not found in '$InstallDir' - build the install tree first\"",
+      "new": "if (-not (Test-Path (Join-Path $InstallDir 'CosmoSlice.exe'))) {\n    throw \"CosmoSlice.exe not found in '$InstallDir' - build the install tree first\"",
+      "count": 1,
+      "reason": "the MSIX build checks for the renamed Windows executable (decision 0210)"
     },
     {
       "file": "src/dev-utils/platform/unix/com.orcaslicer.OrcaSlicer.desktop",

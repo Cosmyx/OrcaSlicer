@@ -65,21 +65,27 @@ class UppercaseNameTest(unittest.TestCase):
 
 
 class KeptAppKeyNamesTest(unittest.TestCase):
-    """Decision 0132: the data folder, the config file and the .app / .exe /
-    AppImage names keep SLIC3R_APP_KEY (OrcaSlicer). A visible text naming
-    them must keep pointing at the real file, but only `.exe` and a name
-    followed by a slash are protected today."""
+    """Decision 0133: the data folder and the config file keep SLIC3R_APP_KEY
+    (OrcaSlicer), so a visible text naming them keeps pointing at the real
+    file. Decision 0210: the .app and the AppImage are named CosmoSlice, so a
+    text naming them follows the new name."""
 
     def test_names_derived_from_the_app_key_stay(self) -> None:
         for text in (
             "Edit OrcaSlicer.conf by hand",
-            "Move OrcaSlicer.app to Applications",
-            "Run OrcaSlicer.AppImage",
             "Data is in %APPDATA%\\OrcaSlicer",
             "Data is in C:\\Users\\me\\AppData\\Roaming\\OrcaSlicer",
         ):
             with self.subTest(text=text):
                 self.assertEqual(tokens.replace_tokens(text), text)
+
+    def test_package_names_follow_the_new_name(self) -> None:
+        for text, expected in (
+            ("Move OrcaSlicer.app to Applications", "Move CosmoSlice.app to Applications"),
+            ("Run OrcaSlicer.AppImage", "Run CosmoSlice.AppImage"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text), expected)
 
 
 class CombiningMarkTest(unittest.TestCase):

@@ -18,7 +18,8 @@
   line naming SLIC3R_APP_KEY in the patched files is lost (post), except a
   line a patch row names the key in on purpose; the key's definition never.
   Every packaging pin (PACKAGING_PINS) is still there after apply (post); a
-  pinned file that lost its pinned text upstream is drift (pre). Inactive until
+  pinned file that lost its pinned text upstream is drift (pre). The AppImage
+  desktop name and the file its script moves agree (pre and post). Inactive until
   product-name/patches.json exists.
 - Status policy: `missing` and `to-validate` rows warn on development builds
   (pull requests, DEV, MIXED, local) and fail release builds (release/*
@@ -364,26 +365,55 @@ def app_key_removals(before: dict, after: dict, patches: list) -> list[Finding]:
     return findings
 
 
-# Packaging identifiers the product-name rename must never change (decision
-# 0134): the build scripts, the CI upload steps and the artifact checks find the
-# packages by these names. Each pin is (file, exact text, why it is pinned).
+# Packaging identifiers the product-name rename must never change (decisions
+# 0134 and 0210): the build scripts and the CI steps find the packages by these
+# names. The CosmoSlice package names are given by the patch rows (executable,
+# installer, AppImage launcher) and by the cosmyx-package-names CI stage, never
+# by an accidental rename of these. Each pin is (file, exact text, why it is pinned).
 PACKAGING_PINS = (
-    ("src/dev-utils/platform/unix/build_appimage.sh.in", "\nName=@SLIC3R_APP_KEY@\n",
-     "appimagetool names the AppImage file after the desktop entry Name, and the script then moves "
-     "@SLIC3R_APP_KEY@-<arch>.AppImage"),
-    ("src/dev-utils/platform/unix/build_appimage.sh.in", "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}",
-     "the file name appimagetool writes"),
     ("src/dev-utils/platform/unix/build_appimage.sh.in", 'APP_IMAGE="@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"',
-     "the AppImage name build_linux.sh and build_orca.yml move and upload"),
+     "the AppImage name build_linux.sh and build_orca.yml move before the Cosmyx stage renames it"),
     ("src/dev-utils/platform/unix/build_linux_image.sh.in",
      'mv package_appimage/"@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage" "@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"',
-     "the AppImage name build_orca.yml moves and uploads"),
+     "the AppImage name build_orca.yml moves before the Cosmyx stage renames it"),
+    ("src/CMakeLists.txt", 'set_target_properties(OrcaSlicer PROPERTIES OUTPUT_NAME "orca-slicer")',
+     "the Linux binary inside the AppImage and the Flatpak, which their launchers run"),
     ("CMakeLists.txt", 'set (CPACK_PACKAGE_NAME "OrcaSlicer")', "the CPack package name"),
-    ("CMakeLists.txt", 'set (CPACK_PACKAGE_FILE_NAME "OrcaSlicer_Windows_Installer_V${SoftFever_VERSION}")',
-     "the Windows installer name build_orca.yml signs and uploads"),
     ("scripts/flatpak/com.orcaslicer.OrcaSlicer.yml", "app-id: com.orcaslicer.OrcaSlicer\n",
      "the Flatpak id, bundle name and desktop file id"),
 )
+
+# appimagetool names its output after the Name= of the AppImage desktop entry,
+# and build_appimage.sh.in then moves "<that name>-<arch>.AppImage": the two
+# must always name the same thing, or the Linux packaging fails (decision 0210).
+APPIMAGE_SCRIPT = "src/dev-utils/platform/unix/build_appimage.sh.in"
+APPIMAGE_NAME = re.compile(r"^Name=(.+)$", re.MULTILINE)
+APPIMAGE_MOVE = re.compile(r"^mv (\S+)-\$\(uname -m\)\.AppImage ", re.MULTILINE)
+
+
+def appimage_pair(root: Path) -> tuple | None:
+    """(desktop entry name, moved file prefix) of the AppImage script, or None
+    when the script is absent or no longer has those two lines."""
+    path = repo_path(root, APPIMAGE_SCRIPT)
+    if not path.is_file():
+        return None
+    text = path.read_bytes().decode("utf-8", "replace").replace("\r\n", "\n")
+    name, move = APPIMAGE_NAME.search(text), APPIMAGE_MOVE.search(text)
+    return (name.group(1).strip(), move.group(1)) if name and move else None
+
+
+def appimage_pair_findings(ctx, phase: str) -> list[Finding]:
+    if not repo_path(ctx.root, APPIMAGE_SCRIPT).is_file():
+        return []
+    pair = appimage_pair(ctx.root)
+    if pair is None:
+        level = drift_level(ctx) if phase == "pre" else "error"
+        return [Finding("G8", level, APPIMAGE_SCRIPT, "the AppImage Name= or its mv line is gone, review APPIMAGE_NAME/APPIMAGE_MOVE")]
+    if pair[0] != pair[1]:
+        return [Finding("G8", "error", APPIMAGE_SCRIPT,
+                        f"the AppImage desktop name {pair[0]!r} and the file it moves {pair[1]!r}-<arch>.AppImage differ: "
+                        "the Name= and mv rows go together")]
+    return []
 
 
 def packaging_pins_present(root: Path) -> list:
@@ -433,6 +463,7 @@ def g8_product_name(ctx, phase: str) -> list[Finding]:
         if before is not None:
             findings += app_key_removals(before, app_key_lines(ctx.root, files), patches)
     findings += packaging_pin_findings(ctx, phase)
+    findings += appimage_pair_findings(ctx, phase)
     for plugin in ctx.plugins.get("product_name", []):
         findings += list(plugin.guards(ctx, phase))
     return findings

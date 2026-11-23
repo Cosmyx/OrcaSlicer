@@ -295,7 +295,7 @@ class G8ProductNameTest(TreeCase):
     APPIMAGE_ROW = {"file": APPIMAGE, "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1,
                     "reason": "AppImage desktop entry name"}
 
-    def test_renaming_the_appimage_desktop_name_is_an_error(self) -> None:
+    def test_renaming_the_appimage_desktop_name_alone_is_an_error(self) -> None:
         # Integration build 44545583808: appimagetool named the AppImage after
         # the renamed desktop entry, and the script's mv of
         # @SLIC3R_APP_KEY@-<arch>.AppImage found nothing.
@@ -306,6 +306,37 @@ class G8ProductNameTest(TreeCase):
         write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@", "Name=@SLIC3R_APP_NAME@"))
         [finding] = guards.g8_product_name(ctx, "post")
         self.assertEqual((finding.level, finding.path), ("error", self.APPIMAGE))
+        self.assertIn("go together", finding.message)
+
+    def test_appimage_name_and_move_renamed_together_pass(self) -> None:
+        # Decision 0210: the launcher says CosmoSlice and the mv follows it.
+        rows = [
+            dict(self.APPIMAGE_ROW, new="Name=CosmoSlice\n"),
+            {"file": self.APPIMAGE, "old": "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage", "new": "mv CosmoSlice-$(uname -m).AppImage",
+             "count": 1, "reason": "file appimagetool writes"},
+        ]
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables(rows)
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@", "Name=CosmoSlice")
+              .replace("mv @SLIC3R_APP_KEY@-", "mv CosmoSlice-"))
+        self.assertEqual(guards.g8_product_name(ctx, "post"), [])
+
+    def test_appimage_script_without_its_name_line_is_drift(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@\n", ""))
+        self.tables([self.PATCH])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(), "pre")), ["warning"])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(RELEASE), "pre")), ["error"])
+
+    def test_renaming_a_pinned_packaging_name_is_an_error(self) -> None:
+        row = {"file": self.APPIMAGE, "old": 'APP_IMAGE="@SLIC3R_APP_KEY@_', "new": 'APP_IMAGE="CosmoSlice_', "count": 1, "reason": "bad"}
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables([row])
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace('APP_IMAGE="@SLIC3R_APP_KEY@_', 'APP_IMAGE="CosmoSlice_'))
+        [finding] = guards.g8_product_name(ctx, "post")
         self.assertIn("packaging identifier", finding.message)
 
     def test_untouched_packaging_pins_pass(self) -> None:
@@ -316,7 +347,7 @@ class G8ProductNameTest(TreeCase):
         self.assertEqual(guards.g8_product_name(ctx, "post"), [])
 
     def test_a_pinned_file_without_its_pin_is_drift(self) -> None:
-        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("mv @SLIC3R_APP_KEY@-", "mv X-"))
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace('APP_IMAGE="@SLIC3R_APP_KEY@_', 'APP_IMAGE="X_'))
         self.tables([self.PATCH])
         self.assertEqual(levels(guards.g8_product_name(self.ctx(), "pre")), ["warning"])
         self.assertEqual(levels(guards.g8_product_name(self.ctx(RELEASE), "pre")), ["error"])
