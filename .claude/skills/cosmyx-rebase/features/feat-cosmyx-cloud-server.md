@@ -124,6 +124,7 @@ branch changing the same `AppConfig.cpp` include block (dark-default).
   `test_foundation.py` and decision 0003 in the same change.
 - Stacked history: the foundation (PR #86) and the stealth-mode commits sit under this range's parent.
 - v2.5.1 pass: `88d9f1d0b5` conflicted on the `Preferences.cpp` include block because DEV has `#include "slic3r/plugin/host/PluginPages.hpp"` on line 2 and the tag does not. Keep only the Cosmyx include on line 2; `g_sizer->Add(item_network_test);` and the "Cloud Providers" title still adjoin (lines 2229-2233 on the tag).
+- v2.5.2 pass: the same `Preferences.cpp` include conflict, replayed by `rerere`.
 
 ## Shared files with other branches
 

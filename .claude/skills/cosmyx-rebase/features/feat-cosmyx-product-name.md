@@ -132,6 +132,7 @@ Re-run `just brand-name-candidates` to propose the rows; it writes nothing.
 - Decision 0182 (installer identity, `cmake/cosmyx/Packaging.cmake`) owns the Windows install folder, registry key, publisher
   and installer window title; this branch only appends `CPACK_NSIS_DISPLAY_NAME`.
 - v2.5.1 pass: adapted with `bbded5e02d`. The real stale set on the tag was 6 msgid rows (AMF load, original names, two plugin-identification rows, presets referring to plugins, body names) plus 1 literal row: the `PythonPluginBridge.cpp` permission docstring, whose DEV text grew the `fs_create`/`fs_delete` paragraphs (DEV `3838002bc8`); it was rewritten to the tag's text. "Objects (%1%) have duplicated connectors" is NOT stale on the tag. The allowlist msgid row absent from the template is not reported by G8. `just brand-name-candidates` proposed nothing after the fix (115 rename rows).
+- v2.5.2 pass: although v2.5.2 refreshed every upstream catalogue, `brand-check` gave the same 13 G8 errors (the same 6 msgid rows and the docstring literal row); the v2.5.1 row change applied as is, committed as `e1e7a173f0`; `just brand-name-candidates` proposes nothing.
 
 ## Shared files with other branches
 

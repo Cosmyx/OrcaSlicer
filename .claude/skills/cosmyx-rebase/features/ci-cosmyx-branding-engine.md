@@ -86,6 +86,7 @@ From the repository root, after the rebase:
 - The PR body says "560 rows, all missing"; once logos land the count is 561 (one extra row for the Custom bed texture).
 - Do not run `just brand-sync`, `brand-refresh` or `brand-validate` on a branded tree: they refuse; revert first.
 - v2.5.1 pass: adapted with `f94c18ee95` (`just brand-sync` dropped the 3 painted-modifier rows, `just brand-table`). Children (logos, colours, product-name) must then be rebased again onto the new engine tip (`git rebase rebase/<tag>/ci/cosmyx-branding-engine` in each worktree), and svg-candidates onto the new colours tip.
+- v2.5.2 pass: the same three painted-modifier rows are stale (DEV-only icons); `just brand-sync` and `just brand-table` gave a diff identical to `f94c18ee95`, committed as `718f663275`. Logos, colours and product-name were rebased after it.
 
 ## Shared files with other branches
 

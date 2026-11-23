@@ -73,6 +73,7 @@ Manual after rebase: on Linux `XDG_CONFIG_HOME=/tmp/x orca-slicer` creates `/tmp
 - The Cosmyx build made on the upstream values (key `OrcaSlicer`, publisher `SoftFever`) cannot be told from upstream and is deliberately not removed.
 - The file association ProgID, D-Bus names, bundle id and Flatpak app id are still shared with upstream.
 - v2.5.1 pass: rebased clean (3-way merge absorbed the Flatpak guard difference). In the integration merge it conflicts with logs (T12) on `SLOTS_BY_AREA` and decision 0003; resolved by union at merge time.
+- v2.5.2 pass: clean. v2.5.2 rewrote the first line of `migrate_flatpak_legacy_datadir` to `if (!is_running_in_flatpak())` (new helper in `utils.cpp`, which also gains Wayland helpers and new `[utils]` tests); the skip hook stays the next statement and the new upstream tests do not read the data folder. Integration union conflicts replayed by `rerere`.
 
 ## Shared files with other branches
 
