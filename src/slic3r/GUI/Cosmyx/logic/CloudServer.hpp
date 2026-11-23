@@ -114,7 +114,8 @@ struct ServerAddress
 // Reads an address that is plainly scheme://host[:port][/path], surrounding
 // spaces trimmed: an explicit http or https scheme (any case), an ASCII host
 // name of letters, digits, '-', '_' and dots (one trailing dot allowed) or an
-// [IPv6] literal, an optional port 1-65535 (empty or with leading zeros is
+// [IPv6] literal that inet_pton() would read (written back in its RFC 5952
+// form), an optional port 1-65535 (empty or with leading zeros is
 // read as written by libcurl), and a path with no "." or ".." segment. Any
 // other address is unrecognised and gives false: no scheme, user info ('@'),
 // percent-encoding ('%'), a query or fragment ('?', '#'), a backslash,
@@ -123,11 +124,28 @@ struct ServerAddress
 // hold, so the client never tries to say which server they reach.
 bool parse_server_address(const std::string& url, ServerAddress& address);
 
+// How the plugin check reads a server address (decision 0204). The one rule
+// that both the plugin check (server_trust()) and Preferences
+// (check_cloud_url()) apply, so Preferences never takes an address whose
+// plugins would all be refused:
+// - empty: Cosmyx, since apply_cloud_server() fills an empty key with
+//   CLOUD_SERVER_URL; a blank (whitespace-only) value is kept and used as it
+//   is by the agent, so it is unrecognised;
+// - an address parse_server_address() refuses: unrecognised;
+// - the host of CLOUD_SERVER_URL: Cosmyx with https on the default port,
+//   unrecognised with any other scheme or port;
+// - any other host: custom. address, when given, gets the parsed address.
+enum class ServerKind { Cosmyx, Custom, Unrecognised };
+ServerKind server_kind(const std::string& url, ServerAddress* address = nullptr);
+
 // Checks a trimmed address: https scheme (any case), or http on a loopback
-// host (localhost, *.localhost, 127.0.0.0/8, [::1]) for a local test server;
-// a host name, an optional port 1-65535, no spaces and no user info, and an
-// address parse_server_address() recognises (Invalid otherwise), so the plugin
-// check never meets an address that Preferences took.
+// host for a local test server: localhost, *.localhost, 127.0.0.0/8 written
+// in plain dotted decimal (no leading zeros, which libcurl reads as octal or
+// as a name to resolve) or ::1 in any IPv6 spelling; "localhost." and
+// IPv4-mapped addresses are not loopback. Also a host name, an optional port
+// 1-65535, no spaces and no user info, and an address server_kind() does not
+// call unrecognised (Invalid otherwise), so the plugin check never refuses
+// an address that Preferences took.
 CloudValueError check_cloud_url(const std::string& url);
 
 // Checks a trimmed public key: not empty, no spaces.

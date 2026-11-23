@@ -79,8 +79,11 @@ here; see the upstream release notes.
   in Preferences, or the user's explicit choice to allow unverified plugins
   from it. A cloud address that is not a plain `https://host[:port][/path]`
   (no scheme, user info, percent-encoding, dot segments, query or fragment),
-  or plain http or another port on the Cosmyx host, is refused outright for
-  plugins, and Preferences no longer accepts such addresses. A downloaded
+  or plain http or another port on the Cosmyx host, or a blank address, is
+  refused outright for plugins, and Preferences no longer accepts such
+  addresses, nor a bracketed host that is not an IPv6 address. Plain http
+  on loopback now needs `127.x.x.x` written without leading zeros, or
+  `localhost`, or `[::1]`. A downloaded
   package swapped before or during its install is removed, the install
   refused and the plugin left not installed, with its version floor kept. A
   wheel whose entry

@@ -124,27 +124,18 @@ std::string public_key_id(const std::string& typed, std::string* normalized)
 
 ServerTrust server_trust(const AppConfig& config, const std::string& server_url)
 {
-    ServerTrust trust;
-    // Without an address the agent talks to CosmoCloud (decision 0201).
-    const bool    no_address = trim_value(server_url).empty();
-    ServerAddress address, cosmyx;
-    parse_server_address(CLOUD_SERVER_URL, cosmyx);
-    if (!no_address && !parse_server_address(server_url, address)) {
+    ServerTrust   trust;
+    ServerAddress address;
+    switch (server_kind(server_url, &address)) {
+    case ServerKind::Unrecognised:
+        // No pin of the user ever applies, and the build's keys neither.
         trust.unrecognised = true;
         return trust;
-    }
-    // The Cosmyx host is decided by the parsed host, never by the spelling. On
-    // that host only https on the default port is the Cosmyx server; plain
-    // http or another port is refused, so no pin of the user ever applies to
-    // a package from that host.
-    if (no_address || address.host == cosmyx.host) {
-        if (!no_address && (address.scheme != cosmyx.scheme || address.port != cosmyx.port)) {
-            trust.unrecognised = true;
-            return trust;
-        }
+    case ServerKind::Cosmyx:
         trust.cosmyx_server = true;
         trust.keys          = built_in_keys();
         return trust;
+    case ServerKind::Custom: break;
     }
     const ServerPins pins = server_pins(config, address.url());
     std::string      error;
@@ -327,12 +318,17 @@ bool check_wheel_import_name(const fs::path& wheel, const std::string& name, std
     return true;
 }
 
-bool check_entry_package(const std::string& entry_path, const std::string& entry_package, std::string& error)
+bool is_wheel_path(const std::string& path)
 {
-    std::string extension = fs::path(entry_path).extension().string();
+    std::string extension = fs::path(path).extension().string();
     std::transform(extension.begin(), extension.end(), extension.begin(),
                    [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
-    return extension != ".whl" || check_wheel_import_name(fs::path(entry_path), entry_package, error);
+    return extension == ".whl";
+}
+
+bool check_entry_package(const std::string& entry_path, const std::string& entry_package, std::string& error)
+{
+    return !is_wheel_path(entry_path) || check_wheel_import_name(fs::path(entry_path), entry_package, error);
 }
 
 } // namespace Cosmyx
