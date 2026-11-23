@@ -89,6 +89,7 @@ From the repository root, after the rebase:
 - The engine's `copy_real_tree` test helper copies the colour scopes and rows whenever `colours.json` exists; do not replace it with a per-stage copy (it caused conflicts with the product-name branch).
 - Icons drawn by OpenGL/ImGui stay teal until their SVG is replaced; this is expected (decision 0130), not a bug of the colour stage.
 - v2.5.1 pass: adapted with `2b46a70b77`; `just brand-colour-literals` removed exactly the `GLGizmoPaintedModifier.cpp` row (114 rows), mappings and statuses unchanged, `brand-check` 0 errors.
+- v2.5.2 pass: same G5 error on `GLGizmoPaintedModifier.cpp`; `just brand-colour-literals` removed the same row (114 rows), committed as `33fbc1c012`.
 
 ## Shared files with other branches
 

@@ -87,6 +87,7 @@ Manual or CI: run `build_all` on the branch (`just build-all <branch>`), then `j
 - Windows runner must be 1920x1080 at 96 DPI (the workflow throws otherwise); macOS needs Screen Recording permission.
 - The workflow's changed-files check calls `compare/DEV...<sha>`; if DEV is renamed, adapt.
 - v2.5.1 pass: adapted with `124e62829c`. The tag's `PreferencesTab` enum has 4 values (General, Control, Graphics, Online); DEV has 6. The driver casts the index of a tab name to `PreferencesTab`, so `preferences_tabs()` in `GoldenScript.cpp` must match the upstream enum exactly; the script test now compares the enum with that list. Restore the six names on a base that has them.
+- v2.5.2 pass: v2.5.2 keeps the four-tab `PreferencesTab` enum; the same adaptation, committed as `da81bbfea6`.
 
 ## Shared files with other branches
 
