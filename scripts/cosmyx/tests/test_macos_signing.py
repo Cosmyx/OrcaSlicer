@@ -32,16 +32,20 @@ def thin_macho(filetype: int = 2) -> bytes:
     return struct.pack("<IiII", 0xFEEDFACF, 0x0100000C, 0, filetype) + bytes(32)
 
 
-def make_app(root: Path, name: str = "OrcaSlicer") -> Path:
+def make_app(root: Path, name: str = "OrcaSlicer", executable: str | None = None) -> Path:
     """A fake universal-build app: main executable, a dylib, a nested framework,
-    the relocated Python runtime with its link, an object file and a non-Mach-O."""
+    the relocated Python runtime with its link, an object file and a non-Mach-O.
+    The executable is named after the app unless given (CosmoSlice.app keeps
+    the OrcaSlicer executable)."""
+    executable = executable or name
     app = root / "build" / "universal" / "OrcaSlicer" / f"{name}.app"
     contents = app / "Contents"
     (contents / "MacOS").mkdir(parents=True)
     (contents / "Info.plist").write_bytes(b'<?xml version="1.0"?><plist version="1.0"><dict>'
                                           b'<key>CFBundleName</key><string>' + name.encode() + b'</string>'
+                                          b'<key>CFBundleExecutable</key><string>' + executable.encode() + b'</string>'
                                           b'</dict></plist>')
-    (contents / "MacOS" / name).write_bytes(thin_macho())
+    (contents / "MacOS" / executable).write_bytes(thin_macho())
     (contents / "Frameworks").mkdir()
     (contents / "Frameworks" / "libfoo.dylib").write_bytes(thin_macho(6))
     fw = contents / "Frameworks" / "Bar.framework"
@@ -456,6 +460,38 @@ class CliTests(TempCase):
             self.assertEqual(cli.cmd_run(args, env=self.ENV, run=runner), 1)
         self.assertIn("**Result: failed**", summary.read_text(encoding="utf-8"))
         self.assertFalse(runner.of("bash"))
+
+
+class CosmoSliceAppTests(TempCase):
+    """The renamed app (CosmoSlice.app, executable still OrcaSlicer) is signed,
+    notarised and shipped under its own name: nothing in the signing code is
+    tied to OrcaSlicer.app (package names plan, decision 0154)."""
+
+    def test_discovered_planned_and_named_after_the_app(self) -> None:
+        app = make_app(self.root, "CosmoSlice", executable="OrcaSlicer")
+        self.assertEqual(discover.find_apps(self.root), [app])
+        items, _ = discover.plan(app)
+        rel = [i.path.relative_to(app.parent).as_posix() for i in items]
+        self.assertEqual(rel[-1], "CosmoSlice.app")
+        self.assertIn("CosmoSlice.app/Contents/MacOS/OrcaSlicer", rel)
+        self.assertEqual(dmg.dmg_name(app, "2.4.0-dev_abc"), "CosmoSlice_Mac_universal_2.4.0-dev_abc.dmg")
+        self.assertEqual(dmg.volume_name(app), "CosmoSlice")
+
+    def test_full_run_ships_the_cosmoslice_dmg(self) -> None:
+        make_app(self.root, "CosmoSlice", executable="OrcaSlicer")
+        handlers, _ = notary_handlers([])
+        handlers.update(VerifyFlowTests.handlers(None))
+        runner = FakeRunner(handlers)
+        args = cli.parser().parse_args(["run", "--root", str(self.root), "--version", "9.9",
+                                        "--work", str(self.root / "work")])
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(cli.cmd_run(args, env=CliTests.ENV, run=runner), 0)
+        submitted = [Path(c[3]).name for c in runner.of("xcrun notarytool submit")]
+        self.assertEqual(submitted, ["CosmoSlice.zip", "CosmoSlice_Mac_universal_9.9.dmg"])
+        command = runner.of("bash")[0][2]
+        self.assertIn("create_dmg CosmoSlice ", command)
+        self.assertTrue((self.root / "CosmoSlice_Mac_universal_9.9.dmg").exists())
+        self.assertFalse(list(self.root.glob("OrcaSlicer_*.dmg")))
 
 
 REAL_TOOLS = sys.platform == "darwin" and all(shutil.which(t) for t in ("cc", "codesign"))

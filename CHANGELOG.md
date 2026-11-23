@@ -91,7 +91,8 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T15 -->
 - Sign DEV and `release/*` macOS builds with the Cosmyx Developer ID
   certificate, notarise and staple the apps and the DMGs, and verify them
-  before upload; the DMG names do not change. The artifact checks then
+  before upload; each DMG keeps the name of the app it holds
+  (`CosmoSlice_Mac_universal_<ver>.dmg` for `CosmoSlice.app`). The artifact checks then
   enforce Developer ID, team, notarisation and stapling on those DMGs. Uses
   the repository's existing Apple signing secrets and is off without them;
   the app-specific password never appears on a command line. Pull request:
