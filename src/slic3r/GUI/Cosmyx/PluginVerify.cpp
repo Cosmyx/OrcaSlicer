@@ -54,6 +54,7 @@ std::string refusal_message(const std::string& reason, const ServerTrust& trust,
 // upstream plugin tests) has no wxTheApp, or a plain wxApp (wxInitializer),
 // and during shutdown wxTheApp becomes null while an install worker may still
 // run. Read once per hook, so one hook never sees the app come and go.
+// This worker read races the main thread clearing wxTheApp, as upstream's wxGetApp() use does; null fails closed.
 GUI_App* current_app() { return dynamic_cast<GUI_App*>(wxTheApp); }
 
 void notify_unverified(GUI_App& app, const std::string& name)
