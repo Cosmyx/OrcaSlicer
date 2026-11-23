@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <string>
 
+#include <boost/log/trivial.hpp>
 #include <wx/colour.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -197,9 +198,21 @@ private:
         const CloudValues values = custom_cloud_values(*config);
         for (std::size_t field = 0; field < CLOUD_FIELD_COUNT; ++field)
             m_inputs[field]->GetTextCtrl()->SetValue(from_u8(values[field]));
-        const ServerPins pins = server_pins(*config, values[ApiUrl]);
+        load_pins(*config, values[ApiUrl]);
+    }
+
+    // Shows the pins stored for api_url and remembers that address: Apply only
+    // stores the rows for the server they were loaded for (pins_to_save()).
+    // The Cosmyx server's pins are never used, so its rows are disabled.
+    void load_pins(const AppConfig& config, const std::string& api_url)
+    {
+        m_pins_url             = api_url;
+        const bool       custom = server_kind(api_url) == ServerKind::Custom;
+        const ServerPins pins   = custom ? server_pins(config, api_url) : ServerPins();
         m_plugin_key->GetTextCtrl()->SetValue(from_u8(pins.public_key));
         m_allow_unverified->SetValue(pins.allow_unverified);
+        m_plugin_key->Enable(custom);
+        m_allow_unverified->Enable(custom);
         show_key_id(pins.public_key);
     }
 
@@ -254,22 +267,35 @@ private:
             relayout();
             return;
         }
-        ServerPins pins;
-        const std::string typed_key = trim_value(into_u8(m_plugin_key->GetTextCtrl()->GetValue()));
-        if (!typed_key.empty() && public_key_id(typed_key, &pins.public_key).empty()) {
-            show_key_info(_L("The plugin signing key must be 64 hexadecimal characters."), true);
-            m_plugin_key->GetTextCtrl()->SetFocus();
-            relayout();
-            return;
+        // The rows hold the pins of the address they were loaded for; they are
+        // never stored for another server (decision 0204).
+        const PinsSave save = pins_to_save(m_pins_url, values[ApiUrl]);
+        ServerPins     pins;
+        if (save == PinsSave::Typed) {
+            const std::string typed_key = trim_value(into_u8(m_plugin_key->GetTextCtrl()->GetValue()));
+            if (!typed_key.empty() && public_key_id(typed_key, &pins.public_key).empty()) {
+                show_key_info(_L("The plugin signing key must be 64 hexadecimal characters."), true);
+                m_plugin_key->GetTextCtrl()->SetFocus();
+                relayout();
+                return;
+            }
+            pins.allow_unverified = m_allow_unverified->GetValue();
         }
-        pins.allow_unverified = m_allow_unverified->GetValue();
         // Show the values as they are stored.
         for (std::size_t field = 0; field < CLOUD_FIELD_COUNT; ++field)
             m_inputs[field]->GetTextCtrl()->SetValue(from_u8(values[field]));
-        m_plugin_key->GetTextCtrl()->SetValue(from_u8(pins.public_key));
-        show_key_id(pins.public_key);
         use_custom_cloud(*config, values);
-        set_server_pins(*config, values[ApiUrl], pins);
+        const bool pins_saved = save != PinsSave::Typed || set_server_pins(*config, values[ApiUrl], pins);
+        load_pins(*config, values[ApiUrl]);
+        if (!pins_saved) {
+            BOOST_LOG_TRIVIAL(warning) << "Cosmyx plugin trust settings not saved: the stored " << PLUGIN_TRUST_KEY
+                                       << " value cannot be read";
+            show_key_info(_L("The plugin signing settings were not saved: the stored ones cannot be read."), true);
+        } else if (save == PinsSave::Keep) {
+            show_key_info(_L("The API address changed: these are the plugin signing settings of the new address. "
+                             "Check them and apply again to change them."),
+                          false);
+        }
         config->save();
         relayout();
         show_restart_note();
@@ -295,6 +321,7 @@ private:
     ::TextInput*                                   m_plugin_key       = nullptr;
     wxStaticText*                                  m_plugin_key_info  = nullptr;
     ::CheckBox*                                    m_allow_unverified = nullptr;
+    std::string                                    m_pins_url; // the API address the plugin rows were loaded for
 };
 
 } // namespace

@@ -4,6 +4,8 @@
 #include <cctype>
 #include <cstddef>
 #include <cstdint>
+#include <exception>
+#include <functional>
 #include <ios>
 #include <map>
 #include <mutex>
@@ -33,10 +35,19 @@ using nlohmann::json;
 
 namespace {
 
-json read_trust_doc(const AppConfig& config)
+// The stored pins document, {} when none is stored. False, with doc {}, when
+// the stored value is not a JSON object (hand-edited or truncated).
+bool read_trust_doc(const AppConfig& config, json& doc)
 {
-    json doc = json::parse(config.get(PLUGIN_TRUST_KEY), nullptr, /*allow_exceptions=*/false);
-    return doc.is_object() ? doc : json::object();
+    const std::string text = config.get(PLUGIN_TRUST_KEY);
+    doc                    = json::object();
+    if (trim_value(text).empty())
+        return true;
+    json parsed = json::parse(text, nullptr, /*allow_exceptions=*/false);
+    if (!parsed.is_object())
+        return false;
+    doc = std::move(parsed);
+    return true;
 }
 
 std::mutex& pending_mutex()
@@ -80,7 +91,8 @@ ServerPins server_pins(const AppConfig& config, const std::string& server_url)
     const std::string url = normalize_server_url(server_url);
     if (url.empty())
         return pins;
-    const json doc   = read_trust_doc(config);
+    json doc;
+    read_trust_doc(config, doc); // an unreadable document holds no pins
     const auto entry = doc.find(url);
     if (entry == doc.end() || !entry->is_object())
         return pins;
@@ -101,13 +113,24 @@ bool set_server_pins(AppConfig& config, const std::string& server_url, const Ser
     const std::string url = normalize_server_url(server_url);
     if (url.empty() || (!trim_value(pins.public_key).empty() && public_key_id(pins.public_key, &key).empty()))
         return false;
-    json doc = read_trust_doc(config);
+    json doc;
+    // Saving over an unreadable document would drop every other server's pins.
+    if (!read_trust_doc(config, doc))
+        return false;
     if (key.empty() && !pins.allow_unverified)
         doc.erase(url);
     else
         doc[url] = {{"public_key", key}, {"allow_unverified", pins.allow_unverified}};
     config.set(PLUGIN_TRUST_KEY, doc.dump());
     return true;
+}
+
+PinsSave pins_to_save(const std::string& loaded_url, const std::string& applied_url)
+{
+    if (server_kind(applied_url) != ServerKind::Custom)
+        return PinsSave::None;
+    const std::string applied = normalize_server_url(applied_url);
+    return !applied.empty() && normalize_server_url(loaded_url) == applied ? PinsSave::Typed : PinsSave::Keep;
 }
 
 std::string public_key_id(const std::string& typed, std::string* normalized)
@@ -272,6 +295,25 @@ bool commit_package_record(const std::string&   plugin_id,
         return true;
     if (!found)
         error = "the installed package is not the one whose signature was checked";
+    refuse_installed_package(plugin_dir, package_file, floor);
+    return false;
+}
+
+bool commit_checked_install(const std::string&                       plugin_id,
+                            const fs::path&                          plugin_dir,
+                            const fs::path&                          package_file,
+                            const std::function<bool(std::string&)>& metadata_matches,
+                            std::string&                             error,
+                            const PackageRecord*                     floor)
+{
+    try {
+        if (metadata_matches(error))
+            return commit_package_record(plugin_id, plugin_dir, package_file, error, floor);
+    } catch (const std::exception& e) {
+        error = std::string("the installed package cannot be read: ") + e.what();
+    } catch (...) {
+        error = "the installed package cannot be read";
+    }
     refuse_installed_package(plugin_dir, package_file, floor);
     return false;
 }
