@@ -100,9 +100,34 @@ struct CloudValidation
 // Leading and trailing spaces, tabs and line breaks removed.
 std::string trim_value(const std::string& value);
 
+// A server address in its one spelling (decision 0204).
+struct ServerAddress
+{
+    std::string scheme; // "https" or "http"
+    std::string host;   // lower case, no trailing dot; an IPv6 literal keeps its brackets
+    std::string port;   // decimal without leading zeros; empty for the scheme's default port
+    std::string path;   // as written, without trailing slashes: empty or starting with '/'
+
+    std::string url() const { return scheme + "://" + host + (port.empty() ? std::string() : ":" + port) + path; }
+};
+
+// Reads an address that is plainly scheme://host[:port][/path], surrounding
+// spaces trimmed: an explicit http or https scheme (any case), an ASCII host
+// name of letters, digits, '-', '_' and dots (one trailing dot allowed) or an
+// [IPv6] literal, an optional port 1-65535 (empty or with leading zeros is
+// read as written by libcurl), and a path with no "." or ".." segment. Any
+// other address is unrecognised and gives false: no scheme, user info ('@'),
+// percent-encoding ('%'), a query or fragment ('?', '#'), a backslash,
+// whitespace, control or non-ASCII characters. The cloud agent hands the
+// address to libcurl, which decodes, guesses or drops what such spellings
+// hold, so the client never tries to say which server they reach.
+bool parse_server_address(const std::string& url, ServerAddress& address);
+
 // Checks a trimmed address: https scheme (any case), or http on a loopback
 // host (localhost, *.localhost, 127.0.0.0/8, [::1]) for a local test server;
-// a host name, an optional port 1-65535, no spaces and no user info.
+// a host name, an optional port 1-65535, no spaces and no user info, and an
+// address parse_server_address() recognises (Invalid otherwise), so the plugin
+// check never meets an address that Preferences took.
 CloudValueError check_cloud_url(const std::string& url);
 
 // Checks a trimmed public key: not empty, no spaces.

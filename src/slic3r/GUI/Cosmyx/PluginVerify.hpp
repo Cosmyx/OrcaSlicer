@@ -9,13 +9,15 @@
 //   verify_cloud_plugin_package() once the body is downloaded, before anything
 //   is written, for an install and an update alike.
 // - PluginManager::install_cloud_plugin_package() opens a CloudInstallScope
-//   first, and calls commit_cloud_plugin_record() once the package is
-//   installed.
+//   first, and calls its commit() once the package is installed, before the
+//   plugin entry is marked installed.
 
+#include <optional>
 #include <string>
-#include <utility>
 
 #include <nlohmann/json_fwd.hpp>
+
+#include "logic/PluginSigning.hpp"
 
 namespace Slic3r {
 
@@ -33,24 +35,31 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
                                  const std::string&      body,
                                  std::string&            error);
 
-// Writes .cosmyx_package.json for the package just installed (see
-// commit_package_record()). False when the installed bytes are not the ones
-// that passed the check or the record cannot be written: the package file is
-// removed, error gets a translated message and the install is refused.
-bool commit_cloud_plugin_record(const PluginDescriptor& installed, std::string& error);
-
-// Drops the checked records of a plugin that its install did not commit, when
-// the install ends, failed or not (forget_checked_packages()).
+// One cloud install of a plugin. Opened before the install starts, it keeps
+// the record of the package being replaced (the downgrade floor); when the
+// install ends, failed or not, it drops the checked records that the install
+// did not commit (forget_checked_packages()).
 class CloudInstallScope
 {
 public:
-    explicit CloudInstallScope(std::string plugin_id) : m_plugin_id(std::move(plugin_id)) {}
+    // previous is the plugin entry before the install.
+    explicit CloudInstallScope(const PluginDescriptor& previous);
     ~CloudInstallScope();
     CloudInstallScope(const CloudInstallScope&)            = delete;
     CloudInstallScope& operator=(const CloudInstallScope&) = delete;
 
+    // Writes .cosmyx_package.json for the package just installed (see
+    // commit_package_record()). False when the installed bytes are not the
+    // ones that passed the check, when their dependencies or entry package
+    // differ from the ones the installer read (the downloaded file was swapped
+    // while it was read), or when the record cannot be written: the package
+    // file is removed, the record of the replaced package is put back, error
+    // gets a translated message and the install is refused.
+    bool commit(const PluginDescriptor& installed, std::string& error) const;
+
 private:
-    std::string m_plugin_id;
+    std::string                  m_plugin_id;
+    std::optional<PackageRecord> m_floor;
 };
 
 } // namespace Cosmyx
