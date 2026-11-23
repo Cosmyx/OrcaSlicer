@@ -50,10 +50,10 @@ std::string refusal_message(const std::string& reason, const ServerTrust& trust,
 }
 
 // The OrcaSlicer app when it runs, or null. wxGetApp() casts wxTheApp
-// unchecked, so the hooks never call it: a process without the app (the
-// upstream plugin tests) has no wxTheApp, or a plain wxApp (wxInitializer),
-// and during shutdown wxTheApp becomes null while an install worker may still
-// run. Read once per hook, so one hook never sees the app come and go.
+// unchecked, so the hooks never call it: in a process where no GUI_App was
+// ever created (the upstream plugin tests) the check stays off, and during
+// shutdown wxTheApp becomes null while an install worker may still run.
+// Read once per hook, so one hook never sees the app come and go.
 // This worker read races the main thread clearing wxTheApp, as upstream's wxGetApp() use does; null fails closed.
 GUI_App* current_app() { return dynamic_cast<GUI_App*>(wxTheApp); }
 
