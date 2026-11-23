@@ -131,10 +131,14 @@ bool parse_server_address(const std::string& url, ServerAddress& address);
 // - empty: Cosmyx, since apply_cloud_server() fills an empty key with
 //   CLOUD_SERVER_URL; a blank (whitespace-only) value is kept and used as it
 //   is by the agent, so it is unrecognised;
-// - an address parse_server_address() refuses: unrecognised;
+// - an address with any whitespace or control character, surrounding ones
+//   included (the agent does not trim it), or one parse_server_address()
+//   refuses: unrecognised;
 // - the host of CLOUD_SERVER_URL: Cosmyx with https on the default port,
 //   unrecognised with any other scheme or port;
-// - any other host: custom. address, when given, gets the parsed address.
+// - any other host: custom with https, or with plain http on a loopback host
+//   as check_cloud_url() reads it; unrecognised with plain http on any other
+//   host. address, when given, gets the parsed address.
 enum class ServerKind { Cosmyx, Custom, Unrecognised };
 ServerKind server_kind(const std::string& url, ServerAddress* address = nullptr);
 
