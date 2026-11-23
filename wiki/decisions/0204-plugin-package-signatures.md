@@ -25,6 +25,9 @@ own key, or none at all.
   steps in order, with its reason strings: Ed25519 with
   `EVP_PKEY_new_raw_public_key(EVP_PKEY_ED25519)` and a one-shot
   `EVP_DigestVerify` with a NULL digest, `CRYPTO_memcmp` for the digest. The
+  OpenSSL calls run between `ERR_set_mark()` and `ERR_pop_to_mark()`: a
+  refused key or signature leaves nothing on the thread's error queue, which
+  the next TLS call on the download thread would otherwise misread. The
   CosmoCloud vectors are copied unchanged to
   `tests/cosmyx/data/plugin-signatures.json`; every row must give its
   `expect`.
@@ -62,19 +65,53 @@ own key, or none at all.
 
   The pins are kept in the app key `cosmyx_plugin_trust`, JSON keyed by the
   normalized API address, so they never follow the user to another server.
+  An address has one spelling (`normalize_server_url()`): spaces trimmed,
+  scheme and host in lower case (https when none is given), trailing dots of
+  the host, the default port (443 for https, 80 for http), leading zeros of
+  the port and trailing slashes removed, the path as written. So every
+  spelling of `CLOUD_SERVER_URL` is the Cosmyx server, and the user's pins
+  and opt-in never apply to it. The key is stored as 64 lowercase hex; the
+  setter refuses anything else. A stored key that cannot be read (hand-edited,
+  truncated) gives no key and no opt-in, so that server is refused: a pin
+  never falls back to unverified plugins.
   The settings do not fetch `/pkg/v1/keys`: the user pastes the key from it,
   and the key id is shown to compare with the operator's.
+- **Requested version.** The request carries the version asked for when it is
+  a strict `X.Y.Z`, or none for the latest. Any other requested version is
+  refused with `wrong_version` instead of being sent as a request for the
+  latest (`request_version()`).
 - **Anti-rollback.** Before the verification, a version lower than the one in
   the installed package's record is refused with `downgrade`. The upstream UI
   has no way to choose a downgrade, so the hook always passes "not chosen";
   the logic takes the flag for when one exists.
-- **Record.** After the install, `PluginManager::install_cloud_plugin_package()`
-  calls `Cosmyx::commit_cloud_plugin_record()`, which writes
-  `.cosmyx_package.json` (`plugin_id`, `version`, `sha256`, `size`, `key_id`,
-  `key_id` empty when unverified) for the exact bytes that passed: the record
-  is matched by the SHA-256 of the installed file, and used once. The same call
-  removes `__whl_extracted__`, so the first load extracts the new wheel. The
+- **Record.** A package that passed is remembered under its plugin id and
+  SHA-256 (two plugins may ship the same bytes). After the install,
+  `PluginManager::install_cloud_plugin_package()` calls
+  `Cosmyx::commit_cloud_plugin_record()`, which writes `.cosmyx_package.json`
+  (`plugin_id`, `version`, `sha256`, `size`, `key_id`, `key_id` empty when
+  unverified) for the exact bytes that passed: the record is matched by the
+  plugin id and the SHA-256 and size of the installed file, and used once. The
   file is a denied filename for plugins (`PluginAuditManager`).
+- **Only checked bytes stay installed.** The check runs on the downloaded body,
+  which upstream then writes to a file in the shared temporary folder and
+  installs later, so the file could be swapped in between. The commit hashes
+  the installed copy, inside the user's plugin folder: when no record matches
+  it, or the record cannot be written, the installed package file and any
+  record are removed and the install is refused (the hook sets the error that
+  the upstream metadata step already turns into a failed install, and reports
+  `ReplacementInstalled` to an update, since the old package was replaced).
+  This closes the swap for what is loaded, with two hook lines instead of a
+  rewrite of upstream's temporary file. A `Cosmyx::CloudInstallScope` opened
+  at the top of `install_cloud_plugin_package()` drops the remembered records
+  of the plugin when the install ends, so a failed install leaves none behind.
+  A record left by a download that failed after its check (writing the
+  temporary file) lives until the next install of that plugin ends, and can
+  only ever match the bytes it was checked for.
+- **No stale wheel extraction.** The specification asks that a stale
+  `__whl_extracted__` is never reused. Upstream's installer already meets it:
+  it moves the replaced plugin folder aside and installs into a fresh one, and
+  a wheel is extracted next to it in that folder, so the commit removes
+  nothing.
 - **Legacy installs.** A plugin installed before this change has no record. It
   keeps loading as before; its next update passes the full check like any
   other download, and nothing is ever trusted from its hash.
@@ -103,17 +140,22 @@ own key, or none at all.
   server cannot be installed or updated. Plugins already installed keep
   working. A development server can be tested as a custom instance with its
   key pinned, or with unverified plugins allowed.
+- Two installs of the same plugin at the same time are not supported
+  upstream either; the scope of the one that ends first drops the other's
+  record, and the other is then refused, never installed unchecked.
 - Not done here: an "unverified" badge in the plugin list for legacy and
   unverified installs (the list is a web page outside the Cosmyx folders; the
   state is readable through `read_package_record()`), a "fetch key from
   server" button, and a user-chosen downgrade.
 - Removing it: delete the hook lines tagged `// Cosmyx` in
   `OrcaCloudServiceAgent.{hpp,cpp}`, `CloudPluginService.cpp`,
-  `PluginManager.cpp`, `PluginAuditManager.cpp`, `PluginFsUtils.cpp` and
+  `PluginManager.cpp` (the scope and the commit), `PluginAuditManager.cpp`, `PluginFsUtils.cpp` and
   `PluginLoader.cpp`, the files `logic/PluginSigning.*`,
   `logic/PluginTrust.*` and `PluginVerify.*`, the plugin rows of
   `CloudServerPrefs.cpp`, and their tests.
 - Checked by `cosmyx_tests` (`test_cosmyx_plugin_signing.cpp`,
-  `test_cosmyx_plugin_trust.cpp`); the hook lines are pinned by
+  `test_cosmyx_plugin_trust.cpp`, and the breakers' reproductions
+  `test_cosmyx_plugin_signing_break_a.cpp`,
+  `test_cosmyx_plugin_trust_break_b.cpp`); the hook lines are pinned by
   `scripts/cosmyx/tests/test_plugin_signing.py`. The Preferences rows are to
   be covered by the GUI goldens (T16), which are not on this branch's base.

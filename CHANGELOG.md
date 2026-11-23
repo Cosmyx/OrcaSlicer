@@ -77,8 +77,10 @@ here; see the upstream release notes.
   from the Cosmyx cloud cannot be installed until a release adds it; installed
   plugins keep working. A custom cloud instance needs its signing key pinned
   in Preferences, or the user's explicit choice to allow unverified plugins
-  from it. A wheel whose entry package name could escape the plugin folder is
-  refused. Pull request: pending. Decision: 0204.
+  from it, whatever the spelling of its address. A downloaded package swapped
+  before its install is removed and the install refused. A wheel whose entry
+  package name could escape the plugin folder is refused. Pull request:
+  pending. Decision: 0204.
 
 ### i18n
 

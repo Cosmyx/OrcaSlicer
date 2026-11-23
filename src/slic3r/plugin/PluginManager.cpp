@@ -2005,6 +2005,7 @@ bool PluginManager::install_cloud_plugin_package(const std::string& plugin_key,
                                                  const PluginInstallState* preserved_state)
 {
     error.clear();
+    const GUI::Cosmyx::CloudInstallScope cosmyx_scope(descriptor.cloud_uuid()); // Cosmyx: drops an uncommitted check (decision 0204)
 
     // When `failure` is given, the caller owns the failed update: it restores the previous package
     // when that is still usable, and only then decides whether the plugin is actually broken. Do
@@ -2036,7 +2037,8 @@ bool PluginManager::install_cloud_plugin_package(const std::string& plugin_key,
         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": " << error;
         return false;
     }
-    GUI::Cosmyx::commit_cloud_plugin_record(installed); // Cosmyx: .cosmyx_package.json (decision 0204)
+    if (!GUI::Cosmyx::commit_cloud_plugin_record(installed, error) && failure != nullptr) // Cosmyx: refuses bytes not checked (decision 0204)
+        *failure = CloudUpdateFailure::ReplacementInstalled; // Cosmyx: the error below refuses the install
 
     if (!requested_version.empty())
         installed.version = requested_version;
