@@ -77,8 +77,13 @@ here; see the upstream release notes.
   from the Cosmyx cloud cannot be installed until a release adds it; installed
   plugins keep working. A custom cloud instance needs its signing key pinned
   in Preferences, or the user's explicit choice to allow unverified plugins
-  from it, whatever the spelling of its address. A downloaded package swapped
-  before its install is removed and the install refused. A wheel whose entry
+  from it. A cloud address that is not a plain `https://host[:port][/path]`
+  (no scheme, user info, percent-encoding, dot segments, query or fragment),
+  or plain http or another port on the Cosmyx host, is refused outright for
+  plugins, and Preferences no longer accepts such addresses. A downloaded
+  package swapped before or during its install is removed, the install
+  refused and the plugin left not installed, with its version floor kept. A
+  wheel whose entry
   package name could escape the plugin folder is refused. Pull request:
   pending. Decision: 0204.
 

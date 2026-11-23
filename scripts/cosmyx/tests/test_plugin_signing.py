@@ -89,29 +89,35 @@ class InstallHookTests(unittest.TestCase):
         self.assertEqual(self.lines[1], '#include "slic3r/GUI/Cosmyx/PluginVerify.hpp" // Cosmyx')
 
     def test_scope_opens_before_the_install(self) -> None:
-        # Its destructor drops a checked record that no install committed.
-        scope = index_of(self.lines, "const GUI::Cosmyx::CloudInstallScope cosmyx_scope(descriptor.cloud_uuid()); // Cosmyx")
+        # It reads the record of the package being replaced (the version floor)
+        # before the installer moves it aside, and its destructor drops a
+        # checked record that no install committed.
+        scope = index_of(self.lines, "const GUI::Cosmyx::CloudInstallScope cosmyx_scope(descriptor); // Cosmyx")
         self.assertGreater(scope, self.function)
         self.assertEqual(self.lines[scope - 1].strip(), "error.clear();")
 
-    def test_record_is_committed_after_a_successful_install(self) -> None:
-        call = index_of(self.lines, "if (!GUI::Cosmyx::commit_cloud_plugin_record(installed, error) && failure != nullptr) // Cosmyx")
+    def test_refused_commit_returns_before_the_entry_is_marked_installed(self) -> None:
+        call = index_of(self.lines, "if (!cosmyx_scope.commit(installed, error)) { // Cosmyx")
         impl = [i for i in range(self.function, call) if "install_plugin_impl(package_path, installed" in self.lines[i]]
         self.assertEqual(len(impl), 1)
         self.assertEqual(self.lines[call - 1].strip(), "}")
         self.assertEqual(
             self.lines[call + 1].strip(),
-            "*failure = CloudUpdateFailure::ReplacementInstalled; // Cosmyx: the error below refuses the install",
+            "if (failure != nullptr) *failure = CloudUpdateFailure::ReplacementInstalled; "
+            "else set_plugin_error(plugin_key, error); // Cosmyx",
         )
-        # The error the hook sets refuses the install through the upstream
-        # check that follows the metadata update, which nothing between may clear.
-        refuse = [i for i in range(call, len(self.lines)) if self.lines[i].strip() == "if (!error.empty()) {"]
-        self.assertTrue(refuse)
-        between = self.lines[call + 2 : refuse[0]]
-        self.assertFalse([line for line in between if "error.clear()" in line or re.search(r"\berror\s*=\s*\{?\}?;", line)])
+        self.assertEqual(self.lines[call + 2].strip(), "return false; // Cosmyx")
+        self.assertEqual(self.lines[call + 3].strip(), "} // Cosmyx")
+        # Nothing of the upstream success path (descriptor marked installed and
+        # enabled, error cleared) runs before the hook.
+        marked = index_of(self.lines, "installed.cloud->installed        = true;")
+        cleared = [i for i in range(call, len(self.lines)) if self.lines[i].strip() == "installed.clear_error();"]
+        self.assertLess(call, marked)
+        self.assertTrue(cleared)
+        self.assertLess(call, cleared[0])
 
     def test_hook_count(self) -> None:
-        self.assertEqual(len(cosmyx_lines(self.lines)), 4)
+        self.assertEqual(len(cosmyx_lines(self.lines)), 6)
 
     def test_record_is_a_denied_filename(self) -> None:
         lines = read(*PLUGIN, "PluginAuditManager.cpp")

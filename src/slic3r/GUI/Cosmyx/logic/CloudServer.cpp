@@ -3,7 +3,9 @@
 #include <algorithm>
 #include <cctype>
 #include <mutex>
+#include <cstddef>
 #include <string>
+#include <utility>
 
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Cosmyx/StealthMode.hpp"
@@ -150,7 +152,111 @@ bool is_loopback(const Authority& authority)
            is_loopback_ipv4(name);
 }
 
+bool is_host_char(char c) { return std::isalnum(static_cast<unsigned char>(c)) != 0 || c == '-' || c == '_'; }
+
+bool is_ipv6_char(char c) { return std::isxdigit(static_cast<unsigned char>(c)) != 0 || c == ':' || c == '.'; }
+
+// A host name: dot-separated labels of host characters, one trailing dot
+// allowed (a fully qualified name is the same host) and dropped.
+bool read_host_name(std::string host, std::string& out)
+{
+    if (!host.empty() && host.back() == '.')
+        host.pop_back();
+    if (host.empty())
+        return false;
+    std::size_t pos = 0;
+    while (true) {
+        const std::size_t end   = host.find('.', pos);
+        const std::string label = host.substr(pos, end == std::string::npos ? std::string::npos : end - pos);
+        if (label.empty() || !std::all_of(label.begin(), label.end(), is_host_char))
+            return false;
+        if (end == std::string::npos)
+            break;
+        pos = end + 1;
+    }
+    out = to_lower(host);
+    return true;
+}
+
+// A port as libcurl reads it: decimal digits, leading zeros allowed, 1-65535.
+// Empty (host:) is the default port. The default port of scheme gives empty.
+bool read_port(const std::string& port, const std::string& scheme, std::string& out)
+{
+    out.clear();
+    if (port.empty())
+        return true;
+    if (!std::all_of(port.begin(), port.end(), is_digit))
+        return false;
+    const std::size_t first = port.find_first_not_of('0');
+    if (first == std::string::npos || port.size() - first > 5)
+        return false;
+    const long number = std::stol(port.substr(first));
+    if (number < 1 || number > 65535)
+        return false;
+    out = std::to_string(number);
+    if ((scheme == "https" && number == 443) || (scheme == "http" && number == 80))
+        out.clear();
+    return true;
+}
+
 } // namespace
+
+bool parse_server_address(const std::string& url, ServerAddress& address)
+{
+    const std::string text = trim_value(url);
+    if (text.empty() || has_space_or_control(text) ||
+        std::any_of(text.begin(), text.end(), [](char c) { return static_cast<unsigned char>(c) >= 0x80; }) ||
+        text.find_first_of("%@?#\\") != std::string::npos)
+        return false;
+
+    const std::size_t marker = text.find("://");
+    if (marker == std::string::npos)
+        return false;
+    ServerAddress result;
+    result.scheme = to_lower(text.substr(0, marker));
+    if (result.scheme != "https" && result.scheme != "http")
+        return false;
+
+    const std::size_t start     = marker + 3;
+    const std::size_t slash     = text.find('/', start);
+    const std::string authority = text.substr(start, slash == std::string::npos ? std::string::npos : slash - start);
+    std::string       port;
+    if (!authority.empty() && authority.front() == '[') {
+        const std::size_t close = authority.find(']');
+        if (close == std::string::npos || close == 1 ||
+            !std::all_of(authority.begin() + 1, authority.begin() + static_cast<std::ptrdiff_t>(close), is_ipv6_char))
+            return false;
+        const std::string tail = authority.substr(close + 1);
+        if (!tail.empty() && tail.front() != ':')
+            return false;
+        result.host = to_lower(authority.substr(0, close + 1));
+        port        = tail.empty() ? std::string() : tail.substr(1);
+    } else {
+        const std::size_t colon = authority.find(':');
+        if (colon != std::string::npos && authority.find(':', colon + 1) != std::string::npos)
+            return false;
+        if (!read_host_name(authority.substr(0, colon), result.host))
+            return false;
+        port = colon == std::string::npos ? std::string() : authority.substr(colon + 1);
+    }
+    if (!read_port(port, result.scheme, result.port))
+        return false;
+
+    std::string path = slash == std::string::npos ? std::string() : text.substr(slash);
+    while (!path.empty() && path.back() == '/')
+        path.pop_back();
+    // libcurl removes dot segments before sending the path.
+    for (std::size_t pos = 0; pos < path.size();) {
+        const std::size_t end     = path.find('/', pos + 1);
+        const std::string segment = path.substr(pos + 1, end == std::string::npos ? std::string::npos : end - pos - 1);
+        if (segment == "." || segment == "..")
+            return false;
+        pos = end == std::string::npos ? path.size() : end;
+    }
+    result.path = path;
+    address     = std::move(result);
+    return true;
+}
 
 int apply_cloud_server(AppConfig& config)
 {
@@ -211,6 +317,10 @@ CloudValueError check_cloud_url(const std::string& url)
     // Plain http is allowed only on a loopback host, where it never leaves the machine.
     if (scheme == HTTP && !is_loopback(authority))
         return CloudValueError::NotHttps;
+    // Anything the plugin check would not recognise (decision 0204).
+    ServerAddress address;
+    if (!parse_server_address(url, address))
+        return CloudValueError::Invalid;
     return CloudValueError::None;
 }
 

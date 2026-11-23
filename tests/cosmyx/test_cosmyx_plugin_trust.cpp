@@ -183,8 +183,9 @@ TEST_CASE("Server addresses have one spelling", "[cosmyx]")
         {"http://localhost:443", "http://localhost:443"},
         {"http://[::1]:080", "http://[::1]"},
         {"https://[::1]:8443/", "https://[::1]:8443"},
-        {"plugins.example.org", "https://plugins.example.org"},
         {"https://plugins.example.org/API/V1/", "https://plugins.example.org/API/V1"},
+        // No scheme: libcurl would guess http, so the address is unrecognised.
+        {"plugins.example.org", ""},
     };
     for (const auto& [typed, expected] : cases) {
         INFO(typed);
@@ -193,6 +194,77 @@ TEST_CASE("Server addresses have one spelling", "[cosmyx]")
     CHECK(CC::normalize_server_url(CC::CLOUD_SERVER_URL) == CC::CLOUD_SERVER_URL);
     // http and https on the same host are different servers.
     CHECK(CC::normalize_server_url("http://plugins.example.org") != CC::normalize_server_url(CUSTOM));
+}
+
+TEST_CASE("An address that is not plainly scheme://host[:port][/path] is refused outright", "[cosmyx]")
+{
+    const SignedPackage package = script_package();
+    const std::string   unrecognised[] = {
+        "plugins.example.org",
+        "//plugins.example.org",
+        "ftp://plugins.example.org",
+        "https://plugins.example.org/a/../b",
+        "https://plugins.example.org/./b",
+        "https://plugins.example.org/b/..",
+        "https://plugins%2Eexample.org",
+        "https://plugins.example.org/%7Euser",
+        "https://user@plugins.example.org",
+        "https://plugins.example.org/?x=1",
+        "https://plugins.example.org/#top",
+        "https://plugins.example.org\\api",
+        "https://plugins.example .org",
+        "https://plugins.example.org/a b",
+        "https://pl\xc3\xbcgins.example.org",
+        "https://plugins..example.org",
+        "https://.plugins.example.org",
+        "https://plugins.example.org:0",
+        "https://plugins.example.org:65536",
+        "https://plugins.example.org:1:2",
+        "https://[::1]x",
+        "https://[]",
+        "https://",
+    };
+    for (const std::string& url : unrecognised) {
+        INFO(url);
+        AppConfig config;
+        CHECK(CC::normalize_server_url(url).empty());
+        // No pin is ever stored or read for it.
+        CHECK_FALSE(CC::set_server_pins(config, url, {K1_PUBLIC, true}));
+        CHECK(config.get(CC::PLUGIN_TRUST_KEY).empty());
+        const CC::ServerTrust trust = CC::server_trust(config, url);
+        CHECK(trust.unrecognised);
+        CHECK_FALSE(trust.cosmyx_server);
+        CHECK(trust.keys.empty());
+        CHECK_FALSE(trust.allow_unverified);
+        CHECK(CC::check_plugin_package(&package.row, package.body, package.request, trust, {}, "", false).reason ==
+              CC::SIGN_UNRECOGNISED_SERVER);
+    }
+}
+
+TEST_CASE("The Cosmyx server is told by its parsed host, and only https on the default port", "[cosmyx]")
+{
+    AppConfig config;
+    for (const std::string url : {"https://orca-cloud.cosmyx3d.fr/api/v1", "https://ORCA-CLOUD.cosmyx3d.fr.:0443/",
+                                  "HTTPS://orca-cloud.COSMYX3D.fr:"}) {
+        INFO(url);
+        CHECK(CC::server_trust(config, url).cosmyx_server);
+    }
+    // Plain http, or another port, on the Cosmyx host is refused: never the
+    // build's keys, never the user's pins.
+    for (const std::string url : {"http://orca-cloud.cosmyx3d.fr", "HTTP://orca-cloud.cosmyx3d.fr:443",
+                                  "https://orca-cloud.cosmyx3d.fr:8443", "http://orca-cloud.cosmyx3d.fr:80/api"}) {
+        INFO(url);
+        CHECK(CC::set_server_pins(config, url, {K1_PUBLIC, true}));
+        const CC::ServerTrust trust = CC::server_trust(config, url);
+        CHECK(trust.unrecognised);
+        CHECK_FALSE(trust.cosmyx_server);
+        CHECK(trust.keys.empty());
+        CHECK_FALSE(trust.allow_unverified);
+    }
+    // Another host under the Cosmyx domain is a custom server.
+    const CC::ServerTrust other = CC::server_trust(config, "https://plugins.orca-cloud.cosmyx3d.fr");
+    CHECK_FALSE(other.unrecognised);
+    CHECK_FALSE(other.cosmyx_server);
 }
 
 TEST_CASE("A typed public key gives its key id", "[cosmyx]")
@@ -381,6 +453,61 @@ TEST_CASE("Installed bytes that differ from the checked ones are refused and rem
     CHECK_FALSE(CC::read_package_record(dir.path(), record));
     CHECK_FALSE(fs::exists(package_file));
     CC::forget_checked_packages(package.request.plugin_id);
+}
+
+TEST_CASE("A refused install keeps the version floor of the package it replaced", "[cosmyx]")
+{
+    AppConfig           config;
+    const SignedPackage package = script_package();
+    const CC::PackageRecord floor{package.request.plugin_id, "2.0.0", std::string(64, 'a'), 10, K1_ID};
+
+    // The installed bytes are not the checked ones: refused, and the floor is
+    // written back in place of the (absent) record of the new folder.
+    ScopedTemporaryDir dir("cosmyx-plugin");
+    const fs::path     package_file = dir.path() / "hello.py";
+    write_file(package_file, package.body + "# changed\n");
+    std::string error;
+    CHECK_FALSE(CC::commit_package_record(package.request.plugin_id, dir.path(), package_file, error, &floor));
+    CHECK_FALSE(fs::exists(package_file));
+    CC::PackageRecord record;
+    REQUIRE(CC::read_package_record(dir.path(), record));
+    CHECK(record.version == "2.0.0");
+    CHECK(record.sha256 == floor.sha256);
+    // The next download of an older version is still a downgrade.
+    CHECK(CC::check_plugin_package(&package.row, package.body, package.request, custom_trust(config, {K1_PUBLIC, false}), {},
+                                   record.version, false)
+              .reason == CC::SIGN_DOWNGRADE);
+
+    // A refusal for any other reason (the metadata check of the GUI hook) does the same.
+    write_file(package_file, package.body);
+    fs::remove(dir.path() / CC::PACKAGE_RECORD_FILE);
+    CC::refuse_installed_package(dir.path(), package_file, &floor);
+    CHECK_FALSE(fs::exists(package_file));
+    REQUIRE(CC::read_package_record(dir.path(), record));
+    CHECK(record.version == "2.0.0");
+    // With no floor, nothing is left.
+    write_file(package_file, package.body);
+    CC::refuse_installed_package(dir.path(), package_file, nullptr);
+    CHECK_FALSE(fs::exists(package_file));
+    CHECK_FALSE(fs::exists(dir.path() / CC::PACKAGE_RECORD_FILE));
+    CC::forget_checked_packages(package.request.plugin_id);
+}
+
+TEST_CASE("A record that cannot be written leaves no temporary file", "[cosmyx]")
+{
+    ScopedTemporaryDir dir("cosmyx-plugin");
+    // A non-empty folder in place of the record makes the final rename fail.
+    fs::create_directories(dir.path() / CC::PACKAGE_RECORD_FILE / "busy");
+    std::string error;
+    CHECK_FALSE(CC::write_package_record(dir.path(), {"id", "1.0.0", std::string(64, 'a'), 1, ""}, error));
+    CHECK_FALSE(error.empty());
+    CHECK_FALSE(fs::exists(dir.path() / (std::string(CC::PACKAGE_RECORD_FILE) + ".tmp")));
+    // A folder squatting the temporary name is not ours: refused, and kept.
+    fs::remove_all(dir.path() / CC::PACKAGE_RECORD_FILE);
+    fs::create_directories(dir.path() / (std::string(CC::PACKAGE_RECORD_FILE) + ".tmp"));
+    CHECK_FALSE(CC::write_package_record(dir.path(), {"id", "1.0.0", std::string(64, 'a'), 1, ""}, error));
+    CHECK(fs::is_directory(dir.path() / (std::string(CC::PACKAGE_RECORD_FILE) + ".tmp")));
+    CHECK_FALSE(fs::exists(dir.path() / CC::PACKAGE_RECORD_FILE));
 }
 
 TEST_CASE("A failed install drops the records its plugin id was checked with", "[cosmyx]")

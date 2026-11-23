@@ -55,42 +55,6 @@ std::map<PendingKey, PackageRecord>& pending_records()
     return records;
 }
 
-std::string to_lower(std::string value)
-{
-    std::transform(value.begin(), value.end(), value.begin(),
-                   [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
-    return value;
-}
-
-bool all_digits(const std::string& text)
-{
-    return !text.empty() && std::all_of(text.begin(), text.end(), [](char c) { return c >= '0' && c <= '9'; });
-}
-
-// host[:port] or [IPv6][:port] in its one spelling (see normalize_server_url()).
-std::string normalize_authority(const std::string& authority, const std::string& scheme)
-{
-    // User info is refused by the cloud settings; such an address is left as it is.
-    if (authority.find('@') != std::string::npos)
-        return authority;
-    const bool        ipv6     = !authority.empty() && authority.front() == '[';
-    const std::size_t host_end = ipv6 ? authority.find(']') : std::string::npos;
-    const std::size_t colon    = ipv6 ? (host_end == std::string::npos ? std::string::npos : authority.find(':', host_end))
-                                      : authority.rfind(':');
-    std::string       host     = to_lower(authority.substr(0, colon));
-    std::string       port     = colon == std::string::npos ? std::string() : authority.substr(colon + 1);
-    // A fully qualified name (example.org.) is the same host.
-    while (!ipv6 && !host.empty() && host.back() == '.')
-        host.pop_back();
-    if (all_digits(port)) {
-        port.erase(0, std::min(port.find_first_not_of('0'), port.size() - 1));
-        if ((scheme == "https" && port == "443") || (scheme == "http" && port == "80"))
-            port.clear();
-    }
-    // An empty port (host:) is the default one; any other port stays as written.
-    return port.empty() ? host : host + ":" + port;
-}
-
 bool read_file(const fs::path& path, std::string& data)
 {
     boost::nowide::ifstream file(path.string(), std::ios::binary);
@@ -106,30 +70,18 @@ bool read_file(const fs::path& path, std::string& data)
 
 std::string normalize_server_url(const std::string& url)
 {
-    const std::string text = trim_value(url);
-    if (text.empty())
-        return text;
-    std::string       scheme = "https";
-    std::size_t       start  = 0;
-    const std::size_t marker = text.find("://");
-    if (marker != std::string::npos) {
-        scheme = to_lower(text.substr(0, marker));
-        start  = marker + 3;
-    }
-    const std::size_t end    = text.find_first_of("/?#", start);
-    std::string       result = scheme + "://" +
-                         normalize_authority(text.substr(start, end == std::string::npos ? std::string::npos : end - start), scheme) +
-                         (end == std::string::npos ? std::string() : text.substr(end));
-    while (!result.empty() && result.back() == '/')
-        result.pop_back();
-    return result;
+    ServerAddress address;
+    return parse_server_address(url, address) ? address.url() : std::string();
 }
 
 ServerPins server_pins(const AppConfig& config, const std::string& server_url)
 {
-    ServerPins pins;
+    ServerPins        pins;
+    const std::string url = normalize_server_url(server_url);
+    if (url.empty())
+        return pins;
     const json doc   = read_trust_doc(config);
-    const auto entry = doc.find(normalize_server_url(server_url));
+    const auto entry = doc.find(url);
     if (entry == doc.end() || !entry->is_object())
         return pins;
     const auto key = entry->find("public_key");
@@ -145,11 +97,11 @@ ServerPins server_pins(const AppConfig& config, const std::string& server_url)
 
 bool set_server_pins(AppConfig& config, const std::string& server_url, const ServerPins& pins)
 {
-    std::string key;
-    if (!trim_value(pins.public_key).empty() && public_key_id(pins.public_key, &key).empty())
-        return false;
-    json              doc = read_trust_doc(config);
+    std::string       key;
     const std::string url = normalize_server_url(server_url);
+    if (url.empty() || (!trim_value(pins.public_key).empty() && public_key_id(pins.public_key, &key).empty()))
+        return false;
+    json doc = read_trust_doc(config);
     if (key.empty() && !pins.allow_unverified)
         doc.erase(url);
     else
@@ -172,15 +124,29 @@ std::string public_key_id(const std::string& typed, std::string* normalized)
 
 ServerTrust server_trust(const AppConfig& config, const std::string& server_url)
 {
-    ServerTrust       trust;
-    const std::string url = normalize_server_url(server_url);
+    ServerTrust trust;
     // Without an address the agent talks to CosmoCloud (decision 0201).
-    if (url.empty() || url == CLOUD_SERVER_URL) {
+    const bool    no_address = trim_value(server_url).empty();
+    ServerAddress address, cosmyx;
+    parse_server_address(CLOUD_SERVER_URL, cosmyx);
+    if (!no_address && !parse_server_address(server_url, address)) {
+        trust.unrecognised = true;
+        return trust;
+    }
+    // The Cosmyx host is decided by the parsed host, never by the spelling. On
+    // that host only https on the default port is the Cosmyx server; plain
+    // http or another port is refused, so no pin of the user ever applies to
+    // a package from that host.
+    if (no_address || address.host == cosmyx.host) {
+        if (!no_address && (address.scheme != cosmyx.scheme || address.port != cosmyx.port)) {
+            trust.unrecognised = true;
+            return trust;
+        }
         trust.cosmyx_server = true;
         trust.keys          = built_in_keys();
         return trust;
     }
-    const ServerPins pins = server_pins(config, url);
+    const ServerPins pins = server_pins(config, address.url());
     std::string      error;
     if (!pins.public_key.empty()) {
         std::string raw;
@@ -209,6 +175,10 @@ PackageVerdict check_plugin_package(const json*          row,
                                     bool                 allow_downgrade)
 {
     PackageVerdict verdict;
+    if (trust.unrecognised) {
+        verdict.reason = SIGN_UNRECOGNISED_SERVER;
+        return verdict;
+    }
     if (row == nullptr) {
         verdict.reason = SIGN_NO_ROW;
         return verdict;
@@ -248,19 +218,23 @@ bool write_package_record(const fs::path& plugin_dir, const PackageRecord& recor
 {
     const fs::path target = plugin_dir / PACKAGE_RECORD_FILE;
     const fs::path temp   = plugin_dir / (std::string(PACKAGE_RECORD_FILE) + ".tmp");
+    bool written = false;
     {
         boost::nowide::ofstream file(temp.string(), std::ios::binary | std::ios::trunc);
         const std::string       text = record_to_json(record);
         file.write(text.data(), static_cast<std::streamsize>(text.size()));
-        if (!file) {
-            error = "cannot write " + temp.string();
-            return false;
-        }
+        file.close();
+        written = !file.fail();
     }
     boost::system::error_code ec;
-    fs::rename(temp, target, ec);
-    if (ec) {
-        fs::remove(temp, ec);
+    if (written)
+        fs::rename(temp, target, ec);
+    if (!written || ec) {
+        // A partly written temp file is never left behind (a folder in its
+        // place is not ours to remove).
+        boost::system::error_code remove_ec;
+        if (!fs::is_directory(temp, remove_ec))
+            fs::remove(temp, remove_ec);
         error = "cannot write " + target.string();
         return false;
     }
@@ -284,7 +258,11 @@ void forget_checked_packages(const std::string& plugin_id)
 // The upstream installer moves the replaced plugin folder aside and installs
 // into a fresh one, so no wheel extraction of the replaced package is left in
 // plugin_dir to remove here (decision 0204).
-bool commit_package_record(const std::string& plugin_id, const fs::path& plugin_dir, const fs::path& package_file, std::string& error)
+bool commit_package_record(const std::string&   plugin_id,
+                           const fs::path&      plugin_dir,
+                           const fs::path&      package_file,
+                           std::string&         error,
+                           const PackageRecord* floor)
 {
     std::string   data;
     bool          found = false;
@@ -303,12 +281,18 @@ bool commit_package_record(const std::string& plugin_id, const fs::path& plugin_
         return true;
     if (!found)
         error = "the installed package is not the one whose signature was checked";
+    refuse_installed_package(plugin_dir, package_file, floor);
+    return false;
+}
 
+void refuse_installed_package(const fs::path& plugin_dir, const fs::path& package_file, const PackageRecord* floor)
+{
     // Nothing that could not be recorded as checked is left to load.
     boost::system::error_code ec;
-    fs::remove(plugin_dir / PACKAGE_RECORD_FILE, ec);
     fs::remove(package_file, ec);
-    return false;
+    std::string error;
+    if (floor == nullptr || !write_package_record(plugin_dir, *floor, error))
+        fs::remove(plugin_dir / PACKAGE_RECORD_FILE, ec);
 }
 
 bool check_wheel_import_name(const fs::path& wheel, const std::string& name, std::string& error)

@@ -1,5 +1,6 @@
 #include "PluginVerify.hpp"
 
+#include <optional>
 #include <string>
 
 #include <boost/filesystem/path.hpp>
@@ -14,6 +15,7 @@
 #include "slic3r/GUI/Plater.hpp"
 #include "slic3r/GUI/format.hpp"
 #include "slic3r/plugin/PluginDescriptor.hpp"
+#include "slic3r/plugin/PluginFsUtils.hpp"
 #include "logic/CloudServer.hpp"
 #include "logic/PluginSigning.hpp"
 #include "logic/PluginTrust.hpp"
@@ -27,6 +29,9 @@ namespace {
 std::string refusal_message(const std::string& reason, const ServerTrust& trust, const std::string& version,
                             const std::string& installed_version)
 {
+    if (reason == SIGN_UNRECOGNISED_SERVER)
+        return _u8L("The plugin server address is not a plain https address, so its plugins cannot be verified. "
+                    "The plugin was not installed.");
     if (reason == SIGN_DOWNGRADE)
         // TRN %1% is the version offered by the server, %2% the installed version.
         return GUI::format(_u8L("Plugin version %1% is older than the installed version %2%, so it was not installed."), version,
@@ -58,6 +63,38 @@ void notify_unverified(const std::string& name)
     });
 }
 
+// The record of the package installed for entry, or nothing.
+std::optional<PackageRecord> installed_record(const PluginDescriptor& entry)
+{
+    PackageRecord record;
+    if (entry.plugin_root.empty() || !read_package_record(boost::filesystem::path(entry.plugin_root), record) ||
+        record.plugin_id != entry.cloud_uuid())
+        return std::nullopt;
+    return record;
+}
+
+// The installer read the dependencies and the entry package from the
+// downloaded file before it copied it, so a file swapped there and back would
+// pass the digest check with another package's metadata. Read them again from
+// the installed bytes, the ones whose digest is checked.
+bool same_package_metadata(const PluginDescriptor& installed, std::string& reason)
+{
+    const boost::filesystem::path file(installed.entry_path);
+    PluginDescriptor              read;
+    std::string                   error;
+    const bool                    ok = file.extension() == ".whl" ? read_wheel_plugin_metadata(file, read, error) :
+                                                                    read_python_plugin_metadata(file, read, error);
+    if (!ok) {
+        reason = "the installed package cannot be read: " + error;
+        return false;
+    }
+    if (read.dependencies != installed.dependencies || read.entry_package != installed.entry_package) {
+        reason = "the dependencies or the entry package read before the install are not the installed package's";
+        return false;
+    }
+    return true;
+}
+
 } // namespace
 
 bool verify_cloud_plugin_package(const PluginDescriptor& entry,
@@ -76,11 +113,8 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
     if (row != nullptr && row->is_object() && row->contains("version") && row->at("version").is_string())
         row_version = row->at("version").get<std::string>();
 
-    PackageRecord installed;
-    std::string   installed_version;
-    if (!entry.plugin_root.empty() && read_package_record(boost::filesystem::path(entry.plugin_root), installed) &&
-        installed.plugin_id == request.plugin_id)
-        installed_version = installed.version;
+    const std::optional<PackageRecord> installed         = installed_record(entry);
+    const std::string                  installed_version = installed ? installed->version : std::string();
 
     const std::string server = config != nullptr ? active_api_url(*config) : std::string(CLOUD_SERVER_URL);
     const ServerTrust trust  = config != nullptr ? server_trust(*config, server) : ServerTrust{true, built_in_keys(), false};
@@ -113,11 +147,19 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
     return true;
 }
 
-bool commit_cloud_plugin_record(const PluginDescriptor& installed, std::string& error)
+CloudInstallScope::CloudInstallScope(const PluginDescriptor& previous)
+    : m_plugin_id(previous.cloud_uuid()), m_floor(installed_record(previous))
+{}
+
+bool CloudInstallScope::commit(const PluginDescriptor& installed, std::string& error) const
 {
-    std::string reason;
-    if (commit_package_record(installed.cloud_uuid(), boost::filesystem::path(installed.plugin_root),
-                              boost::filesystem::path(installed.entry_path), reason))
+    const boost::filesystem::path plugin_dir(installed.plugin_root);
+    const boost::filesystem::path package_file(installed.entry_path);
+    const PackageRecord*          floor = m_floor ? &*m_floor : nullptr;
+    std::string                   reason;
+    if (!same_package_metadata(installed, reason))
+        refuse_installed_package(plugin_dir, package_file, floor);
+    else if (commit_package_record(installed.cloud_uuid(), plugin_dir, package_file, reason, floor))
         return true;
     BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused after install: plugin " << installed.cloud_uuid() << ": " << reason;
     error = _u8L("The installed plugin package could not be recorded as the one whose signature was checked, so it was removed. "

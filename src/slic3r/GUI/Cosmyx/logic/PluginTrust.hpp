@@ -4,8 +4,12 @@
 // What a downloaded plugin package is checked against, and what is kept once
 // it passed (decision 0204):
 //
-// - the Cosmyx server (CLOUD_SERVER_URL) is checked against the keys pinned in
-//   the build, and only those;
+// - an address that is not plainly scheme://host[:port][/path] (see
+//   parse_server_address()) is unrecognised: its packages are refused, and
+//   neither the build's keys nor any pin or opt-in of the user apply to it;
+// - the Cosmyx server (the host of CLOUD_SERVER_URL, over https on its
+//   default port, any path) is checked against the keys pinned in the build,
+//   and only those; any other scheme or port on that host is unrecognised;
 // - another server is checked against the public key the user pinned for its
 //   address in Preferences; with none, the package is refused, unless the user
 //   allowed unverified plugins from that server, which still checks the row,
@@ -34,11 +38,14 @@ namespace Cosmyx {
 // {"<server address>": {"public_key": "<64 hex>", "allow_unverified": false}}
 constexpr const char* PLUGIN_TRUST_KEY = "cosmyx_plugin_trust";
 
-// One spelling per server address, so a pin is found whatever the user typed
-// and the Cosmyx address is always recognised: spaces trimmed, scheme and host
-// in lower case (https when none is given), trailing dots of the host, the
-// default port (443 for https, 80 for http), leading zeros of the port and
-// trailing slashes removed. The path keeps its case. Empty stays empty.
+// Client-side refusal reason: the address is unrecognised (decision 0204).
+constexpr const char* SIGN_UNRECOGNISED_SERVER = "unrecognised_server";
+
+// One spelling per server address, so a pin is found whatever the user typed:
+// parse_server_address() then ServerAddress::url(), so scheme and host in
+// lower case, the trailing dot of the host, the default port (443 for https,
+// 80 for http), leading zeros of the port and trailing slashes removed; the
+// path keeps its case. Empty for an empty or unrecognised address.
 std::string normalize_server_url(const std::string& url);
 
 // The user's settings for one custom server.
@@ -54,7 +61,8 @@ struct ServerPins
 ServerPins server_pins(const AppConfig& config, const std::string& server_url);
 // Stores the settings of server_url, the key as 64 lowercase hex; empty
 // settings remove its entry. False, and nothing stored, when public_key is
-// neither empty nor a key (see public_key_id()).
+// neither empty nor a key (see public_key_id()) or server_url is unrecognised.
+// An unrecognised address has no pins.
 bool set_server_pins(AppConfig& config, const std::string& server_url, const ServerPins& pins);
 
 // The key id of a public key typed by the user (spaces trimmed, any case), or
@@ -67,6 +75,7 @@ struct ServerTrust
     bool     cosmyx_server    = false;
     KeyTable keys;
     bool     allow_unverified = false; // only ever true for a custom server with no key
+    bool     unrecognised     = false; // packages refused with SIGN_UNRECOGNISED_SERVER
 };
 
 ServerTrust server_trust(const AppConfig& config, const std::string& server_url);
@@ -114,12 +123,21 @@ void forget_checked_packages(const std::string& plugin_id);
 // plugin_id for those exact bytes (SHA-256 and size) and writes it. With no
 // such record the installed bytes are not the ones checked (the downloaded
 // file was swapped before the install copied it). That case and a record that
-// cannot be written return false with error set, and remove package_file and
-// any record in plugin_dir, so nothing that is not recorded as checked loads.
+// cannot be written return false with error set, and refuse the install
+// (refuse_installed_package()), so nothing that is not recorded as checked
+// loads. floor is the record of the package this install replaces, if any.
 bool commit_package_record(const std::string&             plugin_id,
                            const boost::filesystem::path& plugin_dir,
                            const boost::filesystem::path& package_file,
-                           std::string&                   error);
+                           std::string&                   error,
+                           const PackageRecord*           floor = nullptr);
+
+// Removes package_file and the record in plugin_dir. With floor (the record of
+// the package the refused install replaced), writes floor there instead, so
+// the version floor of the downgrade check survives the refusal.
+void refuse_installed_package(const boost::filesystem::path& plugin_dir,
+                              const boost::filesystem::path& package_file,
+                              const PackageRecord*           floor);
 
 // --- Wheel entry package ------------------------------------------------------
 
