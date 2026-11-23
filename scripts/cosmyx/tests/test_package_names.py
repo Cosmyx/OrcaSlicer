@@ -7,6 +7,7 @@ from __future__ import annotations
 import io
 import json
 import re
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -337,9 +338,15 @@ class WiringTest(unittest.TestCase):
 
     def test_hook_files_keep_their_line_endings(self) -> None:
         # A hook never mixes line endings: build_all.yml is CRLF upstream on this base.
+        # The committed blob, not the checkout: a Windows checkout (core.autocrlf)
+        # turns every line into CRLF whatever the repository holds.
         for path in (BUILD_ORCA, BUILD_FLATPAK):
-            data = path.read_bytes()
-            self.assertIn(data.count(b"\r\n"), (0, data.count(b"\n")), path.name)
+            relative = path.relative_to(REPO_ROOT).as_posix()
+            blob = subprocess.run(
+                ["git", "-C", str(REPO_ROOT), "cat-file", "blob", f":{relative}"],
+                capture_output=True, check=True,
+            ).stdout
+            self.assertIn(blob.count(b"\r\n"), (0, blob.count(b"\n")), path.name)
 
     def test_action_uploads_every_output_and_deletes_the_rest(self) -> None:
         action = ACTION.read_text(encoding="utf-8")
