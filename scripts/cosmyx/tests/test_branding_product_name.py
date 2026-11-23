@@ -601,7 +601,8 @@ class RealTreeTest(unittest.TestCase):
         self.assertIn('set_target_properties(OrcaSlicer PROPERTIES OUTPUT_NAME "orca-slicer")', text("src/CMakeLists.txt"))
 
     def test_appimage_launcher_and_its_file_agree(self) -> None:
-        script = read(self.root, "src/dev-utils/platform/unix/build_appimage.sh.in").decode()
+        # LF whatever the checkout: a Windows runner (core.autocrlf) has it CRLF on disk.
+        script = branding.read_lf(self.root.joinpath("src", "dev-utils", "platform", "unix", "build_appimage.sh.in"))
         self.assertIn("\nName=CosmoSlice\n", script)
         self.assertIn("mv CosmoSlice-$(uname -m).AppImage ${APP_IMAGE}", script)
         self.assertEqual(guards.appimage_pair(self.root), ("CosmoSlice", "CosmoSlice"))
