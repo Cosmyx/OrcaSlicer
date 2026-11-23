@@ -84,7 +84,7 @@ here; see the upstream release notes.
   `[::1]` or `127.x.x.x` without leading zeros. A package swapped during its
   install, or whose entry package could escape the plugin folder, is refused,
   and so is a plugin download that ends after the app was closed.
-  Pull request: pending. Decision: 0204.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/112. Decision: 0204.
 
 ### i18n
 
