@@ -12,8 +12,11 @@
 //   first, and calls its commit() once the package is installed, before the
 //   plugin entry is marked installed.
 //
-// Both are no-ops in a process with no OrcaSlicer app (package_check_on()):
-// the download is logged as not checked and installed as upstream does.
+// Both are no-ops in a process where no OrcaSlicer app was ever seen
+// (package_gate()): the download is logged as not checked and installed as
+// upstream does. Once the app was seen, the check stays on: a download that
+// ends after the app closed is refused, and a commit then still matches the
+// installed bytes against the checked record.
 
 #include <optional>
 #include <string>

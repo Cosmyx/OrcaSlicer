@@ -1,6 +1,7 @@
 #include "PluginTrust.hpp"
 
 #include <algorithm>
+#include <atomic>
 #include <cctype>
 #include <cstddef>
 #include <cstdint>
@@ -172,12 +173,33 @@ ServerTrust server_trust(const AppConfig& config, const std::string& server_url)
     return trust;
 }
 
-bool package_check_on(bool app_running) { return app_running; }
+namespace {
 
-DownloadCheck download_check(bool app_running, const AppConfig* config)
+// Set once an OrcaSlicer app was seen in this process (package_gate()).
+std::atomic<bool>& app_seen()
+{
+    static std::atomic<bool> seen{false};
+    return seen;
+}
+
+} // namespace
+
+PackageGate package_gate(bool app_running_now)
+{
+    if (app_running_now) {
+        note_app_seen();
+        return PackageGate::Checked;
+    }
+    return app_seen().load() ? PackageGate::AppGone : PackageGate::Unchecked;
+}
+
+void note_app_seen() { app_seen().store(true); }
+
+void reset_package_gate_for_tests() { app_seen().store(false); }
+
+DownloadCheck download_check(const AppConfig* config)
 {
     DownloadCheck check;
-    check.on     = package_check_on(app_running);
     check.server = config != nullptr ? active_api_url(*config) : std::string(CLOUD_SERVER_URL);
     if (config != nullptr) {
         check.trust = server_trust(*config, check.server);
@@ -236,6 +258,33 @@ PackageVerdict check_plugin_package(const json*          row,
         verdict.record = {row->at("plugin_id").get<std::string>(), row->at("version").get<std::string>(),
                           row->at("sha256").get<std::string>(), static_cast<std::uint64_t>(body.size()), key_id};
     return verdict;
+}
+
+DownloadDecision decide_download(bool app_running_now, const AppConfig* config, const DownloadInput& input)
+{
+    DownloadDecision decision;
+    decision.gate = package_gate(app_running_now);
+    if (decision.gate == PackageGate::Unchecked)
+        return decision;
+    if (decision.gate == PackageGate::AppGone) {
+        decision.verdict.reason = SIGN_APP_GONE;
+        return decision;
+    }
+    decision.check = download_check(config);
+
+    ClientRequest request;
+    request.plugin_id = input.plugin_id;
+    // The request carries a strict X.Y.Z or none (latest); any other version is refused.
+    if (!request_version(input.requested_version, request.version))
+        decision.verdict.reason = SIGN_WRONG_VERSION;
+    else if (!client_slot(input.platform_os, input.platform_arch, request.os, request.arch))
+        decision.verdict.reason = SIGN_UNKNOWN_SLOT;
+    else
+        decision.verdict = check_plugin_package(input.row, input.body, request, decision.check.trust, input.revoked,
+                                                input.installed_version, /*allow_downgrade=*/false);
+    if (decision.verdict.ok())
+        remember_checked_package(decision.verdict.record);
+    return decision;
 }
 
 bool read_package_record(const fs::path& plugin_dir, PackageRecord& record)
@@ -332,6 +381,19 @@ bool commit_checked_install(const std::string&                       plugin_id,
     }
     refuse_installed_package(plugin_dir, package_file, floor);
     return false;
+}
+
+bool commit_cloud_install(bool                                     app_running_now,
+                          const std::string&                       plugin_id,
+                          const fs::path&                          plugin_dir,
+                          const fs::path&                          package_file,
+                          const std::function<bool(std::string&)>& metadata_matches,
+                          std::string&                             error,
+                          const PackageRecord*                     floor)
+{
+    if (package_gate(app_running_now) == PackageGate::Unchecked)
+        return true;
+    return commit_checked_install(plugin_id, plugin_dir, package_file, metadata_matches, error, floor);
 }
 
 void refuse_installed_package(const fs::path& plugin_dir, const fs::path& package_file, const PackageRecord* floor)
