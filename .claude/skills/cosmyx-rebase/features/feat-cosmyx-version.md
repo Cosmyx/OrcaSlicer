@@ -104,6 +104,7 @@ Manual checks after a rebase onto v2.5.1:
 - `5fbe728f6f` and `57866a96b9`: the `cosmyx-checks` workflow path filters and the justfile imports of planned recipe files (`version.just` is imported with `import?` but is not created by this branch).
 - `ver` on release-tag builds: do not assume `ver_pure` equals `ver`; the step replaces `ver` only, `ver_pure` keeps the plain upstream number.
 - `shell: python` needs the runner Python on `PATH`; if a runner image stops shipping it, add `actions/setup-python` before the step.
+- v2.5.2 pass: clean. `cosmyx_version.py version` prints `2.5.2-8` (build tag `2.5.2-8_<hash>`). v2.5.2 edits `TroubleshootDialog.cpp` only in `GetPackageType()` (Flatpak detection), away from the hook.
 
 ## Shared files with other branches
 

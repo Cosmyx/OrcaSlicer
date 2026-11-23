@@ -13,28 +13,76 @@ Entry format:
 - Commit: <sha> (or "unknown").
 ```
 
-## Expected on v2.5.1 (not yet confirmed by a run)
+## Expected on v2.5.2 (not yet confirmed by a run)
 
-Upstream `v2.5.1` (`eef7710cb1`) is not an ancestor of `DEV` (185 commits only in the tag, 310 only in DEV;
-merge-base `65aab6bcf7`). The dry run of 2026-11-20 confirmed and fixed every source-level item (see the log). What is
-left needs the build of `integration/v2.5.1` (run 44716244843) or the artifact checks:
+Upstream `v2.5.2` (`f92a7c065c`) is `v2.5.1` plus 44 commits of the 2.5 release branch (backports, a translation
+refresh, deps fixes). It is not an ancestor of `DEV` (229 commits only in the tag, 310 only in DEV; merge-base
+`65aab6bcf7`). The dry run of 2026-11-23 met only the v2.5.1 conflicts again (see the log); the combined tree equals
+`integration/v2.5.1` plus the tag diff plus `04f9955f54`. What is left needs the build of `integration/v2.5.2` (run
+45136685686) or the artifact checks.
 
-- **`ci/cosmyx-artifact-checks`: artifact names.** Tag names the PDB artifact `PDB` (DEV `PDB_msvc` for MSVC)
-  and has no per-arch `OrcaSlicer_Mac_<arch>_<ver>` DMG. The `mac-arm64`/`mac-x86_64` regexes match nothing
-  (harmless); check `data/expectations.json` against a real run's artifact list and `content.py`'s version
-  parsing of `version.inc`.
-- **`feat/cosmyx-version`:** artifacts must be named `..._2.5.1-8_<hash>` (script side confirmed: `2.5.1-8`).
-- **`feat/cosmyx-dark-default`: wxWidgets API.** `wxApp::SetAppearance` needs the wxWidgets 3.3 fork; check the
-  tag's `deps` wx pin if macOS or Linux fails to compile `ColorMode.cpp`.
-- **`test/cosmyx-gui-goldens`:** goldens are base-specific (none committed yet); `pick_artifacts` must still find
-  the tag's Linux AppImage, macOS DMG and Windows x64 portable artifacts. `GoldenDriver.cpp` compile on the tag.
+Already confirmed by the v2.5.1 build (run 44716244843), and expected to hold: Linux x86_64 and aarch64, macOS arm64
+and x86_64 and Windows x64 compile and link (so `ColorMode.cpp`, `GoldenDriver.cpp` and `CloudServerPrefs.cpp` build
+on the release base, and the wxWidgets fork has `SetAppearance`); Linux unit tests green; Windows artifacts are named
+`OrcaSlicer_Windows_2.5.1-8_<8-char hash>_x64` (so `2.5.2-8_<hash>` now); the PDB artifact is named `PDB`.
+
+- **Windows arm64 deps.** Expected green: v2.5.2 carries the OCCT workaround `3cd5a7d19a` (#17601). See the log.
+- **Flatpak.** Expected past the runtime update: v2.5.2 carries `2e2becc3f2` (#17207). It also carries `9a4391396c`
+  (Boost.Locale configure with CMake 4.5, #17725), which may be the known Boost configure failure; check.
+- **macOS unit tests and the Universal job.** Cancelled in the v2.5.1 run (no macOS runner): still unverified.
+- **`ci/cosmyx-artifact-checks`: artifact names.** No per-arch `OrcaSlicer_Mac_<arch>_<ver>` DMG on the tag (only
+  `OrcaSlicer_Mac_bundle_<arch>_<full sha>`); the `mac-arm64`/`mac-x86_64` regexes match nothing (harmless); check
+  `data/expectations.json` against this run's artifact list and `content.py`'s version parsing of `version.inc`.
+- **`test/cosmyx-gui-goldens`:** goldens are base-specific (none committed yet); `pick_artifacts` must still find the
+  tag's Linux AppImage, macOS DMG and Windows x64 portable artifacts.
 - **`ci/cosmyx-exec-smoke`:** re-check `--help` and the slice command line of `slice.py` against the tag's CLI
-  (`src/OrcaSlicer.cpp`).
-- **`feat/cosmyx-cloud-server`:** `CloudServerPrefs.cpp` compile against the tag's `Preferences.cpp` neighbourhood.
+  (`src/OrcaSlicer.cpp`, which v2.5.2 edits).
 - **`feat/cosmyx-windows-signing`:** on the tag the installer payload is signed twice (no `ORCA_SIGN_REUSE` in the
   foreground cpack); valid but slower. Only visible on a signed ref.
 
 ## Log
+
+### 2026-11 several branches - v2.5.2 pass replays the v2.5.1 resolutions
+- Symptom: on v2.5.2 the same conflicts and breaks as on v2.5.1: modify/delete of `build_flatpak.yml` (foundation
+  `be423c6998`, translations `abcf9e2295`), the two `build_orca.yml` conflicts of windows-signing, the `Preferences.cpp`
+  include of cloud-server, the stale painted-modifier rows (engine, colours), the 13 G8 errors (product-name), the
+  four-tab Preferences enum (goldens), and the integration unions (slot lists, decision 0003, CHANGELOG, `GUI_App.cpp`).
+- Cause: v2.5.2 is a patch release of the same release branch; none of its 44 commits touch a hook anchor.
+- Resolution: `rerere` (cache of the v2.5.1 pass) replayed every textual resolution; the two `build_flatpak.yml` hooks
+  were re-applied from the v2.5.1 copies' commits; each adaptation was re-run with its generator (`brand-sync`,
+  `brand-colour-literals`) or re-checked (`brand-check`, script test) and gave the same diff as on v2.5.1.
+- Commit: `718f663275` (engine), `33fbc1c012` (colours), `e1e7a173f0` (product-name), `da81bbfea6` (goldens), dry-run
+  copies.
+
+### 2026-11 feat/cosmyx-svg-candidates - rerere does not replay a file deletion
+- Symptom: after the v2.5.2 rebase, `brand-check` failed with G2 "overlay file has no manifest row" for
+  `menu_add_painted_modifier.svg`, `toolbar_painted_modifier.svg`, `toolbar_painted_modifier_dark.svg`.
+- Cause: rerere replayed the manifest and table text conflicts of the accept commits, but the `git rm` of the three
+  overlays was not a text resolution, so the accept commits added them back.
+- Resolution: one `git commit --fixup=<accept commit>` per accept commit with the `git rm`, then
+  `GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash <colours tip>`. Lesson: after a rerere-driven rebase, compare
+  the Cosmyx-owned tree with the previous copy (`git diff <old copy> HEAD -- cosmyx-src wiki scripts`).
+- Commit: none added (folded into the accept commits; copy tip `715c60a6f7`).
+
+### 2026-11 integration/v2.5.1 - Windows arm64 deps: MSVC 14.52 internal compiler error in OCCT
+- Symptom: run 44716244843 failed on "Build Windows arm64 / Build Deps" with MSVC 14.52 C1001 (internal compiler error)
+  in OCCT `BRepGraph_LayerTopoSupplement.cxx`.
+- Cause: a runner image update from MSVC 14.51 to 14.52. Upstream never compiled it for v2.5.1, because its deps came
+  from cache; our fork has no deps cache, so it does a full deps build.
+- Resolution: upstream fixed it in `e0f7f0b7ee` (#17601), which is in v2.5.2+ (as `3cd5a7d19a`) and in DEV. Lesson: a
+  fork builds every dependency from scratch, so a release tag can fail on a newer runner image even though upstream
+  shipped it. Check upstream's later release branches (and `main`) for workarounds before dispatching, for example
+  `git log --oneline $BASE..upstream/main -- deps .github`.
+- Commit: none (upstream fix).
+
+### 2026-11 integration/v2.5.1 - Flatpak runtime update fails with "Invalid cross-device link"
+- Symptom: both Flatpak legs of run 44716244843 failed: "Error: Failed to update org.gnome.Sdk: Invalid cross-device
+  link", then `xvfb-run` exit code 139.
+- Cause: updating a Flatpak runtime renames its old deployment, which fails on a Docker overlay filesystem; like the
+  MSVC case, upstream's cache hid it.
+- Resolution: upstream mounts `/var/lib/flatpak` as a volume in the `flatpak:` job (`2e2becc3f2`, #17207, in v2.5.2;
+  `aee4dfc705` in DEV). Nothing to do on our side.
+- Commit: none (upstream fix).
 
 ### 2026-11 integration/v2.5.1 - slot lists and shared lines collide between siblings
 - Symptom: merging install-paths, gui-goldens and cloud-server into `integration/v2.5.1` conflicted in
@@ -211,7 +259,27 @@ left needs the build of `integration/v2.5.1` (run 44716244843) or the artifact c
 
 ## Skill gaps found
 
-Found on the v2.5.1 dry run (2026-11-20); what `SKILL.md` and the sheets did not say:
+Found on the v2.5.2 dry run (2026-11-23):
+
+- No path for a target that follows a previous pass (a patch release such as v2.5.1 to v2.5.2). What worked: compare
+  each `origin/<branch>` with the previous copy's source (`git reflog rebase/<old tag>/<branch>`, then
+  `git range-diff <old NP>..rebase/<old tag>/<b> <OLD>..origin/<b>`) to see which branches really changed; let `rerere`
+  replay the old resolutions; re-run each adaptation's generator and check its diff equals the old adaptation commit.
+  The whole pass then takes minutes. Old copies and the `rerere` cache are worth keeping until the next pass.
+- The skill's commands use `rerere.enabled` only: a rebase still stops at every conflict rerere has already resolved.
+  `-c rerere.autoupdate=true` plus a loop that continues while no file is unmerged lets one script replay a branch.
+- `rerere` replays text resolutions, not file deletions (`git rm` of an overlay, of `build_flatpak.yml`); a deletion is
+  re-done by hand, inside the commit it belongs to (`--fixup` + `rebase -i --autosquash` with
+  `GIT_SEQUENCE_EDITOR=true`). The skill does not mention it.
+- Step 8 dispatches the build without checking that the target builds from scratch on today's runner images. A fork has
+  no deps cache, so it meets compiler and runner breakages upstream's cache hid (MSVC 14.52 ICE, Flatpak runtime
+  update). Before dispatching, look for upstream build workarounds after the tag:
+  `git log --oneline $BASE..upstream/main -- deps .github` and the later release branch.
+- Step 4's `git range-diff` proof marks context-only changes as `!` (a CHANGELOG neighbour line); the skill should say
+  to read each `!` pair rather than treat it as a changed patch.
+- The scratchpad may hold files from other sessions; keep a per-pass subfolder for scripts and logs.
+
+Found on the v2.5.1 dry run (2026-11-20); what `SKILL.md` and the sheets did not say (still open unless noted):
 
 - Step 1's `git fetch ... "refs/tags/$TAG:refs/tags/upstream/$TAG"` breaks under zsh: `$TAG:r` is a modifier and
   the refspec becomes `refs/tags/v2.5efs/...`. Write `${TAG}:refs/...` (the zsh note only mentions `$b:path`).

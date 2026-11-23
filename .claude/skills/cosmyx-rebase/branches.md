@@ -113,3 +113,40 @@ tree; never push to it from this skill.
 | `src/slic3r/GUI/Cosmyx/logic/GuidePolicy.hpp`, `tests/cosmyx/test_cosmyx_stealth.cpp` | stealth-mode, cloud-server | Cloud-server's version wins (it is the child). |
 | `tests/libslic3r/test_utils.cpp`, `src/libslic3r/utils.cpp` | install-paths | Two-line hooks (decision 0185); logs relies on `g_log_sink` in `utils.cpp` without editing it. |
 | `tests/cosmyx/CMakeLists.txt`, `Cosmyx.cmake` | foundation (globs) | No branch edits them to add files. |
+
+## State at the last pass
+
+Dry run onto `v2.5.2` (`f92a7c065c`), 2026-11-23. `origin` tips the copies were made from (compare with them to see
+what moved before the next pass), and the copy tips `rebase/v2.5.2/<branch>`. Every branch sits on `DEV` `3838002bc8`. Since
+the v2.5.1 pass only `feat/cosmyx-translations` changed (`04f9955f54` added); the branding engine, logos, colours,
+product-name, svg-candidates and translations-fill were restacked onto it with the same patches.
+
+| # | Branch | origin tip | Copy tip | Commits added by the pass |
+|---|--------|------------|----------|---------------------------|
+| 1 | `chore/cosmyx-foundation` | `be423c6998` | `cef12aa526` | none |
+| 2 | `ci/cosmyx-upstream-sync` | `4601573750` | `e17d1cbbe6` | none |
+| 3 | `feat/bed-temp-off` | `de8058dc33` | `91484e311a` | none |
+| 4 | `feat/cht-nozzle` | `08d8d62f96` | `d91077eb34` | none |
+| 5 | `feat/ironing-temperature` | `685b434cb4` | `03ceaac55c` | none |
+| 6 | `fix/toolchange-fan-order` | `e9ab15ae0f` | `e80ff81c91` | none |
+| 7 | `feat/cosmyx-models` | `662b5d79fa` | `4fa0d6e386` | none |
+| 8 | `feat/cosmyx-version` | `c34bce56ac` | `7f2e49e3d5` | none |
+| 9 | `feat/cosmyx-stealth-mode` | `aa48e1b4c0` | `2301b058a0` | none |
+| 10 | `feat/cosmyx-translations` | `04f9955f54` | `76cb75b5b4` | none |
+| 11 | `feat/cosmyx-windows-signing` | `a2fbaba0fa` | `a88a79d944` | none |
+| 12 | `feat/cosmyx-logs` | `1a54759bd4` | `bc645d0bd3` | none |
+| 13 | `feat/cosmyx-dark-default` | `b93fce0559` | `0d565acb09` | none |
+| 14 | `ci/cosmyx-branding-engine` | `e3c74df8d3` | `718f663275` | `718f663275` |
+| 15 | `feat/cosmyx-logos` | `c16c57f6dd` | `b49d45db81` | none |
+| 16 | `feat/cosmyx-colours` | `3ba961954b` | `33fbc1c012` | `33fbc1c012` |
+| 17 | `feat/cosmyx-product-name` | `cb31da2577` | `e1e7a173f0` | `e1e7a173f0` |
+| 18 | `feat/cosmyx-svg-candidates` | `e5e44314e0` | `715c60a6f7` | none |
+| 19 | `feat/cosmyx-translations-fill` | `127f5bb985` | `734b073410` | none |
+| 20 | `ci/cosmyx-artifact-checks` | `0f40efe642` | `8799fe174f` | none |
+| 21 | `ci/cosmyx-macos-signing` | `e6524bdeba` | `1944146a11` | none |
+| 22 | `ci/cosmyx-exec-smoke` | `fcf2a4cc91` | `7801e15059` | none |
+| 23 | `feat/cosmyx-install-paths` | `28aa25e538` | `950ee9d4e4` | none |
+| 24 | `test/cosmyx-gui-goldens` | `6ee87da92f` | `da81bbfea6` | `da81bbfea6` |
+| 25 | `feat/cosmyx-cloud-server` | `ed15f92456` | `f9a6bd001f` | none |
+
+`integration/v2.5.2` = `b94fa72efb`, build run 45136685686.

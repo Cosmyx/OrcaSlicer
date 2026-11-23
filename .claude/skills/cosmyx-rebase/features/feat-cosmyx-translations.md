@@ -94,10 +94,12 @@ Run from the repository root after the rebase:
 - `85bf240be2` Grafted catalogues made push builds `-dirty`; `worktree_clean.py hide` was added and shared with branding.
 - `07e927ca49` (tests `1f20c098e1`) PO reader split on Unicode line separators (U+2028 etc.) and accepted unescaped quotes; a file without a final newline got the next entry glued on; non-UTF-8 charsets were grafted silently. Now LF-only splitting, strict quotes, newline restoration, `require_utf8()`.
 - `f86446b4fb` (test `fd064cd602`) `unhide` passed file names as glob pathspecs, so `x[ab].txt` restored `xa.txt`; checkout now uses `GIT_LITERAL_PATHSPECS`.
+- `04f9955f54` (pushed after the v2.5.1 pass, 2026-11-20) the graft's `main()` falls back to `$GITHUB_STEP_SUMMARY`, so the graft unit tests appended fake tables to the real CI job summary; the tests now drop the variable, and a regression test runs them as a subprocess with it set. The engine and every child were restacked onto it (same patches).
 - `f6dd26c085` an obsolete `version` catalogue was dropped because the redone display version no longer adds the string; a catalogue with msgids found nowhere in sources would be appended as dead entries in every Orca catalogue.
 - `abcf9e2295` / `61f7af5bf6` the action was widened so the Flatpak build is prepared as well (decision 0086 supersedes 0082).
 - Zsh note for agents: write `${REF}:path` in shell when reading blobs from a ref, `$REF:path` expands modifiers.
 - v2.5.1 pass (copy tip `ae7591df8d`): `abcf9e2295` hit modify/delete on `build_flatpak.yml`; the two prepare lines went after `    - uses: actions/checkout@v7` of the `flatpak:` job in `build_all.yml` (line 299, before "Get the version and date"), CRLF kept. No script test pins that Flatpak hook, so a lost hook would only show as an untranslated Flatpak build. Decisions 0082/0086 still name `build_flatpak.yml` (DEV layout).
+- v2.5.2 pass (copy tip `76cb75b5b4`): the same modify/delete on `abcf9e2295`, resolved the same way; the prepare lines now sit at lines 304-305 of `build_all.yml` (four lines lower). The branch gained `04f9955f54` after the v2.5.1 pass (see above); it replayed clean.
 
 ## Shared files with other branches
 

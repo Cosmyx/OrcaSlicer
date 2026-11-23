@@ -107,6 +107,7 @@ icon change. The hash anchors make any upstream change to an SVG loud (G3).
 - Windows checkouts use CRLF: the engine reads text as LF (fixes `2b0c26555e`, `c9a1d85718` on the parent branches); an overlay
   file that is committed with CRLF changes the recorded hash.
 - v2.5.1 pass (copy tip `e3f21df2ea`): restacking on the adapted colours conflicted in the icons-a-m and icons-n-z accept commits (`icons-*.json`, `icons-*.md`). Resolution per commit: take the replayed side of the manifest and table, `git rm` the painted-modifier overlay files of that group, `just brand-refresh <path>`, `just brand-sync`, `just brand-table`, `git add -A`, continue. Result: 521 overlay files, all `to-validate`.
+- v2.5.2 pass (copy tip `715c60a6f7`): `rerere` replayed the manifest and table conflicts of the accept commits, but not the `git rm` of the three painted-modifier overlays (rerere records text resolutions only), so `brand-check` failed with three G2 orphan overlays. Fixed inside the accept commits: one `git commit --fixup=<accept commit>` per commit with the `git rm`, then `GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash <colours tip>`. The resulting `cosmyx-src/` and `wiki/` equal the v2.5.1 copy.
 
 ## Shared files with other branches
 
