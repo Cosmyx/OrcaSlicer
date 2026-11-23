@@ -201,17 +201,40 @@ own key, or none at all.
 - **Legacy installs.** A plugin installed before this change has no record. It
   keeps loading as before; its next update passes the full check like any
   other download, and nothing is ever trusted from its hash.
-- **Entry package guard.** `Cosmyx::check_wheel_import_name()` runs where the
-  entry package is chosen (`read_wheel_plugin_metadata()`) and, for a wheel
-  entry, in `plugin_loader::import_plugin_module()` right before the import,
-  since the catalog sets the entry package of a cloud plugin after the
-  metadata check. The second hook is not in
+- **Without the app.** Both hooks read the trust settings from the app
+  (`wxGetApp().app_config`), and `wxGetApp()` casts `wxTheApp` unchecked. The
+  upstream plugin tests (`slic3rutils_tests`) drive the plugin manager with no
+  app: they download through `CloudPluginService` from loopback fakes over
+  plain http, with packages that carry no signature, and expect updates to
+  succeed. So the check is on only when the OrcaSlicer app runs
+  (`dynamic_cast<GUI_App*>(wxTheApp)`, `package_check_on()`): without it,
+  `verify_cloud_plugin_package()` logs a warning naming the plugin as not
+  checked and lets it through, and `CloudInstallScope::commit()` writes no
+  record and refuses nothing, which is upstream's behaviour. Refusing instead
+  would fail upstream tests that must pass; checking against the build's keys
+  would refuse the same unsigned packages. This is not a trust decision a user
+  can reach: every cloud install goes through `download_cloud_plugin()`, only
+  the GUI app runs the plugin manager (the command line does not), and in the
+  app the check is always on. In the app, a config not loaded yet checks
+  against the Cosmyx server's built-in keys (`download_check()`), and a commit
+  with no checked record is refused: "refuse bytes other than the checked
+  ones" applies whenever a check ran, which in the app is always.
+- **Entry package guard.** Where the entry package is chosen
+  (`read_wheel_plugin_metadata()`), `Cosmyx::check_entry_package_name()`
+  applies the name rule only: upstream accepts a resource-only wheel there
+  (dist-info and data, no Python package), and the name rule alone closes the
+  path escape. Right before the import, for a wheel entry,
+  `plugin_loader::import_plugin_module()` runs `check_wheel_import_name()`,
+  which also asks the wheel to hold the package, so the import never picks a
+  module of that name from elsewhere on the path; the catalog sets the entry
+  package of a cloud plugin after the metadata check. The second hook is not in
   `PythonInterpreter::load_module_from_whl()`, where the name becomes a path:
   upstream main removes that function (wheels installed with uv, with its own
   `is_valid_entry_package()`), so a hook there would conflict. The name must
   be an ASCII identifier (`[A-Za-z_][A-Za-z0-9_]*`, at most 255 bytes, so
   dotted names are refused, as the server does), not a dunder, not a Windows
-  device name, and the wheel must hold `name/...` or `name.py` at its top. A
+  device name, and at the import the wheel must hold `name/...` or `name.py`
+  at its top. A
   namespace package folder is accepted, unlike the server's upload rule, so
   existing local wheels keep loading; the identifier rule alone closes the path
   escape.
@@ -254,7 +277,8 @@ own key, or none at all.
   `test_cosmyx_plugin_trust.cpp`, and the breakers' reproductions
   `test_cosmyx_plugin_signing_break_a.cpp`,
   `test_cosmyx_plugin_trust_break_b.cpp`, `test_cosmyx_plugin_break_c.cpp`,
-  `test_cosmyx_plugin_break_d.cpp`, `test_cosmyx_plugin_break_e.cpp`, what
+  `test_cosmyx_plugin_break_d.cpp`, `test_cosmyx_plugin_break_e.cpp`, the
+  no-app path and the resource-only wheel in `test_cosmyx_plugin_no_app.cpp`, what
   Apply stores and the install commit in `test_cosmyx_plugin_pins_save.cpp`,
   and the address rules in `test_cosmyx_cloud_server.cpp` and
   `test_cosmyx_server_address.cpp`); the hook lines are pinned by

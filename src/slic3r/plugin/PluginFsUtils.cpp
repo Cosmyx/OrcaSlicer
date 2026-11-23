@@ -1474,7 +1474,7 @@ bool read_wheel_plugin_metadata(const boost::filesystem::path& whl_path, PluginD
     } else {
         descriptor.entry_package = normalize_package_name(meta_name);
     }
-    if (!GUI::Cosmyx::check_wheel_import_name(whl_path, descriptor.entry_package, error)) // Cosmyx: CosmoCloud 0077
+    if (!GUI::Cosmyx::check_entry_package_name(descriptor.entry_package, error)) // Cosmyx: CosmoCloud 0077
         return false; // Cosmyx
 
     descriptor.dependencies = std::move(requires_dist);
