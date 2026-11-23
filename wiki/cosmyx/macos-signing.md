@@ -25,9 +25,15 @@ right after "Create DMG without notary" on the macOS combine leg. It calls
      the password written to `notarytool`'s prompt on stdin, never on a
      command line (decision 0159);
    - notarises the apps (zipped), staples them;
-   - rebuilds `OrcaSlicer_Mac_universal_<ver>.dmg` and
-     `OrcaSlicer_profile_validator_Mac_universal_<ver>.dmg` from the stapled
-     apps with upstream's `create_dmg`, signs, notarises and staples them;
+   - rebuilds each app's DMG, `<app>_Mac_universal_<ver>.dmg` named after
+     the `.app` it holds (`CosmoSlice_Mac_universal_<ver>.dmg` for
+     `CosmoSlice.app`, `OrcaSlicer_Mac_universal_<ver>.dmg` for an unrenamed
+     `OrcaSlicer.app`, likewise for the profile validator when it is built),
+     with the volume named from the app's `CFBundleName`, from the stapled
+     apps with upstream's `create_dmg`, signs, notarises and staples them.
+     Nothing here names the app: whatever `.app` sits in
+     `build/universal/OrcaSlicer/` when the step runs is what gets signed, so
+     a rename of the app has to happen before this step;
    - verifies everything (below) and writes a step summary;
 5. on failure, uploads the notary logs as `cosmyx-notary-log-<ver>`;
 6. always deletes the keychain, restores the keychain list and releases pf.
