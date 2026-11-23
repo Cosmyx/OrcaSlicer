@@ -47,8 +47,11 @@ name patterns, limits and the Mesa pin are in `data/expectations.json`.
 - Smoke and slice (x64 portable, when the build may be run, decision 0160):
   the portable folder is copied to a temporary folder, the pinned Mesa
   software OpenGL goes into its `mesa/` folder (below), then
-  `orca-slicer.exe --help` (60 s) and the slice of the shipped cube (300 s),
-  judged like on Linux. A crash is named from its NTSTATUS exit code
+  `<exe> --help` (60 s) and the slice of the shipped cube (300 s),
+  judged like on Linux. `<exe>` is the first of `windows.app_exe`
+  (`CosmoSlice.exe`, then `orca-slicer.exe`) that is a file of the portable
+  folder; with none, both checks fail and the reason lists the names. A
+  crash is named from its NTSTATUS exit code
   (`STATUS_ACCESS_VIOLATION`, for example). arm64 folders are not run.
 - Mesa (decision 0161): the hosted runner has no GPU, so the app's launcher
   loads `<exe folder>/mesa/opengl32.dll`, which the build does not ship. The
