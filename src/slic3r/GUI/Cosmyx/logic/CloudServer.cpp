@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <cctype>
+#include <mutex>
+#include <string>
 
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Cosmyx/StealthMode.hpp"
@@ -14,6 +16,18 @@ namespace {
 
 constexpr const char* HTTPS = "https://";
 constexpr const char* HTTP  = "http://";
+
+std::mutex& active_api_url_mutex()
+{
+    static std::mutex mutex;
+    return mutex;
+}
+
+std::string& active_api_url_value()
+{
+    static std::string value;
+    return value;
+}
 
 std::string seeded_key(std::size_t field) { return std::string(SEEDED_PREFIX) + CLOUD_KEYS[field]; }
 std::string custom_key(std::size_t field) { return std::string(CUSTOM_PREFIX) + CLOUD_KEYS[field]; }
@@ -156,7 +170,21 @@ int apply_cloud_server(AppConfig& config)
         }
         config.set(seeded_key(field), defaults[field]);
     }
+    {
+        std::lock_guard<std::mutex> lock(active_api_url_mutex());
+        active_api_url_value() = config.get(CLOUD_KEYS[ApiUrl]);
+    }
     return written;
+}
+
+std::string active_api_url(const AppConfig& config)
+{
+    {
+        std::lock_guard<std::mutex> lock(active_api_url_mutex());
+        if (!active_api_url_value().empty())
+            return active_api_url_value();
+    }
+    return config.get(CLOUD_KEYS[ApiUrl]);
 }
 
 std::string trim_value(const std::string& value)
