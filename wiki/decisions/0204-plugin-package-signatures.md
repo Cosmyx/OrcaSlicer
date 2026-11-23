@@ -107,7 +107,11 @@ own key, or none at all.
   `apply_cloud_server()` fills an empty key with `CLOUD_SERVER_URL` before
   the agent reads it; a blank (whitespace-only) one is kept by
   `apply_cloud_server()` and used as it is by the agent, so it is
-  unrecognised.
+  unrecognised. For the same reason `server_kind()` never trims: an address
+  with whitespace or a control character anywhere, surrounding ones
+  included (` https://host`, `https://host\n`), is unrecognised, since the
+  agent hands it to libcurl untrimmed. Preferences trims what the user typed
+  before it checks and stores it, so a padded value typed there is taken.
 - **Loopback is spelled so that libcurl never resolves it.** Plain http is
   allowed on a loopback host only (decision 0203). libcurl reads an IPv4
   part with a leading zero as octal, and hands a host it cannot read as an
@@ -119,7 +123,9 @@ own key, or none at all.
   `[::ffff:127.0.0.1]` (whether they reach 127.0.0.1 depends on the OS
   socket options) are refused with http, as is any other spelling. An `orca_api_url`
   written by hand in the app config can still be anything, and is then
-  refused for plugins by the rule above.
+  refused for plugins by the rule above: `server_kind()` calls plain http on
+  any host that is not loopback by this rule unrecognised, so no pin or
+  opt-in of the user applies to a package fetched over it.
   The settings do not fetch `/pkg/v1/keys`: the user pastes the key from it,
   and the key id is shown to compare with the operator's.
 - **Requested version.** The request carries the version asked for when it is

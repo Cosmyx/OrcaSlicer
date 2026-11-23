@@ -365,16 +365,27 @@ ServerKind server_kind(const std::string& url, ServerAddress* address)
     // agent reads it. A blank one is kept and used as it is, so it is not.
     if (url.empty())
         return ServerKind::Cosmyx;
+    // The agent hands the value to libcurl untrimmed, so any whitespace or
+    // control character, surrounding ones included, is a spelling this rule
+    // does not read. Preferences trims what the user typed before it checks.
     ServerAddress parsed, cosmyx;
-    if (!parse_server_address(url, parsed))
+    if (has_space_or_control(url) || !parse_server_address(url, parsed))
         return ServerKind::Unrecognised;
     parse_server_address(CLOUD_SERVER_URL, cosmyx);
     if (address != nullptr)
         *address = parsed;
     // The Cosmyx host is decided by the parsed host, never by the spelling.
     // On that host only https on the default port is the Cosmyx server.
-    if (parsed.host != cosmyx.host)
+    if (parsed.host != cosmyx.host) {
+        // Plain http only reaches a custom server on a loopback host, where it
+        // never leaves the machine; read from the address as written, since
+        // the parsed host drops the trailing dot of "localhost.".
+        Authority authority;
+        if (parsed.scheme == "http" &&
+            (parse_authority(url, std::char_traits<char>::length(HTTP), authority) != CloudValueError::None || !is_loopback(authority)))
+            return ServerKind::Unrecognised;
         return ServerKind::Custom;
+    }
     return parsed.scheme == cosmyx.scheme && parsed.port == cosmyx.port ? ServerKind::Cosmyx : ServerKind::Unrecognised;
 }
 
