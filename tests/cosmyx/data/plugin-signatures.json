@@ -1,0 +1,3033 @@
+{
+  "format": "cosmocloud-plugin-signature-vectors-v1",
+  "domain_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d763100",
+  "keys": [
+    {
+      "name": "k1",
+      "seed_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "public_key": "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8",
+      "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+    },
+    {
+      "name": "k2",
+      "seed_hex": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+      "public_key": "29acbae141bccaf0b22e1a94d34d0bc7361e526d0bfe12c89794bc9322966dd7",
+      "key_id": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28"
+    },
+    {
+      "name": "k3",
+      "seed_hex": "404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f",
+      "public_key": "2543b92ff1095511476adc8369db6ddc933665a11978dda1404ee1066ca9559d",
+      "key_id": "03396219237f75a64f12aeb7f39723abf400b160c364980a765dac24aeba2464"
+    }
+  ],
+  "rfc8032": [
+    {
+      "name": "TEST 1",
+      "seed_hex": "9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60",
+      "public_key": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+      "message_hex": "",
+      "signature": "e5564300c360ac729086e2cc806e828a84877f1eb8e5d974d873e065224901555fb8821590a33bacc61e39701cf9b46bd25bf5f0595bbe24655141438e7a100b"
+    },
+    {
+      "name": "TEST 2",
+      "seed_hex": "4ccd089b28ff96da9db6c346ec114e0f5b8a319f35aba624da8cf6ed4fb8a6fb",
+      "public_key": "3d4017c3e843895a92b70aa74d1b7ebc9c982ccf2ec4968cc0cd55f12af4660c",
+      "message_hex": "72",
+      "signature": "92a009a9f0d4cab8720e820b5f642540a2b27b5416503f8fb3762223ebdb69da085ac1e43e15996e458f3613d0f11d8c387b2eaeb4302aeeb00d291612bb0c00"
+    },
+    {
+      "name": "TEST 3",
+      "seed_hex": "c5aa8df43f9f837bedb7442f31dcb7b166d38535076f094b85ce3a2e0b4458f7",
+      "public_key": "fc51cd8e6218a1a38da47ed00230f0580816ed13ba3303ac5deb911548908025",
+      "message_hex": "af82",
+      "signature": "6291d657deec24024827e69c3abe01a30ce548a284743a445e3680d7db5ac3ac18ff9b538d16f290ae67f760984dc6594a7c15e9716ed28dc027beceea1ec40a"
+    }
+  ],
+  "statements": [
+    {
+      "name": "script for any target",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "kind": "script",
+        "targets": "*/*",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002430623565326436632d336634312d346138652d396332372d35643165386633613662393000000005312e302e3000000006736372697074000000032a2f2a7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab000000000000003f",
+      "signature": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+    },
+    {
+      "name": "linux x86_64 wheel",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002437633961316533342d386232662d346436612d613163352d33653766396232643463313800000005322e312e3000000005776865656c0000000c6c696e75782f7838365f363472a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f0000000000000021",
+      "signature": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+    },
+    {
+      "name": "macosx universal2 wheel",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "kind": "wheel",
+        "targets": "macosx/arm64,macosx/x86_64",
+        "sha256": "04fcfe1f41824a57a9cdb87857d2275d08b3c0e112e6dee3e88fc24df40a20ab",
+        "size": 38
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002437633961316533342d386232662d346436612d613163352d33653766396232643463313800000005322e312e3000000005776865656c0000001a6d61636f73782f61726d36342c6d61636f73782f7838365f363404fcfe1f41824a57a9cdb87857d2275d08b3c0e112e6dee3e88fc24df40a20ab0000000000000026",
+      "signature": "81fffc5a8ffc140a92e5439aa9a610546cf33127cdbbbace5f2d906ec1bd0c3bbe70b265ccb5d5f2f55937f2b08959e1522bfae46014ee9bc7530fd61410bb0f"
+    },
+    {
+      "name": "signed with k2",
+      "key": "k2",
+      "fields": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "kind": "script",
+        "targets": "*/*",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040323466366564366163626665313030396330333064376361353637633333636134383330393131343938323336623535363161366338326162656335646532380000002430623565326436632d336634312d346138652d396332372d35643165386633613662393000000005312e302e3000000006736372697074000000032a2f2a7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab000000000000003f",
+      "signature": "eb376b95f5c11b23a41229d3f027f93366da41d88bc85d2e813ac085af9bd5f61baff94ed2d418d72fb7c0c409bbf199b099a4c8a29263a6332713f39415d701"
+    },
+    {
+      "name": "size above 32 bits",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "kind": "script",
+        "targets": "*/*",
+        "sha256": "5b80484ff44d96e4514dc73df4de2d744a18bf3ec30f348d78c5181fcd0f24d1",
+        "size": 4294967296
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002430623565326436632d336634312d346138652d396332372d35643165386633613662393000000005312e302e3000000006736372697074000000032a2f2a5b80484ff44d96e4514dc73df4de2d744a18bf3ec30f348d78c5181fcd0f24d10000000100000000",
+      "signature": "19c15aff7538b16002313a0defa217cf653e69752dca1a0505516e46dd06e4b0d941c7415c83d00768cce4e47f4259d39c9a8ddb34003f61c8dc61597b669f06"
+    },
+    {
+      "name": "smallest size and version",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "0.0.0",
+        "kind": "script",
+        "targets": "*/*",
+        "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "size": 1
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002430623565326436632d336634312d346138652d396332372d35643165386633613662393000000005302e302e3000000006736372697074000000032a2f2a01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b0000000000000001",
+      "signature": "162e204f3d4f28c494024820121c7e41bd5057174e9be6262051b208c0f7039ce8e7fd8b7a21843a5fa5def448b28fca0095a65a06dca5567522cd6ca62f2e0e"
+    },
+    {
+      "name": "largest size",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "kind": "script",
+        "targets": "*/*",
+        "sha256": "f96ce0a216ff09ffa52875e81e154322be6ba31a20646c5ec30a6b970dfcda7d",
+        "size": 9007199254740991
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002430623565326436632d336634312d346138652d396332372d35643165386633613662393000000005312e302e3000000006736372697074000000032a2f2af96ce0a216ff09ffa52875e81e154322be6ba31a20646c5ec30a6b970dfcda7d001fffffffffffff",
+      "signature": "53053016b14b5c276e587d968d7a2d6a9c6f786abb665d73e55cad11c8d397148e223ab11d1cd4187ff1b2f0f08d5372eb17df1803d7972870a848471fef5606"
+    },
+    {
+      "name": "six-digit version part",
+      "key": "k1",
+      "fields": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "999999.0.10",
+        "kind": "script",
+        "targets": "*/*",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63
+      },
+      "message_hex": "636f736d6f636c6f75642d706c7567696e2d7061636b6167652d76310000000040353634373561613735343633343734633032383564663564626632626361623733646136353133353838333965396237373438316232656162313037373038630000002430623565326436632d336634312d346138652d396332372d3564316538663361366239300000000b3939393939392e302e313000000006736372697074000000032a2f2a7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab000000000000003f",
+      "signature": "96888750f1d160408a673fb33d42d0b112762c620c3c46749ededf9541f3b301b4e407a69e64496d80cdbb09177aee729a4122888457d2395c7a26992bc32c07"
+    }
+  ],
+  "rows": [
+    {
+      "name": "script for any target",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "universal2 wheel for a macosx arm64 client",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "macosx",
+        "arch": "arm64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-cp312-cp312-macosx_11_0_universal2.whl",
+        "requested_os": "macosx",
+        "returned_os": "macosx",
+        "sha256": "04fcfe1f41824a57a9cdb87857d2275d08b3c0e112e6dee3e88fc24df40a20ab",
+        "size": 38,
+        "kind": "wheel",
+        "targets": "macosx/arm64,macosx/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "81fffc5a8ffc140a92e5439aa9a610546cf33127cdbbbace5f2d906ec1bd0c3bbe70b265ccb5d5f2f55937f2b08959e1522bfae46014ee9bc7530fd61410bb0f"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206d61636f737820756e6976657273616c3220776865656c2066697874757265",
+      "expect": "ok"
+    },
+    {
+      "name": "linux x86_64 wheel",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "ok"
+    },
+    {
+      "name": "signed with k2, k1 and k2 pinned",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1",
+        "k2"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28",
+            "sig": "eb376b95f5c11b23a41229d3f027f93366da41d88bc85d2e813ac085af9bd5f61baff94ed2d418d72fb7c0c409bbf199b099a4c8a29263a6332713f39415d701"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "k3 entry before a valid k1 entry",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "03396219237f75a64f12aeb7f39723abf400b160c364980a765dac24aeba2464",
+            "sig": "423163854ed7b53e2e547a845bbe685db767dcbd49ea63a6b26f9fa08c9c8c2b631967dc35429361b3d0bb1cc80fdb7298ec3b072367f7fe8c1e9a702462d90e"
+          },
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "v2 entry before a valid v1 entry",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v2",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          },
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "unknown extra row field",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ],
+        "mirror": "ignored"
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "latest version requested",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": null,
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "uppercase sha256",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7B99F45F2CE88CA84EAFC98B615C8B437A5800F8E0EBA52B58B31DD50E0610AB",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size true",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": true,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size 5.0",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 5.0,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "unsorted targets",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "macosx",
+        "arch": "arm64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-cp312-cp312-macosx_11_0_universal2.whl",
+        "requested_os": "macosx",
+        "returned_os": "macosx",
+        "sha256": "04fcfe1f41824a57a9cdb87857d2275d08b3c0e112e6dee3e88fc24df40a20ab",
+        "size": 38,
+        "kind": "wheel",
+        "targets": "macosx/x86_64,macosx/arm64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "81fffc5a8ffc140a92e5439aa9a610546cf33127cdbbbace5f2d906ec1bd0c3bbe70b265ccb5d5f2f55937f2b08959e1522bfae46014ee9bc7530fd61410bb0f"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206d61636f737820756e6976657273616c3220776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "any system with one architecture",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/arm64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version with a leading zero",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "01.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "uppercase plugin id",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0B5E2D6C-3F41-4A8E-9C27-5D1E8F3A6B90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "signatures an object",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": {
+          "format": "v1",
+          "alg": "ed25519",
+          "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+          "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+        }
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "kind egg",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "egg",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "another plugin",
+      "client": {
+        "plugin_id": "c3d2e1f0-a9b8-4c7d-b6e5-f4a3b2c1d0e9",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "wrong_plugin"
+    },
+    {
+      "name": "another version",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.1",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "wrong_version"
+    },
+    {
+      "name": "linux wheel for a win client",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "win",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "wrong_platform"
+    },
+    {
+      "name": "signatures absent",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*"
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "missing_signature"
+    },
+    {
+      "name": "signatures empty",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": []
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "missing_signature"
+    },
+    {
+      "name": "only v2 entries",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v2",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "missing_signature"
+    },
+    {
+      "name": "only a k3 entry",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "03396219237f75a64f12aeb7f39723abf400b160c364980a765dac24aeba2464",
+            "sig": "423163854ed7b53e2e547a845bbe685db767dcbd49ea63a6b26f9fa08c9c8c2b631967dc35429361b3d0bb1cc80fdb7298ec3b072367f7fe8c1e9a702462d90e"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "unknown_key"
+    },
+    {
+      "name": "k1 pinned but revoked",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [
+        "k1"
+      ],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "unknown_key"
+    },
+    {
+      "name": "one bit flipped in the signature",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "6bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "signature of 126 hex",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f87"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "uppercase signature hex",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7BDA89004A3337E15C0D85A056F030E6081CFB9DC3DB1CBD8094D1C08619F03EB2DF890D2FCA0C986DC7DD9436DC242529B5C9BEA38709CE15448E4B4C0F8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "k1 signature shown under k2",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1",
+        "k2"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "row size plus one",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 64,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "row targets widened",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "row kind changed",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "script",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "truncated body",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f2229",
+      "expect": "size_mismatch"
+    },
+    {
+      "name": "one body byte changed",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22293f",
+      "expect": "sha256_mismatch"
+    },
+    {
+      "name": "script body starting like a zip",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "1344d9216b964218fc7fe71830b5d59cff7018c5bbe31bd9f015a869af55626c",
+        "size": 45,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "1eccbdc8441b2e917e4ae84c6a550e425425db3a9d36a93b62785a4ee9961db06cd4d681436a09669c96c87e7d086f1e0e2337eb2d76be2d77ca306edc5d3202"
+          }
+        ]
+      },
+      "body_hex": "504b03047072696e7428276120736372697074207468617420737461727473206c696b652061207a697027290a",
+      "expect": "kind_mismatch"
+    },
+    {
+      "name": "wheel body that is not a zip",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "448a1b1dea74d1403f33705544b88796d837186004197c349b1faec3d83d9ebd",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "b94c92edc64448bdd9076205552280dcb8be275694d750c9fb35e5a29ca53473a876589e22e221ee2594cc6505ad50d5bf68c9ba6de4df372b6029934ce67b01"
+          }
+        ]
+      },
+      "body_hex": "6120776865656c20666978747572652074686174206973206e6f742061207a6970",
+      "expect": "kind_mismatch"
+    },
+    {
+      "name": "non-object entries before a valid entry",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          "v1",
+          null,
+          1,
+          [],
+          true,
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "only non-object entries",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          "v1",
+          null,
+          1,
+          [],
+          true
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "missing_signature"
+    },
+    {
+      "name": "signatures null",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": null
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "alg in another case",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "Ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "missing_signature"
+    },
+    {
+      "name": "key_id a number",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": 1,
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "unknown_key"
+    },
+    {
+      "name": "key_id null",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": null,
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "unknown_key"
+    },
+    {
+      "name": "uppercase key_id of a pinned key",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475AA75463474C0285DF5DBF2BCAB73DA651358839E9B77481B2EAB107708C",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "unknown_key"
+    },
+    {
+      "name": "a failing pinned entry before a valid one",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          },
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "a revoked key beside a valid pinned key",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1",
+        "k2"
+      ],
+      "revoked": [
+        "k2"
+      ],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "24f6ed6acbfe1009c030d7ca567c33ca4830911498236b5561a6c82abec5de28",
+            "sig": "eb376b95f5c11b23a41229d3f027f93366da41d88bc85d2e813ac085af9bd5f61baff94ed2d418d72fb7c0c409bbf199b099a4c8a29263a6332713f39415d701"
+          },
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "unknown fields inside a signature entry",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708",
+            "note": "ignored",
+            "expires": 0
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "ok"
+    },
+    {
+      "name": "sig null",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": null
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "sig absent",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "signature of 130 hex",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f870800"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "size 0",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 0,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size negative",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": -1,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size 2^53",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 9007199254740992,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size 2^64",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 18446744073709551616,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size a string",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": "63",
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "size false",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": false,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "sha256 of 63 hex",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610a",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "sha256 null",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": null,
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version with a trailing newline",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0\n",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version with a non-ASCII digit",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.\u0661",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version part of seven digits",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1000000.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version of two parts",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version a number",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": 1,
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "version with a NUL",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0\u0000",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "plugin id of uuid version 1",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-1a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "plugin id with variant c",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-cc27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "plugin id without hyphens",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c3f414a8e9c275d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "plugin id null",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": null,
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "kind capitalised",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "Script",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "kind absent",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "kind with a NUL",
+      "client": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "0b5e2d6c-3f41-4a8e-9c27-5d1e8f3a6b90",
+        "version": "1.0.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello.py",
+        "requested_os": "linux",
+        "returned_os": "",
+        "sha256": "7b99f45f2ce88ca84eafc98b615c8b437a5800f8e0eba52b58b31dd50e0610ab",
+        "size": 63,
+        "kind": "script\u0000",
+        "targets": "*/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "7bda89004a3337e15c0d85a056f030e6081cfb9dc3db1cbd8094d1c08619f03eb2df890d2fca0c986dc7dd9436dc242529b5c9bea38709ce15448e4b4c0f8708"
+          }
+        ]
+      },
+      "body_hex": "23202f2f2f207363726970740a232072657175697265732d707974686f6e203d20223e3d332e3132220a23202f2f2f0a7072696e74282268656c6c6f22290a",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "targets duplicate element",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64,linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "targets empty",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "targets with a space",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/arm64, linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "targets with an unknown system",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "freebsd/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "targets with a trailing comma",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64,",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "targets with a non-ASCII letter",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64,\u0130/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "malformed_row"
+    },
+    {
+      "name": "linux/* wheel for a linux arm64 client",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "arm64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-linux.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "c92f913a52c9d183d3e7058c93c674fcaf37781404131ba53bd6ae98de6d1fde",
+        "size": 39,
+        "kind": "wheel",
+        "targets": "linux/*",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "99b8c21f2ceece5e4309df5819b80d9eaf813c2d0ac8c5d790daa515b3e3e143a47f9a400e2dbe46685a657dd2887cae1496339cb232fce62b26c49a0220cd0e"
+          }
+        ]
+      },
+      "body_hex": "504b03042061206c696e757820776865656c20666f7220616e7920617263686974656374757265",
+      "expect": "ok"
+    },
+    {
+      "name": "order: wrong plugin before every later step",
+      "client": {
+        "plugin_id": "c3d2e1f0-a9b8-4c7d-b6e5-f4a3b2c1d0e9",
+        "version": "9.9.9",
+        "os": "win",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64"
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "wrong_plugin"
+    },
+    {
+      "name": "order: wrong version before every later step",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "9.9.9",
+        "os": "win",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64"
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "wrong_version"
+    },
+    {
+      "name": "order: wrong platform before every later step",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "win",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64"
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "wrong_platform"
+    },
+    {
+      "name": "order: missing signature before the body steps",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64"
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "missing_signature"
+    },
+    {
+      "name": "order: unknown key before the body steps",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "03396219237f75a64f12aeb7f39723abf400b160c364980a765dac24aeba2464",
+            "sig": "8e443ba8946663465c239738552c79a8302838aba84b320edf57a09b80a19019fb3999d2b2ab7d19cddfbb967d0c2ce93af76e4be6ef347e3d6e92715970310a"
+          }
+        ]
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "unknown_key"
+    },
+    {
+      "name": "order: bad signature before the body steps",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "71d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "bad_signature"
+    },
+    {
+      "name": "order: size before digest and kind",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "6e65697468657220746865207369676e656420776865656c206e6f722061207a6970",
+      "expect": "size_mismatch"
+    },
+    {
+      "name": "order: digest before kind",
+      "client": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "os": "linux",
+        "arch": "x86_64"
+      },
+      "pinned": [
+        "k1"
+      ],
+      "revoked": [],
+      "row": {
+        "plugin_id": "7c9a1e34-8b2f-4d6a-a1c5-3e7f9b2d4c18",
+        "version": "2.1.0",
+        "download_link": "https://cloud.example.org/pkg/v1/0123456789abcdef0123456789abcdef/1763560900/c2lnbmF0dXJl/hello-2.1.0-py3-none-manylinux_2_17_x86_64.whl",
+        "requested_os": "linux",
+        "returned_os": "linux",
+        "sha256": "72a093d91d33e6c1814ab094e78715cbac8b845d356f036796a6087338e0525f",
+        "size": 33,
+        "kind": "wheel",
+        "targets": "linux/x86_64",
+        "signatures": [
+          {
+            "format": "v1",
+            "alg": "ed25519",
+            "key_id": "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c",
+            "sig": "61d594dbcdf8cbdb53f6bb7132d2f403b0a5e59e6cf78db0b6ad24c7944be410db147c1eda806fefd738acf54fcabd2a7f7cce2508c72bade3a38e0591d5900e"
+          }
+        ]
+      },
+      "body_hex": "585803042061206c696e7578207838365f363420776865656c2066697874757265",
+      "expect": "sha256_mismatch"
+    }
+  ]
+}
