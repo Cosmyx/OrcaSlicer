@@ -89,7 +89,7 @@ TEST_CASE("The Cosmyx server is checked against the build's pins only", "[cosmyx
     AppConfig config;
     // A pin or an opt-in stored for the Cosmyx address is never used.
     CC::set_server_pins(config, CC::CLOUD_SERVER_URL, {K1_PUBLIC, true});
-    for (const std::string url : {std::string(CC::CLOUD_SERVER_URL), std::string(CC::CLOUD_SERVER_URL) + "/", std::string()}) {
+    for (const std::string& url : {std::string(CC::CLOUD_SERVER_URL), std::string(CC::CLOUD_SERVER_URL) + "/", std::string()}) {
         INFO(url);
         const CC::ServerTrust trust = CC::server_trust(config, url);
         CHECK(trust.cosmyx_server);
