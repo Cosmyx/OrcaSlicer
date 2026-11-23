@@ -20,6 +20,7 @@
 //
 // wxWidgets-free, so cosmyx_tests checks it directly.
 
+#include <functional>
 #include <string>
 
 #include <boost/filesystem/path.hpp>
@@ -61,9 +62,20 @@ struct ServerPins
 ServerPins server_pins(const AppConfig& config, const std::string& server_url);
 // Stores the settings of server_url, the key as 64 lowercase hex; empty
 // settings remove its entry. False, and nothing stored, when public_key is
-// neither empty nor a key (see public_key_id()) or server_url is unrecognised.
-// An unrecognised address has no pins.
+// neither empty nor a key (see public_key_id()), server_url is unrecognised,
+// or the stored document cannot be read (saving over it would drop the pins
+// of every other server). An unrecognised address has no pins.
 bool set_server_pins(AppConfig& config, const std::string& server_url, const ServerPins& pins);
+
+// What Apply in Preferences does with the plugin rows, which show the pins of
+// the API address they were loaded for (loaded_url), once the API address
+// applied_url is accepted.
+enum class PinsSave {
+    Typed, // the same server, whatever its spelling: store what the rows hold for it
+    Keep,  // another server: store nothing, so its own pins stay, and show them
+    None,  // the Cosmyx server or an unrecognised address: store nothing, never used
+};
+PinsSave pins_to_save(const std::string& loaded_url, const std::string& applied_url);
 
 // The key id of a public key typed by the user (spaces trimmed, any case), or
 // empty when it is not 64 hex characters. *normalized gets the lowercase hex.
@@ -131,6 +143,17 @@ bool commit_package_record(const std::string&             plugin_id,
                            const boost::filesystem::path& package_file,
                            std::string&                   error,
                            const PackageRecord*           floor = nullptr);
+
+// The commit of a cloud install: metadata_matches (which reads the installed
+// package again, and may throw) and then commit_package_record(). A false or a
+// throw from metadata_matches refuses the install (refuse_installed_package()
+// with floor) and returns false with error set.
+bool commit_checked_install(const std::string&                       plugin_id,
+                            const boost::filesystem::path&           plugin_dir,
+                            const boost::filesystem::path&           package_file,
+                            const std::function<bool(std::string&)>& metadata_matches,
+                            std::string&                             error,
+                            const PackageRecord*                     floor = nullptr);
 
 // Removes package_file and the record in plugin_dir. With floor (the record of
 // the package the refused install replaced), writes floor there instead, so

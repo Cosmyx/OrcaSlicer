@@ -157,9 +157,9 @@ bool CloudInstallScope::commit(const PluginDescriptor& installed, std::string& e
     const boost::filesystem::path package_file(installed.entry_path);
     const PackageRecord*          floor = m_floor ? &*m_floor : nullptr;
     std::string                   reason;
-    if (!same_package_metadata(installed, reason))
-        refuse_installed_package(plugin_dir, package_file, floor);
-    else if (commit_package_record(installed.cloud_uuid(), plugin_dir, package_file, reason, floor))
+    // The metadata reader may throw (a filesystem error): that refuses the install too.
+    if (commit_checked_install(installed.cloud_uuid(), plugin_dir, package_file,
+                               [&installed](std::string& why) { return same_package_metadata(installed, why); }, reason, floor))
         return true;
     BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused after install: plugin " << installed.cloud_uuid() << ": " << reason;
     error = _u8L("The installed plugin package could not be recorded as the one whose signature was checked, so it was removed. "
