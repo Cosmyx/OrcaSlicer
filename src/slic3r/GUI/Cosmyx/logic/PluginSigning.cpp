@@ -11,6 +11,7 @@
 
 #include <nlohmann/json.hpp>
 #include <openssl/crypto.h>
+#include <openssl/err.h>
 #include <openssl/evp.h>
 
 namespace Slic3r {
@@ -331,11 +332,27 @@ std::string signed_message(const json& row, const std::string& key_id)
     return message;
 }
 
+namespace {
+
+// Every error OpenSSL queues after the mark is dropped when the scope ends:
+// a refused key or signature must not leave an entry on the calling thread's
+// queue, which the next TLS call on that thread would misread.
+struct OpenSslErrorMark
+{
+    OpenSslErrorMark() { ERR_set_mark(); }
+    ~OpenSslErrorMark() { ERR_pop_to_mark(); }
+    OpenSslErrorMark(const OpenSslErrorMark&)            = delete;
+    OpenSslErrorMark& operator=(const OpenSslErrorMark&) = delete;
+};
+
+} // namespace
+
 bool ed25519_verify(const std::string& raw_public_key, const std::string& message, const std::string& raw_signature)
 {
     if (raw_public_key.size() != 32 || raw_signature.size() != 64)
         return false;
 
+    const OpenSslErrorMark error_mark;
     std::unique_ptr<EVP_PKEY, decltype(&EVP_PKEY_free)> key(
         EVP_PKEY_new_raw_public_key(EVP_PKEY_ED25519, nullptr, reinterpret_cast<const unsigned char*>(raw_public_key.data()),
                                     raw_public_key.size()),
