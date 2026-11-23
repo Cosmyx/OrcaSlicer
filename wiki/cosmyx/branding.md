@@ -86,7 +86,7 @@ The build checks the tables before it writes anything and the tree after:
 | G5 | Colour rewrites match their exact counts, and no teal is left in the colour scopes unless allow-listed. |
 | G6 | The tables are valid, sorted and canonical, and the review tables are up to date. |
 | G7 | No CosmoSlice colour or name is committed in an upstream-owned file. |
-| G8 | Product-name patches and rename rows match, literals and msgids are renamed together, no visible upstream name is left outside the allowlist, the app key (data folder, registry key) is unchanged, and every packaging pin (AppImage desktop name and file names, CPack package and installer names, Flatpak id) is identical after apply. |
+| G8 | Product-name patches and rename rows match, literals and msgids are renamed together, no visible upstream name is left outside the allowlist, the app key (data folder, registry key) is unchanged, every packaging pin (AppImage intermediate file names, Linux binary name, CPack package name, Flatpak id) is identical after apply, and the AppImage launcher name matches the file its script moves. |
 
 A failed check before apply writes nothing; a failure after apply puts every
 file back.
@@ -110,9 +110,9 @@ checks the same on every OS.
 
 The build shows the name CosmoSlice, including the installer's Apps &
 features name, the Start menu and desktop shortcut label and the Flatpak
-software centre name and description; the app key stays OrcaSlicer, so the
-executable, bundle id, file associations and the `OrcaSlicer_` artifact
-names do not change (decision 0132). The Windows install folder, registry
+software centre name and description (decision 0132). The app key stays
+OrcaSlicer, so the data folder, `OrcaSlicer.conf`, the bundle id, the Linux
+binary `orca-slicer` and the Flatpak id do not change. The Windows install folder, registry
 key and installer window title belong to the installer identity
 (`cmake/cosmyx/Packaging.cmake`, decision 0182).
 
@@ -129,9 +129,43 @@ Names that name an upstream thing are never rewritten: Orca Cloud, Orca Cube,
 Orca String Hell, Orca Tolerance Test, Orca YOLO, Orca Arena, Orca Palette,
 Orca Badge, OrcaSliced Combo, Orca Preset Bundle, Orca Filament Library, and
 any name inside a URL, file or path name, or dotted id. Names tied to the app
-key stay too, because they point at real files: `OrcaSlicer.conf`,
-`OrcaSlicer.app`, `OrcaSlicer.AppImage` and the Windows data folder
-(`%APPDATA%\OrcaSlicer`). "ORCA SLICER" and "ORCASLICER" become "CosmoSlice".
+key stay too, because they point at real files: `OrcaSlicer.conf` and the
+Windows data folder (`%APPDATA%\OrcaSlicer`). `OrcaSlicer.app` and
+`OrcaSlicer.AppImage` become `CosmoSlice.app` and `CosmoSlice.AppImage`, the
+packages' own names. "ORCA SLICER" and "ORCASLICER" become "CosmoSlice".
+
+### Package names
+
+Every package a user downloads or runs is named CosmoSlice (decision 0210):
+
+| Package | Name |
+|---------|------|
+| Windows executable (portable, installer, MSIX) | `CosmoSlice.exe`; MSIX command alias `cosmoslice.exe` |
+| Windows installer | `CosmoSlice_Windows_Installer_V<version>_<arch>.exe` |
+| Windows artifacts | `CosmoSlice_Windows_<ver><arch>_portable`, `CosmoSlice_Windows_<ver><arch>`, `CosmoSlice_Windows_MSIX_<ver><arch>` |
+| macOS | `CosmoSlice.app` in `CosmoSlice_Mac_universal_<ver>.dmg` (volume CosmoSlice), artifact `CosmoSlice_Mac_universal_<ver>` |
+| Linux AppImage | launcher name CosmoSlice, file `CosmoSlice_Linux_AppImage<ubuntu><arch>_<ver>.AppImage`, artifact `CosmoSlice_Linux_ubuntu_<ubuntu><arch>_<ver>` |
+| Flatpak | `CosmoSlice-Linux-flatpak_<ver>_<arch>.flatpak` (file and artifact) |
+
+`<ver>` is the workflow's `env.ver`; `<arch>` is its arch suffix (Windows
+`_x64`, `_arm64`, plus `_msvc` on a cl build; Linux empty or `_aarch64`).
+
+What the build names (the executable, the installer, the AppImage launcher
+and the file appimagetool makes from it) is patched before the build by
+`patches.json`. What only the workflow names is renamed by the action
+`.github/actions/cosmyx-package-names` (`scripts/cosmyx/package_names.py`,
+names in `packages.json`), from five `# Cosmyx` hook steps: `mac-app` (before
+the Cosmyx macOS signing, which then signs `CosmoSlice.app` and rebuilds its
+DMG), `mac-upload`, `windows`, `linux` and `flatpak` (in
+`build_flatpak.yml`). Each stage uploads the CosmoSlice packages and deletes
+the upstream `OrcaSlicer_` artifacts it replaces. The profile validator is not
+exported (decision 0211).
+
+The MSIX identity comes from repository variables, set by a repository admin
+(decision 0212): `ORCA_MSIX_IDENTITY_NAME` = `Cosmyx.CosmoSlice`,
+`ORCA_MSIX_PUBLISHER_DISPLAY_NAME` = `Cosmyx`, and `ORCA_MSIX_PUBLISHER` =
+the signing certificate's subject once that certificate exists (unset until
+then: the upstream default applies).
 
 After an upstream merge, `just brand-check` (or the next build) reports:
 

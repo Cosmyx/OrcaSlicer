@@ -7,7 +7,9 @@ key, publisher and installer window title belong to the installer identity
 (`cmake/cosmyx/Packaging.cmake`), no longer to this decision. Amended
 after integration build 44545583808: packaging identifiers are pinned and
 the AppImage desktop entry name stays the app key (see the last decision
-point).
+point). Amended by decision 0210: the executable, `.app`, AppImage, installer,
+MSIX, DMG and Flatpak file names and the CI artifacts are named CosmoSlice;
+the AppImage desktop entry is renamed together with the file it makes.
 
 ## Context
 
