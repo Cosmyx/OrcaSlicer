@@ -42,7 +42,7 @@
     "seven_zip_min": "23.01",
     "own_names": ["OrcaSlicer*.exe", "orca-slicer.exe", "CosmoSlice*.exe", "CosmoSlice.exe", "Uninstall.exe", "OrcaSlicer_profile_validator.exe"],
     "nsis_prefixes": ["$INSTDIR"],
-    "app_exe": "orca-slicer.exe",
+    "app_exe": ["CosmoSlice.exe", "orca-slicer.exe"],
     "run_archs": ["x64"],
     "smoke_timeout": 60,
     "slice_timeout": 300

@@ -104,6 +104,8 @@ here; see the upstream release notes.
   `--help` and a slice of the shipped cube, judged on the G-code it writes. On
   Windows the app runs from a temporary copy with a pinned, hash-checked Mesa
   software OpenGL (mesa-dist-win 26.2.5, MIT, test-only, never shipped). The
-  macOS run never executes a file outside the app bundle. See
+  macOS run never executes a file outside the app bundle. The Windows run
+  starts `CosmoSlice.exe`, or `orca-slicer.exe` for an unrenamed build, and
+  fails naming both when neither is there. See
   `wiki/cosmyx/artifact-checks.md`. Pull request: pending. Decisions: 0160,
   0161.

@@ -28,8 +28,11 @@ check.
   being run.
 - The app's output is decoded with replacement characters: bytes that are not
   valid text give a record, never a crashed job.
-- Windows: `orca-slicer.exe` of a temporary copy of each x64 portable folder
-  (the downloaded artifact is never changed), with the pinned Mesa of 0161.
+- Windows: the exe of a temporary copy of each x64 portable folder (the
+  downloaded artifact is never changed), with the pinned Mesa of 0161. The exe
+  is the first of the ordered list `windows.app_exe` (`CosmoSlice.exe`, then
+  `orca-slicer.exe` for a build without the product rename) that is a file of
+  the folder; with none, both checks fail and their reason names the list.
   arm64 folders are skipped by design. `--sw-renderer` is not passed: the
   launcher forwards it to the command line parser, which rejects it as an
   invalid option (0161 says how Mesa is picked up instead).

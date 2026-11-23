@@ -149,11 +149,11 @@ class WindowsTests(unittest.TestCase):
         (self.subject / "version.inc").write_text(VERSION_INC, encoding="utf-8")
         self.expectations = expectations()
 
-    def artifact(self, arch: str = "x64") -> inventory.Artifact:
-        return inventory.classify(f"OrcaSlicer_Windows_{TAG}_{arch}_portable", self.expectations)
+    def artifact(self, arch: str = "x64", product: str = "OrcaSlicer") -> inventory.Artifact:
+        return inventory.classify(f"{product}_Windows_{TAG}_{arch}_portable", self.expectations)
 
-    def records(self, app, arch="x64", exec_ok=True, seven_zip="7z.exe", payload=ARCHIVE):
-        return smoke_native.windows_records(self.artifact(arch), self.portable, self.subject, self.work,
+    def records(self, app, arch="x64", exec_ok=True, seven_zip="7z.exe", payload=ARCHIVE, product="OrcaSlicer"):
+        return smoke_native.windows_records(self.artifact(arch, product), self.portable, self.subject, self.work,
                                             self.expectations, exec_ok, {"PATH": "sysbin"}, app,
                                             lambda url, timeout=None: io.BytesIO(payload), seven_zip, pause=0)
 
@@ -216,10 +216,46 @@ class WindowsTests(unittest.TestCase):
             self.assertTrue(all(r.status == "skip" and r.by_design for r in records))
         self.assertEqual(app.calls, [])
 
-    def test_missing_exe_fails(self) -> None:
-        (self.portable / "orca-slicer.exe").unlink()
+    def test_app_exe_is_an_ordered_preference_list(self) -> None:
+        self.assertEqual(self.expectations["windows"]["app_exe"], ["CosmoSlice.exe", "orca-slicer.exe"])
+
+    def test_cosmoslice_exe_runs_when_it_is_the_only_one(self) -> None:
+        (self.portable / "orca-slicer.exe").rename(self.portable / "CosmoSlice.exe")
+        app = FakeApp()
+        records = by_check(self.records(app, product="CosmoSlice"))
+        self.assertEqual(records["smoke"].status, "pass")
+        self.assertEqual(records["slice"].status, "pass", records["slice"].reason)
+        self.assertEqual(records["smoke"].path, "CosmoSlice.exe --help")
+        copy = self.work / self.artifact(product="CosmoSlice").name / "run" / "app"
+        (smoke_args, _), (slice_args, _) = app.app_calls()
+        self.assertEqual(smoke_args, [str(copy / "CosmoSlice.exe"), "--help"])
+        self.assertEqual(slice_args[0], str(copy / "CosmoSlice.exe"))
+
+    def test_cosmoslice_exe_wins_over_orca_slicer_exe(self) -> None:
+        (self.portable / "CosmoSlice.exe").write_bytes(b"MZ")
+        app = FakeApp()
+        records = by_check(self.records(app))
+        self.assertEqual(records["smoke"].path, "CosmoSlice.exe --help")
+        (smoke_args, _), _ = app.app_calls()
+        self.assertEqual(Path(smoke_args[0]).name, "CosmoSlice.exe")
+
+    def test_orca_slicer_exe_runs_without_cosmoslice_exe(self) -> None:
         records = by_check(self.records(FakeApp()))
-        self.assertEqual(records["smoke"].status, "fail")
+        self.assertEqual(records["smoke"].path, "orca-slicer.exe --help")
+
+    def test_a_folder_named_like_the_exe_does_not_count(self) -> None:
+        (self.portable / "CosmoSlice.exe").mkdir()
+        records = by_check(self.records(FakeApp()))
+        self.assertEqual(records["smoke"].path, "orca-slicer.exe --help")
+
+    def test_missing_exe_fails_and_names_every_candidate(self) -> None:
+        (self.portable / "orca-slicer.exe").unlink()
+        app = FakeApp()
+        records = by_check(self.records(app))
+        for check in ("smoke", "slice"):
+            self.assertEqual(records[check].status, "fail")
+            self.assertIn("none of CosmoSlice.exe, orca-slicer.exe in the portable folder", records[check].reason)
+        self.assertEqual(app.app_calls(), [])
 
 
 class MacTests(unittest.TestCase):
@@ -257,6 +293,17 @@ class MacTests(unittest.TestCase):
         self.assertEqual(slice_args[0], exe)
         self.assertNotIn("env", slice_kwargs)
         self.assertEqual(slice_kwargs["timeout"], 300)
+
+    def test_renamed_cosmoslice_app_runs_its_bundle_executable(self) -> None:
+        (self.mount / "OrcaSlicer.app").rename(self.mount / "CosmoSlice.app")
+        artifact = inventory.classify(f"CosmoSlice_Mac_universal_{TAG}", self.expectations)
+        self.assertEqual(artifact.spec["id"], "mac-universal")
+        app = FakeApp()
+        records = by_check(smoke_native.macos_records(artifact, self.mount, self.subject, self.work,
+                                                      self.expectations, True, app, "arm64"))
+        self.assertEqual(records["smoke"].status, "pass")
+        self.assertEqual(records["smoke"].path, "CosmoSlice.app/Contents/MacOS/OrcaSlicer --help")
+        self.assertEqual(records["slice"].status, "pass", records["slice"].reason)
 
     def test_executable_name_from_info_plist(self) -> None:
         contents = self.mount / "OrcaSlicer.app" / "Contents"

@@ -192,6 +192,13 @@ def macos_records(artifact: Artifact, mount: Path, subject: Path, work: Path, ex
 # Windows
 
 
+def windows_exe(portable: Path, names: list[str]) -> str | None:
+    """The first of the expected exe names (an ordered preference list) that
+    is a file of the portable folder: CosmoSlice.exe once the product is
+    renamed, orca-slicer.exe for an unrenamed build."""
+    return next((name for name in names if (portable / name).is_file()), None)
+
+
 def windows_records(artifact: Artifact, portable: Path, subject: Path, work: Path, expectations: dict, exec_ok: bool,
                     env: dict | None = None, run: Runner = subprocess.run, opener=urllib.request.urlopen,
                     seven_zip: str | None = None, pause: float = 5.0) -> list[Record]:
@@ -200,9 +207,10 @@ def windows_records(artifact: Artifact, portable: Path, subject: Path, work: Pat
         return skipped("windows", artifact.name, "built from a fork: never executed (0141)", True)
     if artifact.arch not in settings["run_archs"]:
         return skipped("windows", artifact.name, f"{artifact.arch} app is not run on the x64 runner", True)
-    exe_name = settings["app_exe"]
-    if not (portable / exe_name).is_file():
-        return skipped("windows", artifact.name, f"no {exe_name} in the portable folder", False, "fail")
+    exe_name = windows_exe(portable, settings["app_exe"])
+    if exe_name is None:
+        return skipped("windows", artifact.name, f"none of {', '.join(settings['app_exe'])} in the portable folder",
+                       False, "fail")
     base = work / artifact.name / "run"
     copy = base / "app"
     if copy.exists():
