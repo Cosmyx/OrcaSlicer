@@ -3787,6 +3787,7 @@ int OrcaCloudServiceAgent::get_plugin_download_url(const std::string& uuid,
             row.download_link = get_json_string_field(item, "download_link");
             row.requested_os  = get_json_string_field(item, "requested_os");
             row.returned_os   = get_json_string_field(item, "returned_os");
+            row.cosmyx_row    = item; // Cosmyx: kept whole, verified in CloudPluginService (decision 0204)
 
             if (!row.requested_os.empty() || !row.returned_os.empty())
                 BOOST_LOG_TRIVIAL(info) << __FUNCTION__ << ": artifact fallback requested_os=" << row.requested_os

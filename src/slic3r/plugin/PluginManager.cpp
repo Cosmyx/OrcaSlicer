@@ -1,4 +1,5 @@
 #include "PluginManager.hpp"
+#include "slic3r/GUI/Cosmyx/PluginVerify.hpp" // Cosmyx
 
 #include <atomic>
 #include <boost/filesystem/path.hpp>
@@ -2035,6 +2036,7 @@ bool PluginManager::install_cloud_plugin_package(const std::string& plugin_key,
         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": " << error;
         return false;
     }
+    GUI::Cosmyx::commit_cloud_plugin_record(installed); // Cosmyx: .cosmyx_package.json (decision 0204)
 
     if (!requested_version.empty())
         installed.version = requested_version;

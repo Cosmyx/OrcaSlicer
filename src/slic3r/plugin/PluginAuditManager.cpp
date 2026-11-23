@@ -843,6 +843,7 @@ std::vector<std::string> PluginAuditManager::default_denied_filenames()
         GCODEVIEWER_APP_KEY ".ini",
         secret_constants::USER_SECRET_FILENAME,
         ".install_state.json",
+        ".cosmyx_package.json", // Cosmyx: the package record (decision 0204)
     };
 }
 

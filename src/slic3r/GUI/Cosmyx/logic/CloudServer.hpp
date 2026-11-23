@@ -73,6 +73,13 @@ inline CloudValues cosmocloud_values()
 // Returns the number of cloud keys written.
 int apply_cloud_server(AppConfig& config);
 
+// The API address the cloud agent was created with: orca_api_url as
+// apply_cloud_server() left it, which the agent reads right after. A change in
+// Preferences only reaches the agent at the next start (decision 0203), so the
+// plugin package check (decision 0204) uses this address, not the current key.
+// Before the first apply_cloud_server(), the current orca_api_url.
+std::string active_api_url(const AppConfig& config);
+
 // --- Custom cloud instance (Preferences, decision 0203) ---------------------
 
 enum class CloudValueError {
