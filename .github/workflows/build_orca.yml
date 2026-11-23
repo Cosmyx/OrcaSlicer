@@ -633,6 +633,7 @@ jobs:
         uses: ./.github/actions/cosmyx-sign # Cosmyx
         with: # Cosmyx
           mode: verify # Cosmyx
+          require-installer: ${{ !vars.SELF_HOSTED }} # Cosmyx
 
       - name: Pack app
         if: runner.os == 'Windows'
