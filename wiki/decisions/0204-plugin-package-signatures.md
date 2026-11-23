@@ -68,7 +68,20 @@ own key, or none at all.
   The key is stored as 64 lowercase hex; the setter refuses anything else. A
   stored key that cannot be read (hand-edited, truncated) gives no key and no
   opt-in, so that server is refused: a pin never falls back to unverified
-  plugins.
+  plugins. A stored document that cannot be read holds no pins, and the
+  setter refuses to save over it, since that would drop every other server's
+  pins; Preferences then says the settings were not saved.
+
+  The Preferences rows show the pins of the API address they were loaded
+  for, and Apply stores them for that server only (`pins_to_save()`): when
+  the API address was changed to another server (another normalized
+  address), nothing is stored, so neither server's pins change and an opt-in
+  never carries to a new address; the rows then show the new address's own
+  pins, with a note asking the user to check them and apply again. Nothing is
+  stored for the Cosmyx server, whose rows are disabled.
+
+  The settings do not fetch `/pkg/v1/keys`: the user pastes the key from it,
+  and the key id is shown to compare with the operator's.
 - **Canonical or refused addresses.** The cloud agent hands its API address,
   with a path appended, to libcurl, which decodes a percent-encoded host,
   drops user info, removes dot segments and guesses http for an address with
@@ -126,8 +139,6 @@ own key, or none at all.
   refused for plugins by the rule above: `server_kind()` calls plain http on
   any host that is not loopback by this rule unrecognised, so no pin or
   opt-in of the user applies to a package fetched over it.
-  The settings do not fetch `/pkg/v1/keys`: the user pastes the key from it,
-  and the key id is shown to compare with the operator's.
 - **Requested version.** The request carries the version asked for when it is
   a strict `X.Y.Z`, or none for the latest. Any other requested version is
   refused with `wrong_version` instead of being sent as a request for the
@@ -156,7 +167,8 @@ own key, or none at all.
   copies it, so a file swapped there and swapped back before the copy would
   pass the digest check with another package's dependencies. The commit reads
   both again from the installed copy, the bytes whose digest it checks, and
-  refuses the install when they differ from what the installer read. This was
+  refuses the install when they differ from what the installer read, or when
+  reading them fails or throws (`commit_checked_install()`). This was
   chosen over writing the body to a private temporary folder: that would need
   a rewrite of upstream's temporary file code in `CloudPluginService.cpp`, and
   it only keeps out other users, who cannot replace a file in a per-user or
@@ -225,8 +237,12 @@ own key, or none at all.
 - An address that reaches the Cosmyx server under another name (an IP
   literal, a DNS alias) is a custom server: the user's pins for it apply.
   TLS host name checking makes such a name fail unless the certificate covers
-  it. Once `PRODUCTION_KEYS` is filled, the breaker test that expects the
-  build's keys for a refused Cosmyx spelling must expect no key instead.
+  it.
+- Known limit: the download check reads the pins from the app config on the
+  download thread, while Preferences may write them on the GUI thread, and
+  upstream's `AppConfig` has no lock. A download that runs while the user
+  applies the cloud settings is not serialized with that write; closing it
+  would need a lock in upstream's `AppConfig`.
 - Removing it: delete the hook lines tagged `// Cosmyx` in
   `OrcaCloudServiceAgent.{hpp,cpp}`, `CloudPluginService.cpp`,
   `PluginManager.cpp` (the scope and the commit block), `PluginAuditManager.cpp`, `PluginFsUtils.cpp` and
@@ -238,6 +254,9 @@ own key, or none at all.
   `test_cosmyx_plugin_trust.cpp`, and the breakers' reproductions
   `test_cosmyx_plugin_signing_break_a.cpp`,
   `test_cosmyx_plugin_trust_break_b.cpp`, `test_cosmyx_plugin_break_c.cpp`,
-  and the address rules in `test_cosmyx_cloud_server.cpp`); the hook lines are pinned by
+  `test_cosmyx_plugin_break_d.cpp`, `test_cosmyx_plugin_break_e.cpp`, what
+  Apply stores and the install commit in `test_cosmyx_plugin_pins_save.cpp`,
+  and the address rules in `test_cosmyx_cloud_server.cpp` and
+  `test_cosmyx_server_address.cpp`); the hook lines are pinned by
   `scripts/cosmyx/tests/test_plugin_signing.py`. The Preferences rows are to
   be covered by the GUI goldens (T16), which are not on this branch's base.
