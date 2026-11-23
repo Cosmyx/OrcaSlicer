@@ -130,7 +130,9 @@ class ImportNameHookTests(unittest.TestCase):
     def test_guard_after_the_entry_package_is_chosen(self) -> None:
         lines = read(*PLUGIN, "PluginFsUtils.cpp")
         self.assertEqual(lines[1], '#include "slic3r/GUI/Cosmyx/logic/PluginTrust.hpp" // Cosmyx')
-        guard = index_of(lines, "GUI::Cosmyx::check_wheel_import_name(whl_path, descriptor.entry_package, error)")
+        # The name rule only: upstream accepts a resource-only wheel here,
+        # which holds no package at its top.
+        guard = index_of(lines, "GUI::Cosmyx::check_entry_package_name(descriptor.entry_package, error)")
         self.assertIn("descriptor.entry_package = normalize_package_name(meta_name);", lines[guard - 2])
         self.assertEqual(lines[guard + 1].strip(), "return false; // Cosmyx")
 

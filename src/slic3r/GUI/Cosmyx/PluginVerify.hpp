@@ -11,6 +11,9 @@
 // - PluginManager::install_cloud_plugin_package() opens a CloudInstallScope
 //   first, and calls its commit() once the package is installed, before the
 //   plugin entry is marked installed.
+//
+// Both are no-ops in a process with no OrcaSlicer app (package_check_on()):
+// the download is logged as not checked and installed as upstream does.
 
 #include <optional>
 #include <string>

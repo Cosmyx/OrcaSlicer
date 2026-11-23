@@ -6,6 +6,7 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/log/trivial.hpp>
 #include <nlohmann/json.hpp>
+#include <wx/app.h>
 
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Platform.hpp"
@@ -16,7 +17,6 @@
 #include "slic3r/GUI/format.hpp"
 #include "slic3r/plugin/PluginDescriptor.hpp"
 #include "slic3r/plugin/PluginFsUtils.hpp"
-#include "logic/CloudServer.hpp"
 #include "logic/PluginSigning.hpp"
 #include "logic/PluginTrust.hpp"
 
@@ -47,6 +47,11 @@ std::string refusal_message(const std::string& reason, const ServerTrust& trust,
     // TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
     return GUI::format(_u8L("The plugin package failed its signature check (%1%). The plugin was not installed."), reason);
 }
+
+// True when the OrcaSlicer app runs. wxGetApp() casts wxTheApp unchecked, so
+// it is only called once this holds: a process without the app (the upstream
+// plugin tests) has no wxTheApp, or a plain wxApp (wxInitializer).
+bool app_running() { return dynamic_cast<GUI_App*>(wxTheApp) != nullptr; }
 
 void notify_unverified(const std::string& name)
 {
@@ -103,9 +108,17 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
                                  const std::string&      body,
                                  std::string&            error)
 {
-    const AppConfig* config = wxGetApp().app_config;
-    ClientRequest    request;
+    const bool          running = app_running();
+    const DownloadCheck check   = download_check(running, running ? wxGetApp().app_config : nullptr);
+    ClientRequest       request;
     request.plugin_id = entry.cloud_uuid();
+    if (!check.on) {
+        // No app, so no trust settings: the download is installed as upstream
+        // does, unchecked and without a record (decision 0204, "Without the app").
+        BOOST_LOG_TRIVIAL(warning) << "Cosmyx plugin package NOT CHECKED (no OrcaSlicer app in this process): plugin "
+                                   << request.plugin_id;
+        return true;
+    }
     // The request carries a strict X.Y.Z or none (latest); any other version is refused.
     const bool request_ok = request_version(requested_version, request.version);
 
@@ -116,8 +129,8 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
     const std::optional<PackageRecord> installed         = installed_record(entry);
     const std::string                  installed_version = installed ? installed->version : std::string();
 
-    const std::string server = config != nullptr ? active_api_url(*config) : std::string(CLOUD_SERVER_URL);
-    const ServerTrust trust  = config != nullptr ? server_trust(*config, server) : ServerTrust{true, built_in_keys(), false};
+    const std::string& server = check.server;
+    const ServerTrust& trust  = check.trust;
 
     PackageVerdict verdict;
     if (!request_ok)
@@ -153,6 +166,11 @@ CloudInstallScope::CloudInstallScope(const PluginDescriptor& previous)
 
 bool CloudInstallScope::commit(const PluginDescriptor& installed, std::string& error) const
 {
+    // Without the app the download was not checked, so there is no record to
+    // match: the install goes on as upstream. With the app, a missing record
+    // still refuses it.
+    if (!package_check_on(app_running()))
+        return true;
     const boost::filesystem::path plugin_dir(installed.plugin_root);
     const boost::filesystem::path package_file(installed.entry_path);
     const PackageRecord*          floor = m_floor ? &*m_floor : nullptr;

@@ -92,6 +92,30 @@ struct ServerTrust
 
 ServerTrust server_trust(const AppConfig& config, const std::string& server_url);
 
+// --- Without the app ------------------------------------------------------------
+
+// Whether cloud installs are checked in this process. app_running is false
+// when no OrcaSlicer app runs: the upstream plugin tests drive the plugin
+// manager headless, with fake servers over plain http and packages that carry
+// no signature. There are no trust settings to read then (no app config, no
+// Preferences), so the check is off: both hooks behave as upstream, and the
+// download hook logs each package it did not check. In the app, the check is
+// always on (decision 0204, "Without the app").
+bool package_check_on(bool app_running);
+
+// What one cloud download is checked against.
+struct DownloadCheck
+{
+    bool        on = false; // package_check_on(): false leaves the download unchecked
+    std::string server;     // the API address the agent uses
+    ServerTrust trust;
+};
+
+// config is the app config, or null before it is loaded: the Cosmyx server is
+// then assumed, with the build's keys only, so a missing config never relaxes
+// the check.
+DownloadCheck download_check(bool app_running, const AppConfig* config);
+
 // The result of the whole check of one download.
 struct PackageVerdict
 {
@@ -164,17 +188,25 @@ void refuse_installed_package(const boost::filesystem::path& plugin_dir,
 
 // --- Wheel entry package ------------------------------------------------------
 
+// The entry package name read from a wheel's metadata is safe to use as a
+// folder name and an import name (is_safe_import_name()); the rule that closes
+// the path escape. Checked where the name is chosen, so it does not ask the
+// wheel to hold the package: upstream accepts a resource-only wheel (data
+// files and dist-info, no Python package) there.
+bool check_entry_package_name(const std::string& name, std::string& error);
+
 // The entry package of a wheel is safe to extract to and import: a plain
-// module name (is_safe_import_name) that the wheel holds at its top, as a
-// package folder or a module. Error messages are English, like the upstream
-// wheel checks they join.
+// module name (check_entry_package_name()) that the wheel holds at its top, as
+// a package folder or a module, so the import never picks a module of the
+// same name from elsewhere on the path. Error messages are English, like the
+// upstream wheel checks they join.
 bool check_wheel_import_name(const boost::filesystem::path& wheel, const std::string& name, std::string& error);
 
 // The entry is a wheel: its extension is .whl in any case.
 bool is_wheel_path(const std::string& path);
 
-// The same check right before a plugin is imported, since the catalog may set
-// the entry package of a cloud plugin: applied when entry_path is a wheel
+// check_wheel_import_name() right before a plugin is imported, since the
+// catalog may set the entry package of a cloud plugin: applied when entry_path is a wheel
 // (any case of .whl), true for any other entry.
 bool check_entry_package(const std::string& entry_path, const std::string& entry_package, std::string& error);
 

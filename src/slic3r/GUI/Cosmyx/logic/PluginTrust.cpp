@@ -172,6 +172,22 @@ ServerTrust server_trust(const AppConfig& config, const std::string& server_url)
     return trust;
 }
 
+bool package_check_on(bool app_running) { return app_running; }
+
+DownloadCheck download_check(bool app_running, const AppConfig* config)
+{
+    DownloadCheck check;
+    check.on     = package_check_on(app_running);
+    check.server = config != nullptr ? active_api_url(*config) : std::string(CLOUD_SERVER_URL);
+    if (config != nullptr) {
+        check.trust = server_trust(*config, check.server);
+    } else {
+        check.trust.cosmyx_server = true;
+        check.trust.keys          = built_in_keys();
+    }
+    return check;
+}
+
 bool request_version(const std::string& requested, std::string& version)
 {
     if (!requested.empty() && !is_strict_version(requested))
@@ -328,12 +344,18 @@ void refuse_installed_package(const fs::path& plugin_dir, const fs::path& packag
         fs::remove(plugin_dir / PACKAGE_RECORD_FILE, ec);
 }
 
+bool check_entry_package_name(const std::string& name, std::string& error)
+{
+    if (is_safe_import_name(name))
+        return true;
+    error = "Wheel entry package is not a plain Python module name: " + name;
+    return false;
+}
+
 bool check_wheel_import_name(const fs::path& wheel, const std::string& name, std::string& error)
 {
-    if (!is_safe_import_name(name)) {
-        error = "Wheel entry package is not a plain Python module name: " + name;
+    if (!check_entry_package_name(name, error))
         return false;
-    }
 
     mz_zip_archive archive;
     mz_zip_zero_struct(&archive);
