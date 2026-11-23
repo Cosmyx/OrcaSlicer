@@ -12,8 +12,9 @@ any of them silently.
 
 ## Decision
 
-- Names: every `OrcaSlicer_*` artifact except the `Mac_bundle` tarballs
-  carries `<display version>_<hash>`, the hash a prefix of the built commit (7
+- Names: every artifact named with a product prefix, `OrcaSlicer_*` or
+  `CosmoSlice_*` (the prefixes listed in `name_prefixes` of
+  `data/expectations.json`), except the `Mac_bundle` tarballs, carries `<display version>_<hash>`, the hash a prefix of the built commit (7
   characters or more). The display version comes from the trusted
   `cosmyx_version.py` applied to the built commit's files.
 - Translations: every translated, non-fuzzy entry of
@@ -29,6 +30,12 @@ any of them silently.
 
 ## Consequences
 
-- The branding guard (T11) is deferred; if T11 renames the artifacts, the
-  patterns in `data/expectations.json` change with it.
+- The branding guard (T11) is deferred. The rename of the packages to
+  CosmoSlice (`CosmoSlice_*` artifacts, `CosmoSlice.exe`, `CosmoSlice.app`)
+  lands on its own branch in an order not known here, so every artifact
+  pattern, the names check and the Windows own names accept both the
+  `OrcaSlicer` and the `CosmoSlice` forms. The profile validator artifacts are
+  no longer exported by Cosmyx builds: they are checked when present and never
+  required. Once no build can produce the old names, dropping the
+  `OrcaSlicer` alternatives is a data change in `data/expectations.json`.
 - Removing it: drop `content.py` and the names check in `inventory.py`.

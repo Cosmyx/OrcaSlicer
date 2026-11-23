@@ -32,6 +32,12 @@ NAMES = {
     f"OrcaSlicer_profile_validator_Linux_ubuntu_2404_{TAG}": ("linux-validator", ""),
 }
 
+# The same names under the CosmoSlice product name (the rename to CosmoSlice,
+# package-names plan). Cosmyx builds no longer export the profile validator,
+# so its names have no CosmoSlice form.
+COSMO_NAMES = {name.replace("OrcaSlicer_", "CosmoSlice_", 1): spec for name, spec in NAMES.items()
+               if "profile_validator" not in name}
+
 
 def api(names: list[str]) -> list[dict]:
     return [{"id": index + 1, "name": name, "expired": False} for index, name in enumerate(names)]
@@ -49,6 +55,19 @@ class ClassifyTests(unittest.TestCase):
                 found = inventory.classify(name, EXPECTATIONS)
                 self.assertIsNotNone(found)
                 self.assertEqual((found.family, found.arch), (family, arch))
+
+    def test_every_cosmoslice_name_has_its_family(self) -> None:
+        for name, (family, arch) in COSMO_NAMES.items():
+            with self.subTest(name=name):
+                found = inventory.classify(name, EXPECTATIONS)
+                self.assertIsNotNone(found)
+                self.assertEqual((found.family, found.arch, found.tag or TAG), (family, arch, TAG))
+
+    def test_other_prefixes_are_unknown(self) -> None:
+        for name in (f"Cosmoslice_Windows_{TAG}_x64", f"XCosmoSlice_Mac_universal_{TAG}",
+                     f"CosmoSlice-Linux-flatpak_{TAG}_x86_64.flatpak"):
+            with self.subTest(name=name):
+                self.assertIsNone(inventory.classify(name, EXPECTATIONS))
 
     def test_msvc_flag_and_tag(self) -> None:
         found = inventory.classify(f"OrcaSlicer_Windows_{TAG}_x64_msvc", EXPECTATIONS)
@@ -84,6 +103,25 @@ class RequiredTests(unittest.TestCase):
                 statuses = self.statuses(run(branch), names)
                 self.assertEqual(statuses["mac-universal"], "fail")
 
+    def test_cosmoslice_build_without_validator_passes(self) -> None:
+        statuses = self.statuses(run(), list(COSMO_NAMES))
+        self.assertEqual(sorted(statuses.values()), ["pass"] * 4)
+
+    def test_validator_absent_does_not_fail(self) -> None:
+        names = [n for n in NAMES if "profile_validator" not in n]
+        for build in (run(), run("release/2.6"), run(event="schedule")):
+            with self.subTest(build=build):
+                self.assertNotIn("fail", self.statuses(build, names).values())
+
+    def test_mixed_prefixes_pass(self) -> None:
+        names = [n if n.startswith("OrcaSlicer_Mac") else n.replace("OrcaSlicer_", "CosmoSlice_", 1)
+                 for n in NAMES if "profile_validator" not in n]
+        self.assertEqual(sorted(self.statuses(run(), names).values()), ["pass"] * 4)
+
+    def test_missing_cosmoslice_required_fails(self) -> None:
+        names = [n for n in COSMO_NAMES if not n.startswith("CosmoSlice_Mac_universal")]
+        self.assertEqual(self.statuses(run(), names)["mac-universal"], "fail")
+
     def test_msvc_installer_does_not_count(self) -> None:
         names = [n for n in NAMES if n != f"OrcaSlicer_Windows_{TAG}_x64"]
         self.assertEqual(self.statuses(run(), names)["windows-installer x64"], "fail")
@@ -117,6 +155,15 @@ class NamesTests(unittest.TestCase):
         self.assertNotIn(f"OrcaSlicer_Mac_bundle_arm64_{SHA}", records)
         self.assertEqual(records["OrcaSlicer_Windows_V2.6.0_x64"], "fail")
         self.assertEqual(records[f"OrcaSlicer_Mac_universal_{TAG}"], "pass")
+
+    def test_cosmoslice_names_records(self) -> None:
+        names = list(COSMO_NAMES) + ["CosmoSlice_Windows_V2.6.0_x64", f"CosmoSlice-Linux-flatpak_{TAG}_x86_64.flatpak"]
+        records = {r.artifact: r.status for r in inventory.names_records(names, "2.6.0-dev-8", SHA, EXPECTATIONS)}
+        self.assertNotIn(f"CosmoSlice_Mac_bundle_arm64_{SHA}", records)
+        self.assertNotIn(f"CosmoSlice-Linux-flatpak_{TAG}_x86_64.flatpak", records)
+        self.assertEqual(records["CosmoSlice_Windows_V2.6.0_x64"], "fail")
+        self.assertEqual(records[f"CosmoSlice_Mac_universal_{TAG}"], "pass")
+        self.assertEqual(len(records), len(COSMO_NAMES))
 
     def test_names_skip_before_t6(self) -> None:
         records = inventory.names_records(list(NAMES), None, SHA, EXPECTATIONS)
