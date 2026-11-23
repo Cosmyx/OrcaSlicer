@@ -77,19 +77,13 @@ here; see the upstream release notes.
   from the Cosmyx cloud cannot be installed until a release adds it; installed
   plugins keep working. A custom cloud instance needs its signing key pinned
   in Preferences, or the user's explicit choice to allow unverified plugins
-  from it. A cloud address that is not a plain `https://host[:port][/path]`
-  (no scheme, user info, percent-encoding, dot segments, query or fragment),
-  or plain http or another port on the Cosmyx host, plain http on any host
-  but loopback, a blank address, or one padded with spaces or line breaks
-  in the app config, is refused outright for plugins, and Preferences no longer accepts such
-  addresses, nor a bracketed host that is not an IPv6 address. Plain http
-  on loopback now needs `127.x.x.x` written without leading zeros, or
-  `localhost`, or `[::1]`. A downloaded
-  package swapped before or during its install is removed, the install
-  refused and the plugin left not installed, with its version floor kept. A
-  wheel whose entry
-  package name could escape the plugin folder is refused. Pull request:
-  pending. Decision: 0204.
+  from it; these settings belong to one server address. Plugins are refused
+  from a cloud address that is not a plain `https://host[:port][/path]`
+  (plain http only on the local machine), and Preferences no longer accepts
+  such addresses: plain http on the local machine now needs `localhost`,
+  `[::1]` or `127.x.x.x` without leading zeros. A package swapped during its
+  install, or whose entry package could escape the plugin folder, is refused.
+  Pull request: pending. Decision: 0204.
 
 ### i18n
 
