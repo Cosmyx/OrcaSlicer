@@ -102,6 +102,10 @@ class WorkflowHookTests(unittest.TestCase):
         ):
             self.assertIn(part, conditions[0])
 
+    def test_verify_requires_the_installer_where_one_is_built(self) -> None:
+        # "Start installer Win" skips self-hosted runners, so only they may verify without one.
+        self.assertIn("require-installer: ${{ !vars.SELF_HOSTED }} # Cosmyx", self.by_name[VERIFY])
+
     def test_sign_and_verify_follow_the_enabled_output(self) -> None:
         for name in (SIGN, VERIFY):
             self.assertIn("if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx", self.by_name[name])
@@ -133,6 +137,25 @@ class ActionTests(unittest.TestCase):
         guarded = re.findall(r"if: inputs\.mode == 'setup' && steps\.settings\.outputs\.enabled == 'true'", self.text)
         self.assertEqual(len(guarded), 2)
         self.assertNotRegex(self.text, r"if: inputs\.mode == 'setup'\s*\n")
+
+    def verify_step(self) -> str:
+        return self.text.split("- name: Verify Windows signatures", 1)[1]
+
+    def test_verify_finds_the_installer_whatever_its_prefix(self) -> None:
+        # The installer is renamed from OrcaSlicer_ to CosmoSlice_ on another branch: the lookup
+        # goes through the script, which matches any prefix, never a hard-coded name.
+        step = self.verify_step()
+        self.assertIn("./scripts/cosmyx/find_windows_installer.ps1 @find", step)
+        self.assertNotIn("OrcaSlicer_Windows_Installer", self.text)
+        self.assertNotIn("CosmoSlice_Windows_Installer", self.text)
+        script = (REPO_ROOT / "scripts" / "cosmyx" / "find_windows_installer.ps1").read_text(encoding="utf-8")
+        self.assertIn("$Pattern = '*_Windows_Installer_*.exe'", script)
+
+    def test_missing_installer_fails_unless_not_required(self) -> None:
+        self.assertRegex(self.text, r"require-installer:\n\s+description: .*\n\s+required: false\n\s+default: 'true'")
+        step = self.verify_step()
+        self.assertIn("REQUIRE_INSTALLER: ${{ inputs.require-installer }}", step)
+        self.assertIn("if ($env:REQUIRE_INSTALLER -ne 'true') { $find.Optional = $true }", step)
 
     def test_pins_reach_the_script(self) -> None:
         self.assertIn('"COSMYX_SIGN_SUBJECT=$env:SIGN_SUBJECT"', self.text)

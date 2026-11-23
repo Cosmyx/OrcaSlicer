@@ -6,7 +6,7 @@
 #   sign   after the build: logs in to Azure with OIDC, exports a masked access token for the
 #          installer build that runs in the background, and signs the shipped files.
 #   verify after the installer is built: checks the shipped files, the installer, its payload and
-#          the uninstaller a silent install writes.
+#          the uninstaller a silent install writes, and fails when no installer was built.
 # scripts/sign_windows.ps1 hands over to scripts/cosmyx/sign_windows_azure.ps1 because
 # COSMYX_SIGN_BACKEND is 'azure'.
 # The settings come from the repository's AZURE_* secrets. A step's `if:` cannot read secrets, so
@@ -51,6 +51,10 @@ inputs:
     description: Azure subscription ID that holds the signing account, secret AZURE_SUBSCRIPTION_ID (setup).
     required: false
     default: ''
+  require-installer:
+    description: "'true' to fail when the build wrote no installer, 'false' for builds that make none (verify)."
+    required: false
+    default: 'true'
 
 outputs:
   enabled:
@@ -174,21 +178,27 @@ runs:
         }
         ./scripts/sign_windows.ps1 -Path $paths
 
-    # Same checks as upstream's "Verify Windows signatures".
+    # Same checks as upstream's "Verify Windows signatures", except that a missing installer fails
+    # the step unless require-installer is 'false' (decision 0099). Any product prefix matches, so
+    # OrcaSlicer_ and CosmoSlice_ installers both pass.
     - name: Verify Windows signatures
       if: inputs.mode == 'verify'
       shell: pwsh
+      env:
+        REQUIRE_INSTALLER: ${{ inputs.require-installer }}
       run: |
         $paths = @("$env:BUILD_DIR/OrcaSlicer")
         $validator = 'build/src/Release/OrcaSlicer_profile_validator.exe'
         if (Test-Path $validator) { $paths += $validator }
-        $installer = Get-ChildItem "$env:BUILD_DIR/OrcaSlicer_Windows_Installer_*.exe" | Select-Object -First 1
+        $find = @{ Directory = $env:BUILD_DIR }
+        if ($env:REQUIRE_INSTALLER -ne 'true') { $find.Optional = $true }
+        $installer = ./scripts/cosmyx/find_windows_installer.ps1 @find
         if ($installer) {
           $payload = Join-Path $env:RUNNER_TEMP 'installer-payload'
-          & 'C:/Program Files/7-Zip/7z.exe' x -y "-o$payload" $installer.FullName | Out-Null
-          if ($LASTEXITCODE -ne 0) { throw "7-Zip could not unpack $($installer.Name)." }
+          & 'C:/Program Files/7-Zip/7z.exe' x -y "-o$payload" $installer | Out-Null
+          if ($LASTEXITCODE -ne 0) { throw "7-Zip could not unpack $(Split-Path -Leaf $installer)." }
           $installed = Join-Path $env:RUNNER_TEMP 'installer-test'
-          Start-Process -Wait -FilePath $installer.FullName -ArgumentList '/S', "/D=$installed"
-          $paths += $installer.FullName, $payload, (Join-Path $installed 'Uninstall.exe')
+          Start-Process -Wait -FilePath $installer -ArgumentList '/S', "/D=$installed"
+          $paths += $installer, $payload, (Join-Path $installed 'Uninstall.exe')
         }
         ./scripts/sign_windows.ps1 -Verify -Path $paths

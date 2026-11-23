@@ -23,7 +23,10 @@ The build steps, in order:
    files. The background cpack reuses them and signs the uninstaller and the
    installer.
 3. `verify` (after the installer): checks every file, the installer, its
-   payload and the uninstaller a silent install writes.
+   payload and the uninstaller a silent install writes. The installer is
+   found by `scripts/cosmyx/find_windows_installer.ps1` under any product
+   prefix (`OrcaSlicer_` or `CosmoSlice_Windows_Installer_*.exe`); a signed
+   build without one fails, except on self-hosted runners, which build none.
 
 Builds that are signed: DEV and `release/*`, never pull requests or MIXED,
 and only when the `AZURE_*` signing secrets are set (decision 0098).
