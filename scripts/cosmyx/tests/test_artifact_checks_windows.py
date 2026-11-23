@@ -140,10 +140,15 @@ class EnforceTests(unittest.TestCase):
         data = {"version": 1, "entries": [{"os": "windows", "kind": "unsigned-ok", "glob": "*.exe", "reason": "x"}]}
         allow = allowlist.parse(data, dt.date(2026, 1, 1))
         helper, uninstaller = item("helper.exe"), item("Uninstall.exe", role="installed")
+        own = [item(name) for name in ("orca-slicer.exe", "CosmoSlice.exe", f"CosmoSlice_Windows_Installer_{TAG}.exe",
+                                       f"OrcaSlicer_Windows_Installer_{TAG}.exe")]
         records = evaluate([(helper, fact(str(helper.file), signer=None)),
-                            (uninstaller, fact(str(uninstaller.file), signer=None))], allow=allow)
+                            (uninstaller, fact(str(uninstaller.file), signer=None))]
+                           + [(i, fact(str(i.file), signer=None)) for i in own], allow=allow)
         self.assertEqual(signature(records, "helper.exe").status, "pass")
         self.assertEqual(signature(records, "Uninstall.exe").status, "fail")
+        for own_item in own:
+            self.assertEqual(signature(records, own_item.path).status, "fail", own_item.path)
 
     def test_missing_facts_fail(self) -> None:
         records = pw.evaluate([item("a.dll")], {}, ENFORCE, pw.Identity(OUR_SUBJECT, OUR_EKU),
@@ -220,26 +225,31 @@ def pe_bytes() -> bytes:
 
 
 class CollectTests(unittest.TestCase):
+    # Product prefix of the artifact and file names, and the app executable.
+    PREFIX = "OrcaSlicer"
+    EXE = "orca-slicer.exe"
+
     def setUp(self) -> None:
+        prefix, exe = self.PREFIX, self.EXE
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         root = Path(self.tmp.name)
         self.artifacts, self.work = root / "artifacts", root / "work"
         self.calls: list[list[str]] = []
-        portable = self.artifacts / f"OrcaSlicer_Windows_{TAG}_x64_portable"
+        portable = self.artifacts / f"{prefix}_Windows_{TAG}_x64_portable"
         (portable / "resources").mkdir(parents=True)
-        (portable / "orca-slicer.exe").write_bytes(pe_bytes())
+        (portable / exe).write_bytes(pe_bytes())
         (portable / "resources" / "readme.txt").write_text("x", encoding="utf-8")
-        installer = self.artifacts / f"OrcaSlicer_Windows_{TAG}_x64"
+        installer = self.artifacts / f"{prefix}_Windows_{TAG}_x64"
         installer.mkdir()
-        (installer / f"OrcaSlicer_Windows_Installer_{TAG}.exe").write_bytes(pe_bytes())
-        arm = self.artifacts / f"OrcaSlicer_Windows_{TAG}_arm64"
+        (installer / f"{prefix}_Windows_Installer_{TAG}.exe").write_bytes(pe_bytes())
+        arm = self.artifacts / f"{prefix}_Windows_{TAG}_arm64"
         arm.mkdir()
-        (arm / "OrcaSlicer_Windows_Installer_arm64.exe").write_bytes(pe_bytes())
-        msix = self.artifacts / f"OrcaSlicer_Windows_MSIX_{TAG}_x64"
+        (arm / f"{prefix}_Windows_Installer_arm64.exe").write_bytes(pe_bytes())
+        msix = self.artifacts / f"{prefix}_Windows_MSIX_{TAG}_x64"
         msix.mkdir()
-        with zipfile.ZipFile(msix / f"OrcaSlicer_Windows_MSIX_{TAG}_x64.msix", "w") as archive:
-            archive.writestr("VFS/ProgramFilesX64/OrcaSlicer/orca-slicer.exe", pe_bytes())
+        with zipfile.ZipFile(msix / f"{prefix}_Windows_MSIX_{TAG}_x64.msix", "w") as archive:
+            archive.writestr(f"VFS/ProgramFilesX64/OrcaSlicer/{exe}", pe_bytes())
             archive.writestr("AppxManifest.xml", "<xml/>")
         self.seven_zip = root / "7z.exe"
         self.seven_zip.write_bytes(b"")
@@ -253,7 +263,7 @@ class CollectTests(unittest.TestCase):
         if args[1:2] == ["x"]:
             out = Path(args[3][2:]) / "$INSTDIR"
             out.mkdir(parents=True)
-            (out / "orca-slicer.exe").write_bytes(pe_bytes())
+            (out / self.EXE).write_bytes(pe_bytes())
             return subprocess.CompletedProcess(args, 0, "", "")
         if args[1:2] == ["/S"]:
             target = Path(args[2][3:])
@@ -272,18 +282,23 @@ class CollectTests(unittest.TestCase):
     def test_collects_every_pe(self) -> None:
         collected = self.collect()
         roles = sorted((i.role, i.path) for i in collected.items)
-        self.assertIn(("portable", "orca-slicer.exe"), roles)
-        self.assertIn(("payload", "payload/$INSTDIR/orca-slicer.exe"), roles)
+        prefix, exe = self.PREFIX, self.EXE
+        self.assertIn(("portable", exe), roles)
+        self.assertIn(("payload", f"payload/$INSTDIR/{exe}"), roles)
         self.assertIn(("installed", "installed/Uninstall.exe"), roles)
-        self.assertIn(("msix", f"OrcaSlicer_Windows_MSIX_{TAG}_x64.msix/VFS/ProgramFilesX64/OrcaSlicer/orca-slicer.exe"),
-                      roles)
-        self.assertIn(("msix-package", f"OrcaSlicer_Windows_MSIX_{TAG}_x64.msix"), roles)
+        self.assertIn(("installer", f"{prefix}_Windows_Installer_{TAG}.exe"), roles)
+        self.assertIn(("msix", f"{prefix}_Windows_MSIX_{TAG}_x64.msix/VFS/ProgramFilesX64/OrcaSlicer/{exe}"), roles)
+        self.assertIn(("msix-package", f"{prefix}_Windows_MSIX_{TAG}_x64.msix"), roles)
+        self.assertFalse(any(i.role == "validator" for i in collected.items))
         payload = next(i for i in collected.items if i.role == "payload")
-        self.assertEqual(payload.match_path, "orca-slicer.exe")
+        self.assertEqual(payload.match_path, exe)
+        # Every executable the build makes counts as ours, whatever the product name.
+        for path in (exe, f"{prefix}_Windows_Installer_{TAG}.exe"):
+            self.assertTrue(allowlist.is_own_name(path, OWN), path)
         arm_skip = [r for r in collected.records if "arm64" in r.reason]
         self.assertEqual([r.status for r in arm_skip], ["skip"])
         self.assertTrue(arm_skip[0].by_design)
-        self.assertEqual([t[0] for t in collected.trees], [f"OrcaSlicer_Windows_{TAG}_x64_portable"])
+        self.assertEqual([t[0] for t in collected.trees], [f"{prefix}_Windows_{TAG}_x64_portable"])
         install = next(c for c in self.calls if c[1:2] == ["/S"])
         self.assertTrue(install[-1].startswith("/D="), "NSIS needs /D= last")
 
@@ -316,6 +331,13 @@ class CollectTests(unittest.TestCase):
         path.write_text("\ufeff" + json.dumps(fact("C:/a b/x.dll")) + "\n\n", encoding="utf-8")
         facts = pw.read_facts(path)
         self.assertEqual(list(facts), [str(Path("C:/a b/x.dll"))])
+
+
+class CosmoSliceCollectTests(CollectTests):
+    """The same collection under the CosmoSlice product name (package-names
+    plan): artifacts CosmoSlice_*, app CosmoSlice.exe, no profile validator."""
+    PREFIX = "CosmoSlice"
+    EXE = "CosmoSlice.exe"
 
 
 if __name__ == "__main__":

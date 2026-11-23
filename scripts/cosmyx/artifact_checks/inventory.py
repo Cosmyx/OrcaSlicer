@@ -109,9 +109,11 @@ def build_tag_hash(name: str, display_version: str, head_sha: str) -> tuple[bool
 
 def names_records(names: list[str], display_version: str | None, head_sha: str, expectations: dict,
                   os_name: str = "any") -> list[Record]:
-    """Every OrcaSlicer_* artifact is named after the build tag (T6, decision 0062)."""
+    """Every artifact with a product prefix (OrcaSlicer_ or CosmoSlice_, both
+    accepted while the rename lands) is named after the build tag (T6, decision 0062)."""
     excludes = [re.compile(p) for p in expectations.get("name_check_excludes", [])]
-    targets = [n for n in sorted(names) if n.startswith("OrcaSlicer_") and not any(p.search(n) for p in excludes)]
+    prefixes = tuple(expectations.get("name_prefixes", ["OrcaSlicer_"]))
+    targets = [n for n in sorted(names) if n.startswith(prefixes) and not any(p.search(n) for p in excludes)]
     if display_version is None:
         return [Record(os_name, name, "", "names", "skip", "T6 not merged: the build has no Cosmyx version")
                 for name in targets]
