@@ -32,6 +32,35 @@ def step_names(text: str) -> list[str]:
     return [m.group(1).split("#", 1)[0].strip() for m in re.finditer(r"^      - name: (.+)$", text, re.MULTILINE)]
 
 
+def steps(text: str) -> list[tuple[str, list[str]]]:
+    """Every step of the workflow as (name, lines), in file order."""
+    found: list[tuple[str, list[str]]] = []
+    for line in text.splitlines():
+        match = re.match(r"^      - name: (.+)$", line)
+        if match:
+            found.append((match.group(1).split("#", 1)[0].strip(), [line]))
+        elif found and (line.startswith("        ") or not line.strip()):
+            found[-1][1].append(line)
+        elif found and not line.startswith("      - "):
+            found.append(("", []))  # a non-step line ends the current step
+    return [step for step in found if step[0]]
+
+
+def is_cosmyx_step(name: str, lines: list[str]) -> bool:
+    """A step another Cosmyx task added: Cosmyx name, every line tagged."""
+    return name.startswith("Cosmyx") and all(line.rstrip().endswith("# Cosmyx") for line in lines if line.strip())
+
+
+def nearest_upstream_step_before(text: str, name: str) -> str:
+    """The closest step before name that is not a Cosmyx-tagged step."""
+    found = steps(text)
+    position = [step[0] for step in found].index(name)
+    for previous, lines in reversed(found[:position]):
+        if not is_cosmyx_step(previous, lines):
+            return previous
+    return ""
+
+
 def cosmyx_step(text: str, name: str) -> list[str]:
     """The lines of the "# Cosmyx" step called name (other tasks add their own)."""
     lines = text.splitlines()
@@ -59,7 +88,8 @@ class WorkflowHookTests(unittest.TestCase):
     def test_step_sits_after_the_unsigned_dmg_and_before_the_uploads(self) -> None:
         names = step_names(self.text)
         position = names.index(STEP)
-        self.assertEqual(names[position - 1], "Create DMG without notary")
+        # Other Cosmyx steps (the package renaming) may sit in between.
+        self.assertEqual(nearest_upstream_step_before(self.text, STEP), "Create DMG without notary")
         self.assertEqual(names[position + 1], "Delete intermediate per-arch artifacts")
         self.assertLess(position, names.index("Upload artifacts mac"))
 
@@ -99,6 +129,53 @@ class WorkflowHookTests(unittest.TestCase):
         upstream = re.search(r"- name: Sign app and notary\n\s+if: (.+)", self.text)
         self.assertIsNotNone(upstream)
         self.assertIn("github.repository == 'OrcaSlicer/OrcaSlicer'", upstream.group(1))
+
+
+class StepOrderRuleTests(unittest.TestCase):
+    """Pins the order rule itself on synthetic workflows."""
+
+    @staticmethod
+    def workflow(between: str) -> str:
+        return (
+            "jobs:\n"
+            "  build:\n"
+            "    steps:\n"
+            "      - name: Create DMG without notary\n"
+            "        run: |\n"
+            "          hdiutil create x.dmg\n"
+            "\n"
+            f"{between}"
+            f"      - name: {STEP} # Cosmyx\n"
+            "        uses: ./.github/actions/cosmyx-sign-macos # Cosmyx\n"
+            "\n"
+            "      - name: Delete intermediate per-arch artifacts\n"
+            "        run: rm -rf x\n"
+        )
+
+    def test_direct_order_passes(self) -> None:
+        self.assertEqual(nearest_upstream_step_before(self.workflow(""), STEP), "Create DMG without notary")
+
+    def test_cosmyx_step_in_between_passes(self) -> None:
+        between = (
+            "      - name: Cosmyx package names mac-app # Cosmyx\n"
+            "        uses: ./.github/actions/cosmyx-package-names # Cosmyx\n"
+            "        with: # Cosmyx\n"
+            "          stage: mac-app # Cosmyx\n"
+            "\n"
+        )
+        self.assertEqual(nearest_upstream_step_before(self.workflow(between), STEP), "Create DMG without notary")
+
+    def test_upstream_step_in_between_fails(self) -> None:
+        between = "      - name: Upload artifacts mac\n        uses: actions/upload-artifact@v4\n\n"
+        self.assertEqual(nearest_upstream_step_before(self.workflow(between), STEP), "Upload artifacts mac")
+
+    def test_partly_tagged_cosmyx_step_in_between_fails(self) -> None:
+        between = (
+            "      - name: Cosmyx package names mac-app # Cosmyx\n"
+            "        run: mv a b\n"
+            "\n"
+        )
+        self.assertEqual(nearest_upstream_step_before(self.workflow(between), STEP), "Cosmyx package names mac-app")
 
 
 class ActionTests(unittest.TestCase):
