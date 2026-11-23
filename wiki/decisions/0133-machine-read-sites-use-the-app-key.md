@@ -3,7 +3,9 @@
 ## Status
 
 Accepted. Amended after integration build 44545583808: no row rewires the
-AppImage desktop entry any more (decision 0132).
+AppImage desktop entry any more (decision 0132). Amended by decision 0210:
+the AppImage desktop entry is named CosmoSlice again, together with the
+`mv` of the file appimagetool makes from it.
 
 ## Context
 

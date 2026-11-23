@@ -4,7 +4,9 @@
 
 Accepted. Replaces CosmoSlice D-004's fuzzy marking for this fork. Amended:
 the token rule (all capitals, combining marks, names tied to the app key)
-and the inflection table.
+and the inflection table. Amended by decision 0210: `OrcaSlicer.app` and
+`OrcaSlicer.AppImage` in a text become `CosmoSlice.app` and
+`CosmoSlice.AppImage`; `OrcaSlicer.conf` and the data folder stay.
 
 ## Context
 
