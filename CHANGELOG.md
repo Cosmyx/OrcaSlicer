@@ -71,6 +71,14 @@ here; see the upstream release notes.
   French), over https or over plain http on the local machine (localhost) for
   testing; cloud addresses set by the user always win.
   Pull request: pending. Decisions: 0200, 0201, 0202, 0203.
+- **Breaking:** cloud plugins are installed and updated only when their
+  CosmoCloud package signature verifies, and never as an older version than
+  the one installed. The production signing key is not pinned yet, so plugins
+  from the Cosmyx cloud cannot be installed until a release adds it; installed
+  plugins keep working. A custom cloud instance needs its signing key pinned
+  in Preferences, or the user's explicit choice to allow unverified plugins
+  from it. A wheel whose entry package name could escape the plugin folder is
+  refused. Pull request: pending. Decision: 0204.
 
 ### i18n
 
