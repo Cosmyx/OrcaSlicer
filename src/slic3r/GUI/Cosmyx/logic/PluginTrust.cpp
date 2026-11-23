@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cstddef>
 #include <cstdint>
 #include <ios>
 #include <map>
@@ -44,11 +45,50 @@ std::mutex& pending_mutex()
     return mutex;
 }
 
-// SHA-256 hex -> record of a package that passed the check.
-std::map<std::string, PackageRecord>& pending_records()
+// (plugin id, SHA-256 hex) -> record of a package that passed the check. The
+// plugin id is part of the key: two plugins may ship the same bytes.
+using PendingKey = std::pair<std::string, std::string>;
+
+std::map<PendingKey, PackageRecord>& pending_records()
 {
-    static std::map<std::string, PackageRecord> records;
+    static std::map<PendingKey, PackageRecord> records;
     return records;
+}
+
+std::string to_lower(std::string value)
+{
+    std::transform(value.begin(), value.end(), value.begin(),
+                   [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
+    return value;
+}
+
+bool all_digits(const std::string& text)
+{
+    return !text.empty() && std::all_of(text.begin(), text.end(), [](char c) { return c >= '0' && c <= '9'; });
+}
+
+// host[:port] or [IPv6][:port] in its one spelling (see normalize_server_url()).
+std::string normalize_authority(const std::string& authority, const std::string& scheme)
+{
+    // User info is refused by the cloud settings; such an address is left as it is.
+    if (authority.find('@') != std::string::npos)
+        return authority;
+    const bool        ipv6     = !authority.empty() && authority.front() == '[';
+    const std::size_t host_end = ipv6 ? authority.find(']') : std::string::npos;
+    const std::size_t colon    = ipv6 ? (host_end == std::string::npos ? std::string::npos : authority.find(':', host_end))
+                                      : authority.rfind(':');
+    std::string       host     = to_lower(authority.substr(0, colon));
+    std::string       port     = colon == std::string::npos ? std::string() : authority.substr(colon + 1);
+    // A fully qualified name (example.org.) is the same host.
+    while (!ipv6 && !host.empty() && host.back() == '.')
+        host.pop_back();
+    if (all_digits(port)) {
+        port.erase(0, std::min(port.find_first_not_of('0'), port.size() - 1));
+        if ((scheme == "https" && port == "443") || (scheme == "http" && port == "80"))
+            port.clear();
+    }
+    // An empty port (host:) is the default one; any other port stays as written.
+    return port.empty() ? host : host + ":" + port;
 }
 
 bool read_file(const fs::path& path, std::string& data)
@@ -66,7 +106,20 @@ bool read_file(const fs::path& path, std::string& data)
 
 std::string normalize_server_url(const std::string& url)
 {
-    std::string result = trim_value(url);
+    const std::string text = trim_value(url);
+    if (text.empty())
+        return text;
+    std::string       scheme = "https";
+    std::size_t       start  = 0;
+    const std::size_t marker = text.find("://");
+    if (marker != std::string::npos) {
+        scheme = to_lower(text.substr(0, marker));
+        start  = marker + 3;
+    }
+    const std::size_t end    = text.find_first_of("/?#", start);
+    std::string       result = scheme + "://" +
+                         normalize_authority(text.substr(start, end == std::string::npos ? std::string::npos : end - start), scheme) +
+                         (end == std::string::npos ? std::string() : text.substr(end));
     while (!result.empty() && result.back() == '/')
         result.pop_back();
     return result;
@@ -80,22 +133,29 @@ ServerPins server_pins(const AppConfig& config, const std::string& server_url)
     if (entry == doc.end() || !entry->is_object())
         return pins;
     const auto key = entry->find("public_key");
-    if (key != entry->end() && key->is_string() && is_lower_hex(key->get<std::string>(), 64))
-        pins.public_key = key->get<std::string>();
+    if (key != entry->end() && !key->is_null() && !(key->is_string() && trim_value(key->get<std::string>()).empty())) {
+        // A pin that cannot be read refuses the server: no key and no opt-in.
+        if (!key->is_string() || public_key_id(key->get<std::string>(), &pins.public_key).empty())
+            return pins;
+    }
     const auto allow = entry->find("allow_unverified");
     pins.allow_unverified = allow != entry->end() && allow->is_boolean() && allow->get<bool>();
     return pins;
 }
 
-void set_server_pins(AppConfig& config, const std::string& server_url, const ServerPins& pins)
+bool set_server_pins(AppConfig& config, const std::string& server_url, const ServerPins& pins)
 {
+    std::string key;
+    if (!trim_value(pins.public_key).empty() && public_key_id(pins.public_key, &key).empty())
+        return false;
     json              doc = read_trust_doc(config);
     const std::string url = normalize_server_url(server_url);
-    if (pins.public_key.empty() && !pins.allow_unverified)
+    if (key.empty() && !pins.allow_unverified)
         doc.erase(url);
     else
-        doc[url] = {{"public_key", pins.public_key}, {"allow_unverified", pins.allow_unverified}};
+        doc[url] = {{"public_key", key}, {"allow_unverified", pins.allow_unverified}};
     config.set(PLUGIN_TRUST_KEY, doc.dump());
+    return true;
 }
 
 std::string public_key_id(const std::string& typed, std::string* normalized)
@@ -128,8 +188,16 @@ ServerTrust server_trust(const AppConfig& config, const std::string& server_url)
         add_pinned_key(trust.keys, key_id_of(raw), pins.public_key, error);
     }
     // A pinned key always means full verification, never a fallback.
-    trust.allow_unverified = trust.keys.empty() && pins.allow_unverified;
+    trust.allow_unverified = pins.public_key.empty() && pins.allow_unverified;
     return trust;
+}
+
+bool request_version(const std::string& requested, std::string& version)
+{
+    if (!requested.empty() && !is_strict_version(requested))
+        return false;
+    version = requested;
+    return true;
 }
 
 PackageVerdict check_plugin_package(const json*          row,
@@ -202,33 +270,45 @@ bool write_package_record(const fs::path& plugin_dir, const PackageRecord& recor
 void remember_checked_package(const PackageRecord& record)
 {
     std::lock_guard<std::mutex> lock(pending_mutex());
-    pending_records()[record.sha256] = record;
+    pending_records()[{record.plugin_id, record.sha256}] = record;
 }
 
+void forget_checked_packages(const std::string& plugin_id)
+{
+    std::lock_guard<std::mutex> lock(pending_mutex());
+    auto&                       records = pending_records();
+    for (auto it = records.lower_bound({plugin_id, std::string()}); it != records.end() && it->first.first == plugin_id;)
+        it = records.erase(it);
+}
+
+// The upstream installer moves the replaced plugin folder aside and installs
+// into a fresh one, so no wheel extraction of the replaced package is left in
+// plugin_dir to remove here (decision 0204).
 bool commit_package_record(const std::string& plugin_id, const fs::path& plugin_dir, const fs::path& package_file, std::string& error)
 {
-    std::string data;
-    bool        found = false;
+    std::string   data;
+    bool          found = false;
     PackageRecord record;
     if (read_file(package_file, data)) {
         std::lock_guard<std::mutex> lock(pending_mutex());
         auto&                       records = pending_records();
-        const auto                  it      = records.find(sha256_hex(data));
-        if (it != records.end() && it->second.plugin_id == plugin_id && it->second.size == data.size()) {
+        const auto                  it      = records.find({plugin_id, sha256_hex(data)});
+        if (it != records.end() && it->second.size == data.size()) {
             record = it->second;
             records.erase(it);
             found = true;
         }
     }
-
-    boost::system::error_code ec;
-    // The extraction of the replaced package must never be reused for this one.
-    fs::remove_all(plugin_dir / WHEEL_EXTRACT_DIR, ec);
-    if (!found) {
-        fs::remove(plugin_dir / PACKAGE_RECORD_FILE, ec);
+    if (found && write_package_record(plugin_dir, record, error))
         return true;
-    }
-    return write_package_record(plugin_dir, record, error);
+    if (!found)
+        error = "the installed package is not the one whose signature was checked";
+
+    // Nothing that could not be recorded as checked is left to load.
+    boost::system::error_code ec;
+    fs::remove(plugin_dir / PACKAGE_RECORD_FILE, ec);
+    fs::remove(package_file, ec);
+    return false;
 }
 
 bool check_wheel_import_name(const fs::path& wheel, const std::string& name, std::string& error)

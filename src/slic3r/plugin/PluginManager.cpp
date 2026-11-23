@@ -1836,6 +1836,7 @@ bool PluginManager::download_and_install_cloud_plugin(const std::string& plugin_
         BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": Failed to find plugin key " << plugin_key;
         return false;
     }
+    const GUI::Cosmyx::CloudInstallScope cosmyx_scope(descriptor.cloud_uuid()); // Cosmyx: drops an uncommitted check (decision 0204)
 
     clear_plugin_error(plugin_key);
 
@@ -1869,7 +1870,10 @@ bool PluginManager::download_and_install_cloud_plugin(const std::string& plugin_
         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": " << error;
         return false;
     }
-    GUI::Cosmyx::commit_cloud_plugin_record(descriptor); // Cosmyx: .cosmyx_package.json (decision 0204)
+    if (!GUI::Cosmyx::commit_cloud_plugin_record(descriptor, error)) { // Cosmyx: refuses bytes not checked (decision 0204)
+        set_plugin_error(plugin_key, error); // Cosmyx
+        return false; // Cosmyx
+    } // Cosmyx
 
     PluginDescriptor updated_descriptor = descriptor;
     if (!requested_version.empty())

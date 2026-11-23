@@ -69,8 +69,8 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
     const AppConfig* config = wxGetApp().app_config;
     ClientRequest    request;
     request.plugin_id = entry.cloud_uuid();
-    // The request carries a strict X.Y.Z or none (latest).
-    request.version = is_strict_version(requested_version) ? requested_version : std::string();
+    // The request carries a strict X.Y.Z or none (latest); any other version is refused.
+    const bool request_ok = request_version(requested_version, request.version);
 
     std::string row_version;
     if (row != nullptr && row->is_object() && row->contains("version") && row->at("version").is_string())
@@ -86,7 +86,9 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
     const ServerTrust trust  = config != nullptr ? server_trust(*config, server) : ServerTrust{true, built_in_keys(), false};
 
     PackageVerdict verdict;
-    if (!client_slot(platform_os_type(), platform_architecture(), request.os, request.arch))
+    if (!request_ok)
+        verdict.reason = SIGN_WRONG_VERSION;
+    else if (!client_slot(platform_os_type(), platform_architecture(), request.os, request.arch))
         verdict.reason = SIGN_UNKNOWN_SLOT;
     else
         verdict = check_plugin_package(row, body, request, trust, revoked_key_ids(), installed_version,
@@ -111,13 +113,19 @@ bool verify_cloud_plugin_package(const PluginDescriptor& entry,
     return true;
 }
 
-void commit_cloud_plugin_record(const PluginDescriptor& installed)
+bool commit_cloud_plugin_record(const PluginDescriptor& installed, std::string& error)
 {
-    std::string error;
-    if (!commit_package_record(installed.cloud_uuid(), boost::filesystem::path(installed.plugin_root),
-                               boost::filesystem::path(installed.entry_path), error))
-        BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package record not written for " << installed.cloud_uuid() << ": " << error;
+    std::string reason;
+    if (commit_package_record(installed.cloud_uuid(), boost::filesystem::path(installed.plugin_root),
+                              boost::filesystem::path(installed.entry_path), reason))
+        return true;
+    BOOST_LOG_TRIVIAL(error) << "Cosmyx plugin package refused after install: plugin " << installed.cloud_uuid() << ": " << reason;
+    error = _u8L("The installed plugin package could not be recorded as the one whose signature was checked, so it was removed. "
+                 "The plugin was not installed.");
+    return false;
 }
+
+CloudInstallScope::~CloudInstallScope() { forget_checked_packages(m_plugin_id); }
 
 } // namespace Cosmyx
 } // namespace GUI

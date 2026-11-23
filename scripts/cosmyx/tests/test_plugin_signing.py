@@ -81,15 +81,37 @@ class CloudPluginServiceHookTests(unittest.TestCase):
 
 
 class InstallHookTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.lines = read(*PLUGIN, "PluginManager.cpp")
+        self.function = index_of(self.lines, "bool PluginManager::install_cloud_plugin_package(")
+
+    def test_include_follows_the_first_include(self) -> None:
+        self.assertEqual(self.lines[1], '#include "slic3r/GUI/Cosmyx/PluginVerify.hpp" // Cosmyx')
+
+    def test_scope_opens_before_the_install(self) -> None:
+        # Its destructor drops a checked record that no install committed.
+        scope = index_of(self.lines, "const GUI::Cosmyx::CloudInstallScope cosmyx_scope(descriptor.cloud_uuid()); // Cosmyx")
+        self.assertGreater(scope, self.function)
+        self.assertEqual(self.lines[scope - 1].strip(), "error.clear();")
+
     def test_record_is_committed_after_a_successful_install(self) -> None:
-        lines = read(*PLUGIN, "PluginManager.cpp")
-        self.assertEqual(lines[1], '#include "slic3r/GUI/Cosmyx/PluginVerify.hpp" // Cosmyx')
-        call = index_of(lines, "GUI::Cosmyx::commit_cloud_plugin_record(installed); // Cosmyx")
-        function = index_of(lines, "bool PluginManager::install_cloud_plugin_package(")
-        impl = [i for i in range(function, call) if "install_plugin_impl(package_path, installed" in lines[i]]
+        call = index_of(self.lines, "if (!GUI::Cosmyx::commit_cloud_plugin_record(installed, error) && failure != nullptr) // Cosmyx")
+        impl = [i for i in range(self.function, call) if "install_plugin_impl(package_path, installed" in self.lines[i]]
         self.assertEqual(len(impl), 1)
-        self.assertEqual(lines[call - 1].strip(), "}")
-        self.assertEqual(len(cosmyx_lines(lines)), 2)
+        self.assertEqual(self.lines[call - 1].strip(), "}")
+        self.assertEqual(
+            self.lines[call + 1].strip(),
+            "*failure = CloudUpdateFailure::ReplacementInstalled; // Cosmyx: the error below refuses the install",
+        )
+        # The error the hook sets refuses the install through the upstream
+        # check that follows the metadata update, which nothing between may clear.
+        refuse = [i for i in range(call, len(self.lines)) if self.lines[i].strip() == "if (!error.empty()) {"]
+        self.assertTrue(refuse)
+        between = self.lines[call + 2 : refuse[0]]
+        self.assertFalse([line for line in between if "error.clear()" in line or re.search(r"\berror\s*=\s*\{?\}?;", line)])
+
+    def test_hook_count(self) -> None:
+        self.assertEqual(len(cosmyx_lines(self.lines)), 4)
 
     def test_record_is_a_denied_filename(self) -> None:
         lines = read(*PLUGIN, "PluginAuditManager.cpp")

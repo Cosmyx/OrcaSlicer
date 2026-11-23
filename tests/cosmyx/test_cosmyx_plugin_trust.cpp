@@ -1,12 +1,14 @@
 // Checks of what a plugin package is checked against (decision 0204): the
 // build's pins for the Cosmyx server, the user's pin or unverified opt-in for a
-// custom server, the anti-rollback rule, the package record written after an
-// install, and the guard on a wheel's entry package name.
+// custom server, the one spelling of a server address, the anti-rollback rule,
+// the package record written after an install (and the refusal of bytes that
+// were not checked), and the guard on a wheel's entry package name.
 
 #include <catch2/catch_test_macros.hpp>
 
 #include <ios>
 #include <string>
+#include <utility>
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
@@ -31,6 +33,7 @@ constexpr const char* CUSTOM = "https://plugins.example.org";
 
 // k1 of the CosmoCloud vectors (seed 000102...1f).
 constexpr const char* K1_PUBLIC = "03a107bff3ce10be1d70dd18e74bc09967e4d6309ba50d5f1ddc8664125531b8";
+constexpr const char* K1_PUBLIC_UPPER = "03A107BFF3CE10BE1D70DD18E74BC09967E4D6309BA50D5F1DDC8664125531B8";
 constexpr const char* K1_ID     = "56475aa75463474c0285df5dbf2bcab73da651358839e9b77481b2eab107708c";
 constexpr const char* K2_PUBLIC = "29acbae141bccaf0b22e1a94d34d0bc7361e526d0bfe12c89794bc9322966dd7";
 
@@ -142,6 +145,56 @@ TEST_CASE("Pins are stored per address and read back", "[cosmyx]")
     CHECK(CC::server_pins(config, CUSTOM).public_key.empty());
 }
 
+TEST_CASE("A stored key is normalized and a key that is not one is refused", "[cosmyx]")
+{
+    AppConfig config;
+    REQUIRE(CC::set_server_pins(config, CUSTOM, {std::string(" ") + K1_PUBLIC_UPPER + "\n", false}));
+    CHECK(json::parse(config.get(CC::PLUGIN_TRUST_KEY)).at(CUSTOM).at("public_key") == K1_PUBLIC);
+    CHECK(CC::server_pins(config, CUSTOM).public_key == K1_PUBLIC);
+
+    // A typo is refused and the stored pin is kept as it was.
+    CHECK_FALSE(CC::set_server_pins(config, CUSTOM, {std::string(K1_PUBLIC).substr(0, 63), true}));
+    CHECK(CC::server_pins(config, CUSTOM).public_key == K1_PUBLIC);
+    CHECK_FALSE(CC::server_pins(config, CUSTOM).allow_unverified);
+
+    // A hand-edited key in another case is still read as the key.
+    config.set(CC::PLUGIN_TRUST_KEY, json{{CUSTOM, {{"public_key", K1_PUBLIC_UPPER}, {"allow_unverified", false}}}}.dump());
+    CHECK(CC::server_trust(config, CUSTOM).keys.count(K1_ID) == 1);
+    // A pin that is not a string refuses the server, opt-in or not.
+    config.set(CC::PLUGIN_TRUST_KEY, json{{CUSTOM, {{"public_key", 42}, {"allow_unverified", true}}}}.dump());
+    CHECK(CC::server_trust(config, CUSTOM).keys.empty());
+    CHECK_FALSE(CC::server_trust(config, CUSTOM).allow_unverified);
+}
+
+TEST_CASE("Server addresses have one spelling", "[cosmyx]")
+{
+    const std::pair<std::string, std::string> cases[] = {
+        {"", ""},
+        {"   ", ""},
+        {" https://Plugins.Example.ORG/ ", "https://plugins.example.org"},
+        {"HTTPS://plugins.example.org:443//", "https://plugins.example.org"},
+        {"https://plugins.example.org:0443", "https://plugins.example.org"},
+        {"https://plugins.example.org.:443", "https://plugins.example.org"},
+        {"https://plugins.example.org.", "https://plugins.example.org"},
+        {"https://plugins.example.org:", "https://plugins.example.org"},
+        {"https://plugins.example.org:8443", "https://plugins.example.org:8443"},
+        {"https://plugins.example.org:80", "https://plugins.example.org:80"},
+        {"http://LocalHost:80/", "http://localhost"},
+        {"http://localhost:443", "http://localhost:443"},
+        {"http://[::1]:080", "http://[::1]"},
+        {"https://[::1]:8443/", "https://[::1]:8443"},
+        {"plugins.example.org", "https://plugins.example.org"},
+        {"https://plugins.example.org/API/V1/", "https://plugins.example.org/API/V1"},
+    };
+    for (const auto& [typed, expected] : cases) {
+        INFO(typed);
+        CHECK(CC::normalize_server_url(typed) == expected);
+    }
+    CHECK(CC::normalize_server_url(CC::CLOUD_SERVER_URL) == CC::CLOUD_SERVER_URL);
+    // http and https on the same host are different servers.
+    CHECK(CC::normalize_server_url("http://plugins.example.org") != CC::normalize_server_url(CUSTOM));
+}
+
 TEST_CASE("A typed public key gives its key id", "[cosmyx]")
 {
     std::string normalized;
@@ -247,7 +300,7 @@ TEST_CASE("A version older than the installed one is refused before the signatur
     CHECK(CC::check_plugin_package(&package.row, package.body, package.request, trust, {}, "1.0.1", true).reason == CC::SIGN_OK);
 }
 
-TEST_CASE("The installed package's record is written and the stale extraction removed", "[cosmyx]")
+TEST_CASE("The installed package's record is written once for the bytes that passed", "[cosmyx]")
 {
     AppConfig           config;
     const SignedPackage package = script_package();
@@ -258,25 +311,15 @@ TEST_CASE("The installed package's record is written and the stale extraction re
     ScopedTemporaryDir dir("cosmyx-plugin");
     const fs::path     plugin_dir   = dir.path();
     const fs::path     package_file = plugin_dir / "hello.py";
-    const fs::path     extracted    = plugin_dir / CC::WHEEL_EXTRACT_DIR / "hello";
     write_file(package_file, package.body);
-    fs::create_directories(extracted);
-    write_file(extracted / "__init__.py", "stale");
 
     CC::PackageRecord record;
     CHECK_FALSE(CC::read_package_record(plugin_dir, record)); // a legacy install has none
 
     CC::remember_checked_package(verdict.record);
     std::string error;
-    // Another plugin id never takes this record.
-    REQUIRE(CC::commit_package_record("11111111-1111-4111-8111-111111111111", plugin_dir, package_file, error));
-    CHECK_FALSE(CC::read_package_record(plugin_dir, record));
-
-    CHECK_FALSE(fs::exists(plugin_dir / CC::WHEEL_EXTRACT_DIR)); // removed by every commit
-    fs::create_directories(extracted);
-    write_file(extracted / "__init__.py", "stale");
     REQUIRE(CC::commit_package_record(package.request.plugin_id, plugin_dir, package_file, error));
-    CHECK_FALSE(fs::exists(plugin_dir / CC::WHEEL_EXTRACT_DIR));
+    CHECK(error.empty());
     REQUIRE(CC::read_package_record(plugin_dir, record));
     CHECK(record.plugin_id == package.request.plugin_id);
     CHECK(record.version == "1.0.0");
@@ -284,15 +327,18 @@ TEST_CASE("The installed package's record is written and the stale extraction re
     CHECK(record.size == package.body.size());
     CHECK(record.key_id == K1_ID);
     CHECK_FALSE(fs::exists(plugin_dir / (std::string(CC::PACKAGE_RECORD_FILE) + ".tmp")));
+    CHECK(fs::exists(package_file));
 
-    // The record is used once: a later install of bytes nobody checked
-    // (a local install) leaves no record behind.
-    REQUIRE(CC::commit_package_record(package.request.plugin_id, plugin_dir, package_file, error));
+    // The record is used once: installing the same bytes again without a new
+    // check is refused, and nothing of it is left to load.
+    CHECK_FALSE(CC::commit_package_record(package.request.plugin_id, plugin_dir, package_file, error));
+    CHECK_FALSE(error.empty());
     CHECK_FALSE(CC::read_package_record(plugin_dir, record));
     CHECK_FALSE(fs::exists(plugin_dir / CC::PACKAGE_RECORD_FILE));
+    CHECK_FALSE(fs::exists(package_file));
 }
 
-TEST_CASE("A record whose bytes differ from the installed file is not written", "[cosmyx]")
+TEST_CASE("A record is never taken by another plugin id", "[cosmyx]")
 {
     AppConfig           config;
     const SignedPackage package = script_package();
@@ -303,11 +349,76 @@ TEST_CASE("A record whose bytes differ from the installed file is not written", 
 
     ScopedTemporaryDir dir("cosmyx-plugin");
     const fs::path     package_file = dir.path() / "hello.py";
-    write_file(package_file, package.body + "# changed\n");
+    write_file(package_file, package.body);
     std::string error;
-    REQUIRE(CC::commit_package_record(package.request.plugin_id, dir.path(), package_file, error));
+    CHECK_FALSE(CC::commit_package_record("11111111-1111-4111-8111-111111111111", dir.path(), package_file, error));
+    CHECK_FALSE(fs::exists(package_file));
+
+    // The record of the right plugin is still there for its own install.
+    write_file(package_file, package.body);
+    CHECK(CC::commit_package_record(package.request.plugin_id, dir.path(), package_file, error));
+}
+
+TEST_CASE("Installed bytes that differ from the checked ones are refused and removed", "[cosmyx]")
+{
+    AppConfig           config;
+    const SignedPackage package = script_package();
+    const CC::PackageVerdict verdict =
+        CC::check_plugin_package(&package.row, package.body, package.request, custom_trust(config, {K1_PUBLIC, false}), {}, "", false);
+    REQUIRE(verdict.ok());
+    CC::remember_checked_package(verdict.record);
+
+    // The downloaded file was swapped between the check and the install copy;
+    // a record left by an earlier install must not vouch for it either.
+    ScopedTemporaryDir dir("cosmyx-plugin");
+    const fs::path     package_file = dir.path() / "hello.py";
+    write_file(package_file, package.body + "# changed\n");
+    write_file(dir.path() / CC::PACKAGE_RECORD_FILE, CC::record_to_json(verdict.record));
+    std::string error;
+    CHECK_FALSE(CC::commit_package_record(package.request.plugin_id, dir.path(), package_file, error));
+    CHECK_FALSE(error.empty());
     CC::PackageRecord record;
     CHECK_FALSE(CC::read_package_record(dir.path(), record));
+    CHECK_FALSE(fs::exists(package_file));
+    CC::forget_checked_packages(package.request.plugin_id);
+}
+
+TEST_CASE("A failed install drops the records its plugin id was checked with", "[cosmyx]")
+{
+    const std::string body = "# checked but never installed\n";
+    const std::string id   = "22222222-2222-4222-8222-222222222222";
+    const std::string kept = "33333333-3333-4333-8333-333333333333";
+    CC::remember_checked_package({id, "1.0.0", CC::sha256_hex(body), body.size(), ""});
+    CC::remember_checked_package({id, "1.0.1", CC::sha256_hex(body + "1"), body.size() + 1, ""});
+    CC::remember_checked_package({kept, "1.0.0", CC::sha256_hex(body), body.size(), ""});
+
+    CC::forget_checked_packages(id);
+
+    ScopedTemporaryDir dir("cosmyx-plugin");
+    const fs::path     package_file = dir.path() / "plugin.py";
+    std::string        error;
+    write_file(package_file, body);
+    CHECK_FALSE(CC::commit_package_record(id, dir.path(), package_file, error));
+    write_file(package_file, body + "1");
+    CHECK_FALSE(CC::commit_package_record(id, dir.path(), package_file, error));
+    // Another plugin's record is untouched.
+    write_file(package_file, body);
+    CHECK(CC::commit_package_record(kept, dir.path(), package_file, error));
+}
+
+TEST_CASE("A requested version is the latest or a strict X.Y.Z", "[cosmyx]")
+{
+    std::string version = "unchanged";
+    CHECK(CC::request_version("", version));
+    CHECK(version.empty());
+    CHECK(CC::request_version("1.2.3", version));
+    CHECK(version == "1.2.3");
+    for (const std::string requested : {"1.2", "v1.2.3", "1.2.3-beta", " 1.2.3", "01.2.3", "latest", "1.2.3.4"}) {
+        INFO(requested);
+        version = "unchanged";
+        CHECK_FALSE(CC::request_version(requested, version));
+        CHECK(version == "unchanged");
+    }
 }
 
 TEST_CASE("A wheel's entry package must be a safe name at the top of the wheel", "[cosmyx]")
