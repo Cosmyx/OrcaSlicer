@@ -77,35 +77,72 @@ class LaunchTests(unittest.TestCase):
             self.assertTrue(app.command[0].endswith("AppRun"))
 
     def test_windows_copies_the_build_and_adds_mesa(self) -> None:
+        # The branded name (package-name branding) and the upstream names are all accepted.
+        for exe_name in launch.WINDOWS_EXES:
+            with self.subTest(exe=exe_name), tempfile.TemporaryDirectory() as tmp:
+                artifacts, work = Path(tmp) / "a", Path(tmp) / "w"
+                (artifacts / "pkg").mkdir(parents=True)
+                with zipfile.ZipFile(artifacts / "pkg" / "CosmoSlice_portable.zip", "w") as bundle:
+                    bundle.writestr(f"CosmoSlice/{exe_name}", b"exe")
+                fetched = []
+
+                def fetch(dest: Path):
+                    fetched.append(dest)
+                    dest.mkdir(parents=True, exist_ok=True)
+                    for name in ("opengl32.dll", "libgallium_wgl.dll"):
+                        (dest / name).write_bytes(b"dll")
+                    return dest, {"GALLIUM_DRIVER": "llvmpipe"}
+
+                app = launch.prepare_windows(artifacts, work, fetch)
+                # --sw-renderer would reach the command line parser, which rejects it.
+                self.assertEqual(app.command, [str(work / "app" / exe_name)])
+                self.assertEqual(app.process, Path(exe_name).stem)
+                self.assertEqual(fetched, [work / "app" / "mesa"])
+                self.assertEqual(app.env, {"GALLIUM_DRIVER": "llvmpipe"})
+                for name in (exe_name, "opengl32.dll", "libgallium_wgl.dll"):
+                    self.assertTrue((work / "app" / name).is_file(), name)
+
+                def misplaced(dest: Path):
+                    (work / "elsewhere").mkdir(exist_ok=True)
+                    (work / "elsewhere" / "opengl32.dll").write_bytes(b"dll")
+                    return work / "elsewhere", {}
+
+                with self.assertRaises(GoldenError):
+                    launch.prepare_windows(artifacts, work, misplaced)
+
+    def test_windows_unpacked_build_prefers_the_branded_exe(self) -> None:
+        def fetch(dest: Path):
+            dest.mkdir(parents=True, exist_ok=True)
+            (dest / "opengl32.dll").write_bytes(b"dll")
+            return dest, {}
+
+        for names, expected in ((("orca-slicer.exe",), "orca-slicer.exe"),
+                                (("CosmoSlice.exe",), "CosmoSlice.exe"),
+                                (("orca-slicer.exe", "CosmoSlice.exe"), "CosmoSlice.exe")):
+            with self.subTest(names=names), tempfile.TemporaryDirectory() as tmp:
+                artifacts, work = Path(tmp) / "a", Path(tmp) / "w"
+                (artifacts / "build").mkdir(parents=True)
+                for name in names:
+                    (artifacts / "build" / name).write_bytes(b"exe")
+                app = launch.prepare_windows(artifacts, work, fetch)
+                self.assertEqual(Path(app.command[0]).name, expected)
+
+    def test_windows_without_a_known_exe_fails(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             artifacts, work = Path(tmp) / "a", Path(tmp) / "w"
-            (artifacts / "pkg").mkdir(parents=True)
-            with zipfile.ZipFile(artifacts / "pkg" / "OrcaSlicer_portable.zip", "w") as bundle:
-                bundle.writestr("OrcaSlicer/orca-slicer.exe", b"exe")
-            fetched = []
-
-            def fetch(dest: Path):
-                fetched.append(dest)
-                dest.mkdir(parents=True, exist_ok=True)
-                for name in ("opengl32.dll", "libgallium_wgl.dll"):
-                    (dest / name).write_bytes(b"dll")
-                return dest, {"GALLIUM_DRIVER": "llvmpipe"}
-
-            app = launch.prepare_windows(artifacts, work, fetch)
-            # --sw-renderer would reach the command line parser, which rejects it.
-            self.assertEqual(len(app.command), 1)
-            self.assertEqual(fetched, [work / "app" / "mesa"])
-            self.assertEqual(app.env, {"GALLIUM_DRIVER": "llvmpipe"})
-            for name in ("orca-slicer.exe", "opengl32.dll", "libgallium_wgl.dll"):
-                self.assertTrue((work / "app" / name).is_file(), name)
-
-            def misplaced(dest: Path):
-                (work / "elsewhere").mkdir(exist_ok=True)
-                (work / "elsewhere" / "opengl32.dll").write_bytes(b"dll")
-                return work / "elsewhere", {}
-
+            artifacts.mkdir()
+            with zipfile.ZipFile(artifacts / "CosmoSlice_portable.zip", "w") as bundle:
+                bundle.writestr("CosmoSlice/other.exe", b"exe")
             with self.assertRaises(GoldenError):
-                launch.prepare_windows(artifacts, work, misplaced)
+                launch.prepare_windows(artifacts, work, lambda dest: (dest, {}))
+
+    def test_macos_finds_the_bundle_under_either_name(self) -> None:
+        for bundle in ("CosmoSlice.app", "OrcaSlicer.app"):
+            with self.subTest(bundle=bundle), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                (root / bundle).mkdir()
+                (root / "OrcaSlicer_profile_validator.app").mkdir()
+                self.assertEqual(launch.find_app(root).name, bundle)
 
     def test_one_artifact_is_expected(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

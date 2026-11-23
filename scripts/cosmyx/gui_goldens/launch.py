@@ -101,20 +101,34 @@ def mesa_fetch(dest: Path) -> tuple[Path, dict[str, str]]:
     return folder, dict(env)
 
 
+# The Windows exe names, branded first: CosmoSlice.exe once the package-name
+# branding renames it, orca-slicer.exe / OrcaSlicer.exe for older builds.
+WINDOWS_EXES = ("CosmoSlice.exe", "orca-slicer.exe", "OrcaSlicer.exe")
+
+
+def find_windows_exes(root: Path) -> list[Path]:
+    """Every copy of the first exe name of WINDOWS_EXES found under `root`."""
+    for name in WINDOWS_EXES:
+        exes = sorted(root.rglob(name))
+        if exes:
+            return exes
+    return []
+
+
 def prepare_windows(artifact_dir: Path, work: Path,
                     fetch: Callable[[Path], tuple[Path, dict[str, str]]] = mesa_fetch) -> App:
-    exes = sorted(artifact_dir.rglob("orca-slicer.exe")) or sorted(artifact_dir.rglob("OrcaSlicer.exe"))
+    exes = find_windows_exes(artifact_dir)
     app_dir = work / "app"
     if app_dir.exists():
         shutil.rmtree(app_dir)
-    if exes:
-        shutil.copytree(_one(exes, "orca-slicer.exe").parent, app_dir)
-    else:
+    if not exes:
         archive = _one(sorted(artifact_dir.rglob("*.zip")), "portable zip")
         with zipfile.ZipFile(archive) as bundle:
             bundle.extractall(work / "unzipped")
-        shutil.copytree(_one(sorted((work / "unzipped").rglob("orca-slicer.exe")), "orca-slicer.exe").parent, app_dir)
-    exe = next(p for p in (app_dir / "orca-slicer.exe", app_dir / "OrcaSlicer.exe") if p.is_file())
+        exes = find_windows_exes(work / "unzipped")
+    source = _one(exes, " or ".join(WINDOWS_EXES))
+    shutil.copytree(source.parent, app_dir)
+    exe = app_dir / source.name
     fetched, env = fetch(app_dir / "mesa")
     dll_dir = fetched.parent if fetched.is_file() else fetched
     if not (dll_dir / "opengl32.dll").is_file() or dll_dir.resolve() != (app_dir / "mesa").resolve():

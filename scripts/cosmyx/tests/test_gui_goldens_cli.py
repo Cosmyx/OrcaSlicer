@@ -59,6 +59,12 @@ class ResolveTests(unittest.TestCase):
         self.assertEqual(picked, {"windows": NAMES[0], "macos": NAMES[3], "linux": NAMES[5]})
         self.assertEqual(cli.pick_artifacts(NAMES[4:5], classify), {"macos": NAMES[4]})
 
+    def test_branded_artifact_names_are_picked_too(self) -> None:
+        # Package-name branding renames the artifacts from OrcaSlicer_ to CosmoSlice_.
+        branded = [n.replace("OrcaSlicer_", "CosmoSlice_", 1) for n in NAMES]
+        self.assertEqual(cli.pick_artifacts(branded, classify),
+                         {"windows": branded[0], "macos": branded[3], "linux": branded[5]})
+
     def test_a_good_build_runs_on_every_os(self) -> None:
         outputs = self.resolve()
         self.assertEqual(outputs["run_ok"], "true")
