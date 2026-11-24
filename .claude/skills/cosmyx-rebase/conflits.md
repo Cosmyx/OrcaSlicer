@@ -42,6 +42,23 @@ on the release base, and the wxWidgets fork has `SetAppearance`); Linux unit tes
 
 ## Log
 
+### 2026-11 feat/cosmyx-plugin-signing - PluginManager.cpp on v2.5.2
+- Symptom: `just cosmo-rebase-check v2.5.2` reports a conflict in `src/slic3r/plugin/PluginManager.cpp` when
+  replaying `7583922463`.
+- Cause: the plugin-signing hook sits in code that differs between v2.5.2 and DEV.
+- Resolution: not resolved yet; only matters for a rebase onto the tag. Keep the sheet's intent (the hook calls
+  the Cosmyx install gate before anything is written) and rerun the recipe.
+- Commit: unknown.
+
+### 2026-11 ci/cosmyx-integrate - rerere misses resolutions in a fresh clone
+- Symptom: the first `cosmo-integrate` runs stopped on the `build_orca.yml` conflict (macos-signing vs
+  product-name) although it had been resolved before.
+- Cause: the `rerere` cache is local to a clone, and a resolution recorded under a different conflict style
+  (`diff3`) gets another id.
+- Resolution: the recipe trains `rerere` from the merges of `origin/ci/cosmyx-integration` first (like
+  `git rerere-train`) and merges with the default conflict style.
+- Commit: 0c87d76424 (ci/cosmyx-integrate).
+
 ### 2026-11 ci/cosmyx-integration - DEV rebuild with the package names and three new branches
 - Symptom: rebuilding `ci/cosmyx-integration` from `origin/DEV` (`3838002bc8`) with every open PR tip (rows 1-28, then
   #111) conflicted in: `build_orca.yml` (macos-signing against product-name's `mac-app` step, same gap after "Create DMG
