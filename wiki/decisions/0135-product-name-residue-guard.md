@@ -17,7 +17,13 @@ sync on every new string.
   matches (its text in a literal or hint; a msgid row also in the template,
   its new msgid not there yet; a literal row not being a msgid), and every
   allowlist row still matches with its exact count. A stale row is an error
-  on every build.
+  on every build, except in the engine's tolerant mode (decision 0122: a
+  tree whose upstream base is not DEV, such as an integration onto an older
+  upstream tag), where a rename, allowlist or inflection row whose text the
+  tree lacks entirely (old and new text absent from the sources, the hints
+  and the template) is skipped with a warning. A row only partly there (a
+  literal without its msgid) stays an error. The plugin reads the mode from
+  the engine's context and is strict when the engine has none.
 - After apply: each row is renamed in both places (old text gone, new text in
   the sources and, for a msgid row, in the template); no confirmed
   translation of a renamed msgid names the product (error); and no visible

@@ -84,6 +84,8 @@ here; see the upstream release notes.
   Exception texts that upstream tests assert (the plugin host's "OrcaSlicer
   application is not initialized") are kept, and a test fails if the rename
   ever rewrites a text an upstream test asserts.
+  On an older upstream base (tolerant mode), rename rows whose text that
+  tree does not have are skipped with a warning instead of failing the build.
   A guard reports any new upstream text naming OrcaSlicer; recipe
   `just brand-name-candidates` proposes the rows. The cloud web pane and
   the plugin hub fall back to CosmoCloud (orca-cloud.cosmyx3d.fr) instead of
