@@ -9,8 +9,14 @@ worktree `.worktrees/integration` (created, or reused when clean) from BASE
 of `branches.json`. Known conflict kinds are resolved inside the merge commit
 (see resolve.py; `rerere` is on for the run). Any other conflict aborts that
 merge, prints the branch, the files and a summary of their hunks, and exits 1.
-Nothing is pushed unless `--push` (force-with-lease on the old remote tip);
-`--build` then starts build_all on the branch.
+Nothing is pushed unless `--push`, which pushes the branch and
+`cosmyx-ci/<BASE>` (BASE's commit, the base of the build pull request)
+atomically, each with force-with-lease on its old remote tip. `--build` builds
+through a never-merged draft pull request from the branch into
+`cosmyx-ci/<BASE>`: build_all runs on pull requests to `cosmyx-ci/**`. The
+pull request is created after the push (its opening starts the run) or, when
+already open, reused (the push started the run); open ones into another
+`cosmyx-ci/` base are closed before the push so they do not build too.
 
 `rebase-check` is a dry run: in a temporary worktree, it replays each branch's
 own commits onto `refs/tags/upstream/TAG` (stacked children onto their
@@ -44,6 +50,8 @@ DATA_FILE = Path(__file__).resolve().parent / "branches.json"
 UPSTREAM_URL = "https://github.com/OrcaSlicer/OrcaSlicer.git"
 INTEGRATION_BRANCH = "ci/cosmyx-integration"
 INTEGRATION_WORKTREE = Path(".worktrees") / "integration"
+# Branches a build pull request targets; build_all triggers on pull requests to them.
+CI_BASE_PREFIX = "cosmyx-ci/"
 # Settings for every merge or cherry-pick of a run: rerere replays recorded
 # resolutions. The default conflict style is forced so that rerere finds the
 # resolutions recorded by hand merges (a diff3 hunk has another conflict id);
@@ -318,6 +326,56 @@ def prepare_worktree(git: Git, path: Path, branch: str, base: str) -> Git:
     return Git(path)
 
 
+def ci_base_branch(git: Git, base: str, remote: str) -> str:
+    """`cosmyx-ci/<name>` for BASE: `origin/DEV` gives `cosmyx-ci/DEV`, tag `v2.5.2` gives `cosmyx-ci/v2.5.2`."""
+    name = base
+    for prefix in (f"refs/remotes/{remote}/", "refs/heads/", "refs/tags/", f"{remote}/"):
+        if name.startswith(prefix):
+            name = name[len(prefix):]
+            break
+    branch = CI_BASE_PREFIX + name
+    if git.run("check-ref-format", f"refs/heads/{branch}", check=False).returncode != 0:
+        raise SetupError(f"base {base} gives no valid branch name ({branch}): use a branch or tag name")
+    return branch
+
+
+def gh_or_fail(gh: Callable, command: list[str], repo: str | None) -> str:
+    command = command + (["--repo", repo] if repo else [])
+    completed = gh(command)
+    if completed.returncode != 0:
+        raise SetupError(f"gh {' '.join(command)} failed: {completed.stderr.strip()}")
+    return completed.stdout
+
+
+def open_build_prs(gh: Callable, args, ci_branch: str, out) -> dict | None:
+    """Before the push: return the open build pull request into ci_branch, if any.
+
+    Open pull requests from the branch into another `cosmyx-ci/` base are
+    closed, so that the push does not start a build of them too.
+    """
+    listed = json.loads(gh_or_fail(gh, ["pr", "list", "--head", args.branch, "--state", "open",
+                                        "--json", "number,url,baseRefName"], args.repo) or "[]")
+    reuse = None
+    for pr in listed:
+        base = pr.get("baseRefName", "")
+        if base == ci_branch and reuse is None:
+            reuse = pr
+        elif base.startswith(CI_BASE_PREFIX):
+            gh_or_fail(gh, ["pr", "close", str(pr["number"]), "--comment",
+                            f"Superseded by an integration build on {ci_branch}."], args.repo)
+            print(f"Closed stale build pull request {pr['url']} (base {base}).", file=out)
+    return reuse
+
+
+def create_build_pr(gh: Callable, args, ci_branch: str, base_label: str) -> str:
+    body = (f"Build vehicle for `{args.branch}`, the integration of every Cosmyx pull request branch on "
+            f"{base_label}. It runs build_all (pull requests to `cosmyx-ci/**`). Never merge this pull "
+            f"request: `{ci_branch}` only marks the base commit. Rebuilt by `just cosmo-integrate`.")
+    command = ["pr", "create", "--draft", "--head", args.branch, "--base", ci_branch,
+               "--title", f"ci: integration build on {base_label} (never merge)", "--body", body]
+    return gh_or_fail(gh, command, args.repo).strip().splitlines()[-1]
+
+
 def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine, gh: Callable | None = None) -> int:
     git = Git(Path(args.repo_root) if args.repo_root else Path.cwd())
     data, entries = load_branches(Path(args.data) if args.data else DATA_FILE)
@@ -331,11 +389,13 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     base_sha = git.sha(base)
     if not base_sha:
         raise SetupError(f"base {base} not found")
+    ci_branch = ci_base_branch(git, args.base or data["base"], remote) if args.push else None
     tips = {}
     for entry in entries:
         tips[entry.name] = git.sha(f"refs/remotes/{remote}/{entry.name}")
         if not tips[entry.name]:
-            raise SetupError(f"{remote}/{entry.name} not found (fetch it, or --skip it)")
+            print(f"warning: {remote}/{entry.name} not found, skipped (not pushed yet?)", file=out)
+    entries = [entry for entry in entries if tips[entry.name]]
     old_tip = git.sha(f"refs/remotes/{remote}/{args.branch}")
     wt = prepare_worktree(git, main_root(git) / (args.worktree or INTEGRATION_WORKTREE), args.branch, base_sha)
     train = args.train or (f"refs/remotes/{remote}/{args.branch}" if not args.no_train else None)
@@ -368,18 +428,26 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     if not args.push:
         print("Not pushed (use --push).", file=out)
         return 0
-    lease = f"--force-with-lease={args.branch}:{old_tip or ''}"
-    wt.run("push", lease, remote, f"{args.branch}:refs/heads/{args.branch}")
-    print(f"Pushed {args.branch} {tip[:10]}.", file=out)
-    if args.build:
-        command = ["workflow", "run", "build_all.yml", "--ref", args.branch]
-        if args.repo:
-            command += ["--repo", args.repo]
-        completed = (gh or run_gh)(command)
-        if completed.returncode != 0:
-            print(f"gh {' '.join(command)} failed: {completed.stderr}", file=out)
-            return 2
-        print("build_all started.", file=out)
+    gh = gh or run_gh
+    reuse = open_build_prs(gh, args, ci_branch, out) if args.build else None
+    old_ci = git.sha(f"refs/remotes/{remote}/{ci_branch}")
+    wt.run("push", "--atomic", f"--force-with-lease=refs/heads/{args.branch}:{old_tip or ''}",
+           f"--force-with-lease=refs/heads/{ci_branch}:{old_ci or ''}", remote,
+           f"{args.branch}:refs/heads/{args.branch}", f"{base_sha}:refs/heads/{ci_branch}")
+    print(f"Pushed {args.branch} {tip[:10]} and {ci_branch} {base_sha[:10]}.", file=out)
+    if not args.build:
+        return 0
+    base_label = ci_branch[len(CI_BASE_PREFIX):]
+    if reuse:
+        url = reuse["url"]
+        started = "the push started build_all" if tip != old_tip else \
+            "the head did not move, so no new run: rerun the last one with gh run rerun"
+        print(f"Build pull request (reused): {url}; {started}.", file=out)
+    else:
+        url = create_build_pr(gh, args, ci_branch, base_label)
+        print(f"Build pull request (created, draft): {url}; its opening started build_all.", file=out)
+    repo = f" --repo {args.repo}" if args.repo else ""
+    print(f"Run: {url}/checks, or gh run list --workflow build_all.yml --branch {args.branch}{repo}", file=out)
     return 0
 
 
@@ -465,7 +533,8 @@ def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engi
         for entry in entries:
             tip = git.sha(f"refs/remotes/{remote}/{entry.name}")
             if not tip:
-                rows.append((entry.name, "-", "MISSING", ""))
+                # Not pushed yet: a warning, not a failure; its children show as SKIPPED.
+                rows.append((entry.name, "-", "missing on the remote, skipped", ""))
                 continue
             if entry.name == foundation:
                 old_base, new_base, parent = git.out("merge-base", tip, dev), onto, None
@@ -502,7 +571,7 @@ def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engi
     if approximated:
         print("CONFLICT: unknown conflicts were overridden with the branch's side to keep going; "
               "branches stacked on them are approximate.", file=out)
-    return 1 if any(row[2].startswith(("CONFLICT", "SKIPPED", "MISSING")) for row in rows) else 0
+    return 1 if any(row[2].startswith(("CONFLICT", "SKIPPED")) for row in rows) else 0
 
 
 # command line
@@ -523,8 +592,10 @@ def parser() -> argparse.ArgumentParser:
     one.add_argument("--worktree", help=f"worktree path under the main checkout (default: {INTEGRATION_WORKTREE})")
     one.add_argument("--no-train", action="store_true",
                      help="do not teach rerere from the current remote integration branch")
-    one.add_argument("--push", action="store_true", help="push with --force-with-lease on the old remote tip")
-    one.add_argument("--build", action="store_true", help="after --push, start build_all on the branch")
+    one.add_argument("--push", action="store_true",
+                     help=f"push the branch and {CI_BASE_PREFIX}<BASE> with --force-with-lease on their old tips")
+    one.add_argument("--build", action="store_true",
+                     help=f"with --push, build through a draft pull request into {CI_BASE_PREFIX}<BASE>")
     one.add_argument("--repo", default=os.environ.get("COSMYX_REPO"), help="GitHub repository for --build")
     two = sub.add_parser("rebase-check", parents=[common], help="dry-run rebase onto an upstream tag")
     two.add_argument("tag")

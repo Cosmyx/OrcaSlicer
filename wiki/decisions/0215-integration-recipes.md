@@ -26,9 +26,23 @@ it hides the conflicts that really need a person or an agent.
   - `just cosmo-integrate [BASE]` resets `ci/cosmyx-integration` to BASE
     (default `origin/DEV`) in the worktree `.worktrees/integration` (created,
     or reused only when clean), and merges `origin/<branch>` with `--no-ff` for
-    every row of the branch list. It pushes nothing unless `--push`, which
-    uses `--force-with-lease` on the remote tip seen at the start; `--build`
-    then starts `build_all.yml` on the branch.
+    every row of the branch list; a row not on the remote yet is skipped with
+    a warning. It pushes nothing unless `--push`, which pushes, in one atomic
+    push, the branch and `cosmyx-ci/<BASE>` set to BASE's commit (`cosmyx-ci/DEV`
+    for `origin/DEV`, `cosmyx-ci/v2.5.2` for the tag `v2.5.2`), each with
+    `--force-with-lease` on the remote tip seen at the start.
+  - `--build` builds the integration through a draft pull request from the
+    branch into `cosmyx-ci/<BASE>`, titled `ci: integration build on <BASE>
+    (never merge)`, which is never merged: `build_all.yml` runs on pull
+    requests to `cosmyx-ci/**`, in upstream pull request mode (macOS arm64
+    and its DMG only). An open one is reused, and the push starts its run;
+    otherwise it is created after the push, and its opening starts the run.
+    Open build pull requests from the branch into another `cosmyx-ci/` base
+    are closed before the push, so that only the current base builds. The
+    recipe prints the pull request link and the `gh run list` command that
+    finds the run. A pull request, not `workflow_dispatch`, because the run
+    then has a base to diff against and shows on the pull request, like the
+    upstream pull request builds it reproduces.
   - `just cosmo-rebase-check TAG` replays, in a temporary worktree outside the
     repository, each branch's own commits (those after its merge base with its
     parent, the foundation for a `DEV`-parented branch) onto
@@ -62,8 +76,9 @@ it hides the conflicts that really need a person or an agent.
   (name, pull request, parent, `integration_only` for the rebase skill branch),
   not parsed from the rebase skill's `branches.md`: that file lives on a docs
   branch, is prose for agents, and is not in the trees the recipes run on. A
-  new pull request branch is one new row, after its parent. The rebase skill
-  points to this file and keeps its table in the same order.
+  new pull request branch is one new row, after its parent, even before it is
+  pushed. The rebase skill points to this file and keeps its table in the
+  same order.
 - The root `justfile` is owned by the foundation. This change adds one
   `import? 'scripts/cosmyx/just/integrate.just'` line, in alphabetical place,
   like the other feature recipe files.
@@ -73,10 +88,12 @@ it hides the conflicts that really need a person or an agent.
 - An agent only handles the conflicts the recipes cannot: the stop report
   names them.
 - `ci/cosmyx-integration` stays a throwaway branch; the local branch is reset
-  on every run.
+  on every run. The `cosmyx-ci/*` branches and the draft build pull requests
+  are throwaway too: they only mark a base commit and carry the run.
 - The branch list must be kept in step with the open pull requests.
 - Removing it: delete `scripts/cosmyx/integrate/`,
   `scripts/cosmyx/just/integrate.just`, `scripts/cosmyx/tests/test_integrate_*.py`,
   the justfile import line, the T20 slot (changelog, `SLOTS_BY_AREA`, decision
-  0003) and this decision; integration and rebases then go back to being done
+  0003) and this decision, then close the build pull requests and delete the
+  `cosmyx-ci/*` branches; integration and rebases then go back to being done
   by hand.

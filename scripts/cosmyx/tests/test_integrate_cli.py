@@ -262,23 +262,106 @@ class IntegrateTests(Sandbox):
         self.assertIn("auto-resolved: rerere", out)
         self.assertEqual(self.integration_file("src/app.txt"), "one\nTWO-A\nTWO-B\nthree")
 
-    def test_push_uses_a_lease_and_build_calls_gh(self) -> None:
-        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
-        self.push("ci/cosmyx-integration")  # an old remote tip (DEV)
-        self.git(["fetch", "-q", "origin"])
+    def remote_sha(self, branch: str) -> str | None:
+        line = self.git(["ls-remote", str(self.origin), f"refs/heads/{branch}"])
+        return line.split()[0] if line else None
+
+    def fake_gh(self, open_prs: list[dict]):
+        """A gh stand-in: `pr list` returns open_prs; records each call with the remote refs at that moment."""
         calls = []
 
         def gh(command):
-            calls.append(command)
+            calls.append((command, self.remote_sha("cosmyx-ci/DEV")))
+            if command[:2] == ["pr", "list"]:
+                return subprocess.CompletedProcess(command, 0, json.dumps(open_prs), "")
+            if command[:2] == ["pr", "create"]:
+                return subprocess.CompletedProcess(command, 0, "https://github.com/Owner/Repo/pull/7\n", "")
             return subprocess.CompletedProcess(command, 0, "", "")
 
+        return gh, calls
+
+    def test_push_also_pushes_the_ci_base_at_the_base_commit(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.push("ci/cosmyx-integration")  # an old remote tip (DEV)
+        self.git(["fetch", "-q", "origin"])
+        code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push"])
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.remote_sha("ci/cosmyx-integration"), self.git(["rev-parse", "ci/cosmyx-integration"]))
+        self.assertEqual(self.remote_sha("cosmyx-ci/DEV"), self.git(["rev-parse", "origin/DEV"]))
+
+    def test_tag_base_gives_its_own_ci_base(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.git(["tag", "v1", "origin/DEV"])
+        code, out = self.run_cli(["integrate", "v1", "--no-fetch", "--no-train", "--data", self.data(), "--push"])
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.remote_sha("cosmyx-ci/v1"), self.git(["rev-parse", "v1^{commit}"]))
+        self.assertIsNone(self.remote_sha("cosmyx-ci/DEV"))
+
+    def test_base_without_a_branch_name_is_refused_before_any_work(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        with self.assertRaises(cli.SetupError):
+            self.run_cli(["integrate", "origin/DEV~0", "--no-fetch", "--data", self.data(), "--push"])
+        self.assertFalse((self.work / ".worktrees").exists())
+
+    def test_ci_base_lease_refuses_and_pushes_nothing(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        # Someone pushes cosmyx-ci/DEV after our fetch, from their own clone, so
+        # our remote-tracking refs do not know it.
+        other = self.tmp / "other"
+        self.git(["clone", "-q", str(self.origin), str(other)], cwd=self.tmp)
+        self.git(["push", "-q", "origin", "origin/chore/foundation:refs/heads/cosmyx-ci/DEV"], cwd=other)
+        with self.assertRaises(cli.SetupError):
+            self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push"])
+        self.assertIsNone(self.remote_sha("ci/cosmyx-integration"))
+        self.assertEqual(self.remote_sha("cosmyx-ci/DEV"), self.base)
+
+    def test_build_creates_a_draft_pull_request_after_the_push(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        gh, calls = self.fake_gh([])
         code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push", "--build",
                                   "--repo", "Owner/Repo"], gh=gh)
         self.assertEqual(code, 0, out)
-        local = self.git(["rev-parse", "ci/cosmyx-integration"])
-        self.assertEqual(self.git(["ls-remote", str(self.origin), "refs/heads/ci/cosmyx-integration"]).split()[0], local)
-        self.assertEqual(calls, [["workflow", "run", "build_all.yml", "--ref", "ci/cosmyx-integration",
-                                  "--repo", "Owner/Repo"]])
+        self.assertEqual([command[:2] for command, _ in calls], [["pr", "list"], ["pr", "create"]])
+        listed, _ = calls[0]
+        self.assertEqual(listed[listed.index("--head") + 1], "ci/cosmyx-integration")
+        self.assertEqual(listed[-2:], ["--repo", "Owner/Repo"])
+        create, ci_at_create = calls[1]
+        self.assertEqual(ci_at_create, self.git(["rev-parse", "origin/DEV"]))
+        self.assertIn("--draft", create)
+        self.assertEqual(create[create.index("--head") + 1], "ci/cosmyx-integration")
+        self.assertEqual(create[create.index("--base") + 1], "cosmyx-ci/DEV")
+        self.assertEqual(create[create.index("--title") + 1], "ci: integration build on DEV (never merge)")
+        self.assertIn("Never merge", create[create.index("--body") + 1])
+        self.assertEqual(create[-2:], ["--repo", "Owner/Repo"])
+        self.assertIn("https://github.com/Owner/Repo/pull/7", out)
+        self.assertIn("gh run list --workflow build_all.yml --branch ci/cosmyx-integration --repo Owner/Repo", out)
+
+    def test_build_reuses_the_open_pull_request_and_closes_stale_ones_first(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        gh, calls = self.fake_gh([
+            {"number": 5, "url": "https://github.com/Owner/Repo/pull/5", "baseRefName": "cosmyx-ci/v1"},
+            {"number": 6, "url": "https://github.com/Owner/Repo/pull/6", "baseRefName": "cosmyx-ci/DEV"},
+            {"number": 8, "url": "https://github.com/Owner/Repo/pull/8", "baseRefName": "DEV"},
+        ])
+        code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push", "--build"],
+                                 gh=gh)
+        self.assertEqual(code, 0, out)
+        self.assertEqual([command[:3] for command, _ in calls], [["pr", "list", "--head"], ["pr", "close", "5"]])
+        # Closed before the push, so the push does not build it.
+        self.assertIsNone(calls[1][1])
+        self.assertIn("reused): https://github.com/Owner/Repo/pull/6", out)
+        self.assertIn("the push started build_all", out)
+        self.assertEqual(self.remote_sha("cosmyx-ci/DEV"), self.git(["rev-parse", "origin/DEV"]))
+
+    def test_build_stops_when_gh_fails(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+
+        def gh(command):
+            return subprocess.CompletedProcess(command, 1, "", "auth required")
+
+        with self.assertRaises(cli.SetupError):
+            self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push", "--build"], gh=gh)
+        self.assertIsNone(self.remote_sha("ci/cosmyx-integration"))
 
     def test_push_refuses_when_the_remote_moved(self) -> None:
         self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
@@ -309,9 +392,18 @@ class IntegrateTests(Sandbox):
         with self.assertRaises(cli.SetupError):
             self.run_cli(["integrate", "--no-fetch", "--data", self.data()])
 
-    def test_missing_branch_changes_nothing(self) -> None:
+    def test_branch_not_on_the_remote_is_skipped_with_a_warning(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        code, out = self.run_cli(["integrate", "--no-fetch", "--data",
+                                  self.data([{"name": "feat/not-pushed", "parent": "DEV"}])])
+        self.assertEqual(code, 0, out)
+        self.assertIn("warning: origin/feat/not-pushed not found, skipped", out)
+        self.assertNotIn("| feat/not-pushed", out)
+        self.assertEqual(self.integration_file("src/a.txt"), "a")
+
+    def test_missing_base_changes_nothing(self) -> None:
         with self.assertRaises(cli.SetupError):
-            self.run_cli(["integrate", "--no-fetch", "--data", self.data([{"name": "feat/gone", "parent": "DEV"}])])
+            self.run_cli(["integrate", "origin/gone", "--no-fetch", "--data", self.data()])
         self.assertFalse((self.work / ".worktrees").exists())
 
 
@@ -368,6 +460,13 @@ class RebaseCheckTests(Sandbox):
         self.assertEqual(code, 0, out)
         self.assertEqual(len(self.worktrees()), 1)
 
+    def test_branch_not_on_the_remote_is_a_warning(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data",
+                                  self.data([{"name": "feat/not-pushed", "parent": "DEV"}])])
+        self.assertEqual(code, 0, out)
+        self.assertIn("missing on the remote, skipped", out)
+
     def test_missing_tag_without_fetch_fails_cleanly(self) -> None:
         with self.assertRaises(cli.SetupError):
             self.run_cli(["rebase-check", "v9", "--no-fetch", "--data", self.data()])
@@ -390,6 +489,21 @@ class BranchListTests(unittest.TestCase):
         self.assertEqual(entries[0].name, data["foundation"])
         self.assertTrue(entries[-1].integration_only)
         self.assertEqual(len({entry.name for entry in entries}), len(entries))
+
+    def test_shipped_list_has_the_ci_branches(self) -> None:
+        names = [entry.name for entry in cli.load_branches()[1]]
+        for name in ("ci/cosmyx-integrate", "ci/cosmyx-arm64-pr-builds", "ci/cosmyx-mac-retry"):
+            self.assertIn(name, names)
+        self.assertLess(names.index("ci/cosmyx-flatpak-off"), names.index("ci/cosmyx-arm64-pr-builds"))
+
+    def test_ci_base_branch_names(self) -> None:
+        git = cli.Git(Path.cwd())
+        self.assertEqual(cli.ci_base_branch(git, "origin/DEV", "origin"), "cosmyx-ci/DEV")
+        self.assertEqual(cli.ci_base_branch(git, "DEV", "origin"), "cosmyx-ci/DEV")
+        self.assertEqual(cli.ci_base_branch(git, "v2.5.2", "origin"), "cosmyx-ci/v2.5.2")
+        self.assertEqual(cli.ci_base_branch(git, "refs/tags/v2.5.2", "origin"), "cosmyx-ci/v2.5.2")
+        with self.assertRaises(cli.SetupError):
+            cli.ci_base_branch(git, "origin/DEV~1", "origin")
 
     def test_child_before_parent_is_refused(self) -> None:
         data = {"base": "DEV", "foundation": "f"}
