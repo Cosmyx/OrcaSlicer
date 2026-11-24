@@ -80,4 +80,5 @@ here; see the upstream release notes.
 - A "Build all" run whose macOS jobs were cancelled because GitHub could not
   acquire a hosted runner now reruns its failed jobs by itself, after a
   15-minute wait and up to the fifth attempt. Runs cancelled by a user or by a
-  newer push are left alone. Pull request: PR_LINK. Decisions: 0217.
+  newer push are left alone.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/116. Decisions: 0217.
