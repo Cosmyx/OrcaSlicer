@@ -23,6 +23,7 @@ on:
       # run when upstream edits them.
       - '.github/workflows/build_orca.yml'
       - '.github/workflows/build_flatpak.yml'
+      - '.github/workflows/build_all.yml'
   push:
     branches:
       - DEV
@@ -42,6 +43,7 @@ on:
       # run when upstream edits them.
       - '.github/workflows/build_orca.yml'
       - '.github/workflows/build_flatpak.yml'
+      - '.github/workflows/build_all.yml'
   workflow_dispatch:
 
 permissions:

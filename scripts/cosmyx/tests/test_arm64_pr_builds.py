@@ -9,6 +9,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "build_all.yml"
+CHECKS = REPO_ROOT / ".github" / "workflows" / "cosmyx-checks.yml"
 HOOK = "- 'cosmyx-ci/**'"
 
 # The upstream triggers this hook must leave alone.
@@ -22,6 +23,15 @@ def triggers(text: str) -> dict[str, str]:
     section = re.split(r"^\S", section, maxsplit=1, flags=re.MULTILINE)[0]
     parts = re.split(r"^  ([a-z_]+):[^\n]*\n", section, flags=re.MULTILINE)
     return dict(zip(parts[1::2], parts[2::2]))
+
+
+def paths(body: str) -> list[str]:
+    """The items of the paths: list of a trigger body, comments dropped."""
+    match = re.search(r"^    paths:\n((?:      (?:- |#).*\n)+)", body, flags=re.MULTILINE)
+    if not match:
+        return []
+    items = [line.strip() for line in match.group(1).splitlines()]
+    return [item[2:].strip().strip("'\"") for item in items if item.startswith("- ")]
 
 
 def branches(body: str) -> list[str]:
@@ -72,6 +82,16 @@ class Arm64PullRequestBuildTests(unittest.TestCase):
         )
         universal = self.text.split("\n  build_macos_universal:\n", 1)[1].split("\n  build_", 1)[0]
         self.assertIn("github.event_name != 'pull_request'", universal)
+
+
+class CosmyxChecksTriggerTests(unittest.TestCase):
+    def test_upstream_edits_of_build_all_rerun_this_test(self) -> None:
+        # build_all.yml carries the hook pinned above, so cosmyx-checks must run
+        # when an upstream merge changes it, on pull requests and on pushes.
+        checks = triggers(CHECKS.read_bytes().decode("utf-8").replace("\r\n", "\n"))
+        for trigger in ("pull_request", "push"):
+            with self.subTest(trigger=trigger):
+                self.assertIn(".github/workflows/build_all.yml", paths(checks[trigger]))
 
 
 if __name__ == "__main__":

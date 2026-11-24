@@ -34,6 +34,9 @@ and Cosmyx pull requests target DEV.
 - `scripts/cosmyx/tests/test_arm64_pr_builds.py` pins the line, the untouched
   triggers, the `paths:` filter, and the upstream pull request behaviour this
   decision relies on (arm64 only, no universal app).
+- `cosmyx-checks.yml` lists `build_all.yml` in its `paths:` filters, next to
+  the other upstream build workflows that carry Cosmyx hooks, so an upstream
+  edit of the file reruns that test.
 
 ## What else such a pull request starts
 
