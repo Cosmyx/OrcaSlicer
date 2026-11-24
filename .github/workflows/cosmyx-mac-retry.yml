@@ -1,11 +1,12 @@
-# Cosmyx: reruns the failed jobs of a "Build all" run when a macOS job was
-# cancelled because GitHub could not acquire a hosted runner (decision 0217).
+# Cosmyx: reruns the failed jobs of a "Build all" or "Cosmyx dev build" run
+# when a macOS job was cancelled because GitHub could not acquire a hosted
+# runner (decision 0217).
 # workflow_run only fires from the copy of this file on the default branch.
 name: Cosmyx macOS runner retry
 
 on:
   workflow_run:
-    workflows: ["Build all"]
+    workflows: ["Build all", "Cosmyx dev build"]
     types: [completed]
 
 permissions:
@@ -13,7 +14,9 @@ permissions:
   checks: read
 
 concurrency:
-  group: cosmyx-mac-retry-${{ github.event.workflow_run.head_sha }}
+  # Per watched workflow and commit: a dev build and a Build all run of the
+  # same commit never wait on each other.
+  group: cosmyx-mac-retry-${{ github.event.workflow_run.workflow_id }}-${{ github.event.workflow_run.head_sha }}
   cancel-in-progress: false
 
 jobs:

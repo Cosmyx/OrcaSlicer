@@ -7,7 +7,8 @@ Accepted.
 ## Context
 
 Hosted macOS runners are scarce. When GitHub cannot acquire one, it cancels the
-macOS job of a "Build all" run with the annotation "The job was not acquired by
+macOS job of a "Build all" or "Cosmyx dev build" (decision 0218) run with
+the annotation "The job was not acquired by
 Runner of type hosted even after multiple attempts". The run then ends failed
 or cancelled although the code is fine, and someone had to rerun the failed
 jobs by hand, or with a local script, often several times.
@@ -18,7 +19,7 @@ concurrency group. Those runs must not be restarted.
 ## Decision
 
 - `.github/workflows/cosmyx-mac-retry.yml` runs on `workflow_run` for
-  "Build all", `types: [completed]`, and its job only runs when the run
+  "Build all" and "Cosmyx dev build", `types: [completed]`, and its job only runs when the run
   concluded `failure` or `cancelled`. It is a new file: no upstream workflow is
   edited (decision 0002).
 - The logic lives in `scripts/cosmyx/ci/mac_retry.py` (Python standard library,
@@ -28,7 +29,10 @@ concurrency group. Those runs must not be restarted.
   `macos` (any case) that ended `cancelled` or `failure`, and reruns only when
   one of them carries the runner acquisition annotation
   (`/check-runs/{job id}/annotations`, matched on "was not acquired by Runner
-  of type hosted", any case). A failed conclusion is accepted next to
+  of type hosted", any case). Every job that runs on macOS has `macos` in its
+  name in both workflows: the reusable-workflow legs `build_macos_arch
+  (<arch>) / ...` and `macOS arm64 / Unit Tests`, `Build macOS Universal`
+  (Build all) and `macOS DMG <arch>` (dev build); no other job does. A failed conclusion is accepted next to
   cancelled because the annotation, not the conclusion, proves the cause.
 - Retries stop once the run's attempt reaches `MAX` (default 5, repository
   variable `COSMYX_MAC_RETRY_MAX_ATTEMPTS`).
@@ -42,9 +46,11 @@ concurrency group. Those runs must not be restarted.
   keeps the check and the rerun in one tested place.
 - Permissions are `actions: write` (rerun) and `checks: read` (annotations;
   every permission not listed is none).
-- Concurrency group `cosmyx-mac-retry-<head sha>` with
-  `cancel-in-progress: false`: two triggers for the same commit never rerun
-  twice; the second one finds the attempt changed and does nothing.
+- Concurrency group `cosmyx-mac-retry-<workflow id>-<head sha>` with
+  `cancel-in-progress: false`: two triggers of the same workflow for the same
+  commit never rerun twice (the second one finds the attempt changed and does
+  nothing), and the two watched workflows building one commit never queue
+  behind each other.
 - Every outcome prints why it reruns or not in the job log.
 
 `workflow_run` only fires from the copy of the workflow file on the default
