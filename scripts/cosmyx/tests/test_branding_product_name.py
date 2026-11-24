@@ -600,8 +600,12 @@ class RealTreeTest(unittest.TestCase):
 
     def test_applies_without_error_and_no_visible_name_is_left(self) -> None:
         self.assertEqual(self.code, 0, "\n".join(self.lines))
-        # Tolerant mode reports the rows an older tree lacks as skipped.
-        self.assertEqual([line for line in self.lines if "G8" in line and "skipped (tolerant mode)" not in line], [])
+        if REAL_TREE_ENV[MODE_ENV].strip() == "tolerant":
+            # An older tree: rows it lacks are skipped, and a text upstream
+            # worded differently there is drift, a warning; nothing fails.
+            self.assertEqual([line for line in self.lines if "G8" in line and not line.startswith("warning")], [])
+        else:
+            self.assertEqual([line for line in self.lines if "G8" in line], [])
 
     def test_display_name_changes_and_the_app_key_stays(self) -> None:
         version = read(self.root, "version.inc").decode()
