@@ -521,6 +521,48 @@ class ReplayIntegrateTests(Sandbox):
         self.assertEqual(self.file_at("integration/v1", "src/app.txt"), "one\ntwo upstream\ntwo mine\nthree")
         self.assertEqual(self.file_at("integration/v1", "src/later.txt"), "l")
 
+    def test_a_hand_resolved_commit_is_reused_in_later_runs(self) -> None:
+        # The release moved a file the branch edits (modify/delete: rerere cannot record it).
+        self.git(["checkout", "-q", "release"])
+        self.git(["rm", "-q", "src/app.txt"])
+        self.commit({"src/all.txt": "one\ntwo upstream\nthree\n"}, "release moves app.txt")
+        self.git(["tag", "-f", "v1"])
+        self.git(["checkout", "-q", "DEV"])
+        self.branch("feat/edit", "DEV", {"src/app.txt": "one\ntwo\nthree\nfour\n", "src/test.txt": "reads app\n"},
+                    from_ref=self.base)
+        self.branch("feat/later", "feat/edit", {"src/later.txt": "l\n"},
+                    from_ref=self.git(["rev-parse", "origin/feat/edit"]))
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        self.assertIn("modify/delete", out)
+        self.assertIn("cherry-pick --continue", out)
+        worktree = self.work / ".worktrees" / "integration-v1"
+        # Resolved by hand: the edit goes to the moved file, and the test follows it.
+        self.git(["rm", "-q", "src/app.txt"], cwd=worktree)
+        (worktree / "src" / "all.txt").write_bytes(b"one\ntwo upstream\nthree\nfour\n")
+        (worktree / "src" / "test.txt").write_bytes(b"reads all\n")
+        self.git(["add", "src/all.txt", "src/test.txt"], cwd=worktree)
+        self.git(["-c", "core.editor=true", "cherry-pick", "--continue"], cwd=worktree)
+        code, out = self.run_v1("--push")
+        self.assertEqual(code, 0, out)
+        self.assertIn("earlier resolution", out)
+        self.assertEqual(self.file_at("integration/v1", "src/all.txt"), "one\ntwo upstream\nthree\nfour")
+        self.assertEqual(self.file_at("integration/v1", "src/test.txt"), "reads all")
+        self.assertEqual(self.file_at("integration/v1", "src/later.txt"), "l")
+        # A fresh clone state: no local rebase branches, worktree elsewhere; the pushed integration carries it.
+        self.git(["worktree", "remove", "--force", str(worktree)])
+        for ref in self.git(["for-each-ref", "--format=%(refname:short)", "refs/heads/rebase/"]).split():
+            self.git(["branch", "-q", "-D", ref])
+        self.git(["fetch", "-q", "origin"])
+        code, out = self.run_cli(["integrate", "v1", "--no-fetch", "--no-train", "--data", self.data()])
+        self.assertEqual(code, 0, out)
+        self.assertIn("earlier resolution", out)
+        self.assertEqual(self.file_at("integration/v1", "src/test.txt"), "reads all")
+        # The replayed commit still names the branch's original commit, once.
+        message = self.git(["log", "-1", "--format=%B", "rebase/v1/feat/edit"])
+        self.assertEqual(message.count(cli.PICKED), 1)
+        self.assertIn(cli.PICKED + self.git(["rev-parse", "origin/feat/edit"]), message)
+
     def test_known_conflict_kinds_are_resolved_during_the_replay(self) -> None:
         self.branch("feat/a", "DEV", {"CHANGELOG.md": self.changelog_with(("T17", "a."))}, from_ref=self.base)
         # A sibling written against an older feat/a: its replay conflicts in the changelog slots.

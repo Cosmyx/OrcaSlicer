@@ -15,9 +15,12 @@ parent) as the local branch `rebase/<BASE>/<branch>`, and those are merged.
 A branch already checked out in another worktree is moved there, only when
 that worktree is clean. Known conflict kinds are resolved inside the merge or
 cherry-pick commit (see resolve.py; `rerere` is on for the run). Any other
-conflict aborts that merge (a cherry-pick is left in progress, so that its
-hand resolution can be recorded by rerere), prints the branch, the files and
-a summary of their hunks, and exits 1.
+conflict aborts that merge, prints the branch, the files and a summary of
+their hunks, and exits 1. A replay's unknown conflict is first settled by an
+earlier replay of the same commit (found by its `cherry-pick -x` line in the
+worktree's HEAD, the local `rebase/<BASE>/*` branches or the remote
+integration branch); otherwise its cherry-pick is left in progress, so that a
+person resolves and commits it there, and the next run reuses that commit.
 Nothing is pushed unless `--push`, which pushes the branch (never the
 `rebase/<BASE>/*` branches) and
 `cosmyx-ci/<BASE>` (BASE's commit, the base of the build pull request)
@@ -469,6 +472,17 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
         # integration's): git refuses a branch checked out twice.
         print(f"{args.branch} is checked out in {holder}: that worktree is used.", file=out)
         worktree = holder
+    replay_mode = base_name(args.base or data["base"], remote) != data["base"]
+    resolved: dict[str, str] = {}
+    if replay_mode:
+        # Earlier replays that may carry hand resolutions: the worktree's HEAD
+        # (a resolution just committed there), the local rebase branches, then
+        # the remote integration branch.
+        start = Git(worktree).sha("HEAD") if (worktree / ".git").exists() else None
+        rebase_refs = git.out("for-each-ref", "--format=%(refname)",
+                              f"refs/heads/rebase/{base_name(args.base, remote)}/").split()
+        resolved = resolved_picks(git, ([start] if start else []) + rebase_refs
+                                  + [f"refs/remotes/{remote}/{args.branch}"], base_sha)
     wt = prepare_worktree(git, worktree, args.branch, base_sha)
     train = args.train or (f"refs/remotes/{remote}/{args.branch}" if not args.no_train else None)
     if train and git.sha(train):
@@ -478,9 +492,9 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     rows: list[tuple[str, str, str]] = []
     sources = {entry.name: f"{remote}/{entry.name}" for entry in entries}
     notes: dict[str, str] = {}
-    if base_name(args.base or data["base"], remote) != data["base"]:
+    if replay_mode:
         sources, notes, stopped = replay_branches(git, wt, data, entries, base_sha,
-                                                  base_name(args.base, remote), brand_hook, out)
+                                                  base_name(args.base, remote), brand_hook, out, resolved)
         if stopped:
             return 1
         wt.run("checkout", "-q", "-f", "-B", args.branch, base_sha)
@@ -536,7 +550,7 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
 
 
 def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sha: str, name: str,
-                    brand_hook: BrandHook, out) -> tuple[dict[str, str], dict[str, str], bool]:
+                    brand_hook: BrandHook, out, resolved: dict[str, str]) -> tuple[dict[str, str], dict[str, str], bool]:
     """Replay each branch's own commits onto BASE as `rebase/<name>/<branch>`, in list order.
 
     Returns (branch to merge per entry, table note per entry, stopped). A
@@ -560,14 +574,16 @@ def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sh
             continue
         wt.run("checkout", "-q", "-f", "--detach", new_base)
         try:
-            kinds, _ = replay(wt, commits, brand_hook, strict=True)
+            kinds, _ = replay(wt, commits, brand_hook, strict=True, resolved=resolved)
         except ReplayStopped as stop:
             subject = git.out("log", "-1", "--format=%s", stop.commit)
             report_unknown(f"{remote}/{entry.name} ({tip[:10]}), replaying {stop.commit[:10]} \"{subject}\"",
                            stop.outcome, out)
-            print(f"Stopped: the cherry-pick is left in progress in {wt.cwd}. To teach rerere the resolution, "
-                  f"edit the files there, run `git -c rerere.enabled=true rerere`, then `git cherry-pick --abort` "
-                  f"and run again: the replay picks the recorded resolution up. Nothing pushed.", file=out)
+            print(f"Stopped: the cherry-pick is left in progress in {wt.cwd}. Resolve it there (any file the "
+                  f"commit needs on this base), `git add` the files, run `git -c core.editor=true cherry-pick "
+                  f"--continue` (it keeps the \"{PICKED}...)\" line), then run again: that commit is reused for "
+                  f"{stop.commit[:10]} on this base, now and in later runs once pushed (rerere also records the "
+                  f"content conflicts it saw). Nothing pushed.", file=out)
             return sources, notes, True
         head = wt.out("rev-parse", "HEAD")
         replayed[entry.name] = head
@@ -612,6 +628,30 @@ def take_theirs(git: Git, paths: list[str]) -> None:
                 target.unlink()
 
 
+# Line `cherry-pick -x` adds to a replayed commit: it names the original commit.
+PICKED = "(cherry picked from commit "
+
+
+def resolved_picks(git: Git, refs: list[str], base_sha: str) -> dict[str, str]:
+    """Map each original commit to an earlier replay of it, from refs (first ref wins).
+
+    A replay is found by the `cherry-pick -x` line of its message, so a
+    branch commit that was rewritten since (new sha) gets no stale match.
+    """
+    found: dict[str, str] = {}
+    for ref in refs:
+        if not git.sha(ref):
+            continue
+        log = git.run("log", "--no-merges", "--format=%H%x00%B%x1e", ref, f"^{base_sha}").stdout
+        for record in log.split("\x1e"):
+            sha, _, body = record.strip().partition("\0")
+            for line in body.splitlines():
+                line = line.strip()
+                if line.startswith(PICKED) and line.endswith(")"):
+                    found.setdefault(line[len(PICKED):-1], sha)
+    return found
+
+
 class ReplayStopped(Exception):
     """An unknown conflict while replaying `commit`; the cherry-pick is left in progress."""
 
@@ -641,21 +681,40 @@ def own_commits(git: Git, data: dict, entry: Entry, tip: str, dev: str) -> tuple
     return parent, git.out("rev-list", "--reverse", "--no-merges", f"{old_base}..{tip}").split()
 
 
-def replay(wt: Git, commits: list[str], brand_hook: BrandHook, strict: bool = False) -> tuple[list[str], list[str]]:
+def pick(wt: Git, commit: str, brand_hook: BrandHook, record: bool) -> Outcome | None:
+    """Cherry-pick one commit onto HEAD: None when clean, else the conflict outcome."""
+    result = wt.run("cherry-pick", "--allow-empty", "--empty=drop", *(["-x"] if record else []), commit, check=False)
+    if result.returncode == 0:
+        return None
+    if not wt.sha("CHERRY_PICK_HEAD"):
+        raise SetupError(f"cherry-pick {commit[:10]} failed:\n{result.stderr}")
+    return resolve_conflicts(wt, "CHERRY_PICK_HEAD", brand_hook)
+
+
+def replay(wt: Git, commits: list[str], brand_hook: BrandHook, strict: bool = False,
+           resolved: dict[str, str] | None = None) -> tuple[list[str], list[str]]:
     """Cherry-pick commits onto HEAD; return (auto-resolution kinds, conflicting files).
 
     An unknown conflict is overridden with the commit's side (dry run), or,
-    when strict, raises ReplayStopped with the cherry-pick left in progress.
+    when strict, settled by an earlier replay of the commit (from resolved,
+    which carries a hand resolution forward), or else raises ReplayStopped
+    with the cherry-pick left in progress. Strict picks record the original
+    commit with `-x`, so that a hand-resolved commit can be found again.
     """
     kinds: list[str] = []
     conflicts: list[str] = []
     for commit in commits:
-        result = wt.run("cherry-pick", "--allow-empty", "--empty=drop", commit, check=False)
-        if result.returncode == 0:
+        outcome = pick(wt, commit, brand_hook, record=strict)
+        if outcome is None:
             continue
-        if not wt.sha("CHERRY_PICK_HEAD"):
-            raise SetupError(f"cherry-pick {commit[:10]} failed:\n{result.stderr}")
-        outcome = resolve_conflicts(wt, "CHERRY_PICK_HEAD", brand_hook)
+        if outcome.unknown and strict and commit in (resolved or {}):
+            # Its own message already names the original commit: no second -x line.
+            wt.run("cherry-pick", "--abort")
+            outcome = pick(wt, resolved[commit], brand_hook, record=False)
+            if "earlier resolution" not in kinds:
+                kinds.append("earlier resolution")
+            if outcome is None:
+                continue
         kinds.extend(kind for kind in outcome.kinds if kind not in kinds)
         if outcome.unknown and strict:
             raise ReplayStopped(commit, outcome)
