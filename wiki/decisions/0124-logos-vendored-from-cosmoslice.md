@@ -34,7 +34,7 @@ source the user approved, or asked for.
 
 ## Consequences
 
-- The user reviews and validates every row (`just brand-validate`, user only);
-  release builds fail until then (decision 0121).
+- The user reviews and validates every row (decision 0121). The user
+  validated the 34 vendored and derived logos on 2026-11-24.
 - Removing it: delete the overlay files and run `just brand-sync`; the rows go
   back to `missing` and the build keeps the Orca logos.
