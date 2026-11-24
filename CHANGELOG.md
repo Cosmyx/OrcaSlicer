@@ -40,8 +40,10 @@ here; see the upstream release notes.
   resolves the known conflicts (changelog slots, slot lists, branding tables,
   recorded resolutions) inside the merge commits, stopping on any other one,
   and `just cosmo-rebase-check TAG`, a dry run that replays every branch onto
-  an upstream tag and prints a conflict table. The branch list and order live
-  in `scripts/cosmyx/integrate/branches.json`. Pull request:
+  an upstream tag and prints a conflict table. `--push --build` builds the
+  integration through a never-merged draft pull request into
+  `cosmyx-ci/<BASE>`, a branch pushed at the base commit. The branch list and
+  order live in `scripts/cosmyx/integrate/branches.json`. Pull request:
   https://github.com/Cosmyx/OrcaSlicer/pull/115.
   Decisions: 0215.
 

@@ -1,5 +1,5 @@
 {
-  "description": "Cosmyx PR branches in rebase and integration merge order (parents before children). Parent DEV means the branch sits on the foundation. Keep in sync with the rebase skill's branches.md table; add a new PR branch as a new row.",
+  "description": "Cosmyx PR branches in rebase and integration merge order (parents before children). Parent DEV means the branch sits on the foundation. Keep in sync with the rebase skill's branches.md table; add a new PR branch as a new row (its pr number once opened). A row not yet on the remote is skipped with a warning.",
   "remote": "origin",
   "base": "DEV",
   "foundation": "chore/cosmyx-foundation",
@@ -147,6 +147,14 @@
     {
       "name": "ci/cosmyx-integrate",
       "pr": 115,
+      "parent": "chore/cosmyx-foundation"
+    },
+    {
+      "name": "ci/cosmyx-arm64-pr-builds",
+      "parent": "chore/cosmyx-foundation"
+    },
+    {
+      "name": "ci/cosmyx-mac-retry",
       "parent": "chore/cosmyx-foundation"
     },
     {
