@@ -1,0 +1,159 @@
+{
+  "description": "Cosmyx PR branches in rebase and integration merge order (parents before children). Parent DEV means the branch sits on the foundation. Keep in sync with the rebase skill's branches.md table; add a new PR branch as a new row.",
+  "remote": "origin",
+  "base": "DEV",
+  "foundation": "chore/cosmyx-foundation",
+  "branches": [
+    {
+      "name": "chore/cosmyx-foundation",
+      "pr": 86,
+      "parent": "DEV"
+    },
+    {
+      "name": "ci/cosmyx-upstream-sync",
+      "pr": 87,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/bed-temp-off",
+      "pr": 88,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cht-nozzle",
+      "pr": 89,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/ironing-temperature",
+      "pr": 90,
+      "parent": "DEV"
+    },
+    {
+      "name": "fix/toolchange-fan-order",
+      "pr": 91,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-models",
+      "pr": 92,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-version",
+      "pr": 93,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-stealth-mode",
+      "pr": 94,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-translations",
+      "pr": 95,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-windows-signing",
+      "pr": 96,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-logs",
+      "pr": 97,
+      "parent": "DEV"
+    },
+    {
+      "name": "feat/cosmyx-dark-default",
+      "pr": 98,
+      "parent": "feat/cosmyx-version"
+    },
+    {
+      "name": "ci/cosmyx-branding-engine",
+      "pr": 99,
+      "parent": "feat/cosmyx-translations"
+    },
+    {
+      "name": "feat/cosmyx-logos",
+      "pr": 101,
+      "parent": "ci/cosmyx-branding-engine"
+    },
+    {
+      "name": "feat/cosmyx-colours",
+      "pr": 102,
+      "parent": "ci/cosmyx-branding-engine"
+    },
+    {
+      "name": "feat/cosmyx-product-name",
+      "pr": 103,
+      "parent": "ci/cosmyx-branding-engine"
+    },
+    {
+      "name": "feat/cosmyx-svg-candidates",
+      "pr": 110,
+      "parent": "feat/cosmyx-colours"
+    },
+    {
+      "name": "feat/cosmyx-translations-fill",
+      "pr": 108,
+      "parent": "feat/cosmyx-translations"
+    },
+    {
+      "name": "ci/cosmyx-artifact-checks",
+      "pr": 100,
+      "parent": "DEV"
+    },
+    {
+      "name": "ci/cosmyx-macos-signing",
+      "pr": 105,
+      "parent": "ci/cosmyx-artifact-checks"
+    },
+    {
+      "name": "ci/cosmyx-exec-smoke",
+      "pr": 104,
+      "parent": "ci/cosmyx-macos-signing"
+    },
+    {
+      "name": "feat/cosmyx-install-paths",
+      "pr": 106,
+      "parent": "DEV"
+    },
+    {
+      "name": "test/cosmyx-gui-goldens",
+      "pr": 107,
+      "parent": "feat/cosmyx-version"
+    },
+    {
+      "name": "feat/cosmyx-cloud-server",
+      "pr": 109,
+      "parent": "feat/cosmyx-stealth-mode"
+    },
+    {
+      "name": "feat/cosmyx-plugin-signing",
+      "pr": 112,
+      "parent": "feat/cosmyx-cloud-server"
+    },
+    {
+      "name": "ci/cosmyx-flatpak-off",
+      "pr": 113,
+      "parent": "chore/cosmyx-foundation"
+    },
+    {
+      "name": "feat/cosmyx-raster-images",
+      "pr": 114,
+      "parent": "ci/cosmyx-branding-engine"
+    },
+    {
+      "name": "ci/cosmyx-integrate",
+      "pr": null,
+      "parent": "chore/cosmyx-foundation"
+    },
+    {
+      "name": "docs/cosmyx-rebase-skill",
+      "pr": 111,
+      "parent": "DEV",
+      "integration_only": true
+    }
+  ]
+}
