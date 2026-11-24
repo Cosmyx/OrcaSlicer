@@ -74,3 +74,10 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+
+<!-- cosmyx-slot: T21 -->
+- **Changed:** integration builds run "Build all" in pull request mode, through
+  a draft pull request based on a `cosmyx-ci/<base>` branch: macOS builds
+  arm64 only, waits in the macOS runner queue and uploads an arm64 DMG,
+  instead of the arm64, x86_64 and universal builds of a manual run.
+  Decisions: 0216.
