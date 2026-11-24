@@ -22,7 +22,7 @@
       "kind": "recolour",
       "source": "user",
       "source_ref": null,
-      "status": "to-validate",
+      "status": "validated",
       "upstream_sha256": "8cd92a7bfa470e3f6eba0c5bf834cef1c3108bb17c1b4cd400d44c73acc55a51",
       "override_sha256": "a900469b66ba77cf3e7a179cb40f71eaa5741db4fc7dd589494c47e8e828240f"
     },
@@ -46,7 +46,7 @@
       "kind": "recolour",
       "source": "user",
       "source_ref": null,
-      "status": "to-validate",
+      "status": "validated",
       "upstream_sha256": "0d7b1adf8c9023850e7820c251d86595ef5e3ef65a838e61bd6ec45493733470",
       "override_sha256": "299f1184f71975205ce80c638ad7311d601db46c7417b5019a154955efaf59f2"
     },
@@ -58,7 +58,7 @@
       "kind": "recolour",
       "source": "user",
       "source_ref": null,
-      "status": "to-validate",
+      "status": "validated",
       "upstream_sha256": "6f187d257c03224756a436bf25abebe091a79b14fbed2d79804d411a6ab631e4",
       "override_sha256": "a4ba4a0ce0586dd47fb7df6672603bd071193bb8eaf77746920b1beef284244f"
     },
@@ -94,7 +94,7 @@
       "kind": "recolour",
       "source": "user",
       "source_ref": null,
-      "status": "to-validate",
+      "status": "validated",
       "upstream_sha256": "8c417240c08e5f8e7fd2a22a712435b047205ebb13b26e1c16f5debbf4a4c3a8",
       "override_sha256": "3d2b03c1496d33b1b5d428f08fc4f1e96f96e031ebba27f5725cfc310bccea48"
     },
@@ -106,7 +106,7 @@
       "kind": "recolour",
       "source": "user",
       "source_ref": null,
-      "status": "to-validate",
+      "status": "validated",
       "upstream_sha256": "23f0b447c5cf4a0a606c44dd4e849c2fa67edfdbddfd9e7b19554c86a24f91b5",
       "override_sha256": "72bcba317ed702ceb0d229639573034f73430426573a2118769a314842cc6cde"
     },
