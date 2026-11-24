@@ -23,22 +23,31 @@ it hides the conflicts that really need a person or an agent.
 
 - `scripts/cosmyx/integrate/cli.py` (standard library only, called by the
   recipes in `scripts/cosmyx/just/integrate.just`):
-  - `just cosmo-integrate [BASE]` resets `ci/cosmyx-integration` to BASE
-    (default `origin/DEV`) in the worktree `.worktrees/integration` (created,
-    or reused only when clean), and merges `origin/<branch>` with `--no-ff` for
+  - `just cosmo-integrate [BASE]` resets the integration branch to BASE
+    (default `origin/DEV`) in its worktree (created, or reused only when
+    clean), and merges `origin/<branch>` with `--no-ff` for
     every row of the branch list; a row not on the remote yet is skipped with
     a warning. It pushes nothing unless `--push`, which pushes, in one atomic
     push, the branch and `cosmyx-ci/<BASE>` set to BASE's commit (`cosmyx-ci/DEV`
     for `origin/DEV`, `cosmyx-ci/v2.5.2` for the tag `v2.5.2`), each with
     `--force-with-lease` on the remote tip seen at the start.
+  - The integration branch depends on BASE: the list's base (DEV) keeps
+    `ci/cosmyx-integration` in `.worktrees/integration`; any other base gets
+    `integration/<BASE>` in `.worktrees/integration-<BASE>` (`/` replaced by
+    `-`), the name the hand-made release integrations already used
+    (`integration/v2.5.2`). The DEV integration and a release integration
+    therefore coexist, each with its own branch, worktree, base branch and
+    build pull request. `--branch` and `--worktree` override the defaults.
   - `--build` builds the integration through a draft pull request from the
     branch into `cosmyx-ci/<BASE>`, titled `ci: integration build on <BASE>
     (never merge)`, which is never merged: `build_all.yml` runs on pull
     requests to `cosmyx-ci/**`, in upstream pull request mode (macOS arm64
     and its DMG only). An open one is reused, and the push starts its run;
     otherwise it is created after the push, and its opening starts the run.
-    Open build pull requests from the branch into another `cosmyx-ci/` base
-    are closed before the push, so that only the current base builds. The
+    Open build pull requests whose head is that same branch, into another
+    `cosmyx-ci/` base, are closed before the push, so that the branch builds
+    only on its current base; build pull requests of other integration
+    branches are never touched. The
     recipe prints the pull request link and the `gh run list` command that
     finds the run. A pull request, not `workflow_dispatch`, because the run
     then has a base to diff against and shows on the pull request, like the
@@ -64,8 +73,8 @@ it hides the conflicts that really need a person or an agent.
     status.
   - Anything `rerere` resolves. rerere is on for the run, and
     `cosmo-integrate` first teaches it the resolutions of the merges of the
-    current `origin/ci/cosmyx-integration` (as git's contrib `rerere-train`
-    does), so a fresh clone replays them too; `--train REF` picks another
+    current remote integration branch of that base (as git's contrib
+    `rerere-train` does), so a fresh clone replays them too; `--train REF` picks another
     reference, `--no-train` skips it. Merges use the default conflict style so
     that rerere finds resolutions recorded by hand merges.
   - A resolver accepts a hunk only when both sides purely added to the base;
@@ -87,8 +96,8 @@ it hides the conflicts that really need a person or an agent.
 
 - An agent only handles the conflicts the recipes cannot: the stop report
   names them.
-- `ci/cosmyx-integration` stays a throwaway branch; the local branch is reset
-  on every run. The `cosmyx-ci/*` branches and the draft build pull requests
+- `ci/cosmyx-integration` and `integration/<BASE>` stay throwaway branches;
+  the local branch is reset on every run. The `cosmyx-ci/*` branches and the draft build pull requests
   are throwaway too: they only mark a base commit and carry the run.
 - The branch list must be kept in step with the open pull requests.
 - Removing it: delete `scripts/cosmyx/integrate/`,
