@@ -46,6 +46,7 @@ Parent: `ci/cosmyx-artifact-checks` (#100) (so it also depends on the foundation
 - Stapler fetches over HTTP/3 (UDP 443) on hosted runners and times out: the pf rule forces TCP (decision 0157).
 - `codesign --deep` is deprecated and cannot sign bundled Python: sign every nested Mach-O inside out.
 - `if:` expressions cannot read secrets, so they are passed as action inputs and checked inside.
+- Restacked on artifact-checks `53df024c32`: range is now `8d16ab3048`..`7d0ae8d5b4` (7 commits). `5b907cab71` pins signing of the renamed `CosmoSlice.app` (DMG `CosmoSlice_Mac_universal_<ver>.dmg`, volume `CosmoSlice`, no `OrcaSlicer_` DMG left). `7d0ae8d5b4`: product-name's `mac-app` step sits between "Create DMG without notary" and the signing step, so the order test now checks the nearest preceding step that is not a fully tagged Cosmyx step. In `build_orca.yml` the `mac-app` step comes FIRST, then the signing.
 
 ## Shared files with other branches
 

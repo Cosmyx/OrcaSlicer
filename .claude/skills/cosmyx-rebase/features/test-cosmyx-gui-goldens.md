@@ -88,6 +88,7 @@ Manual or CI: run `build_all` on the branch (`just build-all <branch>`), then `j
 - The workflow's changed-files check calls `compare/DEV...<sha>`; if DEV is renamed, adapt.
 - v2.5.1 pass: adapted with `124e62829c`. The tag's `PreferencesTab` enum has 4 values (General, Control, Graphics, Online); DEV has 6. The driver casts the index of a tab name to `PreferencesTab`, so `preferences_tabs()` in `GoldenScript.cpp` must match the upstream enum exactly; the script test now compares the enum with that list. Restore the six names on a base that has them.
 - v2.5.2 pass: v2.5.2 keeps the four-tab `PreferencesTab` enum; the same adaptation, committed as `da81bbfea6`.
+- `2367b858cd` (package-name follow-up): the Windows launcher (`scripts/cosmyx/gui_goldens/launch.py`) looks for `CosmoSlice.exe` first, then `orca-slicer.exe` and `OrcaSlicer.exe`, in an unpacked build or the portable zip, and starts the exe it found; macOS bundle and artifact selection were already name-agnostic, tests pin both names.
 
 ## Shared files with other branches
 
