@@ -296,6 +296,45 @@ class IntegrateTests(Sandbox):
         self.assertEqual(code, 0, out)
         self.assertEqual(self.remote_sha("cosmyx-ci/v1"), self.git(["rev-parse", "v1^{commit}"]))
         self.assertIsNone(self.remote_sha("cosmyx-ci/DEV"))
+        # A base other than the list's gets its own branch and worktree.
+        self.assertEqual(self.remote_sha("integration/v1"), self.git(["rev-parse", "integration/v1"]))
+        self.assertIsNone(self.remote_sha("ci/cosmyx-integration"))
+        self.assertTrue((self.work / ".worktrees" / "integration-v1").is_dir())
+        self.assertFalse((self.work / ".worktrees" / "integration").exists())
+
+    def test_integrations_of_two_bases_coexist(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.git(["tag", "v1", "origin/DEV"])
+        code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push"])
+        self.assertEqual(code, 0, out)
+        dev_tip = self.remote_sha("ci/cosmyx-integration")
+        self.git(["fetch", "-q", "origin"])
+        code, out = self.run_cli(["integrate", "v1", "--no-fetch", "--no-train", "--data", self.data(), "--push"])
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.remote_sha("ci/cosmyx-integration"), dev_tip)
+        self.assertEqual(self.git(["rev-parse", "ci/cosmyx-integration"]), dev_tip)
+        self.assertEqual(self.remote_sha("integration/v1"), self.git(["rev-parse", "integration/v1"]))
+        self.assertEqual(self.remote_sha("cosmyx-ci/DEV"), self.git(["rev-parse", "origin/DEV"]))
+
+    def test_build_on_another_base_leaves_other_integration_pull_requests_alone(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.git(["tag", "v1", "origin/DEV"])
+        gh, calls = self.fake_gh([
+            {"number": 4, "url": "https://github.com/Owner/Repo/pull/4", "baseRefName": "cosmyx-ci/DEV",
+             "headRefName": "ci/cosmyx-integration"},
+            {"number": 5, "url": "https://github.com/Owner/Repo/pull/5", "baseRefName": "cosmyx-ci/v0",
+             "headRefName": "integration/v1"},
+        ])
+        code, out = self.run_cli(["integrate", "v1", "--no-fetch", "--no-train", "--data", self.data(), "--push",
+                                  "--build"], gh=gh)
+        self.assertEqual(code, 0, out)
+        self.assertEqual([command[:3] for command, _ in calls],
+                         [["pr", "list", "--head"], ["pr", "close", "5"], ["pr", "create", "--draft"]])
+        self.assertEqual(calls[0][0][calls[0][0].index("--head") + 1], "integration/v1")
+        create = calls[2][0]
+        self.assertEqual(create[create.index("--head") + 1], "integration/v1")
+        self.assertEqual(create[create.index("--base") + 1], "cosmyx-ci/v1")
+        self.assertIn("--branch integration/v1", out)
 
     def test_base_without_a_branch_name_is_refused_before_any_work(self) -> None:
         self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
@@ -504,6 +543,17 @@ class BranchListTests(unittest.TestCase):
         self.assertEqual(cli.ci_base_branch(git, "refs/tags/v2.5.2", "origin"), "cosmyx-ci/v2.5.2")
         with self.assertRaises(cli.SetupError):
             cli.ci_base_branch(git, "origin/DEV~1", "origin")
+
+    def test_integration_target_names(self) -> None:
+        git = cli.Git(Path.cwd())
+        self.assertEqual(cli.integration_target(git, "origin/DEV", "origin", "DEV"),
+                         ("ci/cosmyx-integration", Path(".worktrees") / "integration"))
+        self.assertEqual(cli.integration_target(git, "v2.5.2", "origin", "DEV"),
+                         ("integration/v2.5.2", Path(".worktrees") / "integration-v2.5.2"))
+        self.assertEqual(cli.integration_target(git, "origin/release/v2.5.3", "origin", "DEV"),
+                         ("integration/release/v2.5.3", Path(".worktrees") / "integration-release-v2.5.3"))
+        with self.assertRaises(cli.SetupError):
+            cli.integration_target(git, "origin/DEV~1", "origin", "DEV")
 
     def test_child_before_parent_is_refused(self) -> None:
         data = {"base": "DEV", "foundation": "f"}

@@ -3,9 +3,11 @@
     python scripts/cosmyx/integrate/cli.py integrate [BASE] [--push [--build]]
     python scripts/cosmyx/integrate/cli.py rebase-check TAG
 
-`integrate` rebuilds the throwaway branch `ci/cosmyx-integration` in the
-worktree `.worktrees/integration` (created, or reused when clean) from BASE
-(default `origin/DEV`), merging `origin/<branch>` with `--no-ff` in the order
+`integrate` rebuilds a throwaway integration branch in its own worktree
+(created, or reused when clean) from BASE (default `origin/DEV`): for the
+list's base (DEV) `ci/cosmyx-integration` in `.worktrees/integration`, for any
+other BASE `integration/<BASE>` in `.worktrees/integration-<BASE>`, so that
+the integrations of different bases coexist. It merges `origin/<branch>` with `--no-ff` in the order
 of `branches.json`. Known conflict kinds are resolved inside the merge commit
 (see resolve.py; `rerere` is on for the run). Any other conflict aborts that
 merge, prints the branch, the files and a summary of their hunks, and exits 1.
@@ -15,8 +17,9 @@ atomically, each with force-with-lease on its old remote tip. `--build` builds
 through a never-merged draft pull request from the branch into
 `cosmyx-ci/<BASE>`: build_all runs on pull requests to `cosmyx-ci/**`. The
 pull request is created after the push (its opening starts the run) or, when
-already open, reused (the push started the run); open ones into another
-`cosmyx-ci/` base are closed before the push so they do not build too.
+already open, reused (the push started the run); open ones from the same
+branch into another `cosmyx-ci/` base are closed before the push so they do
+not build too. Pull requests from other branches are never touched.
 
 `rebase-check` is a dry run: in a temporary worktree, it replays each branch's
 own commits onto `refs/tags/upstream/TAG` (stacked children onto their
@@ -326,17 +329,37 @@ def prepare_worktree(git: Git, path: Path, branch: str, base: str) -> Git:
     return Git(path)
 
 
-def ci_base_branch(git: Git, base: str, remote: str) -> str:
-    """`cosmyx-ci/<name>` for BASE: `origin/DEV` gives `cosmyx-ci/DEV`, tag `v2.5.2` gives `cosmyx-ci/v2.5.2`."""
-    name = base
+def base_name(base: str, remote: str) -> str:
+    """BASE without its ref prefix: `origin/DEV` gives `DEV`, `refs/tags/v2.5.2` gives `v2.5.2`."""
     for prefix in (f"refs/remotes/{remote}/", "refs/heads/", "refs/tags/", f"{remote}/"):
-        if name.startswith(prefix):
-            name = name[len(prefix):]
-            break
-    branch = CI_BASE_PREFIX + name
+        if base.startswith(prefix):
+            return base[len(prefix):]
+    return base
+
+
+def checked_branch(git: Git, base: str, branch: str) -> str:
     if git.run("check-ref-format", f"refs/heads/{branch}", check=False).returncode != 0:
         raise SetupError(f"base {base} gives no valid branch name ({branch}): use a branch or tag name")
     return branch
+
+
+def ci_base_branch(git: Git, base: str, remote: str) -> str:
+    """`cosmyx-ci/<name>` for BASE: `origin/DEV` gives `cosmyx-ci/DEV`, tag `v2.5.2` gives `cosmyx-ci/v2.5.2`."""
+    return checked_branch(git, base, CI_BASE_PREFIX + base_name(base, remote))
+
+
+def integration_target(git: Git, base: str, remote: str, list_base: str) -> tuple[str, Path]:
+    """The default integration branch and worktree for BASE.
+
+    The list's base keeps `ci/cosmyx-integration` in `.worktrees/integration`;
+    any other base gets `integration/<name>` in `.worktrees/integration-<name>`
+    (`/` replaced by `-`), so that two bases never share a branch.
+    """
+    name = base_name(base, remote)
+    if name == list_base:
+        return INTEGRATION_BRANCH, INTEGRATION_WORKTREE
+    branch = checked_branch(git, base, f"integration/{name}")
+    return branch, Path(".worktrees") / ("integration-" + name.replace("/", "-"))
 
 
 def gh_or_fail(gh: Callable, command: list[str], repo: str | None) -> str:
@@ -350,13 +373,16 @@ def gh_or_fail(gh: Callable, command: list[str], repo: str | None) -> str:
 def open_build_prs(gh: Callable, args, ci_branch: str, out) -> dict | None:
     """Before the push: return the open build pull request into ci_branch, if any.
 
-    Open pull requests from the branch into another `cosmyx-ci/` base are
-    closed, so that the push does not start a build of them too.
+    Open pull requests whose head is the branch, into another `cosmyx-ci/`
+    base, are closed, so that the push does not start a build of them too.
+    Any other pull request (another integration branch's) is left alone.
     """
     listed = json.loads(gh_or_fail(gh, ["pr", "list", "--head", args.branch, "--state", "open",
-                                        "--json", "number,url,baseRefName"], args.repo) or "[]")
+                                        "--json", "number,url,baseRefName,headRefName"], args.repo) or "[]")
     reuse = None
     for pr in listed:
+        if pr.get("headRefName", args.branch) != args.branch:
+            continue
         base = pr.get("baseRefName", "")
         if base == ci_branch and reuse is None:
             reuse = pr
@@ -390,6 +416,9 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     if not base_sha:
         raise SetupError(f"base {base} not found")
     ci_branch = ci_base_branch(git, args.base or data["base"], remote) if args.push else None
+    default_branch, default_worktree = integration_target(git, args.base or data["base"], remote, data["base"]) \
+        if not (args.branch and args.worktree) else (args.branch, Path(args.worktree))
+    args.branch = args.branch or default_branch
     tips = {}
     for entry in entries:
         tips[entry.name] = git.sha(f"refs/remotes/{remote}/{entry.name}")
@@ -397,7 +426,7 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
             print(f"warning: {remote}/{entry.name} not found, skipped (not pushed yet?)", file=out)
     entries = [entry for entry in entries if tips[entry.name]]
     old_tip = git.sha(f"refs/remotes/{remote}/{args.branch}")
-    wt = prepare_worktree(git, main_root(git) / (args.worktree or INTEGRATION_WORKTREE), args.branch, base_sha)
+    wt = prepare_worktree(git, main_root(git) / (args.worktree or default_worktree), args.branch, base_sha)
     train = args.train or (f"refs/remotes/{remote}/{args.branch}" if not args.no_train else None)
     if train and git.sha(train):
         train_rerere(wt, train, base_sha, out)
@@ -588,8 +617,10 @@ def parser() -> argparse.ArgumentParser:
     sub = top.add_subparsers(dest="command", required=True)
     one = sub.add_parser("integrate", parents=[common], help="rebuild the integration branch")
     one.add_argument("base", nargs="?", help="start point (default: <remote>/DEV)")
-    one.add_argument("--branch", default=INTEGRATION_BRANCH)
-    one.add_argument("--worktree", help=f"worktree path under the main checkout (default: {INTEGRATION_WORKTREE})")
+    one.add_argument("--branch", help=f"integration branch (default: {INTEGRATION_BRANCH} for the list's base, "
+                                      "integration/<BASE> for any other)")
+    one.add_argument("--worktree", help=f"worktree path under the main checkout (default: {INTEGRATION_WORKTREE} "
+                                        "for the list's base, .worktrees/integration-<BASE> for any other)")
     one.add_argument("--no-train", action="store_true",
                      help="do not teach rerere from the current remote integration branch")
     one.add_argument("--push", action="store_true",

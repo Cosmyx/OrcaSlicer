@@ -151,10 +151,12 @@
     },
     {
       "name": "ci/cosmyx-arm64-pr-builds",
+      "pr": 117,
       "parent": "chore/cosmyx-foundation"
     },
     {
       "name": "ci/cosmyx-mac-retry",
+      "pr": 116,
       "parent": "chore/cosmyx-foundation"
     },
     {

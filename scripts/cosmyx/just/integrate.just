@@ -1,6 +1,6 @@
 # Integration and rebase recipes (T20). Imported by the root justfile.
 
-# Rebuild ci/cosmyx-integration from BASE in .worktrees/integration with every PR branch; known conflicts auto-resolved. ARGS: --push (also cosmyx-ci/<BASE>) [--build: draft PR into cosmyx-ci/<BASE>].
+# Rebuild the integration branch of BASE (ci/cosmyx-integration for DEV, integration/<BASE> otherwise) with every PR branch; known conflicts auto-resolved. ARGS: --push (also cosmyx-ci/<BASE>) [--build: draft PR into cosmyx-ci/<BASE>].
 cosmo-integrate BASE="origin/DEV" *ARGS:
     {{python}} scripts/cosmyx/integrate/cli.py integrate {{BASE}} --repo {{repo}} {{ARGS}}
 
