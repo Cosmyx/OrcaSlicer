@@ -150,13 +150,13 @@
       "parent": "chore/cosmyx-foundation"
     },
     {
-      "name": "ci/cosmyx-arm64-pr-builds",
-      "pr": 117,
+      "name": "ci/cosmyx-mac-retry",
+      "pr": 116,
       "parent": "chore/cosmyx-foundation"
     },
     {
-      "name": "ci/cosmyx-mac-retry",
-      "pr": 116,
+      "name": "ci/cosmyx-dev-build",
+      "pr": 119,
       "parent": "chore/cosmyx-foundation"
     },
     {

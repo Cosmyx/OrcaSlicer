@@ -73,10 +73,18 @@ it hides the conflicts that really need a person or an agent.
     reach the remote as the second parents of the integration merges.
   - `--build` builds the integration through a draft pull request from the
     branch into `cosmyx-ci/<BASE>`, titled `ci: integration build on <BASE>
-    (never merge)`, which is never merged: `build_all.yml` runs on pull
-    requests to `cosmyx-ci/**`, in upstream pull request mode (macOS arm64
-    and its DMG only). An open one is reused, and the push starts its run;
-    otherwise it is created after the push, and its opening starts the run.
+    (never merge)`, which is never merged: the "Cosmyx dev build" workflow
+    (`cosmyx-dev-build.yml`, decision 0218) runs on pull requests to
+    `cosmyx-ci/**`, building the OSes the pull request's `build:*` labels
+    pick (none: Linux, Windows and macOS arm64). An open one is reused, and
+    the push starts its run; otherwise it is created after the push, and its
+    opening starts the run. `--os LIST` (comma list of `linux`, `windows`,
+    `macos-arm64`, `macos-x86_64`, validated) sets the pull request's
+    `build:*` labels to exactly that list, creating the labels the repository
+    lacks: on a reused pull request before the push, so that the push builds
+    that set (the label events' own runs are cancelled by the push's, the
+    workflow keeping one run per pull request); on a new one with `--label`
+    at its creation. Without `--os` the labels are left as they are.
     Open build pull requests whose head is that same branch, into another
     `cosmyx-ci/` base, are closed before the push, so that the branch builds
     only on its current base; build pull requests of other integration
