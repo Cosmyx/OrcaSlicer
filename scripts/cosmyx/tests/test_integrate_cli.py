@@ -266,14 +266,17 @@ class IntegrateTests(Sandbox):
         line = self.git(["ls-remote", str(self.origin), f"refs/heads/{branch}"])
         return line.split()[0] if line else None
 
-    def fake_gh(self, open_prs: list[dict]):
-        """A gh stand-in: `pr list` returns open_prs; records each call with the remote refs at that moment."""
+    def fake_gh(self, open_prs: list[dict], repo_labels: tuple[str, ...] = ()):
+        """A gh stand-in: `pr list` returns open_prs, `label list` repo_labels; records each call with the
+        remote cosmyx-ci/DEV at that moment."""
         calls = []
 
         def gh(command):
             calls.append((command, self.remote_sha("cosmyx-ci/DEV")))
             if command[:2] == ["pr", "list"]:
                 return subprocess.CompletedProcess(command, 0, json.dumps(open_prs), "")
+            if command[:2] == ["label", "list"]:
+                return subprocess.CompletedProcess(command, 0, json.dumps([{"name": n} for n in repo_labels]), "")
             if command[:2] == ["pr", "create"]:
                 return subprocess.CompletedProcess(command, 0, "https://github.com/Owner/Repo/pull/7\n", "")
             return subprocess.CompletedProcess(command, 0, "", "")
@@ -373,7 +376,64 @@ class IntegrateTests(Sandbox):
         self.assertIn("Never merge", create[create.index("--body") + 1])
         self.assertEqual(create[-2:], ["--repo", "Owner/Repo"])
         self.assertIn("https://github.com/Owner/Repo/pull/7", out)
-        self.assertIn("gh run list --workflow build_all.yml --branch ci/cosmyx-integration --repo Owner/Repo", out)
+        self.assertIn("gh run list --workflow cosmyx-dev-build.yml --branch ci/cosmyx-integration --repo Owner/Repo",
+                      out)
+        # No --os: no label is read, created or set (the workflow's default set).
+        self.assertNotIn("--label", create)
+
+    def test_os_labels_a_new_pull_request_at_creation_and_creates_missing_labels(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        gh, calls = self.fake_gh([], repo_labels=("build:linux",))
+        code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push", "--build",
+                                  "--os", "macos-x86_64, linux", "--repo", "Owner/Repo"], gh=gh)
+        self.assertEqual(code, 0, out)
+        self.assertEqual([command[:3] for command, _ in calls],
+                         [["pr", "list", "--head"], ["label", "list", "--search"],
+                          ["label", "create", "build:macos-x86_64"], ["pr", "create", "--draft"]])
+        self.assertEqual(calls[2][0][-2:], ["--repo", "Owner/Repo"])
+        create = calls[3][0]
+        labels = [create[i + 1] for i, arg in enumerate(create) if arg == "--label"]
+        self.assertEqual(labels, ["build:linux", "build:macos-x86_64"])
+        self.assertIn("Created label build:macos-x86_64.", out)
+
+    def test_os_syncs_a_reused_pull_request_labels_before_the_push(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        gh, calls = self.fake_gh([
+            {"number": 6, "url": "https://github.com/Owner/Repo/pull/6", "baseRefName": "cosmyx-ci/DEV",
+             "labels": [{"name": "build:windows"}, {"name": "build:linux"}, {"name": "keep-me"}]},
+        ], repo_labels=("build:linux", "build:windows", "build:macos-arm64", "build:macos-x86_64"))
+        code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push", "--build",
+                                  "--os", "linux,macos-arm64"], gh=gh)
+        self.assertEqual(code, 0, out)
+        self.assertEqual([command[:2] for command, _ in calls],
+                         [["pr", "list"], ["label", "list"], ["pr", "edit"]])
+        edit, ci_at_edit = calls[2]
+        self.assertEqual(edit[:3], ["pr", "edit", "6"])
+        self.assertEqual(edit[edit.index("--add-label") + 1], "build:macos-arm64")
+        self.assertEqual(edit[edit.index("--remove-label") + 1], "build:windows")
+        # Set before the push, so the push builds the new set.
+        self.assertIsNone(ci_at_edit)
+        self.assertIn("the push started the Cosmyx dev build", out)
+
+    def test_os_leaves_matching_labels_alone(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        gh, calls = self.fake_gh([
+            {"number": 6, "url": "https://github.com/Owner/Repo/pull/6", "baseRefName": "cosmyx-ci/DEV",
+             "labels": [{"name": "build:linux"}]},
+        ], repo_labels=("build:linux",))
+        code, out = self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push", "--build",
+                                  "--os", "linux"], gh=gh)
+        self.assertEqual(code, 0, out)
+        self.assertEqual([command[:2] for command, _ in calls], [["pr", "list"], ["label", "list"]])
+
+    def test_os_is_validated_before_any_work(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        for value in ("linux,solaris", "", " , "):
+            with self.subTest(value=value), self.assertRaises(cli.SetupError):
+                self.run_cli(["integrate", "--no-fetch", "--data", self.data(), "--push", "--build", "--os", value])
+        with self.assertRaises(cli.SetupError):
+            self.run_cli(["integrate", "--no-fetch", "--data", self.data(), "--push", "--os", "linux"])
+        self.assertFalse((self.work / ".worktrees").exists())
 
     def test_build_reuses_the_open_pull_request_and_closes_stale_ones_first(self) -> None:
         self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
@@ -389,7 +449,7 @@ class IntegrateTests(Sandbox):
         # Closed before the push, so the push does not build it.
         self.assertIsNone(calls[1][1])
         self.assertIn("reused): https://github.com/Owner/Repo/pull/6", out)
-        self.assertIn("the push started build_all", out)
+        self.assertIn("the push started the Cosmyx dev build", out)
         self.assertEqual(self.remote_sha("cosmyx-ci/DEV"), self.git(["rev-parse", "origin/DEV"]))
 
     def test_build_stops_when_gh_fails(self) -> None:
@@ -712,9 +772,11 @@ class BranchListTests(unittest.TestCase):
 
     def test_shipped_list_has_the_ci_branches(self) -> None:
         names = [entry.name for entry in cli.load_branches()[1]]
-        for name in ("ci/cosmyx-integrate", "ci/cosmyx-arm64-pr-builds", "ci/cosmyx-mac-retry"):
+        for name in ("ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build"):
             self.assertIn(name, names)
-        self.assertLess(names.index("ci/cosmyx-flatpak-off"), names.index("ci/cosmyx-arm64-pr-builds"))
+        # Superseded by the dev build (#119).
+        self.assertNotIn("ci/cosmyx-arm64-pr-builds", names)
+        self.assertLess(names.index("ci/cosmyx-mac-retry"), names.index("ci/cosmyx-dev-build"))
 
     def test_ci_base_branch_names(self) -> None:
         git = cli.Git(Path.cwd())
