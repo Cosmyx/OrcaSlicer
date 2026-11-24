@@ -588,6 +588,16 @@ class ReplayIntegrateTests(Sandbox):
         self.assertEqual(self.file_at("integration/v1", "src/a.txt"), "a")
         self.assertEqual(self.git(["status", "--porcelain"], cwd=holder), "")
 
+    def test_a_stopped_replay_keeps_the_branch_in_its_worktree(self) -> None:
+        self.branch("feat/clash", "DEV", {"src/app.txt": "one\ntwo mine\nthree\n"}, from_ref=self.base)
+        holder = self.work / ".worktrees" / "rebase-v1" / "integration"
+        self.git(["worktree", "add", "-q", "-b", "integration/v1", str(holder), "v1"])
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        # The next run must find the same worktree, not create the default one.
+        self.assertEqual(cli.branch_holder(cli.Git(self.work), "integration/v1").resolve(), holder.resolve())
+        self.assertIsNotNone(cli.Git(holder).sha("CHERRY_PICK_HEAD"))
+
     def test_integration_branch_held_by_a_dirty_worktree_is_refused_with_its_path(self) -> None:
         self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
         holder = self.work / ".worktrees" / "rebase-v1" / "integration"
