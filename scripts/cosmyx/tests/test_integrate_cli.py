@@ -284,12 +284,17 @@ class IntegrateTests(Sandbox):
         self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
         self.push("ci/cosmyx-integration")
         self.git(["fetch", "-q", "origin"])
-        # Someone else pushes after our fetch.
-        self.git(["checkout", "-q", "-B", "other", self.base])
-        self.commit({"src/other.txt": "o\n"}, "other")
-        # Pushed by URL, so our remote-tracking ref stays at the old tip.
-        self.git(["push", "-q", "--force", str(self.origin), "HEAD:refs/heads/ci/cosmyx-integration"])
-        self.git(["checkout", "-q", "DEV"])
+        # Someone else pushes after our fetch, from their own clone, so our
+        # remote-tracking ref stays at the old tip whatever the git version.
+        other = self.tmp / "other"
+        self.git(["clone", "-q", str(self.origin), str(other)], cwd=self.tmp)
+        self.git(["checkout", "-q", "-B", "other", "origin/DEV"], cwd=other)
+        (other / "src" / "other.txt").write_bytes(b"o\n")
+        self.git(["add", "-A"], cwd=other)
+        self.git(["commit", "-q", "-m", "other"], cwd=other)
+        self.git(["push", "-q", "--force", "origin", "HEAD:refs/heads/ci/cosmyx-integration"], cwd=other)
+        before = self.git(["rev-parse", "refs/remotes/origin/ci/cosmyx-integration"])
+        self.assertNotEqual(before, self.git(["ls-remote", str(self.origin), "refs/heads/ci/cosmyx-integration"]).split()[0])
         with self.assertRaises(cli.SetupError):
             self.run_cli(["integrate", "--no-fetch", "--no-train", "--data", self.data(), "--push"])
 
