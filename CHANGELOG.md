@@ -83,4 +83,4 @@ here; see the upstream release notes.
   Windows and macOS arm64 when none is set) or by the manual run's
   checkboxes, run their unit tests, and ship a CosmoSlice DMG per built macOS
   arch. `build_all.yml` stays the release validation build. Pull request:
-  PR_LINK. Decisions: 0218.
+  https://github.com/Cosmyx/OrcaSlicer/pull/119. Decisions: 0218.
