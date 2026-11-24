@@ -64,7 +64,7 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11g -->
 - The pictures in the Texture displacement tool tips and on the web pages
   (home buttons, empty project, setup region) are shown in the Cosmyx
-  colours, waiting for validation. The bed plates, the Hex Tiles texture and
+  colours. The bed plates, the Hex Tiles texture and
   the connection animation keep their upstream look. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/114.
   Decisions: 0214.
 

@@ -17,7 +17,8 @@ loaded, or only serve the Flatpak packaging.
 
 - 13 of them are recoloured by hand by the user and added as overlays under
   `cosmyx-src/branding/overlay/`, with `kind` `recolour` and status
-  `to-validate` until the user validates them (decision 0121):
+  `validated`: the user recoloured them and asked for them to be validated
+  with this change (decision 0121):
   - the 8 tool tip pictures of the Texture displacement tool,
     `resources/images/texture_displacement/` (`erase.gif` keeps its 14
     animation frames);
