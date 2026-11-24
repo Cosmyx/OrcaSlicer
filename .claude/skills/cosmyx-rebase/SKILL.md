@@ -52,7 +52,7 @@ Read, in this order, before touching git:
 
 - Work in worktrees under `.worktrees/rebase-<tag>/<branch with / replaced by ->`, on copies named
   `rebase/<tag>/<branch>` (for example `rebase/v2.5.1/feat/cosmyx-logs`).
-- Only `integration/<tag>` is pushed, so CI can build it. Push a `rebase/<tag>/<branch>` copy only when the
+- Only `integration/<tag>` (and `cosmyx-ci/<tag>`) is pushed, so CI can build it; the recipe's `rebase/<tag>/*` branches stay local. Push a `rebase/<tag>/<branch>` copy only when the
   branch cannot be validated otherwise (see step 6), and say so in the report.
 - No backup tags pushed, no PR edited.
 
@@ -105,15 +105,41 @@ work, and spend your time only on what they report as an unknown conflict:
 
 ```bash
 just cosmo-rebase-check $TAG        # dry run, no ref moved: one row per branch, clean / auto-resolved / CONFLICT + files
-just cosmo-integrate                # rebuild the DEV integration locally; --push --build: push it and cosmyx-ci/<BASE>, build through a draft PR
+just cosmo-integrate                # rebuild the DEV integration (ci/cosmyx-integration, .worktrees/integration)
+just cosmo-integrate $TAG           # rebuild integration/$TAG in .worktrees/integration-$TAG from the replayed branches
+# add --push --build [--os linux,windows,macos-arm64,macos-x86_64] to push it and cosmyx-ci/<BASE> and build it (step 8)
 ```
+
+Pass the plain tag name as BASE (`v2.5.2`): the branch names come from it, so `refs/tags/upstream/$TAG` would give
+`integration/upstream/$TAG`. It must resolve locally (`git rev-parse $TAG`; otherwise `git tag $TAG $BASE`).
+
+`scripts/cosmyx/integrate/branches.json` (on `ci/cosmyx-integrate`) is the machine list of branches and order;
+`branches.md` keeps its table in the same order. The integration branch depends on the base: `DEV` gives
+`ci/cosmyx-integration` in `.worktrees/integration`; any other base gives `integration/<BASE>` in
+`.worktrees/integration-<BASE>` (`/` replaced by `-`). On a non-`DEV` base the recipe does not merge the DEV-based
+branches (that would drag in every DEV commit the tag lacks): it first replays each branch's own commits onto the
+base as local `rebase/<BASE>/<branch>` branches (`cherry-pick -x`, stacked children onto their replayed parent, never
+pushed), then merges those `--no-ff` in list order. An unknown conflict in the replay is first settled by an earlier
+hand resolution of the same original commit, found by its `cherry-pick -x` line in the worktree's HEAD, the local
+`rebase/<BASE>/*` branches, then the pushed `integration/<BASE>`. Otherwise the run stops with the cherry-pick in
+progress: resolve it in place, `git cherry-pick --continue`, run the recipe again; every later run reuses that commit
+once the integration is pushed.
 
 They resolve by themselves the CHANGELOG slots, the `SLOTS_BY_AREA` list of `test_foundation.py`, the slot list
 of decision 0003 (union), the branding manifests and tables (`brand-sync` + `brand-table`, never losing a
 `validated` row), and every conflict `rerere` knows (they first train `rerere` from the merges of
-`origin/ci/cosmyx-integration`). Fix an unknown conflict in the branch that owns the line, then run the recipe
+the remote integration branch of that base, `--train REF` to pick another). Fix an unknown conflict in the branch that owns the line, then run the recipe
 again: the next run replays your resolution. A branch marked "on an approximated parent" is only as reliable
 as its parent's resolution.
+
+Branding on an older tag: the engine's `brand_mode` (decision 0122 amended, `2986d26f2f` on
+`ci/cosmyx-branding-engine`; product-name decision 0135 amended) is strict on `DEV` and on releases, and tolerant on a
+pull request into `cosmyx-ci/<BASE>` with BASE other than `DEV` and on an `integration/*` ref (`COSMYX_BRAND_MODE` or
+`--mode` overrides it). In tolerant mode a colour or product-name row whose file or text the tag lacks entirely
+becomes a G3, G5 or G8 warning instead of an error; a row only partly present (text found with another count) stays
+an error. So on a tag, missing targets need no table edit; partly-present rows do, in the owning branch. Locally, run
+`just brand-check tolerant` (or `COSMYX_BRAND_MODE=tolerant`) to see what CI will see; `just brand-check` alone is
+strict.
 
 ### Step 2. Read
 
@@ -225,20 +251,28 @@ step 5 for it, then rebuild `integration/<tag>` from `$BASE`.
 ### Step 8. Build and test the whole product
 
 ```bash
-git push --force-with-lease origin integration/$TAG     # first push: plain git push -u origin integration/$TAG
-git push --force origin "$BASE:refs/heads/cosmyx-ci/$TAG"  # marks the base commit
-gh pr create -R Cosmyx/OrcaSlicer --draft --base cosmyx-ci/$TAG --head integration/$TAG \
-  --title "ci: integration build on $TAG (never merge)" --body "Integration build only. Never merge."
-gh run list --workflow build_all.yml --branch integration/$TAG -R Cosmyx/OrcaSlicer --limit 3
+just cosmo-integrate $TAG --push --build --os linux,windows,macos-arm64,macos-x86_64
+```
+
+This pushes `integration/$TAG` and `cosmyx-ci/$TAG` (the base commit) in one atomic `--force-with-lease` push, then
+opens or reuses the never-merged draft PR head = `integration/$TAG`, base = `cosmyx-ci/$TAG`, titled
+`ci: integration build on $TAG (never merge)`. That PR runs "Cosmyx dev build" (`cosmyx-dev-build.yml`,
+`ci/cosmyx-dev-build`, decision 0218): it builds the OSes of the PR's `build:linux`, `build:windows`,
+`build:macos-arm64`, `build:macos-x86_64` labels (`--os` sets exactly these; no label: Linux, Windows and macOS arm64),
+runs their unit tests, and ends with a `<product>_Mac_<arch>_<ver>` DMG per built macOS arch. It needs
+`cosmyx-dev-build.yml` in the integration tree (a `pull_request` run reads the workflow from the merge commit), so
+`ci/cosmyx-dev-build` must be in the merge order. The recipe prints the PR link and the `gh run list` command:
+
+```bash
+gh run list --workflow cosmyx-dev-build.yml --branch integration/$TAG -R Cosmyx/OrcaSlicer --limit 3
 gh run watch <run id> -R Cosmyx/OrcaSlicer --exit-status    # run it in the background, do not poll in a loop
 ```
 
-Integration builds no longer use `workflow_dispatch` (decision 0215 amended, decision 0216): a never-merged draft PR
-with head = the integration branch and base = `cosmyx-ci/<BASE>` (a branch at the base commit) runs `build_all` in
-upstream pull request mode (macOS arm64 only, arm64 DMG, no universal app). It needs the `cosmyx-ci/**` line of
-`ci/cosmyx-arm64-pr-builds` in the integration tree. Reuse an open build PR (a push restarts its run). Never close
-it while its run is going: `cancel_closed_pr_builds.yml` cancels the build. `just cosmo-integrate --push --build`
-does all of this for the DEV integration.
+Reuse an open build PR (a push restarts its run; one run per PR, the newest wins). Never close it while its run is
+going: `cancel_closed_pr_builds.yml` cancels the build. `build_all.yml` is not hooked and stays the release validation
+build (full matrix, universal macOS app, Flatpak): run it by `workflow_dispatch` only when the release build itself
+must be proven. Not covered by the dev build: Windows build script tests, Linux slice check, universal macOS app,
+Flatpak.
 
 Green means: Windows, macOS and Linux builds, unit tests (upstream suites plus `cosmyx_tests`), and the
 packaging steps. Then, on the integration tree, locally:
@@ -251,8 +285,8 @@ packaging steps. Then, on the integration tree, locally:
 - With the run id: `just artifact-checks-local <run id>` where possible (the `cosmyx-artifact-checks` and
   `cosmyx-gui-goldens` workflows only start by themselves once they are on `DEV`).
 
-macOS runners are often cancelled for lack of capacity: once `ci/cosmyx-mac-retry` (#116) is in `DEV` the run is
-rerun by itself (15-minute wait, up to attempt 5); until then, or past attempt 5,
+macOS runners are often cancelled for lack of capacity: once `ci/cosmyx-mac-retry` (#116) is in `DEV`, "Build all" and
+"Cosmyx dev build" runs are rerun by themselves (15-minute wait, up to attempt 5); until then, or past attempt 5,
 `gh run rerun <run id> --failed -R Cosmyx/OrcaSlicer`, and say so. Flatpak failures are tracked separately
 (known Boost configure failure in the Flatpak deps, see `conflits.md`): report them, they do not block. Any other red job is a failure: find the branch at fault
 (sheet risk zones, step 6 if needed), fix it there, rebuild integration, rebuild.

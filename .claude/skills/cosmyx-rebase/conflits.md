@@ -37,10 +37,30 @@ on the release base, and the wxWidgets fork has `SetAppearance`); Linux unit tes
   tag's Linux AppImage, macOS DMG and Windows x64 portable artifacts.
 - **`ci/cosmyx-exec-smoke`:** re-check `--help` and the slice command line of `slice.py` against the tag's CLI
   (`src/OrcaSlicer.cpp`, which v2.5.2 edits).
+- **Branding on the tag.** Built in tolerant mode (`integration/*` ref, PR into `cosmyx-ci/v2.5.2`; decision 0122
+  amended, product-name 0135 amended): colour and product-name rows whose file or text the tag lacks are warnings, so
+  the v2.5.1-style row drops are no longer needed; a row only partly present stays an error and is fixed in its branch.
+- **Known older-tag test gaps.** Script tests written for `DEV` that fail on the tag tree, expected, not a regression:
+  - `test_package_names.WiringTest.test_hooks_sit_at_their_anchors` (product-name): asserts the per-arch PR steps
+    `Create DMG ${{ inputs.arch }} without notary` and `Upload DMG ${{ inputs.arch }}` of `build_orca.yml`, which
+    v2.5.2 does not have (only `Create DMG without notary`).
+  - `test_gui_goldens_script` Preferences tabs (gui-goldens): v2.5.2 `PreferencesTab` has 4 tabs (`General, Control,
+    Graphics, Online`), `DEV` has 6; the driver's DEV list maps by index (same cause as the v2.5.1 entry in the log,
+    whose fix lives only on the dry-run copy).
 - **`feat/cosmyx-windows-signing`:** on the tag the installer payload is signed twice (no `ORCA_SIGN_REUSE` in the
   foreground cpack); valid but slower. Only visible on a signed ref.
 
 ## Log
+
+### 2026-11 ci/cosmyx-arm64-pr-builds - dropped, superseded by the dev build
+- Symptom: integration builds through `build_all.yml` in pull request mode (#117, decision 0216) built a fixed matrix
+  that depended on the base (v2.5.2 has no PR mode, so every arch and the Flatpak), and needed a hook in an upstream
+  workflow.
+- Cause: `build_all.yml` is upstream's release matrix, not a dev build.
+- Resolution: `ci/cosmyx-arm64-pr-builds` removed from the branch list and merge order; integration PRs into
+  `cosmyx-ci/<BASE>` now run "Cosmyx dev build" (`ci/cosmyx-dev-build`, #119, decision 0218). `build_all.yml` keeps no
+  Cosmyx hook and stays the release validation build. Slot T21 and decision 0216 are not reused.
+- Commit: `cbc69237fd` (ci/cosmyx-integrate, branches.json).
 
 ### 2026-11 feat/cosmyx-plugin-signing - PluginManager.cpp on v2.5.2
 - Symptom: `just cosmo-rebase-check v2.5.2` reports a conflict in `src/slic3r/plugin/PluginManager.cpp` when
