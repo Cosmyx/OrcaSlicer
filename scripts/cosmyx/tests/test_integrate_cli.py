@@ -76,7 +76,9 @@ class Sandbox(unittest.TestCase):
     """Isolated git environment: no user or system config, fixed identity."""
 
     def setUp(self) -> None:
-        self.tmp = Path(tempfile.mkdtemp(prefix="cosmyx-integrate-test-"))
+        # Resolved once so every path is in its canonical long form: Windows hands out an 8.3 short temp
+        # path (RUNNER~1) while git prints the long one, and macOS links /var to /private/var.
+        self.tmp = Path(tempfile.mkdtemp(prefix="cosmyx-integrate-test-")).resolve()
         self.addCleanup(shutil.rmtree, self.tmp, True)
         env = {
             "GIT_CONFIG_NOSYSTEM": "1",
