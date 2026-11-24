@@ -34,6 +34,16 @@ here; see the upstream release notes.
   changelog, the decision register under `wiki/decisions/`, the justfile and
   the Cosmyx checks workflow. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/86. Decisions: 0001, 0002, 0003, 0004, 0005.
 
+<!-- cosmyx-slot: T20 -->
+- Add `just cosmo-integrate [BASE]`, which rebuilds the throwaway
+  `ci/cosmyx-integration` branch from every Cosmyx pull request branch and
+  resolves the known conflicts (changelog slots, slot lists, branding tables,
+  recorded resolutions) inside the merge commits, stopping on any other one,
+  and `just cosmo-rebase-check TAG`, a dry run that replays every branch onto
+  an upstream tag and prints a conflict table. The branch list and order live
+  in `scripts/cosmyx/integrate/branches.json`. Pull request: pending.
+  Decisions: 0215.
+
 ### libslic3r
 
 <!-- cosmyx-slot: T1 -->
