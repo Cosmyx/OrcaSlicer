@@ -64,6 +64,7 @@ The feature has no code hook; its risk is the coupling to upstream's build outpu
 - 0f41654edd: artifact paths and tool output are attacker-controlled: a newline in a file name could forge a "Result: passed" line, control characters broke `junit.xml`, undecodable bytes raised `UnicodeDecodeError`, a damaged MSIX raised `BadZipFile`, and `git ls-tree` without `-z` exported non-ASCII model names as empty files.
 - Paths and line endings: files under `scripts/cosmyx/artifact_checks/` are read on three OSes; keep LF and avoid host-specific separators.
 - 92830e0a8b: the checks workflow `paths:` must cover the files this feature owns.
+- `53df024c32` (package-name follow-up, decision 0148 edited): every artifact family pattern, the names check (new `name_prefixes` list) and the Windows own names accept both `OrcaSlicer_*` and `CosmoSlice_*`, and `CosmoSlice.exe` as well as `orca-slicer.exe`; the profile validator families are optional (product-name decision 0211 stops exporting them). Children (macos-signing, exec-smoke) were restacked on it, so their shas changed.
 
 ## Shared files with other branches
 

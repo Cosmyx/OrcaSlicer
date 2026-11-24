@@ -44,6 +44,7 @@ No upstream hook. The coupling is to upstream's runtime behaviour: v2.5.1 versus
 - fcf2a4cc91: the macOS run reused the Linux crash table; Darwin numbers SIGBUS 10 (Linux 7), and tests using the host `signal` module gave wrong numbers on the Windows runner. Tables are fixed per target OS.
 - 4492bceec5: the launcher loads `opengl32.dll` by name and searches the exe folder first, so Mesa must also sit next to the exe; `--sw-renderer` is rejected by the command line parser.
 - 449d09ffa9: `mesa_win.fetch` is a public contract with the goldens launcher; do not rename.
+- Restacked on the new macos-signing: tip `526fc8002e`. That commit makes `windows.app_exe` an ordered list `["CosmoSlice.exe", "orca-slicer.exe"]`: the smoke and slice run the first name present in the portable folder, and fail listing both when neither is there; tests cover the renamed `CosmoSlice.app` on macOS.
 
 ## Shared files with other branches
 
