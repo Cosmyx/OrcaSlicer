@@ -54,7 +54,7 @@ reviewed, and the user approves every image that ships (decision 0121).
   candidate.
 - The user reviewed the `icons-a-m`, `icons-n-z` and `web` review sheets
   and approved every candidate on 2026-11-19. All 524 candidates were
-  accepted, one commit per group, as `to-validate` rows. Marking them
-  `validated` stays the user's own `just brand-validate` command.
+  accepted, one commit per group, as `to-validate` rows. The user validated
+  all 524 on 2026-11-24, and they are recorded as `validated`.
 - Removing it: delete `candidates.py` and its recipe file; overlay files
   are then written by hand and recorded with `just brand-sync`.
