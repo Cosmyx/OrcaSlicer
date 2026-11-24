@@ -54,10 +54,21 @@ it hides the conflicts that really need a person or an agent.
     integrations (`Merge branch 'rebase/v2.5.2/<branch>' into
     integration/v2.5.2`). A `rebase/` branch checked out in a worktree is
     moved there only when that worktree is clean (the run stops naming it
-    otherwise). An unknown conflict during the replay stops the run with the
-    cherry-pick left in progress, so that a person resolves the files in
-    place and records them with `git rerere` before aborting it; the next run
-    replays the recorded resolution. The `rebase/` branches are not pushed:
+    otherwise). Replayed commits carry the `cherry-pick -x` line naming the
+    branch's original commit. An unknown conflict during the replay is first
+    settled by an earlier replay of that same original commit, looked up by
+    that line in the worktree's HEAD, the local `rebase/<BASE>/*` branches,
+    then the remote integration branch of that base. Otherwise the run stops
+    with the cherry-pick left in progress: a person resolves it in place,
+    commits it with `cherry-pick --continue`, and runs again; the run reuses
+    that commit, and every later run finds it in the pushed integration. This
+    is rerere at the scale of a commit, needed because a release base can
+    differ in ways rerere cannot record: a file the branch edits may not
+    exist there (modify/delete, such as `build_flatpak.yml`, whose jobs
+    still live in `build_all.yml` on `v2.5.2`), and a resolution may have to
+    change files that did not conflict (a test reading the moved file).
+    Matching the original commit's sha, not its subject, means a branch
+    commit rewritten since gets no stale resolution. The `rebase/` branches are not pushed:
     they are throwaway and rebuilt on every run, and their commits already
     reach the remote as the second parents of the integration merges.
   - `--build` builds the integration through a draft pull request from the
