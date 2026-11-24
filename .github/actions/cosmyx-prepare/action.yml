@@ -53,6 +53,21 @@ runs:
         PYTHON_PATH: ${{ steps.container.outputs.python || steps.python.outputs.python-path }}
       run: echo "COSMYX_PYTHON=$PYTHON_PATH" >> "$GITHUB_ENV"
 
+    # The branding tables are written for DEV. A build of a tree whose upstream
+    # base is not DEV (a pull request into cosmyx-ci/<tag>, an integration/<tag>
+    # branch) brands in tolerant mode: a row whose target file or text that
+    # older tree lacks is skipped with a warning. Everything else stays strict.
+    # Exported once, so the real-tree tests and apply below use the same mode.
+    - name: Choose the branding mode
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: |
+        mode="$("$COSMYX_PYTHON" scripts/cosmyx/branding/cli.py mode)"
+        echo "Cosmyx branding mode: $mode"
+        echo "COSMYX_BRAND_MODE=$mode" >> "$GITHUB_ENV"
+
     # Only fast, hermetic tests run here, on every build leg: the profile makes
     # the tests that need Docker, the network or a long build skip themselves
     # (they run in cosmyx-checks and `just test-scripts`).

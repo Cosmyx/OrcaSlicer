@@ -23,6 +23,23 @@ merged with upstream) must keep building to show merge problems.
   builds, an error on release builds. `just brand-sync` or
   `just brand-refresh` catches up. Every other finding is an error on every
   build.
+- Tolerant mode. The tables are written for DEV, but the same branches are
+  also replayed onto older upstream tags (`integration/<tag>`, built through
+  a pull request into `cosmyx-ci/<tag>`), where a row may name a file or a
+  text that tag does not have yet. `brand_mode` is `strict` by default and on
+  DEV, where a missing target means upstream removed something and must
+  fail. It is `tolerant` for a pull request into `cosmyx-ci/<BASE>` with BASE
+  other than DEV and for an `integration/*` ref, never for a release build;
+  `COSMYX_BRAND_MODE` or `--mode` overrides it. In tolerant mode a G5 or G8
+  text row whose file, or whose text, the tree lacks entirely is skipped with
+  a warning (a text found with another count stays an error), and an
+  override of an upstream file that is gone is not written, with a G3
+  warning, instead of creating a file the older tree never had. The
+  cosmyx-prepare action runs `cli.py mode` once and exports
+  `COSMYX_BRAND_MODE`, so its real-tree tests and apply agree. Detection
+  lives in the engine (tested, no workflow expression) rather than in each
+  workflow, because the integration base is already encoded in the ref
+  names. Strict mode output and behaviour are unchanged.
 - G5 reads `scopes` from colours.json as fnmatch globs on repository paths,
   `!` marking an exclusion. The teal family and the ignored colours come from
   its `family` and `ignore`, with the frozen defaults until it exists.
@@ -57,4 +74,9 @@ merged with upstream) must keep building to show merge problems.
 
 - A new upstream icon never breaks `MIXED` or a pull request, but blocks a
   release until it is synced and validated.
+- An integration onto an older upstream tag builds with the DEV tables; the
+  skipped rows are listed as warnings in the log and the step summary.
+- Removing tolerant mode: delete `brand_mode`, `split_absent`, the
+  `applicable`/`overlay_skips` calls and the prepare step that exports the
+  mode; older tags then need their own tables.
 - Removing a guard: delete its function from `GUARDS` and its tests.

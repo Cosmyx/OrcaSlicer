@@ -28,6 +28,17 @@ from branding import cli  # noqa: E402
 DEV = {}
 RELEASE = {"COSMYX_BRAND_REF": "refs/heads/release/2.6"}
 
+# The branding mode of this run. The cosmyx-prepare action exports
+# COSMYX_BRAND_MODE for the job (tolerant only when the tree's upstream base is
+# not DEV), so the real-tree tests brand this checkout the way its build will.
+# Unset, it is strict.
+REAL_TREE_ENV = {branding.MODE_ENV: os.environ.get(branding.MODE_ENV, "")}
+
+
+def real_tree_tolerant() -> bool:
+    """True when this run brands in tolerant mode (see REAL_TREE_ENV)."""
+    return branding.brand_mode(REAL_TREE_ENV) == "tolerant"
+
 # The cosmyx-prepare action runs the branding tests on every build leg with this
 # variable set to "prepare": only fast, hermetic tests belong there. A test that
 # needs Docker, the network or a long build carries @skip_in_prepare, and still

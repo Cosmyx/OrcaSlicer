@@ -15,6 +15,7 @@ from unittest import mock
 from pathlib import Path
 
 from branding_fixture import (
+    REAL_TREE_ENV,
     RELEASE,
     REPO_ROOT,
     TreeCase,
@@ -192,6 +193,105 @@ class ApplyRevertTest(BrandedTreeCase):
         self.assertTrue(any(f.guard == "G1" for f in apply_module.check(self.root, {}, {})))
 
 
+TOLERANT = {branding.MODE_ENV: "tolerant"}
+GONE_LITERAL = {"file": "src/slic3r/GUI/Gone.cpp", "find": '"#009688"', "replace": '"#8000FF"', "count": 1, "reason": "gone file"}
+GONE_PATCH = {"file": "version.inc", "old": "SLIC3R_GONE", "new": "COSMYX_GONE", "count": 1, "reason": "gone text"}
+
+
+class ModeTest(unittest.TestCase):
+    """Strict by default; tolerant only off DEV (a build pull request into
+    another cosmyx-ci/ base, or an integration/ branch) or when asked."""
+
+    def test_detection(self) -> None:
+        cases = [
+            ({}, "strict"),
+            ({"GITHUB_BASE_REF": "DEV"}, "strict"),
+            ({"GITHUB_BASE_REF": "cosmyx-ci/DEV"}, "strict"),
+            ({"GITHUB_REF": "refs/heads/DEV"}, "strict"),
+            ({"GITHUB_REF": "refs/heads/MIXED"}, "strict"),
+            ({"GITHUB_BASE_REF": "cosmyx-ci/v2.5.2"}, "tolerant"),
+            ({"GITHUB_REF": "refs/heads/integration/v2.5.2"}, "tolerant"),
+            ({"GITHUB_BASE_REF": "cosmyx-ci/v2.5.2", branding.MODE_ENV: "strict"}, "strict"),
+            ({branding.MODE_ENV: "tolerant"}, "tolerant"),
+            ({branding.MODE_ENV: " "}, "strict"),
+            # A release is always complete: never tolerant.
+            ({branding.MODE_ENV: "tolerant", "COSMYX_BRAND_REF": "refs/tags/v1"}, "strict"),
+            ({"GITHUB_REF": "refs/heads/integration/v2.5.2", "COSMYX_BRAND_REF": "refs/heads/release/2.6"}, "strict"),
+        ]
+        for env, expected in cases:
+            with self.subTest(env=env):
+                self.assertEqual(branding.brand_mode(env), expected)
+
+    def test_unknown_mode_is_refused(self) -> None:
+        with self.assertRaises(branding.BrandingError):
+            branding.brand_mode({branding.MODE_ENV: "lenient"})
+
+
+class TolerantModeTest(BrandedTreeCase):
+    """Off DEV, a table row whose target file or text the tree lacks is
+    skipped with a warning; on DEV (strict, the default) it still fails."""
+
+    def gone_rows(self) -> None:
+        self.write_json(branding.COLOURS_FILE, dict(COLOURS, literals=[*COLOURS["literals"], GONE_LITERAL]))
+        self.write_json(f"{branding.PRODUCT_NAME_DIR}/patches.json", {"schema": 1, "rows": [NAME_PATCH, GONE_PATCH]})
+
+    def test_strict_fails_on_a_missing_file_or_text(self) -> None:
+        self.gone_rows()
+        before = snapshot(self.root)
+        code, lines = self.apply()
+        self.assertEqual(code, 1, lines)
+        self.assertTrue(any("G5" in line and "Gone.cpp" in line and line.startswith("error") for line in lines), lines)
+        self.assertTrue(any("G8" in line and "SLIC3R_GONE" in line and line.startswith("error") for line in lines), lines)
+        self.assertEqual(snapshot(self.root), before)
+
+    def test_tolerant_skips_them_with_a_warning(self) -> None:
+        self.gone_rows()
+        code, lines = self.apply(env=TOLERANT)
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(any(line.startswith("warning: G5 src/slic3r/GUI/Gone.cpp:") and "skipped" in line for line in lines), lines)
+        self.assertTrue(any(line.startswith("warning: G8 version.inc:") and "SLIC3R_GONE" in line for line in lines), lines)
+        self.assertFalse([line for line in lines if line.startswith("error")], lines)
+        # The rows that match are still applied.
+        self.assertIn(b"wxColour(128, 0, 255)", read(self.root, "src/slic3r/GUI/Widget.cpp"))
+        self.assertIn(b'"CosmoSlice"', read(self.root, "version.inc"))
+        self.assertFalse((self.root / "src/slic3r/GUI/Gone.cpp").exists())
+        self.assertIn("tolerant", lines[-1])
+        report = json.loads(read(self.root, branding.REPORT_FILE))
+        self.assertEqual(report["mode"], "tolerant")
+        apply_module.revert(self.root)
+
+    def test_tolerant_still_fails_a_wrong_count(self) -> None:
+        wrong = dict(NAME_PATCH, count=2)
+        self.write_json(f"{branding.PRODUCT_NAME_DIR}/patches.json", {"schema": 1, "rows": [wrong]})
+        code, lines = self.apply(env=TOLERANT)
+        self.assertEqual(code, 1, lines)
+        self.assertTrue(any(line.startswith("error: G8") and "found 1 time(s), expected 2" in line for line in lines), lines)
+
+    def test_strict_is_unchanged_on_dev(self) -> None:
+        code, lines = self.apply(env={"GITHUB_REF": "refs/heads/DEV"})
+        self.assertEqual(code, 0, lines)
+        self.assertNotIn("tolerant", lines[-1])
+        self.assertEqual(json.loads(read(self.root, branding.REPORT_FILE))["mode"], "strict")
+
+    def test_overlay_of_a_gone_upstream_file(self) -> None:
+        (self.root / "resources/images/apple.svg").unlink()
+        # Strict keeps the drift policy: a warning on development builds,
+        # and the overlay file is written.
+        code, lines = self.apply()
+        self.assertEqual(code, 0, lines)
+        self.assertTrue((self.root / "resources/images/apple.svg").is_file())
+        apply_module.revert(self.root)
+        # Tolerant does not create a file the older tree never had.
+        code, lines = self.apply(env=TOLERANT)
+        self.assertEqual(code, 0, lines)
+        self.assertFalse((self.root / "resources/images/apple.svg").exists())
+        self.assertTrue(any("G3" in line and "apple.svg" in line and "skipped" in line for line in lines), lines)
+        # An overlay that adds a file upstream never had is still written.
+        self.assertTrue((self.root / "resources/images/OrcaSlicer_new.svg").is_file())
+        apply_module.revert(self.root)
+        self.assertFalse((self.root / "resources/images/apple.svg").exists())
+
+
 class GitCleanTest(BrandedTreeCase):
     use_git = True
 
@@ -258,6 +358,19 @@ class CliTest(TreeCase):
         self.assertEqual(self.run_cli("apply")[0], 0)
         self.assertEqual(self.run_cli("revert")[0], 0)
 
+    def test_mode_option_and_command(self) -> None:
+        self.write_json(f"{branding.PRODUCT_NAME_DIR}/patches.json", {"schema": 1, "rows": [GONE_PATCH]})
+        with mock.patch.dict("os.environ", {branding.MODE_ENV: "", "GITHUB_BASE_REF": "", "GITHUB_REF": ""}):
+            self.assertEqual(self.run_cli("apply")[0], 1)
+            self.assertEqual(self.run_cli("check")[0], 1)
+            self.assertEqual(self.run_cli("check", "--mode", "tolerant")[0], 0)
+            code, lines = self.run_cli("apply", "--mode", "tolerant")
+            self.assertEqual(code, 0, lines)
+            self.assertEqual(self.run_cli("revert")[0], 0)
+            self.assertEqual(self.run_cli("mode"), (0, ["strict"]))
+        with mock.patch.dict("os.environ", {branding.MODE_ENV: "", "GITHUB_BASE_REF": "cosmyx-ci/v2.5.2"}):
+            self.assertEqual(self.run_cli("mode"), (0, ["tolerant"]))
+
     def test_validate_refuses_from_the_cli_without_the_flag(self) -> None:
         code, lines = self.run_cli("validate", "logos")
         self.assertEqual(code, 1)
@@ -278,7 +391,7 @@ class RealTreeTest(unittest.TestCase):
     def test_committed_tables_apply_and_revert(self) -> None:
         before = snapshot(self.root)
         lines = []
-        code = apply_module.apply(self.root, env={}, out=lines.append)
+        code = apply_module.apply(self.root, env=REAL_TREE_ENV, out=lines.append)
         self.assertEqual(code, 0, "\n".join(lines))
         self.assertFalse([line for line in lines if line.startswith("error")])
         apply_module.revert(self.root)
@@ -290,7 +403,7 @@ class RealTreeTest(unittest.TestCase):
         manifest.sync(self.root)
         render.write(self.root, manifest.load(self.root))
         before = snapshot(self.root)
-        self.assertEqual(apply_module.apply(self.root, env={}, out=lambda _: None), 0)
+        self.assertEqual(apply_module.apply(self.root, env=REAL_TREE_ENV, out=lambda _: None), 0)
         self.assertEqual(read(self.root, target), svg("#8000FF", 64).encode())
         apply_module.revert(self.root)
         self.assertEqual(snapshot(self.root), before)
@@ -326,7 +439,7 @@ class CrlfRealTreeTest(unittest.TestCase):
         before = snapshot(self.crlf)
         for root in (self.lf, self.crlf):
             lines = []
-            code = apply_module.apply(root, env={}, out=lines.append)
+            code = apply_module.apply(root, env=REAL_TREE_ENV, out=lines.append)
             self.assertEqual(code, 0, f"{root.name}:\n" + "\n".join(lines))
         lf_after, crlf_after = lf_snapshot(self.lf), lf_snapshot(self.crlf)
         self.assertEqual(sorted(crlf_after), sorted(lf_after))

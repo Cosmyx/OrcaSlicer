@@ -91,6 +91,15 @@ The build checks the tables before it writes anything and the tree after:
 A failed check before apply writes nothing; a failure after apply puts every
 file back.
 
+The tables are written for DEV. A build of a tree whose upstream base is not
+DEV (an integration onto an older upstream tag: a pull request into
+`cosmyx-ci/<tag>`, or an `integration/<tag>` branch) brands in tolerant mode:
+a colour or product-name row whose file or text that tree lacks entirely, and
+a replacement of an upstream file it does not have, are skipped with a
+warning. A text found with another count still fails. DEV, MIXED and release
+builds are strict. `just brand-mode` prints the mode the environment selects;
+`just brand-apply tolerant` brands an older tree locally (decision 0122).
+
 Line endings never matter. A Windows checkout (`core.autocrlf`, the default on
 the runners) has CRLF text files: every match and count is made on LF text, a
 patched file is written back with its own line ending (never a mix), and the
