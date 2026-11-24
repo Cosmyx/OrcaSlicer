@@ -14,7 +14,11 @@ patch them) is renamed here, by the `cosmyx-package-names` action that the
   builds `CosmoSlice_Mac_universal_<ver>.dmg` (volume CosmoSlice) with
   upstream's scripts/create_dmg.sh. The signing, when on, signs every app of
   the folder and rebuilds the DMG under the app's name, so it keeps this name.
-- `mac-upload` (after the upstream mac uploads): uploads that DMG.
+  A pull-request leg builds no universal app and ships its arch's own DMG
+  (upstream's "Create DMG <arch> without notary", before this hook): the stage
+  does the same there, `CosmoSlice_Mac_<arch>_<ver>.dmg` from `CosmoSlice.app`.
+- `mac-upload` (after the upstream mac uploads): uploads that DMG and deletes
+  the `OrcaSlicer_Mac_` artifact it replaces.
 - `windows` (after "Build MSIX Store package Win"): renames the MSIX, uploads
   the portable folder, the installer and the MSIX under CosmoSlice names.
 - `linux` (before "Upload artifacts Ubuntu"): renames the AppImage and
@@ -26,7 +30,7 @@ patch them) is renamed here, by the `cosmyx-package-names` action that the
 Every stage also lists the upstream `OrcaSlicer_` artifacts it replaces and
 the profile validator artifacts, which the action deletes: a Cosmyx build
 exports neither. A stage that does not apply to the running leg (another OS,
-a per-arch macOS leg, a leg that built no MSIX) does nothing.
+a macOS push leg that only packs its bundle, a leg that built no MSIX) does nothing.
 
 The names come from cosmyx-src/branding/product-name/packages.json. Each
 template renders with `{product}` (CosmoSlice) and `{upstream}` (OrcaSlicer),
@@ -52,6 +56,8 @@ TABLE = "cosmyx-src/branding/product-name/packages.json"
 STAGES = ("mac-app", "mac-upload", "windows", "linux", "flatpak")
 # RUNNER_ARCH -> the arch the Flatpak bundle names.
 FLATPAK_ARCH = {"X64": "x86_64", "ARM64": "aarch64"}
+# The archs a macOS pull-request leg may build (build_all.yml), each its own DMG.
+MAC_ARCHS = ("arm64", "x86_64")
 
 
 class PackageError(Exception):
@@ -126,13 +132,31 @@ def build_dmg(root: Path, app: Path, staging: Path, volume: str, output: Path, r
 # ---------------------------------------------------------------- stages
 
 
+def mac_leg(table: dict, workspace: Path, env: dict) -> Names | None:
+    """The macOS leg's names, with `{arch}` set to what it ships: `universal` on
+    the combine job, the arch on a pull-request leg (which ships its own DMG,
+    `{upstream}_Mac_<arch>_<ver>.dmg`, or the CosmoSlice one on a rerun), None
+    on a push leg, which only packs its bundle for the combine job."""
+    ver = env_value(env, "VER")
+    names = Names(table, "mac", ver=ver, arch="universal")
+    if (workspace / names.new("bundle_dir")).is_dir():
+        return names
+    for arch in MAC_ARCHS:
+        names = Names(table, "mac", ver=ver, arch=arch)
+        if (workspace / names.new("bundle_dir")).is_dir() and (
+            (workspace / names.old("dmg")).is_file() or (workspace / names.new("dmg")).is_file()
+        ):
+            return names
+    return None
+
+
 def stage_mac_app(table: dict, root: Path, workspace: Path, env: dict, runner=run_bash) -> dict:
     if env.get("RUNNER_OS") != "macOS":
         return {}
-    names = Names(table, "mac", ver=env_value(env, "VER"))
-    folder = workspace / names.templates["bundle_dir"]
-    if not folder.is_dir():
-        return {}  # a per-arch leg: the universal bundle is made by the combine job
+    names = mac_leg(table, workspace, env)
+    if names is None:
+        return {}
+    folder = workspace / names.new("bundle_dir")
     old_app, new_app = folder / names.old("app"), folder / names.new("app")
     if old_app.exists():
         if new_app.exists():
@@ -150,17 +174,16 @@ def stage_mac_app(table: dict, root: Path, workspace: Path, env: dict, runner=ru
 def stage_mac_upload(table: dict, root: Path, workspace: Path, env: dict, runner=run_bash) -> dict:
     if env.get("RUNNER_OS") != "macOS":
         return {}
-    names = Names(table, "mac", ver=env_value(env, "VER"))
-    if not (workspace / names.templates["bundle_dir"]).is_dir():
+    names = mac_leg(table, workspace, env)
+    if names is None:
         return {}
     dmg = workspace / names.new("dmg")
     if not dmg.is_file():
         raise PackageError(f"{dmg.name} is missing: the mac-app stage did not run before this one")
-    return {
-        "dmg_name": names.new("artifact"),
-        "dmg_path": str(dmg),
-        "delete": [names.old("artifact"), names.new("validator_artifact")],
-    }
+    delete = [names.old("artifact")]
+    if names.fields["arch"] == "universal":
+        delete.append(names.new("validator_artifact"))
+    return {"dmg_name": names.new("artifact"), "dmg_path": str(dmg), "delete": delete}
 
 
 def stage_windows(table: dict, root: Path, workspace: Path, env: dict, runner=run_bash) -> dict:
