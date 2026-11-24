@@ -7,6 +7,7 @@ from __future__ import annotations
 import io
 import json
 import re
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -202,10 +203,13 @@ class MacTest(Workspace):
         self.assertEqual(sorted(path.name for path in self.ws.glob("*.dmg")), [])  # the fake runner wrote none
         self.assertEqual(list((self.ws / "build/universal/CosmoSlice_dmg").iterdir()), [])
         [command] = self.commands
-        self.assertIn(f"ditto {bundle / 'CosmoSlice.app'} {self.ws / 'build/universal/CosmoSlice_dmg/CosmoSlice.app'}", command)
+        # Paths are shell-quoted; on Windows the temp paths hold backslashes, so they get quotes.
+        q = lambda path: shlex.quote(str(path))  # noqa: E731
+        staging = self.ws / "build/universal/CosmoSlice_dmg"
+        self.assertIn(f"ditto {q(bundle / 'CosmoSlice.app')} {q(staging / 'CosmoSlice.app')}", command)
         self.assertIn("ln -s /Applications", command)
         self.assertIn("scripts/create_dmg.sh", command.replace("\\", "/"))
-        self.assertTrue(command.endswith(f"create_dmg CosmoSlice {self.ws / 'build/universal/CosmoSlice_dmg'} {self.ws / f'CosmoSlice_Mac_universal_{DEV_TAG}.dmg'}"))
+        self.assertTrue(command.endswith(f"create_dmg CosmoSlice {q(staging)} {q(self.ws / f'CosmoSlice_Mac_universal_{DEV_TAG}.dmg')}"))
 
     def test_rerun_after_rename_rebuilds_only(self) -> None:
         self.universal()
