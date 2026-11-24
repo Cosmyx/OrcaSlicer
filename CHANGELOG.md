@@ -57,7 +57,9 @@ here; see the upstream release notes.
   on white and on the dark screen), 115 exact literal rows for numeric colours, one dark-mode snippet
   for the CSS-form SVG icons, and a guard that fails on any teal left unless
   allow-listed. URL fragments and numeric character references are never
-  taken for colours, and palette values must be uppercase `#RRGGBB`.
+  taken for colours, and palette values must be uppercase `#RRGGBB`. On an
+  older upstream base (tolerant mode, decision 0122) literal rows whose file
+  or text that tree lacks are skipped with a warning.
   Recipes `just brand-colour-candidates` and
   `brand-colour-literals`. Pull request: pending. Decisions: 0127, 0128,
   0129, 0130.

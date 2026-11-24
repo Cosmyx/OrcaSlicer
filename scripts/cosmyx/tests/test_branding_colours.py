@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -26,6 +27,19 @@ from branding_fixture import (
 from branding import colours, find_hexes, in_family
 
 PLUGINS = {"colours": [colours]}
+
+# The branding mode of this run (decision 0122): the cosmyx-prepare action
+# exports COSMYX_BRAND_MODE, tolerant only when the tree's upstream base is not
+# DEV, so the real-tree tests check this checkout the way its build brands it.
+MODE_ENV = "COSMYX_BRAND_MODE"
+REAL_TREE_ENV = {MODE_ENV: os.environ.get(MODE_ENV, "")}
+TOLERANT = REAL_TREE_ENV[MODE_ENV].strip() == "tolerant"
+
+
+def present_in(root: Path, row: dict) -> bool:
+    """True when the file of a literal row exists and holds its text."""
+    path = root / row["file"]
+    return path.is_file() and row["find"] in path.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
 WIDGET = "src/slic3r/GUI/Widget.cpp"
 CSS = "resources/web/css/global.css"
 
@@ -403,7 +417,12 @@ class CommittedTableTest(unittest.TestCase):
         self.assertEqual([row["from"] for row in self.table["mappings"] if row["status"] != "validated"], [])
 
     def test_literal_rows_are_current(self) -> None:
-        self.assertEqual(colours.literal_rows(REPO_ROOT, self.table), self.table["literals"])
+        expected = self.table["literals"]
+        if TOLERANT:
+            # An older upstream base lacks some rows' files or texts; apply
+            # skips those with a warning, the rest must still be current.
+            expected = [row for row in expected if present_in(REPO_ROOT, row)]
+        self.assertEqual(colours.literal_rows(REPO_ROOT, self.table), expected)
 
     def test_scopes_follow_the_plan(self) -> None:
         scopes = self.table["scopes"]
@@ -446,7 +465,7 @@ class RealTreeColoursTest(unittest.TestCase):
     def test_apply_leaves_no_teal_and_reverts(self) -> None:
         before = snapshot(self.root)
         lines = []
-        code = apply_module.apply(self.root, env={}, out=lines.append)
+        code = apply_module.apply(self.root, env=REAL_TREE_ENV, out=lines.append)
         self.assertEqual(code, 0, "\n".join(lines))
         self.assertFalse([line for line in lines if line.startswith("error")])
         ctx = apply_module.Context(self.root, {})
