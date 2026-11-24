@@ -15,6 +15,7 @@ from branding_fixture import (
     manifest,
     png,
     read,
+    real_tree_tolerant,
     render,
     svg,
     write,
@@ -302,8 +303,14 @@ class CommittedTablesTest(unittest.TestCase):
         self.assertEqual(render.stale(REPO_ROOT, manifest.load(REPO_ROOT)), [])
 
     def test_every_row_points_at_a_real_file(self) -> None:
+        # In tolerant mode (a tree whose upstream base is not DEV) a row whose
+        # file this older tree lacks is skipped by apply with a G3 warning
+        # (TolerantModeTest); on DEV every row needs its file.
+        tolerant = real_tree_tolerant()
         for _, row in manifest.load(REPO_ROOT).rows():
             with self.subTest(path=row["path"]):
+                if tolerant and row["upstream_sha256"] is not None and not (REPO_ROOT / row["path"]).is_file():
+                    continue
                 self.assertTrue((REPO_ROOT / row["path"]).is_file() or row["upstream_sha256"] is None)
 
 

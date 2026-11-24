@@ -1,12 +1,16 @@
 # Branding recipes (T11). Imported by the root justfile. Tables: cosmyx-src/branding/.
 
-# Run the branding guards on the tree and check the review tables, writing nothing.
-brand-check:
-    {{python}} scripts/cosmyx/branding/cli.py check
+# Run the branding guards on the tree and check the review tables, writing nothing (MODE: strict or tolerant).
+brand-check MODE="":
+    {{python}} scripts/cosmyx/branding/cli.py check {{ if MODE == "" { "" } else { "--mode " + quote(MODE) } }}
 
-# Brand the local tree as the CI does (vendored images, colours, product name); undo with brand-revert.
-brand-apply:
-    {{python}} scripts/cosmyx/branding/cli.py apply
+# Brand the local tree as the CI does; MODE=tolerant skips rows an older upstream base lacks. Undo with brand-revert.
+brand-apply MODE="":
+    {{python}} scripts/cosmyx/branding/cli.py apply {{ if MODE == "" { "" } else { "--mode " + quote(MODE) } }}
+
+# Print the branding mode this environment selects (strict unless the upstream base is not DEV).
+brand-mode:
+    {{python}} scripts/cosmyx/branding/cli.py mode
 
 # Restore every file the last brand-apply wrote, byte for byte.
 brand-revert:

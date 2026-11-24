@@ -33,10 +33,13 @@ def targets(root: Path, manifest: Manifest) -> list[str]:
     return sorted(row["path"] for _, row in manifest.rows() if row["override_sha256"] and row["path"] in present)
 
 
-def apply(root: Path, manifest: Manifest, before_write=None) -> list[str]:
-    """Copy every overlay file onto its upstream path. Returns the paths written."""
+def apply(root: Path, manifest: Manifest, before_write=None, skip=frozenset()) -> list[str]:
+    """Copy every overlay file onto its upstream path, except the paths in
+    `skip` (tolerant mode). Returns the paths written."""
     written = []
     for path in targets(root, manifest):
+        if path in skip:
+            continue
         if before_write is not None:
             before_write(path)
         source = overlay_path(root, path)

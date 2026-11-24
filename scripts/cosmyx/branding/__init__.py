@@ -297,3 +297,44 @@ def ref_kind(env: dict | None = None) -> str:
     if ref.startswith(("refs/tags/", "refs/heads/release/")):
         return "release"
     return "development"
+
+
+# ---------------------------------------------------------------- mode
+
+MODE_ENV = "COSMYX_BRAND_MODE"
+MODES = ("strict", "tolerant")
+# Build pull requests of an integration target `cosmyx-ci/<BASE>`, and the
+# integration branch of any base other than DEV is `integration/<BASE>`.
+CI_BASE_PREFIX = "cosmyx-ci/"
+DEV_CI_BASE = f"{CI_BASE_PREFIX}DEV"
+INTEGRATION_REF_PREFIX = "refs/heads/integration/"
+
+
+def brand_mode(env: dict | None = None) -> str:
+    """`strict` (the default) or `tolerant`.
+
+    The tables are written for DEV. On a tree whose upstream base is not DEV
+    (an older upstream tag), a row may name a file or a text that base does not
+    have yet: tolerant mode skips such a row with a warning instead of failing.
+    On DEV a missing target means upstream removed something, so strict mode
+    keeps failing.
+
+    `COSMYX_BRAND_MODE` (`strict` or `tolerant`) decides when set, for local
+    runs and for the cosmyx-prepare action, which exports the detected mode.
+    Otherwise tolerant is detected for a pull request into `cosmyx-ci/<BASE>`
+    with BASE other than DEV, and for a push or dispatch on `integration/*`.
+    A release build is always strict.
+    """
+    env = os.environ if env is None else env
+    explicit = env.get(MODE_ENV, "").strip()
+    if explicit and explicit not in MODES:
+        raise BrandingError(f"{MODE_ENV} must be one of {', '.join(MODES)}, not {explicit!r}")
+    if explicit:
+        mode = explicit
+    else:
+        base = env.get("GITHUB_BASE_REF", "")
+        off_dev = (base.startswith(CI_BASE_PREFIX) and base != DEV_CI_BASE) or env.get("GITHUB_REF", "").startswith(
+            INTEGRATION_REF_PREFIX
+        )
+        mode = "tolerant" if off_dev else "strict"
+    return "strict" if ref_kind(env) == "release" else mode

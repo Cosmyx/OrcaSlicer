@@ -21,6 +21,11 @@
   (pull requests, DEV, MIXED, local) and fail release builds (release/*
   branches and tags).
 
+Tolerant mode (a tree whose upstream base is not DEV, see `brand_mode`):
+a G5 or G8 patch row whose file or text the tree lacks, and a G3 override of
+an upstream file that is gone, are skipped by apply and reported here as
+warnings. A text found with another count is still an error.
+
 Drift (an upstream change the tables have not caught up with: G3 and G4)
 follows the status policy too, so a new upstream icon never breaks a
 development build; every other finding is an error everywhere.
@@ -65,6 +70,7 @@ def drift_level(ctx) -> str:
 
 def g1_overlay_hash(ctx, phase: str) -> list[Finding]:
     findings = []
+    skipped = ctx.overlay_skips() if phase == "post" else set()
     for _, row in ctx.manifest.rows():
         expected = row["override_sha256"]
         if not expected:
@@ -78,7 +84,7 @@ def g1_overlay_hash(ctx, phase: str) -> list[Finding]:
                 findings.append(
                     Finding("G1", "error", path, "overlay differs from override_sha256 (just brand-refresh PATH, then review)")
                 )
-        else:
+        elif path not in skipped:
             target = repo_path(ctx.root, path)
             if not target.is_file() or file_sha256(target) != expected:
                 findings.append(Finding("G1", "error", path, "applied file does not carry the override hash"))
@@ -103,6 +109,7 @@ def g3_upstream(ctx, phase: str) -> list[Finding]:
     if phase != "pre":
         return []
     level = drift_level(ctx)
+    skipped = ctx.overlay_skips()
     findings = []
     for _, row in ctx.manifest.rows():
         path = row["path"]
@@ -113,7 +120,10 @@ def g3_upstream(ctx, phase: str) -> list[Finding]:
                 findings.append(Finding("G3", level, path, "upstream now has this file (just brand-refresh PATH)"))
             continue
         if not upstream.is_file():
-            findings.append(Finding("G3", level, path, "upstream file is gone (just brand-sync or brand-refresh PATH)"))
+            message = "upstream file is gone (just brand-sync or brand-refresh PATH)"
+            if path in skipped:
+                message += "; overlay skipped (tolerant mode)"
+            findings.append(Finding("G3", level, path, message))
         elif file_sha256(upstream) != recorded:
             advice = "just brand-refresh PATH, then review" if row["override_sha256"] else "just brand-sync"
             findings.append(Finding("G3", level, path, f"upstream file changed ({advice})"))
@@ -134,6 +144,19 @@ def g4_coverage(ctx, phase: str) -> list[Finding]:
 
 
 # ---------------------------------------------------------------- G5
+
+
+def patch_findings(ctx, guard: str, patches: list) -> list[Finding]:
+    """Count mismatches of text rows as errors. In tolerant mode a row whose
+    file or text the tree lacks is first set aside with a warning (apply
+    skips it the same way, see Context.applicable)."""
+    skipped = []
+    if ctx.tolerant:
+        patches, absent = textpatch.split_absent(ctx.root, patches)
+        skipped = [
+            Finding(guard, "warning", patch.file, f"skipped (tolerant mode): {why} ({patch.reason})") for patch, why in absent
+        ]
+    return skipped + [Finding(guard, "error", "", message) for message in textpatch.mismatches(ctx.root, patches)]
 
 
 def scope_files(root: Path, patterns: list) -> list[str]:
@@ -221,7 +244,7 @@ def g5_colours(ctx, phase: str) -> list[Finding]:
             literals = colour_literals(ctx)
         except BrandingError as error:
             return [Finding("G5", "error", COLOURS_FILE, str(error))]
-        findings += [Finding("G5", "error", "", message) for message in textpatch.mismatches(ctx.root, literals)]
+        findings += patch_findings(ctx, "G5", literals)
     else:
         permits = allowed(ctx)
         for (relative, colour), count in sorted(residue(ctx).items()):
@@ -322,7 +345,7 @@ def g8_product_name(ctx, phase: str) -> list[Finding]:
     files = [patch.file for patch in patches]
     findings = []
     if phase == "pre":
-        findings += [Finding("G8", "error", "", message) for message in textpatch.mismatches(ctx.root, patches)]
+        findings += patch_findings(ctx, "G8", patches)
         ctx.snapshot["app_key_lines"] = app_key_lines(ctx.root, files)
     else:
         before = ctx.snapshot.get("app_key_lines")
