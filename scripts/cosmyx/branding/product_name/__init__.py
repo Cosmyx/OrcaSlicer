@@ -23,6 +23,10 @@ plugin then renames, from the `rename` table:
     visible text names it (non-log C++ literals, template msgids, hints,
     setup-guide pages) outside the allowlist. A new upstream text is drift:
     a warning on development builds, an error on release builds.
+  - tolerant mode (a tree whose upstream base is not DEV, decision 0122): a
+    rename, allowlist or inflection row whose text the tree lacks entirely is
+    skipped with a warning instead of being stale; a row only partly there
+    (a literal without its msgid) is still an error.
 
 Tables: `cosmyx-src/branding/product-name/{rename,allowlist,patches,inflections}.json`.
 """
@@ -68,6 +72,21 @@ def load_inflections(root: Path) -> list:
 
 def drift_level(ctx) -> str:
     return "error" if ctx.kind == "release" else "warning"
+
+
+def tolerant(ctx) -> bool:
+    """True in the engine's tolerant mode (decision 0122). An engine without
+    modes has no such attribute and is strict."""
+    return bool(getattr(ctx, "tolerant", False))
+
+
+SKIPPED = "skipped (tolerant mode)"
+
+
+def absent_rename(rename: list, texts: Counter, pot: Counter) -> list:
+    """Rename rows whose old and new texts are nowhere in the sources, the
+    hints or the template: rows written for a newer upstream."""
+    return [row for row in rename if not any(texts[row[key]] or pot[row[key]] for key in ("old", "new"))]
 
 
 # ---------------------------------------------------------------- sources
@@ -189,10 +208,19 @@ def guards(ctx, phase: str) -> list[Finding]:
         sources = source_groups(root)
         pot = template_msgids(root)
         texts = text_counts(root, sources)
-        findings = check_rename(rename, texts, pot, phase)
+        findings = []
+        if tolerant(ctx):
+            absent = absent_rename(rename, texts, pot)
+            rename = [row for row in rename if row not in absent]
+            if phase == "pre":
+                findings += [
+                    Finding(GUARD, "warning", RENAME_FILE, f"{SKIPPED}: {row['kind']} row {row['old'][:60]!r} is absent")
+                    for row in absent
+                ]
+        findings += check_rename(rename, texts, pot, phase)
         findings += check_allowlist(ctx, allow, sources, pot, texts, phase, {row["new"] for row in rename})
         if phase == "pre":
-            findings += check_inflections(root, rename, inflections)
+            findings += check_inflections(root, rename, inflections, "warning" if tolerant(ctx) else "error")
         else:
             findings += check_translations(root, rename, inflection_map(inflections), drift_level(ctx))
     except (BrandingError, OSError) as error:
@@ -203,9 +231,12 @@ def guards(ctx, phase: str) -> list[Finding]:
     return findings
 
 
+RENAME_FILE = f"{PRODUCT_NAME_DIR}/rename.json"
+
+
 def check_rename(rename: list, texts: Counter, pot: Counter, phase: str) -> list[Finding]:
     findings = []
-    where = "cosmyx-src/branding/product-name/rename.json"
+    where = RENAME_FILE
     for row in rename:
         old, new, kind = row["old"], row["new"], row["kind"]
         label = f"{kind} row {old[:60]!r}"
@@ -231,8 +262,9 @@ def check_rename(rename: list, texts: Counter, pot: Counter, phase: str) -> list
 def check_allowlist(ctx, allow: list, sources: list, pot: Counter, texts: Counter, phase: str, renamed: set) -> list[Finding]:
     where = "cosmyx-src/branding/product-name/allowlist.json"
     kept_msgids = {row["msgid"] for row in allow if row["kind"] == "msgid"}
+    stale = "warning" if tolerant(ctx) else "error"
     findings = [
-        Finding(GUARD, "error", where, f"stale msgid row {msgid[:60]!r}: the template has no such msgid")
+        Finding(GUARD, stale, where, f"stale msgid row {msgid[:60]!r}: the template has no such msgid" + (f", {SKIPPED}" if tolerant(ctx) else ""))
         for msgid in sorted(kept_msgids)
         if not pot[msgid] and not (phase == "pre" and msgid in renamed)
     ]
@@ -247,12 +279,12 @@ def check_allowlist(ctx, allow: list, sources: list, pot: Counter, texts: Counte
             if visible_name(piece.raw) and not piece.is_log and not piece.is_include:
                 found[(relative, piece.raw)] += 1
     allowed = Counter({(row["file"], row["literal"]): row["count"] for row in allow if row["kind"] == "literal"})
-    findings += compare(found, allowed, phase, level, "literal")
+    findings += compare(found, allowed, phase, level, "literal", tolerant(ctx))
 
     # Setup-guide pages.
     guide = Counter((path, text) for path, _, text in resources.guide_texts(ctx.root) if visible_name(text))
     allowed = Counter({(row["file"], row["text"]): row["count"] for row in allow if row["kind"] == "text"})
-    findings += compare(guide, allowed, phase, level, "guide text")
+    findings += compare(guide, allowed, phase, level, "guide text", tolerant(ctx))
 
     if phase == "post":
         # A template msgid no source carries any more is never shown.
@@ -265,11 +297,16 @@ def check_allowlist(ctx, allow: list, sources: list, pot: Counter, texts: Counte
     return findings
 
 
-def compare(found: Counter, allowed: Counter, phase: str, level: str, label: str) -> list[Finding]:
-    """Stale allowlist rows (pre and post); visible residue (post only)."""
+def compare(found: Counter, allowed: Counter, phase: str, level: str, label: str, skip_absent: bool = False) -> list[Finding]:
+    """Stale allowlist rows (pre and post); visible residue (post only).
+    With `skip_absent` (tolerant mode) a row whose text is not found at all
+    is a warning."""
     findings = []
     for (path, text), count in sorted(allowed.items()):
-        if found[(path, text)] < count:
+        if skip_absent and not found[(path, text)]:
+            if phase == "pre":
+                findings.append(Finding(GUARD, "warning", path, f"{SKIPPED}: allowlist {label} {text[:60]!r} is absent"))
+        elif found[(path, text)] < count:
             findings.append(
                 Finding(GUARD, "error", path, f"stale allowlist {label} {text[:60]!r}: {found[(path, text)]} found, {count} listed")
             )
@@ -280,9 +317,10 @@ def compare(found: Counter, allowed: Counter, phase: str, level: str, label: str
     return findings
 
 
-def check_inflections(root: Path, rename: list, rows: list) -> list[Finding]:
+def check_inflections(root: Path, rename: list, rows: list, level: str = "error") -> list[Finding]:
     """Pre: every inflection row matches a confirmed translation of a renamed
-    msgid in its language; a row that matches none is stale."""
+    msgid in its language; a row that matches none is stale (`level`: a
+    warning in tolerant mode, where its msgid may be absent)."""
     msgids = {row["old"] for row in rename if row["kind"] == "msgid"}
     inflections = inflection_map(rows)
     fired: set = set()
@@ -291,7 +329,7 @@ def check_inflections(root: Path, rename: list, rows: list) -> list[Finding]:
         # of its language went first: a row they always shadow is stale too.
         fired |= {(lang, old) for old in apply_inflections(text, lang, inflections)[1]}
     return [
-        Finding(GUARD, "error", INFLECTIONS_FILE, f"stale inflection row {row['language']} {row['old']!r}: no renamed translation has it")
+        Finding(GUARD, level, INFLECTIONS_FILE, f"stale inflection row {row['language']} {row['old']!r}: no renamed translation has it")
         for row in rows
         if (row["language"], row["old"]) not in fired
     ]

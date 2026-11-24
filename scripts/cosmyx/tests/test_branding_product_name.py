@@ -7,6 +7,7 @@ Ported from the CosmoSlice product-name tests (D-001..D-006) to unittest.
 
 from __future__ import annotations
 
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -29,6 +30,12 @@ from branding.product_name import catalogues, cpp, resources, tables, tokens  # 
 
 graft = catalogues.graft
 PN = branding.PRODUCT_NAME_DIR
+
+# The branding mode of this run (decision 0122): the cosmyx-prepare action
+# exports COSMYX_BRAND_MODE, tolerant only when the tree's upstream base is not
+# DEV, so the real-tree tests brand this checkout the way its build will.
+MODE_ENV = "COSMYX_BRAND_MODE"
+REAL_TREE_ENV = {MODE_ENV: os.environ.get(MODE_ENV, "")}
 
 
 # ---------------------------------------------------------------- tokens
@@ -524,6 +531,54 @@ class PluginTest(ProductNameTreeCase):
         self.assertEqual(read(self.root, "version.inc").decode(), 'set(SLIC3R_APP_NAME "CosmoSlice")\nset(SLIC3R_APP_KEY "OrcaSlicer")\n')
 
 
+class TolerantTest(ProductNameTreeCase):
+    """Off DEV (tolerant mode, decision 0122) a rename row whose text the
+    older tree lacks entirely is skipped with a warning; strict still fails."""
+
+    GONE = {"kind": "msgid", "old": "Gone OrcaSlicer", "new": "Gone CosmoSlice", "source": "cosmyx"}
+    GONE_INFLECTION = {"language": "fr", "old": "OrcaSlicerette", "new": "CosmoSlicette", "source": "test"}
+
+    def tolerant_g8(self, phase: str):
+        ctx = self.ctx()
+        ctx.plugins = apply_module.load_plugins()
+        ctx.tolerant = True
+        return [finding for finding in apply_module.guards.run(ctx, phase) if finding.guard == "G8"]
+
+    def test_absent_rows_warn_in_tolerant_mode(self) -> None:
+        self.tables(RENAME + [self.GONE], ALLOW + [dict(ALLOW[0], literal="Gone OrcaSlicer")])
+        found = self.tolerant_g8("pre")
+        self.assertTrue(found)
+        self.assertEqual({f.level for f in found}, {"warning"}, found)
+        self.assertTrue(all("skipped (tolerant mode)" in f.message for f in found), found)
+        self.assertTrue(any("Gone OrcaSlicer" in f.message for f in found))
+
+    def test_absent_inflection_row_warns_in_tolerant_mode(self) -> None:
+        self.write_json(product_name.INFLECTIONS_FILE, {"schema": 1, "rows": [self.GONE_INFLECTION]})
+        self.assertEqual({f.level for f in self.g8("pre")}, {"error"})
+        found = self.tolerant_g8("pre")
+        self.assertEqual([f.level for f in found], ["warning"], found)
+
+    def test_a_partly_present_row_still_fails(self) -> None:
+        # The literal is there but the template lost its msgid: not absent.
+        write(self.root, "localization/i18n/OrcaSlicer.pot", POT.replace('msgid "About OrcaSlicer"\nmsgstr ""\n\n', ""))
+        found = self.tolerant_g8("pre")
+        self.assertIn("error", [f.level for f in found])
+
+    def test_strict_mode_is_unchanged(self) -> None:
+        self.tables(RENAME + [self.GONE], ALLOW)
+        self.assertEqual([f.level for f in self.g8("pre")], ["error", "error"])
+
+    @unittest.skipUnless(hasattr(branding, "brand_mode"), "engine without modes (before decision 0122 tolerant mode)")
+    def test_tolerant_apply_skips_and_renames_the_rest(self) -> None:
+        self.tables(RENAME + [self.GONE], ALLOW)
+        self.assertEqual(self.run_apply()[0], 1)
+        code, lines = self.run_apply(env={MODE_ENV: "tolerant"})
+        self.assertEqual(code, 0, "\n".join(lines))
+        self.assertTrue(any("Gone OrcaSlicer" in line and line.startswith("warning") for line in lines), lines)
+        self.assertIn('show(_L("About CosmoSlice"));', read(self.root, "src/slic3r/GUI/About.cpp").decode())
+        apply_module.revert(self.root)
+
+
 # ---------------------------------------------------------------- the committed tables on the real tree
 
 
@@ -537,7 +592,7 @@ class RealTreeTest(unittest.TestCase):
         copy_real_tree(cls.root)
         cls.before = snapshot(cls.root)
         cls.lines = []
-        cls.code = apply_module.apply(cls.root, env={}, out=cls.lines.append)
+        cls.code = apply_module.apply(cls.root, env=REAL_TREE_ENV, out=cls.lines.append)
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -545,7 +600,8 @@ class RealTreeTest(unittest.TestCase):
 
     def test_applies_without_error_and_no_visible_name_is_left(self) -> None:
         self.assertEqual(self.code, 0, "\n".join(self.lines))
-        self.assertEqual([line for line in self.lines if "G8" in line], [])
+        # Tolerant mode reports the rows an older tree lacks as skipped.
+        self.assertEqual([line for line in self.lines if "G8" in line and "skipped (tolerant mode)" not in line], [])
 
     def test_display_name_changes_and_the_app_key_stays(self) -> None:
         version = read(self.root, "version.inc").decode()
