@@ -105,7 +105,7 @@ work, and spend your time only on what they report as an unknown conflict:
 
 ```bash
 just cosmo-rebase-check $TAG        # dry run, no ref moved: one row per branch, clean / auto-resolved / CONFLICT + files
-just cosmo-integrate                # rebuild the DEV integration locally; --push then --build to push and start build_all
+just cosmo-integrate                # rebuild the DEV integration locally; --push --build: push it and cosmyx-ci/<BASE>, build through a draft PR
 ```
 
 They resolve by themselves the CHANGELOG slots, the `SLOTS_BY_AREA` list of `test_foundation.py`, the slot list
@@ -226,10 +226,19 @@ step 5 for it, then rebuild `integration/<tag>` from `$BASE`.
 
 ```bash
 git push --force-with-lease origin integration/$TAG     # first push: plain git push -u origin integration/$TAG
-gh workflow run build_all.yml --ref integration/$TAG -R Cosmyx/OrcaSlicer
+git push --force origin "$BASE:refs/heads/cosmyx-ci/$TAG"  # marks the base commit
+gh pr create -R Cosmyx/OrcaSlicer --draft --base cosmyx-ci/$TAG --head integration/$TAG \
+  --title "ci: integration build on $TAG (never merge)" --body "Integration build only. Never merge."
 gh run list --workflow build_all.yml --branch integration/$TAG -R Cosmyx/OrcaSlicer --limit 3
 gh run watch <run id> -R Cosmyx/OrcaSlicer --exit-status    # run it in the background, do not poll in a loop
 ```
+
+Integration builds no longer use `workflow_dispatch` (decision 0215 amended, decision 0216): a never-merged draft PR
+with head = the integration branch and base = `cosmyx-ci/<BASE>` (a branch at the base commit) runs `build_all` in
+upstream pull request mode (macOS arm64 only, arm64 DMG, no universal app). It needs the `cosmyx-ci/**` line of
+`ci/cosmyx-arm64-pr-builds` in the integration tree. Reuse an open build PR (a push restarts its run). Never close
+it while its run is going: `cancel_closed_pr_builds.yml` cancels the build. `just cosmo-integrate --push --build`
+does all of this for the DEV integration.
 
 Green means: Windows, macOS and Linux builds, unit tests (upstream suites plus `cosmyx_tests`), and the
 packaging steps. Then, on the integration tree, locally:
@@ -242,9 +251,10 @@ packaging steps. Then, on the integration tree, locally:
 - With the run id: `just artifact-checks-local <run id>` where possible (the `cosmyx-artifact-checks` and
   `cosmyx-gui-goldens` workflows only start by themselves once they are on `DEV`).
 
-macOS runners are often cancelled for lack of capacity: `gh run rerun <run id> --failed -R Cosmyx/OrcaSlicer`,
-and say so. Flatpak failures are tracked separately (known Boost configure failure in the Flatpak deps, see
-`conflits.md`): report them, they do not block. Any other red job is a failure: find the branch at fault
+macOS runners are often cancelled for lack of capacity: once `ci/cosmyx-mac-retry` (#116) is in `DEV` the run is
+rerun by itself (15-minute wait, up to attempt 5); until then, or past attempt 5,
+`gh run rerun <run id> --failed -R Cosmyx/OrcaSlicer`, and say so. Flatpak failures are tracked separately
+(known Boost configure failure in the Flatpak deps, see `conflits.md`): report them, they do not block. Any other red job is a failure: find the branch at fault
 (sheet risk zones, step 6 if needed), fix it there, rebuild integration, rebuild.
 
 Leave the worktrees until the report is written; then remove the ones whose branch is pushed or abandoned
