@@ -45,7 +45,9 @@ here; see the upstream release notes.
   and `just cosmo-rebase-check TAG`, a dry run that replays every branch onto
   an upstream tag and prints a conflict table. `--push --build` builds the
   integration through a never-merged draft pull request into
-  `cosmyx-ci/<BASE>`, a branch pushed at the base commit. The branch list and
+  `cosmyx-ci/<BASE>`, a branch pushed at the base commit, which the Cosmyx
+  dev build workflow builds; `--os LIST` picks its OSes through the pull
+  request's `build:*` labels. The branch list and
   order live in `scripts/cosmyx/integrate/branches.json`. Pull request:
   https://github.com/Cosmyx/OrcaSlicer/pull/115.
   Decisions: 0215.

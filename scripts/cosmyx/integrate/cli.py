@@ -1,6 +1,6 @@
 """Pre-chew the integration and rebase work of the Cosmyx branch stack.
 
-    python scripts/cosmyx/integrate/cli.py integrate [BASE] [--push [--build]]
+    python scripts/cosmyx/integrate/cli.py integrate [BASE] [--push [--build [--os LIST]]]
     python scripts/cosmyx/integrate/cli.py rebase-check TAG
 
 `integrate` rebuilds a throwaway integration branch in its own worktree
@@ -26,11 +26,16 @@ Nothing is pushed unless `--push`, which pushes the branch (never the
 `cosmyx-ci/<BASE>` (BASE's commit, the base of the build pull request)
 atomically, each with force-with-lease on its old remote tip. `--build` builds
 through a never-merged draft pull request from the branch into
-`cosmyx-ci/<BASE>`: build_all runs on pull requests to `cosmyx-ci/**`. The
-pull request is created after the push (its opening starts the run) or, when
-already open, reused (the push started the run); open ones from the same
-branch into another `cosmyx-ci/` base are closed before the push so they do
-not build too. Pull requests from other branches are never touched.
+`cosmyx-ci/<BASE>`: the "Cosmyx dev build" workflow runs on pull requests to
+`cosmyx-ci/**`. The pull request is created after the push (its opening starts
+the run) or, when already open, reused (the push started the run); open ones
+from the same branch into another `cosmyx-ci/` base are closed before the push
+so they do not build too. Pull requests from other branches are never touched.
+`--os LIST` (comma list of linux, windows, macos-arm64, macos-x86_64) sets the
+pull request's `build:*` labels, which pick the OSes the workflow builds, to
+exactly that list: on a reused pull request before the push, so that the push
+builds that set; on a new one at its creation. Without `--os` the labels are
+left as they are (a new pull request has none: the workflow's default set).
 
 `rebase-check` is a dry run: in a temporary worktree, it replays each branch's
 own commits onto `refs/tags/upstream/TAG` (stacked children onto their
@@ -64,8 +69,14 @@ DATA_FILE = Path(__file__).resolve().parent / "branches.json"
 UPSTREAM_URL = "https://github.com/OrcaSlicer/OrcaSlicer.git"
 INTEGRATION_BRANCH = "ci/cosmyx-integration"
 INTEGRATION_WORKTREE = Path(".worktrees") / "integration"
-# Branches a build pull request targets; build_all triggers on pull requests to them.
+# Branches a build pull request targets; "Cosmyx dev build" triggers on pull requests to them.
 CI_BASE_PREFIX = "cosmyx-ci/"
+DEV_BUILD_WORKFLOW = "cosmyx-dev-build.yml"
+# Pull request labels that pick the OSes of a dev build (decision 0218), in
+# the order --os documents them.
+BUILD_LABEL_PREFIX = "build:"
+BUILD_OSES = ("linux", "windows", "macos-arm64", "macos-x86_64")
+BUILD_LABEL_COLOR = "1d76db"
 # Settings for every merge or cherry-pick of a run: rerere replays recorded
 # resolutions. The default conflict style is forced so that rerere finds the
 # resolutions recorded by hand merges (a diff3 hunk has another conflict id);
@@ -415,7 +426,7 @@ def open_build_prs(gh: Callable, args, ci_branch: str, out) -> dict | None:
     Any other pull request (another integration branch's) is left alone.
     """
     listed = json.loads(gh_or_fail(gh, ["pr", "list", "--head", args.branch, "--state", "open",
-                                        "--json", "number,url,baseRefName,headRefName"], args.repo) or "[]")
+                                        "--json", "number,url,baseRefName,headRefName,labels"], args.repo) or "[]")
     reuse = None
     for pr in listed:
         if pr.get("headRefName", args.branch) != args.branch:
@@ -430,12 +441,57 @@ def open_build_prs(gh: Callable, args, ci_branch: str, out) -> dict | None:
     return reuse
 
 
-def create_build_pr(gh: Callable, args, ci_branch: str, base_label: str) -> str:
+def parse_oses(value: str | None) -> list[str] | None:
+    """The `build:*` labels --os asks for, in BUILD_OSES order; None without --os."""
+    if value is None:
+        return None
+    oses = [item.strip() for item in value.split(",") if item.strip()]
+    unknown = sorted(set(oses) - set(BUILD_OSES))
+    if unknown or not oses:
+        raise SetupError(f"--os takes a comma list among {', '.join(BUILD_OSES)}"
+                         + (f"; unknown: {', '.join(unknown)}" if unknown else ""))
+    return [BUILD_LABEL_PREFIX + name for name in BUILD_OSES if name in oses]
+
+
+def ensure_build_labels(gh: Callable, args, labels: list[str], out) -> None:
+    """Create the `build:*` labels the repository does not have yet."""
+    listed = json.loads(gh_or_fail(gh, ["label", "list", "--search", BUILD_LABEL_PREFIX, "--limit", "100",
+                                        "--json", "name"], args.repo) or "[]")
+    existing = {label["name"] for label in listed}
+    for label in labels:
+        if label not in existing:
+            gh_or_fail(gh, ["label", "create", label, "--color", BUILD_LABEL_COLOR, "--description",
+                            f"Cosmyx dev build: build {label[len(BUILD_LABEL_PREFIX):]}"], args.repo)
+            print(f"Created label {label}.", file=out)
+
+
+def sync_build_labels(gh: Callable, args, pr: dict, labels: list[str], out) -> bool:
+    """Set the pull request's `build:*` labels to exactly labels; True when they changed."""
+    current = {label["name"] for label in pr.get("labels") or []
+               if label["name"].startswith(BUILD_LABEL_PREFIX)}
+    add = [label for label in labels if label not in current]
+    remove = sorted(current - set(labels))
+    if not add and not remove:
+        return False
+    command = ["pr", "edit", str(pr["number"])]
+    if add:
+        command += ["--add-label", ",".join(add)]
+    if remove:
+        command += ["--remove-label", ",".join(remove)]
+    gh_or_fail(gh, command, args.repo)
+    print(f"Build labels of {pr['url']}: {', '.join(labels)}.", file=out)
+    return True
+
+
+def create_build_pr(gh: Callable, args, ci_branch: str, base_label: str, labels: list[str] | None) -> str:
     body = (f"Build vehicle for `{args.branch}`, the integration of every Cosmyx pull request branch on "
-            f"{base_label}. It runs build_all (pull requests to `cosmyx-ci/**`). Never merge this pull "
-            f"request: `{ci_branch}` only marks the base commit. Rebuilt by `just cosmo-integrate`.")
+            f"{base_label}. It runs the Cosmyx dev build (pull requests to `cosmyx-ci/**`; `build:*` labels "
+            f"pick the OSes). Never merge this pull request: `{ci_branch}` only marks the base commit. "
+            f"Rebuilt by `just cosmo-integrate`.")
     command = ["pr", "create", "--draft", "--head", args.branch, "--base", ci_branch,
                "--title", f"ci: integration build on {base_label} (never merge)", "--body", body]
+    for label in labels or []:
+        command += ["--label", label]
     return gh_or_fail(gh, command, args.repo).strip().splitlines()[-1]
 
 
@@ -446,6 +502,9 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     entries = [entry for entry in entries if entry.name not in set(args.skip or [])]
     if args.build and not args.push:
         raise SetupError("--build needs --push")
+    if args.os is not None and not args.build:
+        raise SetupError("--os needs --build")
+    labels = parse_oses(args.os)
     if not args.no_fetch:
         git.run("fetch", "-q", "--prune", remote)
     base = args.base or f"{remote}/{data['base']}"
@@ -529,6 +588,12 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
         return 0
     gh = gh or run_gh
     reuse = open_build_prs(gh, args, ci_branch, out) if args.build else None
+    relabeled = False
+    if labels is not None:
+        ensure_build_labels(gh, args, labels, out)
+        if reuse:
+            # Before the push, so that the push builds the new set.
+            relabeled = sync_build_labels(gh, args, reuse, labels, out)
     old_ci = git.sha(f"refs/remotes/{remote}/{ci_branch}")
     wt.run("push", "--atomic", f"--force-with-lease=refs/heads/{args.branch}:{old_tip or ''}",
            f"--force-with-lease=refs/heads/{ci_branch}:{old_ci or ''}", remote,
@@ -539,14 +604,19 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     base_label = ci_branch[len(CI_BASE_PREFIX):]
     if reuse:
         url = reuse["url"]
-        started = "the push started build_all" if tip != old_tip else \
-            "the head did not move, so no new run: rerun the last one with gh run rerun"
+        if tip != old_tip:
+            started = "the push started the Cosmyx dev build"
+        elif relabeled:
+            started = "the head did not move; the label change started the Cosmyx dev build"
+        else:
+            started = "the head did not move, so no new run: rerun the last one with gh run rerun"
         print(f"Build pull request (reused): {url}; {started}.", file=out)
     else:
-        url = create_build_pr(gh, args, ci_branch, base_label)
-        print(f"Build pull request (created, draft): {url}; its opening started build_all.", file=out)
+        url = create_build_pr(gh, args, ci_branch, base_label, labels)
+        print(f"Build pull request (created, draft): {url}; its opening started the Cosmyx dev build.", file=out)
     repo = f" --repo {args.repo}" if args.repo else ""
-    print(f"Run: {url}/checks, or gh run list --workflow build_all.yml --branch {args.branch}{repo}", file=out)
+    print(f"Run: {url}/checks, or gh run list --workflow {DEV_BUILD_WORKFLOW} --branch {args.branch}{repo}",
+          file=out)
     return 0
 
 
@@ -816,6 +886,9 @@ def parser() -> argparse.ArgumentParser:
                      help=f"push the branch and {CI_BASE_PREFIX}<BASE> with --force-with-lease on their old tips")
     one.add_argument("--build", action="store_true",
                      help=f"with --push, build through a draft pull request into {CI_BASE_PREFIX}<BASE>")
+    one.add_argument("--os", metavar="LIST",
+                     help=f"with --build, build only these OSes (comma list among {', '.join(BUILD_OSES)}): "
+                          f"sets the build pull request's {BUILD_LABEL_PREFIX}* labels to exactly that list")
     one.add_argument("--repo", default=os.environ.get("COSMYX_REPO"), help="GitHub repository for --build")
     two = sub.add_parser("rebase-check", parents=[common], help="dry-run rebase onto an upstream tag")
     two.add_argument("tag")
