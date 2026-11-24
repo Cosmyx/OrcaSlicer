@@ -75,3 +75,9 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+
+<!-- cosmyx-slot: T22 -->
+- A "Build all" run whose macOS jobs were cancelled because GitHub could not
+  acquire a hosted runner now reruns its failed jobs by itself, after a
+  15-minute wait and up to the fifth attempt. Runs cancelled by a user or by a
+  newer push are left alone. Pull request: PR_LINK. Decisions: 0217.
