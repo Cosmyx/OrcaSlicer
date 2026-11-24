@@ -230,9 +230,42 @@ class MacTest(Workspace):
             self.run_stage("mac-app", self.env("macOS", VER=DEV_TAG))
 
     def test_per_arch_leg_does_nothing(self) -> None:
+        # A push leg packs its bundle for the combine job: no DMG of its own, nothing renamed.
+        app = self.touch("build/arm64/OrcaSlicer/OrcaSlicer.app/Contents/MacOS/OrcaSlicer")
         self.assertEqual(self.run_stage("mac-app", self.env("macOS", VER=DEV_TAG)), {})
         self.assertEqual(self.run_stage("mac-upload", self.env("macOS", VER=DEV_TAG)), {})
         self.assertEqual(self.commands, [])
+        self.assertTrue(app.is_file())
+
+    def test_pull_request_arch_dmg_renamed(self) -> None:
+        # A pull request builds no universal app: each arch leg ships its own DMG.
+        q = lambda path: shlex.quote(str(path))  # noqa: E731
+        for arch in ("arm64", "x86_64"):
+            with self.subTest(arch=arch):
+                self.setUp()
+                bundle = self.ws / f"build/{arch}/OrcaSlicer"
+                self.touch(f"build/{arch}/OrcaSlicer/OrcaSlicer.app/Contents/MacOS/OrcaSlicer")
+                self.touch(f"OrcaSlicer_Mac_{arch}_{DEV_TAG}.dmg")
+                env = self.env("macOS", VER=DEV_TAG)
+                self.assertEqual(self.run_stage("mac-app", env), {})
+                self.assertEqual(sorted(path.name for path in bundle.iterdir()), ["CosmoSlice.app"])
+                self.assertEqual(list(self.ws.glob("*.dmg")), [])
+                [command] = self.commands
+                staging = self.ws / f"build/{arch}/CosmoSlice_dmg"
+                self.assertIn(f"ditto {q(bundle / 'CosmoSlice.app')} {q(staging / 'CosmoSlice.app')}", command)
+                self.assertTrue(command.endswith(f"create_dmg CosmoSlice {q(staging)} {q(self.ws / f'CosmoSlice_Mac_{arch}_{DEV_TAG}.dmg')}"))
+                self.touch(f"CosmoSlice_Mac_{arch}_{DEV_TAG}.dmg")  # what create_dmg writes
+                out = self.run_stage("mac-upload", env)
+                self.assertEqual(out["dmg_name"], f"CosmoSlice_Mac_{arch}_{DEV_TAG}")
+                self.assertEqual(Path(out["dmg_path"]), self.ws / f"CosmoSlice_Mac_{arch}_{DEV_TAG}.dmg")
+                self.assertEqual(out["delete"], [f"OrcaSlicer_Mac_{arch}_{DEV_TAG}"])
+                self.tearDown()
+
+    def test_pull_request_arch_upload_without_the_dmg_fails(self) -> None:
+        self.touch("build/arm64/OrcaSlicer/OrcaSlicer.app/Contents/MacOS/OrcaSlicer")
+        self.touch(f"OrcaSlicer_Mac_arm64_{DEV_TAG}.dmg")
+        with self.assertRaisesRegex(pn.PackageError, "mac-app"):
+            self.run_stage("mac-upload", self.env("macOS", VER=DEV_TAG))
 
     def test_upload_names_the_dmg_and_deletes_the_upstream_ones(self) -> None:
         (self.ws / self.BUNDLE).mkdir(parents=True)
@@ -323,6 +356,9 @@ class WiringTest(unittest.TestCase):
         for sign in (name for name in names if name.startswith("Cosmyx sign and notarize macOS")):
             self.assert_between(names, "Cosmyx package names mac-app # Cosmyx", None, sign)
         self.assert_between(names, "Cosmyx package names mac-upload # Cosmyx", "Upload OrcaSlicer_profile_validator DMG mac", "Deploy Mac release")
+        # The per-arch (pull request) DMG is built and uploaded before both hooks.
+        self.assert_between(names, "Cosmyx package names mac-app # Cosmyx", "Create DMG ${{ inputs.arch }} without notary", None)
+        self.assert_between(names, "Cosmyx package names mac-upload # Cosmyx", "Upload DMG ${{ inputs.arch }}", None)
         self.assert_between(names, "Cosmyx package names windows # Cosmyx", "Build MSIX Store package Win", "Upload artifacts Win MSIX")
         self.assert_between(names, "Cosmyx package names windows # Cosmyx", "Upload OrcaSlicer_profile_validator Win", None)
         self.assert_between(names, "Cosmyx package names linux # Cosmyx", "Build orca_custom_preset_tests", "Upload artifacts Ubuntu")

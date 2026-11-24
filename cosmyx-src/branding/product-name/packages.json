@@ -3,12 +3,12 @@
   "upstream": "OrcaSlicer",
   "product": "CosmoSlice",
   "mac": {
-    "bundle_dir": "build/universal/OrcaSlicer",
+    "bundle_dir": "build/{arch}/OrcaSlicer",
     "app": "{product}.app",
-    "dmg": "{product}_Mac_universal_{ver}.dmg",
-    "dmg_staging": "build/universal/{product}_dmg",
+    "dmg": "{product}_Mac_{arch}_{ver}.dmg",
+    "dmg_staging": "build/{arch}/{product}_dmg",
     "volume": "{product}",
-    "artifact": "{product}_Mac_universal_{ver}",
+    "artifact": "{product}_Mac_{arch}_{ver}",
     "validator_app": "{upstream}_profile_validator.app",
     "validator_dmg": "{upstream}_profile_validator_Mac_universal_{ver}.dmg",
     "validator_artifact": "{upstream}_profile_validator_Mac_universal_DMG_{ver}"
