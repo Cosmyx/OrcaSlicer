@@ -80,4 +80,4 @@ here; see the upstream release notes.
   a draft pull request based on a `cosmyx-ci/<base>` branch: macOS builds
   arm64 only, waits in the macOS runner queue and uploads an arm64 DMG,
   instead of the arm64, x86_64 and universal builds of a manual run.
-  Decisions: 0216.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/117. Decisions: 0216.
