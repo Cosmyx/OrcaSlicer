@@ -37,7 +37,9 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T20 -->
 - Add `just cosmo-integrate [BASE]`, which rebuilds a throwaway integration
   branch (`ci/cosmyx-integration` on DEV, `integration/<BASE>` on any other
-  base, so both coexist) from every Cosmyx pull request branch and
+  base, so both coexist) from every Cosmyx pull request branch (on a base
+  other than DEV, each branch's own commits are first replayed onto it as
+  `rebase/<BASE>/<branch>`, so DEV's newer commits are not dragged in) and
   resolves the known conflicts (changelog slots, slot lists, branding tables,
   recorded resolutions) inside the merge commits, stopping on any other one,
   and `just cosmo-rebase-check TAG`, a dry run that replays every branch onto

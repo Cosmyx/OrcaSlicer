@@ -446,6 +446,135 @@ class IntegrateTests(Sandbox):
         self.assertFalse((self.work / ".worktrees").exists())
 
 
+class ReplayIntegrateTests(Sandbox):
+    """`integrate` on a base that is not the list's: replay, then merge the replayed branches."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        start = self.base
+        # DEV moved on after the release: a commit the tag does not have.
+        self.commit({"src/dev-only.txt": "dev\n"}, "dev only")
+        self.push("DEV")
+        self.base = self.git(["rev-parse", "HEAD"])
+        self.foundation()
+        # Release tag on the old DEV, with one upstream change.
+        self.git(["checkout", "-q", "-B", "release", start])
+        self.commit({"src/app.txt": "one\ntwo upstream\nthree\n", "src/up.txt": "up\n"}, "upstream release")
+        self.git(["tag", "v1"])
+        self.git(["checkout", "-q", "DEV"])
+        self.git(["fetch", "-q", "origin"])
+
+    def run_v1(self, *extra: str, **kwargs) -> tuple[int, str]:
+        return self.run_cli(["integrate", "v1", "--no-fetch", "--no-train", "--data", self.data(), *extra], **kwargs)
+
+    def file_at(self, ref: str, path: str) -> str:
+        return self.git(["show", f"{ref}:{path}"])
+
+    def test_branches_are_replayed_onto_the_base_then_merged(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.branch("feat/a-child", "feat/a", {"src/child.txt": "c\n"}, from_ref=self.git(["rev-parse", "origin/feat/a"]))
+        code, out = self.run_v1("--push")
+        self.assertEqual(code, 0, out)
+        v1 = self.git(["rev-parse", "v1^{commit}"])
+        # Each branch's own commits, on BASE (foundation) or on its replayed parent.
+        self.assertEqual(self.git(["rev-parse", "rebase/v1/chore/foundation~1"]), v1)
+        self.assertEqual(self.git(["rev-parse", "rebase/v1/feat/a~1"]), self.git(["rev-parse", "rebase/v1/chore/foundation"]))
+        self.assertEqual(self.git(["rev-parse", "rebase/v1/feat/a-child~1"]), self.git(["rev-parse", "rebase/v1/feat/a"]))
+        # The integration merges the replayed branches, like the hand-made release integrations.
+        subjects = self.git(["log", "--first-parent", "--format=%s", "integration/v1"]).splitlines()
+        self.assertEqual(subjects[:3], ["Merge branch 'rebase/v1/feat/a-child' into integration/v1",
+                                        "Merge branch 'rebase/v1/feat/a' into integration/v1",
+                                        "Merge branch 'rebase/v1/chore/foundation' into integration/v1"])
+        self.assertEqual(self.git(["rev-parse", "integration/v1~3"]), v1)
+        # DEV's own commits are not dragged in.
+        self.assertNotIn("src/dev-only.txt", self.git(["ls-tree", "-r", "--name-only", "integration/v1"]))
+        self.assertEqual(self.file_at("integration/v1", "src/child.txt"), "c")
+        self.assertEqual(self.file_at("integration/v1", "src/app.txt"), "one\ntwo upstream\nthree")
+        # Only the integration branch and the CI base are pushed, not the rebase branches.
+        self.assertEqual(self.remote_sha("integration/v1"), self.git(["rev-parse", "integration/v1"]))
+        self.assertEqual(self.git(["ls-remote", str(self.origin), "refs/heads/rebase/*"]), "")
+        self.assertIn("replayed 1", out)
+
+    def remote_sha(self, branch: str) -> str | None:
+        line = self.git(["ls-remote", str(self.origin), f"refs/heads/{branch}"])
+        return line.split()[0] if line else None
+
+    def test_unknown_replay_conflict_stops_and_a_recorded_resolution_is_replayed(self) -> None:
+        self.branch("feat/clash", "DEV", {"src/app.txt": "one\ntwo mine\nthree\n"}, from_ref=self.base)
+        self.branch("feat/later", "DEV", {"src/later.txt": "l\n"}, from_ref=self.base)
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        self.assertIn("UNKNOWN CONFLICT in origin/feat/clash", out)
+        self.assertIn("src/app.txt", out)
+        self.assertIn("rerere", out)
+        worktree = self.work / ".worktrees" / "integration-v1"
+        wt = cli.Git(worktree)
+        # The cherry-pick is left in progress so that the resolution can be recorded.
+        self.assertIsNotNone(wt.sha("CHERRY_PICK_HEAD"))
+        self.assertIsNone(cli.Git(self.work).sha("refs/heads/rebase/v1/feat/later"))
+        (worktree / "src" / "app.txt").write_bytes(b"one\ntwo upstream\ntwo mine\nthree\n")
+        self.git(["-c", "rerere.enabled=true", "rerere"], cwd=worktree)
+        self.git(["cherry-pick", "--abort"], cwd=worktree)
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        self.assertIn("rerere", out)
+        self.assertEqual(self.file_at("integration/v1", "src/app.txt"), "one\ntwo upstream\ntwo mine\nthree")
+        self.assertEqual(self.file_at("integration/v1", "src/later.txt"), "l")
+
+    def test_known_conflict_kinds_are_resolved_during_the_replay(self) -> None:
+        self.branch("feat/a", "DEV", {"CHANGELOG.md": self.changelog_with(("T17", "a."))}, from_ref=self.base)
+        # A sibling written against an older feat/a: its replay conflicts in the changelog slots.
+        self.git(["checkout", "-q", "-B", "feat/a2", self.base])
+        self.commit({"CHANGELOG.md": self.changelog_with(("T17", "a."))}, "old a")
+        self.commit({"CHANGELOG.md": self.changelog_with(("T17", "a."), ("T21", "a2."))}, "a2")
+        self.push("feat/a2")
+        self.git(["checkout", "-q", "DEV"])
+        self.rows.append({"name": "feat/a2", "parent": "feat/a"})
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(list(resolve.marker_order(self.file_at("integration/v1", "CHANGELOG.md"))),
+                         ["T0", "T21", "T17", "T5"])
+
+    def test_integration_branch_held_by_another_clean_worktree_is_reused(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        holder = self.work / ".worktrees" / "rebase-v1" / "integration"
+        self.git(["worktree", "add", "-q", "-b", "integration/v1", str(holder), "v1"])
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        self.assertIn(str(holder), out)
+        self.assertFalse((self.work / ".worktrees" / "integration-v1").exists())
+        self.assertEqual(self.file_at("integration/v1", "src/a.txt"), "a")
+        self.assertEqual(self.git(["status", "--porcelain"], cwd=holder), "")
+
+    def test_integration_branch_held_by_a_dirty_worktree_is_refused_with_its_path(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        holder = self.work / ".worktrees" / "rebase-v1" / "integration"
+        self.git(["worktree", "add", "-q", "-b", "integration/v1", str(holder), "v1"])
+        (holder / "src" / "app.txt").write_bytes(b"dirty\n")
+        with self.assertRaises(cli.SetupError) as raised:
+            self.run_v1()
+        self.assertIn(str(holder), str(raised.exception))
+
+    def test_rebase_branch_held_by_a_clean_worktree_moves_with_it(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        holder = self.work / ".worktrees" / "rebase-v1" / "feat-a"
+        self.git(["worktree", "add", "-q", "-b", "rebase/v1/feat/a", str(holder), "v1"])
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.git(["rev-parse", "HEAD"], cwd=holder), self.git(["rev-parse", "rebase/v1/feat/a"]))
+        self.assertEqual(self.git(["status", "--porcelain"], cwd=holder), "")
+        self.assertEqual((holder / "src" / "a.txt").read_text(encoding="utf-8"), "a\n")
+
+    def test_rebase_branch_held_by_a_dirty_worktree_is_refused_with_its_path(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        holder = self.work / ".worktrees" / "rebase-v1" / "feat-a"
+        self.git(["worktree", "add", "-q", "-b", "rebase/v1/feat/a", str(holder), "v1"])
+        (holder / "src" / "app.txt").write_bytes(b"dirty\n")
+        with self.assertRaises(cli.SetupError) as raised:
+            self.run_v1()
+        self.assertIn(str(holder), str(raised.exception))
+
+
 class RebaseCheckTests(Sandbox):
     def setUp(self) -> None:
         super().setUp()

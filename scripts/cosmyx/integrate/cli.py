@@ -7,11 +7,19 @@
 (created, or reused when clean) from BASE (default `origin/DEV`): for the
 list's base (DEV) `ci/cosmyx-integration` in `.worktrees/integration`, for any
 other BASE `integration/<BASE>` in `.worktrees/integration-<BASE>`, so that
-the integrations of different bases coexist. It merges `origin/<branch>` with `--no-ff` in the order
-of `branches.json`. Known conflict kinds are resolved inside the merge commit
-(see resolve.py; `rerere` is on for the run). Any other conflict aborts that
-merge, prints the branch, the files and a summary of their hunks, and exits 1.
-Nothing is pushed unless `--push`, which pushes the branch and
+the integrations of different bases coexist. For the list's base it merges
+`origin/<branch>` with `--no-ff` in the order of `branches.json`. For any other
+base the branches would drag in every DEV commit BASE lacks, so each branch's
+own commits are first replayed onto BASE (stacked children onto their replayed
+parent) as the local branch `rebase/<BASE>/<branch>`, and those are merged.
+A branch already checked out in another worktree is moved there, only when
+that worktree is clean. Known conflict kinds are resolved inside the merge or
+cherry-pick commit (see resolve.py; `rerere` is on for the run). Any other
+conflict aborts that merge (a cherry-pick is left in progress, so that its
+hand resolution can be recorded by rerere), prints the branch, the files and
+a summary of their hunks, and exits 1.
+Nothing is pushed unless `--push`, which pushes the branch (never the
+`rebase/<BASE>/*` branches) and
 `cosmyx-ci/<BASE>` (BASE's commit, the base of the build pull request)
 atomically, each with force-with-lease on its old remote tip. `--build` builds
 through a never-merged draft pull request from the branch into
@@ -308,6 +316,33 @@ def train_rerere(wt: Git, ref: str, base: str, out) -> int:
 # integrate
 
 
+def branch_holder(git: Git, branch: str) -> Path | None:
+    """The worktree that has `branch` checked out, if any."""
+    current = None
+    for line in git.out("worktree", "list", "--porcelain").splitlines():
+        if line.startswith("worktree "):
+            current = Path(line[len("worktree "):])
+        elif line == f"branch refs/heads/{branch}":
+            return current
+    return None
+
+
+def ensure_clean(wt: Git, why: str) -> None:
+    if wt.out("status", "--porcelain") or wt.sha("MERGE_HEAD") or wt.sha("CHERRY_PICK_HEAD"):
+        raise SetupError(f"{wt.cwd} is not clean ({why}): commit, stash or clean it first")
+
+
+def set_branch(git: Git, branch: str, sha: str) -> None:
+    """Point a local branch at sha; a worktree holding it is moved along, only when clean."""
+    holder = branch_holder(git, branch)
+    if holder is None:
+        git.run("branch", "-f", branch, sha)
+        return
+    wt = Git(holder)
+    ensure_clean(wt, f"it has {branch} checked out")
+    wt.run("reset", "-q", "--hard", sha)
+
+
 def main_root(git: Git) -> Path:
     """The main checkout (where .worktrees lives), from any of its worktrees."""
     common = Path(git.out("rev-parse", "--path-format=absolute", "--git-common-dir"))
@@ -320,8 +355,7 @@ def prepare_worktree(git: Git, path: Path, branch: str, base: str) -> Git:
         top = wt.run("rev-parse", "--show-toplevel", check=False).stdout.strip()
         if not top or Path(top).resolve() != path.resolve():
             raise SetupError(f"{path} exists and is not a worktree of this repository")
-        if wt.out("status", "--porcelain") or wt.sha("MERGE_HEAD") or wt.sha("CHERRY_PICK_HEAD"):
-            raise SetupError(f"{path} is not clean: commit, stash or clean it first")
+        ensure_clean(wt, f"it is the worktree of {branch}")
         wt.run("checkout", "-q", "-B", branch, base)
         return wt
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -426,19 +460,40 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
             print(f"warning: {remote}/{entry.name} not found, skipped (not pushed yet?)", file=out)
     entries = [entry for entry in entries if tips[entry.name]]
     old_tip = git.sha(f"refs/remotes/{remote}/{args.branch}")
-    wt = prepare_worktree(git, main_root(git) / (args.worktree or default_worktree), args.branch, base_sha)
+    worktree = main_root(git) / (args.worktree or default_worktree)
+    holder = branch_holder(git, args.branch)
+    if holder and holder.resolve() != worktree.resolve():
+        if args.worktree:
+            raise SetupError(f"{args.branch} is checked out in {holder}, not in {worktree}")
+        # Reuse the worktree that already holds the branch (a hand-made
+        # integration's): git refuses a branch checked out twice.
+        print(f"{args.branch} is checked out in {holder}: that worktree is used.", file=out)
+        worktree = holder
+    wt = prepare_worktree(git, worktree, args.branch, base_sha)
     train = args.train or (f"refs/remotes/{remote}/{args.branch}" if not args.no_train else None)
     if train and git.sha(train):
         train_rerere(wt, train, base_sha, out)
         wt.run("checkout", "-q", "-f", "-B", args.branch, base_sha)
     print(f"{args.branch} reset to {base} ({base_sha[:10]}) in {wt.cwd}", file=out)
     rows: list[tuple[str, str, str]] = []
+    sources = {entry.name: f"{remote}/{entry.name}" for entry in entries}
+    notes: dict[str, str] = {}
+    if base_name(args.base or data["base"], remote) != data["base"]:
+        sources, notes, stopped = replay_branches(git, wt, data, entries, base_sha,
+                                                  base_name(args.base, remote), brand_hook, out)
+        if stopped:
+            return 1
+        wt.run("checkout", "-q", "-f", "-B", args.branch, base_sha)
     for entry in entries:
-        result = wt.run("merge", "--no-ff", "--no-commit", f"{remote}/{entry.name}", check=False)
+        if entry.name not in sources:
+            rows.append((entry.name, tips[entry.name][:10], notes[entry.name]))
+            continue
+        prefix = notes[entry.name] + "; merge " if entry.name in notes else ""
+        result = wt.run("merge", "--no-ff", "--no-commit", sources[entry.name], check=False)
         if not wt.sha("MERGE_HEAD"):
             if result.returncode != 0:
                 raise SetupError(f"merge of {entry.name} failed:\n{result.stdout}{result.stderr}")
-            rows.append((entry.name, tips[entry.name][:10], "already in"))
+            rows.append((entry.name, tips[entry.name][:10], prefix + "already in"))
             continue
         outcome = resolve_conflicts(wt, "MERGE_HEAD", brand_hook)
         if outcome.unknown:
@@ -450,7 +505,7 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
             return 1
         wt.run("commit", "-q", "--no-verify", "--no-edit")
         rows.append((entry.name, tips[entry.name][:10],
-                     "auto-resolved: " + ", ".join(outcome.kinds) if outcome.kinds else "clean"))
+                     prefix + ("auto-resolved: " + ", ".join(outcome.kinds) if outcome.kinds else "clean")))
     tip = wt.out("rev-parse", "HEAD")
     table(rows, ("Branch", "Tip", "Result"), out)
     print(f"{args.branch} = {tip[:10]} (remote {old_tip[:10] if old_tip else 'absent'})", file=out)
@@ -478,6 +533,48 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     repo = f" --repo {args.repo}" if args.repo else ""
     print(f"Run: {url}/checks, or gh run list --workflow build_all.yml --branch {args.branch}{repo}", file=out)
     return 0
+
+
+def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sha: str, name: str,
+                    brand_hook: BrandHook, out) -> tuple[dict[str, str], dict[str, str], bool]:
+    """Replay each branch's own commits onto BASE as `rebase/<name>/<branch>`, in list order.
+
+    Returns (branch to merge per entry, table note per entry, stopped). A
+    branch whose parent was not replayed gets a note and no branch to merge.
+    On an unknown conflict the cherry-pick is left in progress in wt, the
+    report says how to record its resolution, and stopped is True.
+    """
+    remote = data["remote"]
+    dev = git.sha(f"refs/remotes/{remote}/{data['base']}")
+    if not dev:
+        raise SetupError(f"{remote}/{data['base']} not found")
+    sources: dict[str, str] = {}
+    notes: dict[str, str] = {}
+    replayed: dict[str, str] = {}
+    for entry in entries:
+        tip = git.sha(f"refs/remotes/{remote}/{entry.name}")
+        parent, commits = own_commits(git, data, entry, tip, dev)
+        new_base = base_sha if parent is None else replayed.get(parent)
+        if commits is None or not new_base:
+            notes[entry.name] = f"SKIPPED (parent {parent} not replayed)"
+            continue
+        wt.run("checkout", "-q", "-f", "--detach", new_base)
+        try:
+            kinds, _ = replay(wt, commits, brand_hook, strict=True)
+        except ReplayStopped as stop:
+            subject = git.out("log", "-1", "--format=%s", stop.commit)
+            report_unknown(f"{remote}/{entry.name} ({tip[:10]}), replaying {stop.commit[:10]} \"{subject}\"",
+                           stop.outcome, out)
+            print(f"Stopped: the cherry-pick is left in progress in {wt.cwd}. To teach rerere the resolution, "
+                  f"edit the files there, run `git -c rerere.enabled=true rerere`, then `git cherry-pick --abort` "
+                  f"and run again: the replay picks the recorded resolution up. Nothing pushed.", file=out)
+            return sources, notes, True
+        head = wt.out("rev-parse", "HEAD")
+        replayed[entry.name] = head
+        sources[entry.name] = f"rebase/{name}/{entry.name}"
+        set_branch(git, sources[entry.name], head)
+        notes[entry.name] = f"replayed {len(commits)}" + (f" (auto-resolved: {', '.join(kinds)})" if kinds else "")
+    return sources, notes, False
 
 
 def run_gh(args: list[str]) -> subprocess.CompletedProcess:
@@ -515,8 +612,41 @@ def take_theirs(git: Git, paths: list[str]) -> None:
                 target.unlink()
 
 
-def replay(wt: Git, commits: list[str], brand_hook: BrandHook) -> tuple[list[str], list[str]]:
-    """Cherry-pick commits onto HEAD; return (auto-resolution kinds, conflicting files)."""
+class ReplayStopped(Exception):
+    """An unknown conflict while replaying `commit`; the cherry-pick is left in progress."""
+
+    def __init__(self, commit: str, outcome: Outcome) -> None:
+        super().__init__(commit)
+        self.commit = commit
+        self.outcome = outcome
+
+
+def own_commits(git: Git, data: dict, entry: Entry, tip: str, dev: str) -> tuple[str | None, list[str] | None]:
+    """(parent the branch is replayed onto, its own commits oldest first).
+
+    The foundation's own commits are those after its merge base with DEV and
+    it has no parent (None); any other branch's are those after its merge base
+    with its parent, the foundation for a DEV-parented branch. The commits are
+    None when the parent is not on the remote.
+    """
+    remote, foundation = data["remote"], data["foundation"]
+    if entry.name == foundation:
+        old_base, parent = git.out("merge-base", tip, dev), None
+    else:
+        parent = foundation if entry.parent == data["base"] else entry.parent
+        parent_tip = git.sha(f"refs/remotes/{remote}/{parent}")
+        if not parent_tip:
+            return parent, None
+        old_base = git.out("merge-base", tip, parent_tip)
+    return parent, git.out("rev-list", "--reverse", "--no-merges", f"{old_base}..{tip}").split()
+
+
+def replay(wt: Git, commits: list[str], brand_hook: BrandHook, strict: bool = False) -> tuple[list[str], list[str]]:
+    """Cherry-pick commits onto HEAD; return (auto-resolution kinds, conflicting files).
+
+    An unknown conflict is overridden with the commit's side (dry run), or,
+    when strict, raises ReplayStopped with the cherry-pick left in progress.
+    """
     kinds: list[str] = []
     conflicts: list[str] = []
     for commit in commits:
@@ -527,6 +657,8 @@ def replay(wt: Git, commits: list[str], brand_hook: BrandHook) -> tuple[list[str
             raise SetupError(f"cherry-pick {commit[:10]} failed:\n{result.stderr}")
         outcome = resolve_conflicts(wt, "CHERRY_PICK_HEAD", brand_hook)
         kinds.extend(kind for kind in outcome.kinds if kind not in kinds)
+        if outcome.unknown and strict:
+            raise ReplayStopped(commit, outcome)
         if outcome.unknown:
             paths = [path for path, _ in outcome.unknown]
             conflicts.extend(f"{path} ({commit[:10]})" for path in paths)
@@ -541,7 +673,7 @@ def replay(wt: Git, commits: list[str], brand_hook: BrandHook) -> tuple[list[str
 def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine) -> int:
     git = Git(Path(args.repo_root) if args.repo_root else Path.cwd())
     data, entries = load_branches(Path(args.data) if args.data else DATA_FILE)
-    remote, foundation = data["remote"], data["foundation"]
+    remote = data["remote"]
     entries = [entry for entry in entries if not entry.integration_only and entry.name not in set(args.skip or [])]
     if not args.no_fetch:
         git.run("fetch", "-q", "--prune", remote)
@@ -565,17 +697,11 @@ def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engi
                 # Not pushed yet: a warning, not a failure; its children show as SKIPPED.
                 rows.append((entry.name, "-", "missing on the remote, skipped", ""))
                 continue
-            if entry.name == foundation:
-                old_base, new_base, parent = git.out("merge-base", tip, dev), onto, None
-            else:
-                parent = foundation if entry.parent == data["base"] else entry.parent
-                parent_tip = git.sha(f"refs/remotes/{remote}/{parent}")
-                new_base = replayed.get(parent)
-                if not parent_tip or not new_base:
-                    rows.append((entry.name, tip[:10], f"SKIPPED (parent {parent} not replayed)", ""))
-                    continue
-                old_base = git.out("merge-base", tip, parent_tip)
-            commits = git.out("rev-list", "--reverse", "--no-merges", f"{old_base}..{tip}").split()
+            parent, commits = own_commits(git, data, entry, tip, dev)
+            new_base = onto if parent is None else replayed.get(parent)
+            if commits is None or not new_base:
+                rows.append((entry.name, tip[:10], f"SKIPPED (parent {parent} not replayed)", ""))
+                continue
             wt.run("checkout", "-q", "-f", "--detach", new_base)
             kinds, conflicts = replay(wt, commits, brand_hook)
             replayed[entry.name] = wt.out("rev-parse", "HEAD")
