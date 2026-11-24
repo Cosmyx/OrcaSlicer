@@ -41,7 +41,8 @@ here; see the upstream release notes.
   recorded resolutions) inside the merge commits, stopping on any other one,
   and `just cosmo-rebase-check TAG`, a dry run that replays every branch onto
   an upstream tag and prints a conflict table. The branch list and order live
-  in `scripts/cosmyx/integrate/branches.json`. Pull request: pending.
+  in `scripts/cosmyx/integrate/branches.json`. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/115.
   Decisions: 0215.
 
 ### libslic3r
