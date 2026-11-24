@@ -42,6 +42,24 @@ on the release base, and the wxWidgets fork has `SetAppearance`); Linux unit tes
 
 ## Log
 
+### 2026-11 ci/cosmyx-integration - DEV rebuild with the package names and three new branches
+- Symptom: rebuilding `ci/cosmyx-integration` from `origin/DEV` (`3838002bc8`) with every open PR tip (rows 1-28, then
+  #111) conflicted in: `build_orca.yml` (macos-signing against product-name's `mac-app` step, same gap after "Create DMG
+  without notary"); `test_foundation.py` `SLOTS_BY_AREA` and decision 0003 (install-paths, gui-goldens, cloud-server,
+  flatpak-off, raster-images); `CHANGELOG.md` (gui-goldens T16, flatpak-off T19 after T16a); `GUI_App.cpp` (goldens
+  include); `wiki/cosmyx/branding-assets/icons-n-z.md` and `web.md` (raster-images against svg-candidates). The manifests
+  `icons-n-z.json` and `web.json` merged without a text conflict. plugin-signing merged clean.
+- Cause: sibling branches adding slots or steps at the same place; generated tables rewritten by two branches.
+- Resolution: `rerere` (cache of the previous integration) replayed `build_orca.yml` (`mac-app` step first, then "Cosmyx
+  sign and notarize macOS", identical to the old integration's file) and the install-paths, goldens and cloud-server
+  unions. By hand: flatpak-off and raster-images unions (`CI-release` ... T15, T16a, T19; `GUI` ... T11f, T16, T18,
+  T11g, the order of the markers in `CHANGELOG.md`), T19 line after T16a's. Tables: `git checkout --ours`, then
+  `just brand-sync` (0 added, 0 updated, 0 dropped) and `just brand-table`, in the merge commit; 571 rows `validated`
+  before and after (34 logos, 524 svg, 13 rasters), 3 logos `missing`. Checks: `run_script_tests.py` 961 OK (6
+  skipped, no pwsh), `just decisions` OK, `brand-check` 0 errors, `brand-apply` (571 overlays) then `brand-revert`,
+  tree clean. Lesson: in the integration, regenerate tables in the merge commit, and count `validated` rows.
+- Commit: integration tip `36b5a412b5`, build run 45374695673.
+
 ### 2026-11 several branches - v2.5.2 pass replays the v2.5.1 resolutions
 - Symptom: on v2.5.2 the same conflicts and breaks as on v2.5.1: modify/delete of `build_flatpak.yml` (foundation
   `be423c6998`, translations `abcf9e2295`), the two `build_orca.yml` conflicts of windows-signing, the `Preferences.cpp`

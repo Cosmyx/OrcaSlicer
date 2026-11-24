@@ -74,6 +74,7 @@ Real proof only in CI: start `build_all` on DEV (`just build-all DEV`) with the 
 - CRLF/Windows: Pester and PowerShell files must stay LF in the repository (shared line-ending rule).
 - v2.5.1 pass (copy tip `a55da7f26c`): `137f9674b6` conflicted in `build_orca.yml` twice: the sign step's DEV context ("Save signed NSIS plugins") does not exist on the tag, so the step goes right before "Pack unit tests Win" with no upstream line taken from DEV; the verify step's context differs because the tag has "Pack app" and "Pack PDB" between "Verify Windows signatures" and "Upload artifacts Win zip". Verify was placed right after upstream's verify step (before "Pack app"). The later commits replayed clean and the wiring test passes.
 - v2.5.2 pass (copy tip `a88a79d944`): the two `build_orca.yml` conflicts replayed by `rerere` from the v2.5.1 resolution (v2.5.2 does not touch `build_orca.yml`); no manual edit.
+- `43e711ef86` (package-name follow-up, decision 0099 edited): the verify step looked only for `OrcaSlicer_Windows_Installer_*.exe` and silently skipped when none matched. `scripts/cosmyx/find_windows_installer.ps1` (Pester test `find_windows_installer.Tests.ps1`) now matches `*_Windows_Installer_*.exe`, so both `OrcaSlicer_` and `CosmoSlice_` prefixes pass, and fails when there is none; the action input `require-installer` is `false` only on self-hosted runners (one added `build_orca.yml` line).
 
 ## Shared files with other branches
 

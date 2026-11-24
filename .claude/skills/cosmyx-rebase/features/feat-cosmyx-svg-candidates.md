@@ -7,8 +7,9 @@ branch) only rewrites C++ and web sources, so these icons would stay teal. This 
 recoloured violet SVG per icon, an HTML review sheet to look at them before and after on light and dark backgrounds, and the
 command that moves approved ones into the branding overlay. It also contains the result: all 524 recolour icons accepted
 into `cosmyx-src/branding/overlay/` as `to-validate` rows (the user reviewed the three sheets and approved every candidate
-on 2026-11-19). Marking them `validated` remains the user's own `just brand-validate` command (decision 0121); an agent
-never does it. Decision 0131. At release time `missing` or `to-validate` rows make the build fail.
+on 2026-11-19). The user then marked all 524 `validated` (`9a9034d1a9`, "validate the 524 violet SVG icons"); marking
+rows `validated` is only ever the user's own `just brand-validate` command (decision 0121), never an agent's. A rebase or
+`brand-sync` keeps the status while `override_sha256` is unchanged. Decision 0131. At release time `missing` or `to-validate` rows make the build fail.
 
 ## Parent and dependencies
 
