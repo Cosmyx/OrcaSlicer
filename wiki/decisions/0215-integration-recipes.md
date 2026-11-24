@@ -38,6 +38,28 @@ it hides the conflicts that really need a person or an agent.
     (`integration/v2.5.2`). The DEV integration and a release integration
     therefore coexist, each with its own branch, worktree, base branch and
     build pull request. `--branch` and `--worktree` override the defaults.
+    When the integration branch is already checked out in another worktree
+    (a hand-made integration's, such as `.worktrees/rebase-v2.5.2/integration`),
+    that worktree is used, under the same rule (only when clean); with an
+    explicit `--worktree` elsewhere it stops and names the holder. Git refuses
+    a branch checked out twice, and reusing a clean worktree loses nothing,
+    while failing would force a person to remove it by hand on every run.
+  - On a base other than the list's (a release tag), merging the DEV-based
+    branches would drag in every DEV commit the base lacks (310 upstream
+    commits and 76 conflicting files for `v2.5.2`). There, each branch's own
+    commits (the same set `cosmo-rebase-check` replays) are first
+    cherry-picked onto BASE, stacked children onto their replayed parent, as
+    the local branch `rebase/<BASE>/<branch>`; then those branches are merged
+    with `--no-ff` in list order, giving the layout of the hand-made release
+    integrations (`Merge branch 'rebase/v2.5.2/<branch>' into
+    integration/v2.5.2`). A `rebase/` branch checked out in a worktree is
+    moved there only when that worktree is clean (the run stops naming it
+    otherwise). An unknown conflict during the replay stops the run with the
+    cherry-pick left in progress, so that a person resolves the files in
+    place and records them with `git rerere` before aborting it; the next run
+    replays the recorded resolution. The `rebase/` branches are not pushed:
+    they are throwaway and rebuilt on every run, and their commits already
+    reach the remote as the second parents of the integration merges.
   - `--build` builds the integration through a draft pull request from the
     branch into `cosmyx-ci/<BASE>`, titled `ci: integration build on <BASE>
     (never merge)`, which is never merged: `build_all.yml` runs on pull
@@ -79,8 +101,9 @@ it hides the conflicts that really need a person or an agent.
     that rerere finds resolutions recorded by hand merges.
   - A resolver accepts a hunk only when both sides purely added to the base;
     anything else is an unknown conflict.
-- Any other conflict aborts that merge and stops with the branch, the files
-  and a summary of their hunks, exit code 1.
+- Any other conflict aborts that merge (a replay's cherry-pick stays in
+  progress, see above) and stops with the branch, the files and a summary of
+  their hunks, exit code 1.
 - The branch list and order are data, `scripts/cosmyx/integrate/branches.json`
   (name, pull request, parent, `integration_only` for the rebase skill branch),
   not parsed from the rebase skill's `branches.md`: that file lives on a docs
@@ -96,8 +119,8 @@ it hides the conflicts that really need a person or an agent.
 
 - An agent only handles the conflicts the recipes cannot: the stop report
   names them.
-- `ci/cosmyx-integration` and `integration/<BASE>` stay throwaway branches;
-  the local branch is reset on every run. The `cosmyx-ci/*` branches and the draft build pull requests
+- `ci/cosmyx-integration`, `integration/<BASE>` and the local
+  `rebase/<BASE>/*` branches stay throwaway branches, reset on every run. The `cosmyx-ci/*` branches and the draft build pull requests
   are throwaway too: they only mark a base commit and carry the run.
 - The branch list must be kept in step with the open pull requests.
 - Removing it: delete `scripts/cosmyx/integrate/`,
