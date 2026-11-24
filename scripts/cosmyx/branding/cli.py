@@ -17,6 +17,11 @@ Commands:
   without the flag (or COSMYX_BRAND_VALIDATOR set), without a terminal, in CI,
   and without the typed confirmation. Agents never run it.
 - `render [--check]`: write the review tables, or check they are up to date.
+- `mode`: print the branding mode this environment selects (`strict` or
+  `tolerant`, see `brand_mode`); the cosmyx-prepare action exports it.
+
+`check` and `apply` take `--mode strict|tolerant` to override the detected
+mode (COSMYX_BRAND_MODE). Strict is the default.
 
 PATTERN is a group name (`logos`, `icons-a-m`, `icons-n-z`, `web`) or an
 fnmatch glob on the repository-relative path.
@@ -35,7 +40,7 @@ if __package__ in (None, ""):
     # Run as a script: make the package importable from scripts/cosmyx.
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from branding import BrandingError, errors, manifest, render  # noqa: E402
+from branding import MODE_ENV, MODES, BrandingError, brand_mode, errors, manifest, render  # noqa: E402
 from branding import apply as apply_module  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -47,8 +52,14 @@ def refuse_when_branded(root: Path) -> None:
         raise BrandingError("the tree is branded; run `just brand-revert` first")
 
 
-def cmd_check(root: Path, out) -> int:
-    findings = apply_module.check(root)
+def mode_env(mode: str | None) -> dict | None:
+    """The environment apply and check read: this process's, with the mode
+    forced when `--mode` is given."""
+    return None if mode is None else {**os.environ, MODE_ENV: mode}
+
+
+def cmd_check(root: Path, out, mode: str | None = None) -> int:
+    findings = apply_module.check(root, mode_env(mode))
     for finding in findings:
         out(str(finding))
     failed = errors(findings)
@@ -125,9 +136,12 @@ def main(argv: list[str] | None = None, out=print) -> int:
     parser = argparse.ArgumentParser(description="Apply, check and maintain the Cosmyx branding.")
     parser.add_argument("--root", type=Path, default=REPO_ROOT, help="repository root (default: this checkout)")
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("check", help="run the guards, writing nothing")
+    checker = sub.add_parser("check", help="run the guards, writing nothing")
     applier = sub.add_parser("apply", help="brand the tree")
     applier.add_argument("--ci", action="store_true", help="GitHub annotations and step summary")
+    for command in (checker, applier):
+        command.add_argument("--mode", choices=MODES, help="override the detected mode (default: strict)")
+    sub.add_parser("mode", help="print the branding mode this environment selects")
     sub.add_parser("revert", help="undo the last apply exactly")
     sub.add_parser("sync", help="bring the manifest and the review tables in line with the tree")
     refresher = sub.add_parser("refresh", help="re-baseline rows after an upstream or overlay change")
@@ -142,9 +156,12 @@ def main(argv: list[str] | None = None, out=print) -> int:
 
     try:
         if args.command == "check":
-            return cmd_check(root, out)
+            return cmd_check(root, out, args.mode)
         if args.command == "apply":
-            return apply_module.apply(root, ci=args.ci, out=out)
+            return apply_module.apply(root, ci=args.ci, env=mode_env(args.mode), out=out)
+        if args.command == "mode":
+            out(brand_mode())
+            return 0
         if args.command == "revert":
             restored = apply_module.revert(root)
             out(f"Reverted {len(restored)} file(s).")

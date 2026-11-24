@@ -99,6 +99,29 @@ def mismatches(root: Path, patches: list[Patch]) -> list[str]:
     return problems
 
 
+def split_absent(root: Path, patches: list[Patch]) -> tuple[list[Patch], list[tuple[Patch, str]]]:
+    """(rows to apply, [(row, why)] for the rows whose file or `old` text the
+    tree lacks entirely). Used in tolerant mode only, on a tree older than
+    the tables. A row whose text is there with another count is kept, so
+    `mismatches` still reports it. Rows on the same file are checked in
+    order on the text left by the kept rows before it."""
+    kept, absent = [], []
+    texts: dict = {}
+    for patch in patches:
+        if patch.file not in texts:
+            # tree_path still refuses an unsafe path or a case-only spelling.
+            texts[patch.file] = read_text(root, patch.file) if tree_path(root, patch.file).is_file() else None
+        text = texts[patch.file]
+        if text is None:
+            absent.append((patch, "file is absent"))
+        elif patch.old not in text:
+            absent.append((patch, f"text {patch.old[:60]!r} is absent"))
+        else:
+            kept.append(patch)
+            texts[patch.file] = text.replace(patch.old, patch.new)
+    return kept, absent
+
+
 def plan(root: Path, patches: list[Patch]) -> dict:
     """{relative path: new text} for every patched file; raises on any mismatch."""
     problems = mismatches(root, patches)

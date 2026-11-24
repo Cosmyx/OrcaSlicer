@@ -26,7 +26,8 @@ SUB_TASK_FILES = [
 ]
 
 IMPORT = re.compile(r"^import\? '([^']+)'$", flags=re.MULTILINE)
-RECIPE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*)(?:\s[^:=]*)?:(?!=)", flags=re.MULTILINE)
+# A recipe header: its name, then optional parameters (defaults included), then a colon.
+RECIPE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*)(?:\s[^:\n]*)?:(?!=)", flags=re.MULTILINE)
 
 
 def recipes(path: Path) -> list[str]:
@@ -91,6 +92,18 @@ class PrepareProfileTest(unittest.TestCase):
         found = [step for step in steps if "test_branding_*.py" in step]
         self.assertEqual(len(found), 1, "exactly one prepare step runs the branding tests")
         return found[0]
+
+    def test_prepare_action_exports_the_branding_mode_first(self) -> None:
+        # The mode (strict unless the tree's upstream base is not DEV) is
+        # chosen once and exported, so the real-tree tests and apply agree.
+        steps = PREPARE_ACTION.read_text(encoding="utf-8").split("    - name: ")[1:]
+        names = [step.splitlines()[0] for step in steps]
+        mode = [index for index, step in enumerate(steps) if "branding/cli.py mode" in step]
+        self.assertEqual(len(mode), 1, "exactly one prepare step exports the branding mode")
+        self.assertIn('COSMYX_BRAND_MODE=', steps[mode[0]])
+        self.assertIn('"$GITHUB_ENV"', steps[mode[0]])
+        self.assertLess(mode[0], names.index("Test the graft, the worktree helper and the branding engine"))
+        self.assertLess(mode[0], names.index("Apply Cosmyx branding"))
 
     def test_prepare_action_sets_the_profile_on_the_branding_tests(self) -> None:
         self.assertRegex(self.branding_test_step(), r"(?m)^\s+COSMYX_TEST_PROFILE: prepare$")

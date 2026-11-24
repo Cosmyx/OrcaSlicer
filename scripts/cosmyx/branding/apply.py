@@ -12,6 +12,10 @@ GitHub step summary with `--ci`).
 - `revert` updates the state after each file, so an interrupted revert is
   resumed by running it again.
 - Applying an applied tree reverts it first, so apply is idempotent.
+- Mode (`brand_mode`): strict by default. In tolerant mode (a tree whose
+  upstream base is not DEV) a text row whose file or text the tree lacks, and
+  an overlay row whose upstream file is gone, are skipped with a warning
+  (G5, G8, G3) instead of failing or creating the file.
 
 Stages:
 
@@ -50,6 +54,7 @@ from . import (
     dump_json,
     errors,
     load_json,
+    brand_mode,
     ref_kind,
     repo_path,
     write_text,
@@ -68,6 +73,8 @@ class Context:
     def __init__(self, root: Path, env: dict | None = None, plugins: dict | None = None):
         self.root = root
         self.kind = ref_kind(env)
+        self.mode = brand_mode(env)
+        self.tolerant = self.mode == "tolerant"
         self.manifest = manifest_module.load(root)
         self.table_problems: list = []
         self.colours = self._load_colours()
@@ -109,6 +116,23 @@ class Context:
                 continue
             tables[name] = data["rows"]
         return tables if present else None
+
+    def applicable(self, patches: list) -> list:
+        """The text rows to apply: every row in strict mode; in tolerant mode
+        only those whose file and text the tree has (the guards warn about
+        the others)."""
+        return textpatch.split_absent(self.root, patches)[0] if self.tolerant else patches
+
+    def overlay_skips(self) -> set:
+        """Overlay rows tolerant mode leaves out: an override of an upstream
+        file this tree does not have. Empty in strict mode."""
+        if not self.tolerant:
+            return set()
+        return {
+            row["path"]
+            for _, row in self.manifest.rows()
+            if row["override_sha256"] and row["upstream_sha256"] is not None and not repo_path(self.root, row["path"]).is_file()
+        }
 
     def family(self):
         colours = self.colours or {}
@@ -234,13 +258,13 @@ def warn_git_failure(command: str, process: subprocess.CompletedProcess) -> None
 
 
 def stage_overlay(ctx: Context, state: State) -> dict:
-    return {"written": overlay.apply(ctx.root, ctx.manifest, state.backup)}
+    return {"written": overlay.apply(ctx.root, ctx.manifest, state.backup, skip=ctx.overlay_skips())}
 
 
 def stage_colours(ctx: Context, state: State) -> dict:
     if ctx.colours is None:
         return {"active": False}
-    literals = [textpatch.normalise(row) for row in ctx.colours.get("literals", [])]
+    literals = ctx.applicable([textpatch.normalise(row) for row in ctx.colours.get("literals", [])])
     report = {"active": True, "literals": textpatch.apply(ctx.root, literals, state.backup)}
     for plugin in ctx.plugins.get("colours", []):
         report["plugin"] = plugin.apply(ctx, state.backup)
@@ -250,7 +274,7 @@ def stage_colours(ctx: Context, state: State) -> dict:
 def stage_product_name(ctx: Context, state: State) -> dict:
     if ctx.product_name is None:
         return {"active": False}
-    patches = [textpatch.normalise(row) for row in ctx.product_name.get("patches", [])]
+    patches = ctx.applicable([textpatch.normalise(row) for row in ctx.product_name.get("patches", [])])
     report = {"active": True, "patches": textpatch.apply(ctx.root, patches, state.backup)}
     for plugin in ctx.plugins.get("product_name", []):
         report["plugin"] = plugin.apply(ctx, state.backup)
@@ -319,6 +343,7 @@ def write_report(root, ctx, result, stages, findings, ci, env, out) -> None:
         "schema": 1,
         "result": result,
         "kind": ctx.kind,
+        "mode": ctx.mode,
         "counts": status_counts(ctx),
         "stages": stages,
         "findings": [finding.as_dict() for finding in findings],
@@ -330,12 +355,19 @@ def write_report(root, ctx, result, stages, findings, ci, env, out) -> None:
             out(f"{prefix}{finding.guard} {finding.path} {finding.message}")
         else:
             out(str(finding))
-    out(f"Branding {result} ({ctx.kind} build): {summary_line(report)}")
+    out(f"Branding {result} ({build_label(report)}): {summary_line(report)}")
     environment = os.environ if env is None else env
     summary_file = environment.get("GITHUB_STEP_SUMMARY")
     if ci and summary_file:
         with open(summary_file, "a", encoding="utf-8", newline="\n") as handle:
             handle.write(step_summary(report))
+
+
+def build_label(report: dict) -> str:
+    """`development build`, plus `, tolerant mode` when rows may be skipped
+    (strict output stays as it always was)."""
+    label = f"{report['kind']} build"
+    return f"{label}, tolerant mode" if report["mode"] == "tolerant" else label
 
 
 def summary_line(report: dict) -> str:
@@ -346,7 +378,7 @@ def summary_line(report: dict) -> str:
 
 
 def step_summary(report: dict) -> str:
-    lines = [f"### Cosmyx branding: {report['result']} ({report['kind']} build)", ""]
+    lines = [f"### Cosmyx branding: {report['result']} ({build_label(report)})", ""]
     lines += ["| Group | Missing | To validate | Validated |", "|---|---|---|---|"]
     for group, counts in report["counts"].items():
         lines.append(f"| {group} | {counts['missing']} | {counts['to-validate']} | {counts['validated']} |")
