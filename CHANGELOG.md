@@ -75,3 +75,9 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+
+<!-- cosmyx-slot: T19 -->
+- **Removed:** the Flatpak build and its unit tests no longer run, on every
+  build: the fork does not ship a Flatpak and the leg was often red. Setting
+  the repository variable `COSMYX_FLATPAK` to `true` turns them back on.
+  Pull request: pending. Decisions: 0213.
