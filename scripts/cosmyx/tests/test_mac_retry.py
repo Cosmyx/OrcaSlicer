@@ -13,6 +13,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCRIPT = REPO_ROOT / "scripts" / "cosmyx" / "ci" / "mac_retry.py"
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "cosmyx-mac-retry.yml"
+DEV_BUILD = REPO_ROOT / ".github" / "workflows" / "cosmyx-dev-build.yml"
 
 _spec = importlib.util.spec_from_file_location("mac_retry", SCRIPT)
 mac_retry = importlib.util.module_from_spec(_spec)
@@ -113,6 +114,32 @@ class DecideTests(unittest.TestCase):
         self.assertFalse(decide(api).rerun)
         self.assertFalse(any("annotations" in path for _, path in api.calls))
 
+    def test_dev_build_macos_jobs_are_matched(self) -> None:
+        # Job names of a "Cosmyx dev build" run (cosmyx-dev-build.yml).
+        macos = ["build_macos_arch (arm64) / Check Cache", "build_macos_arch (x86_64) / Build Deps / Build Deps",
+                 "build_macos_arch (arm64) / Build OrcaSlicer / Build OrcaSlicer", "macOS DMG arm64",
+                 "macOS arm64 / Unit Tests"]
+        others = ["Select OSes", "build_linux (, ubuntu-24.04) / Check Cache",
+                  "build_linux (aarch64, ubuntu-24.04-arm) / Build OrcaSlicer / Build OrcaSlicer",
+                  "Build Windows x64 / Check Cache", "Linux x86_64 / Unit Tests", "Windows x64 / Unit Tests",
+                  "Publish Test Results"]
+        for name in macos:
+            with self.subTest(name=name):
+                self.assertTrue(mac_retry.is_macos_job({"name": name}))
+        for name in others:
+            with self.subTest(name=name):
+                self.assertFalse(mac_retry.is_macos_job({"name": name}))
+
+    def test_starved_dev_build_dmg_job_is_rerun(self) -> None:
+        api = FakeApi(
+            [job(1, "build_macos_arch (arm64) / Build OrcaSlicer / Build OrcaSlicer", "success"),
+             job(2, "macOS DMG arm64", "cancelled"), job(3, "Build Windows x64 / Check Cache", "cancelled")],
+            {2: [STARVED], 3: [STARVED]},
+        )
+        decision = decide(api)
+        self.assertTrue(decision.rerun)
+        self.assertEqual(decision.jobs, ("macOS DMG arm64",))
+
     def test_jobs_are_read_from_the_latest_attempt_on_every_page(self) -> None:
         filler = [job(100 + index, f"Linux {index}", "success") for index in range(mac_retry.PER_PAGE)]
         api = FakeApi(filler + [job(2, "Build macOS arm64", "cancelled")], {2: [STARVED]})
@@ -153,16 +180,22 @@ class WorkflowTests(unittest.TestCase):
         self.assertIsNotNone(match, f"no top-level {key}:")
         return match.group(1)
 
-    def test_triggered_by_completed_build_all_runs_only(self) -> None:
+    def test_triggered_by_completed_build_runs_only(self) -> None:
         on = self.top_level("on")
         self.assertRegex(on, r"^  workflow_run:\n", "workflow_run must be the only trigger")
         self.assertEqual(re.findall(r"^  (\w+):", on, flags=re.MULTILINE), ["workflow_run"])
-        self.assertIn('workflows: ["Build all"]', on)
+        self.assertIn('workflows: ["Build all", "Cosmyx dev build"]', on)
         self.assertIn("types: [completed]", on)
 
     def test_watched_workflow_name_exists(self) -> None:
         build_all = (REPO_ROOT / ".github" / "workflows" / "build_all.yml").read_text(encoding="utf-8")
         self.assertRegex(build_all, r"(?m)^name: Build all\s*$")
+
+    def test_watched_dev_build_name_exists(self) -> None:
+        if not DEV_BUILD.exists():
+            self.skipTest("cosmyx-dev-build.yml lives on ci/cosmyx-dev-build (#119); checked where both are merged")
+        dev_build = DEV_BUILD.read_bytes().decode("utf-8")
+        self.assertRegex(dev_build, r"(?m)^name: Cosmyx dev build\s*$")
 
     def test_permissions_are_minimal(self) -> None:
         permissions = self.top_level("permissions")
@@ -171,9 +204,10 @@ class WorkflowTests(unittest.TestCase):
             {"actions": "write", "checks": "read"},
         )
 
-    def test_one_retry_per_commit_at_a_time(self) -> None:
+    def test_one_retry_per_workflow_and_commit_at_a_time(self) -> None:
         concurrency = self.top_level("concurrency")
-        self.assertIn("group: cosmyx-mac-retry-${{ github.event.workflow_run.head_sha }}", concurrency)
+        self.assertIn("group: cosmyx-mac-retry-${{ github.event.workflow_run.workflow_id }}-"
+                      "${{ github.event.workflow_run.head_sha }}", concurrency)
         self.assertIn("cancel-in-progress: false", concurrency)
 
     def test_job_acts_only_on_failed_or_cancelled_runs(self) -> None:

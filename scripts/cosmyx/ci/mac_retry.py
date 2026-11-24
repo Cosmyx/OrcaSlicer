@@ -1,5 +1,5 @@
-"""Rerun the failed jobs of a "Build all" run whose macOS jobs never got a
-hosted runner (decision 0217).
+"""Rerun the failed jobs of a "Build all" or "Cosmyx dev build" run whose
+macOS jobs never got a hosted runner (decision 0217).
 
 Hosted macOS runners are scarce. When GitHub cannot acquire one, it cancels
 the job with the annotation "The job was not acquired by Runner of type hosted
@@ -49,6 +49,9 @@ class Decision:
 
 
 def is_macos_job(job: dict) -> bool:
+    # Both workflows name every job that runs on macOS with "macos" somewhere:
+    # build_macos_arch (<arch>) / ... and macOS arm64 / Unit Tests in both,
+    # Build macOS Universal in Build all, macOS DMG <arch> in the dev build.
     return "macos" in str(job.get("name", "")).lower()
 
 
