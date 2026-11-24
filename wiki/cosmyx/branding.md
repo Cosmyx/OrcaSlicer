@@ -143,7 +143,7 @@ Every package a user downloads or runs is named CosmoSlice (decision 0210):
 | Windows executable (portable, installer, MSIX) | `CosmoSlice.exe`; MSIX command alias `cosmoslice.exe` |
 | Windows installer | `CosmoSlice_Windows_Installer_V<version>_<arch>.exe` |
 | Windows artifacts | `CosmoSlice_Windows_<ver><arch>_portable`, `CosmoSlice_Windows_<ver><arch>`, `CosmoSlice_Windows_MSIX_<ver><arch>` |
-| macOS | `CosmoSlice.app` in `CosmoSlice_Mac_universal_<ver>.dmg` (volume CosmoSlice), artifact `CosmoSlice_Mac_universal_<ver>` |
+| macOS | `CosmoSlice.app` in `CosmoSlice_Mac_universal_<ver>.dmg` (volume CosmoSlice), artifact `CosmoSlice_Mac_universal_<ver>`; on a pull request, `CosmoSlice_Mac_<arch>_<ver>` per arch |
 | Linux AppImage | launcher name CosmoSlice, file `CosmoSlice_Linux_AppImage<ubuntu><arch>_<ver>.AppImage`, artifact `CosmoSlice_Linux_ubuntu_<ubuntu><arch>_<ver>` |
 | Flatpak | `CosmoSlice-Linux-flatpak_<ver>_<arch>.flatpak` (file and artifact) |
 

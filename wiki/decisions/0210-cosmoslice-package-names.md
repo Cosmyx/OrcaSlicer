@@ -26,7 +26,9 @@ what the build or the CI reads by name keeps working.
 - Renamed (visible): the Windows executable `CosmoSlice.exe` (portable,
   installer and MSIX), the MSIX command alias `cosmoslice.exe`, the installer
   file `CosmoSlice_Windows_Installer_V<version>_<arch>.exe`, `CosmoSlice.app`,
-  the DMG `CosmoSlice_Mac_universal_<ver>.dmg` and its volume `CosmoSlice`,
+  the DMG `CosmoSlice_Mac_universal_<ver>.dmg` (on a pull request, which
+  builds no universal app, each arch's own `CosmoSlice_Mac_<arch>_<ver>.dmg`)
+  and its volume `CosmoSlice`,
   the AppImage file and its launcher name, the MSIX file, the Flatpak bundle,
   and every CI artifact (`CosmoSlice_...`, `CosmoSlice-Linux-flatpak_...`).
 - Kept: the data folder and `SLIC3R_APP_KEY`, `OrcaSlicer.conf`, the macOS
@@ -59,8 +61,18 @@ what the build or the CI reads by name keeps working.
     and DMG and the unsigned `OrcaSlicer_` DMG, builds the CosmoSlice DMG with
     upstream's `scripts/create_dmg.sh`. The signing signs every app of the
     folder and rebuilds the DMG under the app's name, so the rename must come
-    first.
-  - `mac-upload` after "Upload OrcaSlicer_profile_validator DMG mac".
+    first. A pull-request leg builds no universal app: upstream's "Create
+    DMG <arch> without notary" and "Upload DMG <arch>" ship each arch as
+    `OrcaSlicer_Mac_<arch>_<ver>`, before this hook. The stage recognises
+    that leg by the per-arch bundle next to that DMG, and does the same
+    there: `CosmoSlice.app`, `CosmoSlice_Mac_<arch>_<ver>.dmg`. A push leg
+    has no such DMG (it only packs its bundle for the combine job, which
+    needs `OrcaSlicer.app`), so it is left alone. The DMG and artifact
+    templates take `{arch}` (`universal` on the combine job), so one hook
+    pair covers both modes and no upstream step is touched.
+  - `mac-upload` after "Upload OrcaSlicer_profile_validator DMG mac":
+    uploads the CosmoSlice DMG and deletes the `OrcaSlicer_Mac_` artifact it
+    replaces (and, on the combine job, the validator one).
   - `windows` after "Build MSIX Store package Win", before "Upload artifacts
     Win MSIX": renames the MSIX, uploads the portable folder, the installer
     and the MSIX, deletes the upstream portable and installer artifacts.
