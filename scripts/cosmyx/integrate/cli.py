@@ -494,7 +494,8 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     notes: dict[str, str] = {}
     if replay_mode:
         sources, notes, stopped = replay_branches(git, wt, data, entries, base_sha,
-                                                  base_name(args.base, remote), brand_hook, out, resolved)
+                                                  base_name(args.base, remote), brand_hook, out, resolved,
+                                                  args.branch)
         if stopped:
             return 1
         wt.run("checkout", "-q", "-f", "-B", args.branch, base_sha)
@@ -550,7 +551,8 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
 
 
 def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sha: str, name: str,
-                    brand_hook: BrandHook, out, resolved: dict[str, str]) -> tuple[dict[str, str], dict[str, str], bool]:
+                    brand_hook: BrandHook, out, resolved: dict[str, str],
+                    branch: str) -> tuple[dict[str, str], dict[str, str], bool]:
     """Replay each branch's own commits onto BASE as `rebase/<name>/<branch>`, in list order.
 
     Returns (branch to merge per entry, table note per entry, stopped). A
@@ -572,7 +574,9 @@ def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sh
         if commits is None or not new_base:
             notes[entry.name] = f"SKIPPED (parent {parent} not replayed)"
             continue
-        wt.run("checkout", "-q", "-f", "--detach", new_base)
+        # On the integration branch, not detached: a stopped run leaves the
+        # branch in this worktree, so that the next run finds it there.
+        wt.run("checkout", "-q", "-f", "-B", branch, new_base)
         try:
             kinds, _ = replay(wt, commits, brand_hook, strict=True, resolved=resolved)
         except ReplayStopped as stop:
