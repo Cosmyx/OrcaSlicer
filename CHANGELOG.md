@@ -75,3 +75,12 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+
+<!-- cosmyx-slot: T23 -->
+- Add the Cosmyx dev build: integration builds of any base (DEV or an older
+  tag) compile only the OSes picked by the `build:linux`, `build:windows`,
+  `build:macos-arm64` and `build:macos-x86_64` pull request labels (Linux,
+  Windows and macOS arm64 when none is set) or by the manual run's
+  checkboxes, run their unit tests, and ship a CosmoSlice DMG per built macOS
+  arch. `build_all.yml` stays the release validation build. Pull request:
+  PR_LINK. Decisions: 0218.
