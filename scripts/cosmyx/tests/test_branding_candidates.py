@@ -8,6 +8,7 @@ from __future__ import annotations
 import base64
 import copy
 import json
+import os
 import re
 import tempfile
 import unittest
@@ -26,6 +27,11 @@ from branding_fixture import (
     write,
 )
 from branding import candidates, in_family
+
+# The branding mode of this run (decision 0122): the cosmyx-prepare action
+# exports COSMYX_BRAND_MODE, tolerant only when the tree's upstream base is not
+# DEV. An older base lacks some of the icons the DEV manifest lists.
+TOLERANT = os.environ.get("COSMYX_BRAND_MODE", "").strip() == "tolerant"
 
 TABLE_MAP = {"#009688": "#8000FF", "#00675B": "#A472F5"}
 
@@ -317,6 +323,9 @@ class RealTreeCandidatesTest(unittest.TestCase):
             manifest_file.write_text(json.dumps(table, indent=2) + "\n", encoding="utf-8")
         index = candidates.generate(self.root)
         rows = candidates.candidate_rows(self.root)
+        if TOLERANT:
+            # generate skips a row whose icon this older tree does not have.
+            rows = [(group, row) for group, row in rows if (self.root / row["path"]).is_file()]
         self.assertGreater(len(index["candidates"]), 0)
         self.assertEqual(len(index["candidates"]) + len(index["unchanged"]), len(rows))
         self.assertEqual(index["unlisted"], [])
