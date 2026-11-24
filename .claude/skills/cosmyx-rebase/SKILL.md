@@ -98,6 +98,23 @@ git rev-list --left-right --count $BASE...origin/DEV     # tag-only vs DEV-only 
 The tag is usually not an ancestor of `DEV`: never rebase onto `DEV` then "move", always replay each branch's
 own commits with `git rebase --onto`.
 
+### Step 1b. Get the conflict map first
+
+The recipes of `ci/cosmyx-integrate` (#115, decision 0215) do the mechanical part. Run them before any manual
+work, and spend your time only on what they report as an unknown conflict:
+
+```bash
+just cosmo-rebase-check $TAG        # dry run, no ref moved: one row per branch, clean / auto-resolved / CONFLICT + files
+just cosmo-integrate                # rebuild the DEV integration locally; --push then --build to push and start build_all
+```
+
+They resolve by themselves the CHANGELOG slots, the `SLOTS_BY_AREA` list of `test_foundation.py`, the slot list
+of decision 0003 (union), the branding manifests and tables (`brand-sync` + `brand-table`, never losing a
+`validated` row), and every conflict `rerere` knows (they first train `rerere` from the merges of
+`origin/ci/cosmyx-integration`). Fix an unknown conflict in the branch that owns the line, then run the recipe
+again: the next run replays your resolution. A branch marked "on an approximated parent" is only as reliable
+as its parent's resolution.
+
 ### Step 2. Read
 
 `branches.md`, all sheets, `conflits.md` (section "Expected on <tag>" if it exists for this tag). Note for each
