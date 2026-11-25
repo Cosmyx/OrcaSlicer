@@ -383,6 +383,7 @@ UpdateVersionDialog::UpdateVersionDialog(wxWindow *parent)
 
     m_cb_stable_only = new LabeledCheckBox(this, _L("Check for stable updates only"));
     m_cb_stable_only->SetFont(Label::Body_12);
+    m_cb_stable_only->Hide(); // Cosmyx: only releases are ever offered (decision 0221)
     m_cb_stable_only->SetValue(wxGetApp().app_config->get_bool("check_stable_update_only"));
     m_cb_stable_only->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& e) {
         wxGetApp().app_config->set_bool("check_stable_update_only", m_cb_stable_only->GetValue());
