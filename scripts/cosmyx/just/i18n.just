@@ -11,6 +11,10 @@ i18n-extract:
 i18n-extract-docker:
     docker run --rm -v "{{justfile_directory()}}:/repo" -w /repo {{i18n_image}} sh -c "apt-get update -qq && apt-get install -y -qq gettext >/dev/null && python scripts/cosmyx/i18n_extract.py extract"
 
+# List the Cosmyx translations still missing, per feature and language (ARGS: --lang LANG, --strict to exit 1 on a gap).
+i18n-coverage *ARGS:
+    {{python}} scripts/cosmyx/i18n_coverage.py {{ARGS}}
+
 # Fill empty Cosmyx translations from the OrcaSlicer catalogues of a git ref (for example the old Cosmyx branch).
 i18n-seed REF:
     {{python}} scripts/cosmyx/i18n_extract.py seed --ref {{REF}}
