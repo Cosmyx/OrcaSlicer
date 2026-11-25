@@ -45,6 +45,11 @@ exactly that list: on a reused pull request before the push, so that the push
 builds that set; on a new one at its creation. Without `--os` the labels are
 left as they are (a new pull request has none: the workflow's default set).
 
+`--bundle N` (both commands) keeps only the rows of `branches.json` whose
+`bundle` is N or lower, so that one Cosmyx bundle is built on its own; the
+parent checks run again on that subset. Every row has a `bundle`, and a
+branch's parent is never in a later bundle than the branch.
+
 `rebase-check` is a dry run: in a temporary worktree, it replays each branch's
 own commits onto `refs/tags/upstream/TAG` (stacked children onto their
 replayed parent) with the same auto-resolutions, and prints a table. No
@@ -143,24 +148,48 @@ class Entry:
     parent: str
     pr: int | None = None
     integration_only: bool = False
+    # Cosmyx bundle (release) that first ships the branch (decision 0226).
+    bundle: int = 1
 
 
-def load_branches(path: Path = DATA_FILE) -> tuple[dict, list[Entry]]:
+def load_branches(path: Path = DATA_FILE, bundle: int | None = None) -> tuple[dict, list[Entry]]:
+    """Read and check the branch list; with `bundle`, keep only the rows of that bundle or an earlier one."""
     data = json.loads(path.read_text(encoding="utf-8"))
-    entries = [Entry(row["name"], row["parent"], row.get("pr"), bool(row.get("integration_only")))
-               for row in data["branches"]]
+    entries = []
+    for row in data["branches"]:
+        value = row.get("bundle")
+        # bool is an int in Python: refuse true/false explicitly.
+        if not isinstance(value, int) or isinstance(value, bool) or value < 1:
+            raise SetupError(f"{row.get('name')}: bundle must be a positive integer, got {value!r}")
+        entries.append(Entry(row["name"], row["parent"], row.get("pr"), bool(row.get("integration_only")), value))
     check_branches(data, entries)
+    if bundle is not None:
+        entries = select_bundle(data, entries, bundle)
     return data, entries
 
 
+def select_bundle(data: dict, entries: list[Entry], bundle: int) -> list[Entry]:
+    """The rows of bundle `bundle` or earlier, checked again as a list of their own."""
+    if bundle < 1:
+        raise SetupError(f"--bundle must be a positive integer, got {bundle}")
+    selected = [entry for entry in entries if entry.bundle <= bundle]
+    check_branches(data, selected)
+    return selected
+
+
 def check_branches(data: dict, entries: list[Entry]) -> None:
-    seen: set[str] = set()
+    seen: dict[str, Entry] = {}
     for entry in entries:
         if entry.name in seen:
             raise SetupError(f"{entry.name} is listed twice")
-        if entry.parent != data["base"] and entry.parent not in seen:
-            raise SetupError(f"{entry.name}: parent {entry.parent} must be {data['base']} or an earlier row")
-        seen.add(entry.name)
+        if entry.parent != data["base"]:
+            parent = seen.get(entry.parent)
+            if parent is None:
+                raise SetupError(f"{entry.name}: parent {entry.parent} must be {data['base']} or an earlier row")
+            if parent.bundle > entry.bundle:
+                raise SetupError(f"{entry.name} (bundle {entry.bundle}): parent {entry.parent} is in the later "
+                                 f"bundle {parent.bundle}; a branch cannot ship before its parent")
+        seen[entry.name] = entry
     if entries and entries[0].name != data["foundation"]:
         raise SetupError(f"the first row must be the foundation {data['foundation']}")
 
@@ -573,8 +602,10 @@ def create_build_pr(gh: Callable, args, ci_branch: str, base_label: str, labels:
 
 def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine, gh: Callable | None = None) -> int:
     git = Git(Path(args.repo_root) if args.repo_root else Path.cwd())
-    data, entries = load_branches(Path(args.data) if args.data else DATA_FILE)
+    data, entries = load_branches(Path(args.data) if args.data else DATA_FILE, args.bundle)
     remote = data["remote"]
+    if args.bundle is not None:
+        print(f"bundle {args.bundle}: {len(entries)} branch(es) of bundle {args.bundle} or earlier", file=out)
     entries = [entry for entry in entries if entry.name not in set(args.skip or [])]
     if args.build and not args.push:
         raise SetupError("--build needs --push")
@@ -928,7 +959,7 @@ def reject_copies(wt: Git, commit: str, earlier: str, paths: list[str], before: 
 
 def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine) -> int:
     git = Git(Path(args.repo_root) if args.repo_root else Path.cwd())
-    data, entries = load_branches(Path(args.data) if args.data else DATA_FILE)
+    data, entries = load_branches(Path(args.data) if args.data else DATA_FILE, args.bundle)
     remote = data["remote"]
     entries = [entry for entry in entries if not entry.integration_only and entry.name not in set(args.skip or [])]
     if not args.no_fetch:
@@ -993,6 +1024,8 @@ def parser() -> argparse.ArgumentParser:
     common.add_argument("--data", help="branch list (default: branches.json next to this script)")
     common.add_argument("--repo-root", help="any checkout of the repository (default: current directory)")
     common.add_argument("--skip", action="append", metavar="BRANCH", help="leave a branch out (repeatable)")
+    common.add_argument("--bundle", type=int, metavar="N",
+                        help="keep only the branches of bundle N or an earlier one (default: every branch)")
     common.add_argument("--no-fetch", action="store_true", help="use the remote-tracking refs as they are")
     common.add_argument("--train", metavar="REF", help="teach rerere the resolutions of REF's merges first")
     top = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])

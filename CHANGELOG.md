@@ -34,6 +34,13 @@ here; see the upstream release notes.
   the Cosmyx checks workflow. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/86. Decisions: 0001, 0002, 0003, 0004, 0005.
 
 <!-- cosmyx-slot: T20 -->
+- `just cosmo-integrate` and `just cosmo-rebase-check` take `--bundle N` to
+  build one Cosmyx bundle: every branch of the integration list now has a
+  `bundle` (8 for the bundle-7 features rebased on OrcaSlicer 2.5.2 and the
+  integration and build tooling, 9 for the new features), and only the
+  branches of bundle N or earlier are kept; without the option every branch
+  is kept as before. A branch whose parent is in a later bundle is refused.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/115. Decisions: 0226.
 - Add `just cosmo-integrate [BASE]`, which rebuilds a throwaway integration
   branch (`ci/cosmyx-integration` on DEV, `integration/<BASE>` on any other
   base, so both coexist) from every Cosmyx pull request branch (on a base
