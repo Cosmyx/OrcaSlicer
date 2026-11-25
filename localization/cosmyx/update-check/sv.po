@@ -7,8 +7,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
+# AI Translated
 #. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
 msgid ""
 "Checking for updates is turned off while Stealth mode is on. Turn off "
 "Stealth mode in Preferences to check for a new release."
 msgstr ""
+"Sökning efter uppdateringar är avstängd när Stealth-läget är på. Stäng av "
+"Stealth-läget i Inställningar för att söka efter en ny version."

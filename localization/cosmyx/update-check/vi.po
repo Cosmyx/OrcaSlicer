@@ -7,8 +7,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 #. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
 msgid ""
 "Checking for updates is turned off while Stealth mode is on. Turn off "
 "Stealth mode in Preferences to check for a new release."
 msgstr ""
+"Kiểm tra cập nhật bị tắt khi Chế độ ẩn danh đang bật. Hãy tắt Chế độ ẩn danh "
+"trong Tùy chọn để kiểm tra phiên bản mới."

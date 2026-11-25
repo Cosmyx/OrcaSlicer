@@ -7,8 +7,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
+# AI Translated
+# Needs human review: upstream Preferences label for 'Stealth mode' is 'Unsichtbarer Modus', other messages use 'Stealth-Modus'; check consistency
 #. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
 msgid ""
 "Checking for updates is turned off while Stealth mode is on. Turn off "
 "Stealth mode in Preferences to check for a new release."
 msgstr ""
+"Die Suche nach Updates ist ausgeschaltet, solange der Stealth-Modus aktiv "
+"ist. Schalten Sie den Stealth-Modus in den Einstellungen aus, um nach einer "
+"neuen Version zu suchen."
