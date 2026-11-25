@@ -70,6 +70,11 @@
       "parent": "feat/cosmyx-version"
     },
     {
+      "name": "feat/cosmyx-update-check",
+      "pr": 122,
+      "parent": "feat/cosmyx-version"
+    },
+    {
       "name": "ci/cosmyx-branding-engine",
       "pr": 99,
       "parent": "feat/cosmyx-translations"
@@ -133,6 +138,11 @@
       "name": "feat/cosmyx-plugin-signing",
       "pr": 112,
       "parent": "feat/cosmyx-cloud-server"
+    },
+    {
+      "name": "feat/cosmyx-external-machines",
+      "pr": 121,
+      "parent": "chore/cosmyx-foundation"
     },
     {
       "name": "ci/cosmyx-flatpak-off",

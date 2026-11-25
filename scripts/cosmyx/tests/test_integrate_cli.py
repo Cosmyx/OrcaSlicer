@@ -921,6 +921,14 @@ class BranchListTests(unittest.TestCase):
         self.assertNotIn("ci/cosmyx-arm64-pr-builds", names)
         self.assertLess(names.index("ci/cosmyx-mac-retry"), names.index("ci/cosmyx-dev-build"))
 
+    def test_shipped_list_has_the_gui_feature_branches_after_their_parents(self) -> None:
+        entries = {entry.name: entry for entry in cli.load_branches()[1]}
+        names = list(entries)
+        self.assertEqual(entries["feat/cosmyx-external-machines"].parent, "chore/cosmyx-foundation")
+        self.assertEqual(entries["feat/cosmyx-update-check"].parent, "feat/cosmyx-version")
+        self.assertLess(names.index("feat/cosmyx-version"), names.index("feat/cosmyx-update-check"))
+        self.assertLess(names.index("chore/cosmyx-foundation"), names.index("feat/cosmyx-external-machines"))
+
     def test_ci_base_branch_names(self) -> None:
         git = cli.Git(Path.cwd())
         self.assertEqual(cli.ci_base_branch(git, "origin/DEV", "origin"), "cosmyx-ci/DEV")
