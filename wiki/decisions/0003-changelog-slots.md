@@ -13,7 +13,7 @@ would all insert at the top of the same section and conflict with each other.
 
 - `CHANGELOG.md` has its rules at the top, one current period (a month), and
   fixed areas in a fixed order: `repo`, `libslic3r`, `GUI`, `i18n`,
-  `CI-release`.
+  `CI-release`, `profiles`.
 - Under each area, one HTML comment marker per planned task,
   `<!-- cosmyx-slot: Tn -->`, separated by blank lines.
 - A task inserts its line directly under its own marker and never removes or
@@ -27,6 +27,7 @@ would all insert at the top of the same section and conflict with each other.
   - `GUI`: T5, T6, T7, T11b, T11c, T11d, T11e, T11f.
   - `i18n`: T8.
   - `CI-release`: T9, T10, T11a, T13.
+  - `profiles`: T30.
 - Decision numbers are reserved in ranges per task so parallel branches never
   take the same number: T11 uses 0120-0139, T12 uses 0110-0119, T13 uses
   0140-0149.
