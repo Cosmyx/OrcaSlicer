@@ -18,6 +18,7 @@ on:
       - '.github/cosmyx/**'
       - '.github/workflows/cosmyx-*.yml'
       - 'localization/cosmyx/**'
+      - 'src/**/Cosmyx/**'
       - 'scripts/sign_windows.ps1'
       # Upstream build workflows carry Cosmyx hooks whose wiring tests must
       # run when upstream edits them.
@@ -37,6 +38,7 @@ on:
       - '.github/cosmyx/**'
       - '.github/workflows/cosmyx-*.yml'
       - 'localization/cosmyx/**'
+      - 'src/**/Cosmyx/**'
       - 'scripts/sign_windows.ps1'
       # Upstream build workflows carry Cosmyx hooks whose wiring tests must
       # run when upstream edits them.
@@ -71,11 +73,18 @@ jobs:
         with:
           tool: just@1.40.0
 
+      - name: Install GNU gettext
+        # The catalogue sync test needs xgettext; Linux runs it, so it never
+        # silently skips in CI.
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq gettext
+
       - name: Run the script tests
         # Windows runners ship PowerShell with Pester, so Pester tests must run
         # there instead of being skipped.
         env:
           COSMYX_REQUIRE_PESTER: ${{ runner.os == 'Windows' && '1' || '0' }}
+          COSMYX_REQUIRE_GETTEXT: ${{ runner.os == 'Linux' && '1' || '0' }}
         run: just test-scripts
 
       - name: Check the decision register
