@@ -4,6 +4,7 @@
 	"from": "system",
 	"instantiation": "false",
 	"printer_technology": "FFF",
+	"default_bed_type": "Textured PEI Plate",
 	"deretraction_speed": [
 		"40"
 	],
