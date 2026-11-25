@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Aquest model de calibratge funciona millor amb les direccions de farciment a "
+"0 graus. Per obtenir uns resultats de calibratge òptims, es recomana "
+"establir tant «Direcció de farciment» com «Direcció de farciment sòlid» a "
+"0.\n"
+"Sí - Canvia aquesta configuració automàticament\n"
+"No - No canviïs aquesta configuració per mi"
+
+msgid "Calibration Suggestion"
+msgstr "Suggeriment de calibratge"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Aquest model de calibratge funciona millor amb una configuració de farciment "
+"específica.\n"
+"Per obtenir uns resultats de calibratge òptims, es recomana establir:\n"
+"- Direcció de farciment: %.0f°\n"
+"- Direcció de farciment sòlid: %.0f°\n"
+"- Només un perímetre a la primera capa: %s\n"
+"\n"
+"Sí - Canvia aquesta configuració automàticament\n"
+"No - No canviïs aquesta configuració per mi"
+
+msgid "Cosmyx 3D Models"
+msgstr "Models 3D de Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "Models de calibratge de doble capçal"
+
+msgid "Calibration Models Single Head"
+msgstr "Models de calibratge de capçal simple"
+
+msgid "Cosmyx Handy Models"
+msgstr "Models pràctics de Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "Calibratge 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Calibratge 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Calibratge 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Cub bicolor"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Calibratge 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cub Cosmyx"
+
+msgid "Control Tension Belt"
+msgstr "Control de tensió de la corretja"
+
+msgid "Support Bobine"
+msgstr "Suport de bobina"

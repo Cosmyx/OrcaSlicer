@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: zh_TW\n"
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"此校正模型在填充方向設為 0 度時效果最佳。為獲得最佳校正結果，建議將「填充方向」與「實心填充方向」皆設為 0。\n"
+"是 - 自動變更這些設定\n"
+"否 - 不要為我變更這些設定"
+
+msgid "Calibration Suggestion"
+msgstr "校正建議"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"此校正模型需要特定的填充設定才能達到最佳效果。\n"
+"為獲得最佳校正結果，建議設定：\n"
+"- 填充方向：%.0f°\n"
+"- 實心填充方向：%.0f°\n"
+"- 首層僅單層牆：%s\n"
+"\n"
+"是 - 自動變更這些設定\n"
+"否 - 不要為我變更這些設定"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D 模型"
+
+msgid "Calibration Models Dual Head"
+msgstr "校正模型（雙頭）"
+
+msgid "Calibration Models Single Head"
+msgstr "校正模型（單頭）"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx 實用模型"
+
+msgid "Calage 1 SNDT"
+msgstr "校準墊 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx 校準墊 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx 校準墊 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "雙色立方體"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx 校準墊 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx 立方體"
+
+msgid "Control Tension Belt"
+msgstr "皮帶張力檢測"
+
+msgid "Support Bobine"
+msgstr "線材盤支架"

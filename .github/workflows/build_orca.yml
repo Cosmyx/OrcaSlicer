@@ -44,6 +44,10 @@ jobs:
         with:
           lfs: 'false'
 
+      - name: Prepare Cosmyx sources # Cosmyx
+        if: ${{ !(runner.os == 'macOS' && inputs.macos-combine-only) }} # Cosmyx
+        uses: ./.github/actions/cosmyx-prepare # Cosmyx
+
       - name: load cached deps
         if: ${{ !(runner.os == 'macOS' && inputs.macos-combine-only) }}
         uses: actions/cache@v6
@@ -161,6 +165,13 @@ jobs:
           echo "git_commit_hash=$git_commit_hash" | Out-File -Append -FilePath $env:GITHUB_ENV -Encoding utf8
           echo "date: ${{ env.date }} version: ${{ env.ver }}"
         shell: pwsh
+
+      # Cosmyx: names every build file and artifact after <display version>_<short hash> (decision 0062).
+      - name: Name the build after the Cosmyx version
+        shell: python
+        run: |
+          import subprocess, sys
+          sys.exit(subprocess.call([sys.executable, "scripts/cosmyx/cosmyx_version.py", "github-env"]))
 
 #   Mac
       - name: Install tools mac

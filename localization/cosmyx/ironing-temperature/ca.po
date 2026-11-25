@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx ironing-temperature\n"
+"Language: ca\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Ironing temperature"
+msgstr "Temperatura de planxat"
+
+msgid ""
+"Nozzle temperature while this filament irons. The nozzle goes back to the "
+"print temperature once ironing is done. 0 means no change."
+msgstr ""
+"Temperatura del broquet mentre aquest filament planxa. El broquet torna a la "
+"temperatura d'impressió quan acaba el planxat. 0 vol dir que no hi ha canvi."

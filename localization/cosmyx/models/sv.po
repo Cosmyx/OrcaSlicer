@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Den här kalibreringsmodellen fungerar bäst när ifyllnadsriktningarna är "
+"inställda på 0 grader. För optimalt kalibreringsresultat rekommenderas det "
+"att ställa in både 'Riktning för ifyllnad' och 'Riktning för solid ifyllnad' "
+"till 0.\n"
+"Ja  - Ändra dessa inställningar automatiskt\n"
+"Nej - Ändra inte dessa inställningar åt mig"
+
+msgid "Calibration Suggestion"
+msgstr "Kalibreringsförslag"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Den här kalibreringsmodellen fungerar bäst med specifika "
+"ifyllnadsinställningar.\n"
+"För optimalt kalibreringsresultat rekommenderas det att ställa in:\n"
+"- Riktning för ifyllnad: %.0f°\n"
+"- Riktning för solid ifyllnad: %.0f°\n"
+"- Endast en vägg på första lagret: %s\n"
+"\n"
+"Ja  - Ändra dessa inställningar automatiskt\n"
+"Nej - Ändra inte dessa inställningar åt mig"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D-modeller"
+
+msgid "Calibration Models Dual Head"
+msgstr "Kalibreringsmodeller dubbelt huvud"
+
+msgid "Calibration Models Single Head"
+msgstr "Kalibreringsmodeller enkelt huvud"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx praktiska modeller"
+
+msgid "Calage 1 SNDT"
+msgstr "Kalibrering 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Kalibrering 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Kalibrering 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Tvåfärgad kub"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Kalibrering 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx-kub"
+
+msgid "Control Tension Belt"
+msgstr "Kontroll av remspänning"
+
+msgid "Support Bobine"
+msgstr "Spolhållare"

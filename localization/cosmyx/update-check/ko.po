@@ -1,0 +1,15 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx update-check\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# AI Translated
+#. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
+msgid ""
+"Checking for updates is turned off while Stealth mode is on. Turn off "
+"Stealth mode in Preferences to check for a new release."
+msgstr "스텔스 모드가 켜져 있는 동안에는 업데이트 확인이 꺼집니다. 새 릴리스를 확인하려면 기본 설정에서 스텔스 모드를 끄세요."
