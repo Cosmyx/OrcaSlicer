@@ -5,6 +5,7 @@
     python scripts/cosmyx/ci/dev_build.py version [--output FILE]
     python scripts/cosmyx/ci/dev_build.py dmg-plan --arch ARCH --ver VER
         --product NAME --sha SHA --names-file FILE [--output FILE]
+    python scripts/cosmyx/ci/dev_build.py seal-app --app APP
 
 `select` reads the triggering event (GITHUB_EVENT_NAME, GITHUB_EVENT_PATH):
 
@@ -37,6 +38,9 @@ given the names of the run's artifacts (one per line):
 - `skip` again when only a `<product>_Mac_<arch>_*` DMG under another version
   string exists.
 
+`seal-app` makes the repacked app's signature verify before it goes into the
+DMG (see `seal_command`); it fails when the bundle still does not verify.
+
 Standard library only.
 """
 
@@ -46,6 +50,7 @@ import argparse
 import json
 import os
 import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -180,6 +185,28 @@ def dmg_plan(names: list[str], arch: str, ver: str, product_name: str, sha: str)
     raise SelectError(f"macOS {arch}: none of {own}, {upstream_dmg} or {bundle} was uploaded")
 
 
+def seal_command(app: Path) -> str:
+    """Upstream's unsigned build leaves only the linker's ad-hoc signature on
+    each Mach-O and never seals the bundle (no _CodeSignature), so
+    `codesign --verify` fails with "code has no resources but signature
+    indicates they must be present" and Gatekeeper calls the downloaded app
+    damaged. Keep a signature that already verifies (a Developer ID one), fail
+    on an identity signature that no longer verifies (never silently replace
+    it), seal anything else ad hoc, then verify strictly."""
+    return (
+        f"set -e; app={shlex.quote(str(app))}; "
+        'if codesign --verify --deep --strict "$app" 2>/dev/null; then echo "$app: signature kept"; '
+        "elif codesign -dv \"$app\" 2>&1 | grep -q '^Authority='; then "
+        'echo "::error::$app is signed with an identity but no longer verifies" >&2; exit 1; '
+        'else codesign --force --deep --sign - "$app"; fi; '
+        'codesign --verify --deep --strict --verbose=2 "$app"'
+    )
+
+
+def run_bash(command: str) -> None:
+    subprocess.run(["bash", "-c", command], check=True)
+
+
 def write_outputs(values: dict[str, str], output: str | None) -> None:
     lines = "".join(f"{key}={value}\n" for key, value in values.items())
     target = output or os.environ.get("GITHUB_OUTPUT")
@@ -189,7 +216,7 @@ def write_outputs(values: dict[str, str], output: str | None) -> None:
     sys.stdout.write(lines)
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(argv: list[str] | None = None, runner=run_bash) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="command", required=True)
     for name in ("select", "version"):
@@ -198,7 +225,15 @@ def main(argv: list[str] | None = None) -> int:
     for name in ("--arch", "--ver", "--product", "--sha", "--names-file"):
         plan.add_argument(name, required=True)
     plan.add_argument("--output")
+    sub.add_parser("seal-app").add_argument("--app", required=True)
     args = parser.parse_args(argv)
+    if args.command == "seal-app":
+        try:
+            runner(seal_command(Path(args.app)))
+        except subprocess.CalledProcessError as error:
+            print(f"::error::{args.app} does not verify after sealing (exit {error.returncode})", file=sys.stderr)
+            return 1
+        return 0
     try:
         if args.command in ("select", "version"):
             event_name = os.environ.get("GITHUB_EVENT_NAME", "")
