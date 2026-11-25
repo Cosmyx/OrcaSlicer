@@ -68,7 +68,36 @@ it hides the conflicts that really need a person or an agent.
     still live in `build_all.yml` on `v2.5.2`), and a resolution may have to
     change files that did not conflict (a test reading the moved file).
     Matching the original commit's sha, not its subject, means a branch
-    commit rewritten since gets no stale resolution. The `rebase/` branches are not pushed:
+    commit rewritten since gets no stale resolution.
+  - Two guards protect a replay against a resolution that copied the source
+    file whole. A rerere postimage recorded by taking "theirs" for a whole
+    file once put DEV's entire `PluginManager.cpp` (+575/-79) into the
+    `v2.5.2` tree; every later run reused that bad replay as an earlier
+    resolution, and the build failed to compile.
+    - Precise: on the rerere path (a conflicted file left without markers)
+      and on the earlier-resolution path, a resolved file that is exactly the
+      replayed commit's file, while the file the commit is replayed onto
+      differs from the commit's parent file, is an unknown conflict. Applying
+      a change cannot give the source file unless every difference of the
+      base was dropped, which on a release base reverts the release's own
+      change. The stop names the path and the source commit and suggests
+      `git rerere forget <path>`. A bad earlier replay is dropped and the
+      source commit's cherry-pick is left in progress, so the hand resolution
+      committed there is found first next time. `--allow-whole-copy PATH`
+      (repeatable) accepts such a resolution on purpose; without it a false
+      positive would stop every run.
+    - Coarse: after the replay, every path BASE has outside the Cosmyx-owned
+      paths (any `cosmyx` folder or `cosmyx-` file, `wiki/`, `.claude/`,
+      `cosmyx-src/`, `CHANGELOG.md`) whose added plus deleted lines against
+      BASE exceed `--drift-threshold` (default 40) is listed in a drift
+      warning table; a binary change is always listed. `DRIFT_ALLOWED` in
+      `cli.py` lists the upstream files the branches legitimately change
+      more: `.github/workflows/build_orca.yml` (+75 on both `integration/v2.5.2`
+      against `v2.5.2` and `ci/cosmyx-integration` against DEV, the only
+      paths over 40) and `justfile`. `--strict-drift` makes a non-empty table
+      exit 1 with nothing pushed. The DEV integration is not checked: it
+      merges the branches as they are, with no replay to go wrong.
+  - The `rebase/` branches are not pushed:
     they are throwaway and rebuilt on every run, and their commits already
     reach the remote as the second parents of the integration merges.
   - `--build` builds the integration through a draft pull request from the

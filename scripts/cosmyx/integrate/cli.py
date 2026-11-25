@@ -21,6 +21,14 @@ earlier replay of the same commit (found by its `cherry-pick -x` line in the
 worktree's HEAD, the local `rebase/<BASE>/*` branches or the remote
 integration branch); otherwise its cherry-pick is left in progress, so that a
 person resolves and commits it there, and the next run reuses that commit.
+A replay resolution, by rerere or by an earlier replay, that is the replayed
+commit's whole file while BASE's file differs from the commit's parent file is
+refused as an unknown conflict (the source file was copied instead of applying
+the change; `--allow-whole-copy PATH` lets one through). After a replay, every
+path BASE has outside the Cosmyx-owned paths that changed by more than
+`--drift-threshold` lines (default 40) against BASE is listed in a drift
+warning table, except the paths of DRIFT_ALLOWED; `--strict-drift` makes that
+an error (exit 1, nothing pushed).
 Nothing is pushed unless `--push`, which pushes the branch (never the
 `rebase/<BASE>/*` branches) and
 `cosmyx-ci/<BASE>` (BASE's commit, the base of the build pull request)
@@ -42,8 +50,8 @@ own commits onto `refs/tags/upstream/TAG` (stacked children onto their
 replayed parent) with the same auto-resolutions, and prints a table. No
 branch is created, moved or pushed; the temporary worktree is always removed.
 
-Exit codes: 0 done, 1 unknown conflict (integrate) or conflicts found
-(rebase-check), 2 usage or setup error.
+Exit codes: 0 done, 1 unknown conflict or strict drift (integrate) or
+conflicts found (rebase-check), 2 usage or setup error.
 """
 
 from __future__ import annotations
@@ -83,6 +91,15 @@ BUILD_LABEL_COLOR = "1d76db"
 # the resolvers get the diff3 form of a file by `checkout --conflict=diff3`.
 RUN_CONFIG = ["-c", "rerere.enabled=true", "-c", "rerere.autoupdate=false", "-c", "merge.conflictStyle=merge",
               "-c", "core.editor=true"]
+# Drift check of a replay (decision 0215): an upstream path that the replay
+# changed by more lines than this against BASE is reported.
+DRIFT_THRESHOLD = 40
+# Upstream paths the Cosmyx branches legitimately change by more than that.
+DRIFT_ALLOWED = (".github/workflows/build_orca.yml", "justfile")
+# Paths owned by Cosmyx: changes there are not drift. Folders anywhere in a path:
+OWNED_DIRS = ("cosmyx",)
+# ...and top-level folders or files:
+OWNED_TOP = ("wiki", ".claude", "cosmyx-src", "CHANGELOG.md")
 
 
 class SetupError(Exception):
@@ -106,6 +123,10 @@ class Git:
 
     def sha(self, rev: str) -> str | None:
         completed = self.run("rev-parse", "-q", "--verify", f"{rev}^{{commit}}", check=False)
+        return completed.stdout.strip() or None
+
+    def blob_id(self, rev: str, path: str) -> str | None:
+        completed = self.run("rev-parse", "-q", "--verify", f"{rev}:{path}", check=False)
         return completed.stdout.strip() or None
 
     def blob(self, rev: str, path: str) -> str | None:
@@ -197,11 +218,14 @@ def manifests_in(worktree: Path) -> dict[str, str]:
     return {path.name: path.read_bytes().decode("utf-8") for path in sorted(folder.glob("*.json"))}
 
 
-def resolve_conflicts(git: Git, theirs_rev: str, brand_hook: BrandHook) -> Outcome:
+def resolve_conflicts(git: Git, theirs_rev: str, brand_hook: BrandHook,
+                      copy_guard: frozenset[str] | None = None) -> Outcome:
     """Resolve the conflicts of the merge or cherry-pick in progress in git.cwd.
 
     Known kinds are resolved and staged. Unknown ones are listed in the outcome
-    and left as they are; the caller aborts or overrides them.
+    and left as they are; the caller aborts or overrides them. With
+    copy_guard (the paths allowed through), a rerere resolution that copied
+    theirs_rev's whole file is unknown too (see copied_whole).
     """
     worktree = git.cwd
     outcome = Outcome()
@@ -230,6 +254,10 @@ def resolve_conflicts(git: Git, theirs_rev: str, brand_hook: BrandHook) -> Outco
         text = read(worktree, path)
         if not resolve.has_conflict_markers(text):
             # rerere already replayed a recorded resolution.
+            if copy_guard is not None and path not in copy_guard and copied_whole(
+                    git, path, theirs_rev, "HEAD", git.out("hash-object", "--", path)):
+                unknown(path, [copy_message(git, path, theirs_rev, "the rerere resolution")])
+                continue
             git.run("add", "--", path)
             note("rerere")
             continue
@@ -283,6 +311,54 @@ def resolve_branding(git: Git, theirs_rev: str, paths: list[str], brand_hook: Br
             git.run("add", "-A", "--", resolve.BRAND_PREFIXES[0].rstrip("/"), resolve.BRAND_PREFIXES[1].rstrip("/"))
             return
     raise resolve.Unresolvable(f"{len(lost)} validated rows lost on either side, e.g. {sorted(lost)[:3]}")
+
+
+def copied_whole(git: Git, path: str, source: str, before: str, resolved: str | None) -> bool:
+    """True when `resolved` (a blob id) is `source`'s whole file put over another file.
+
+    That is a resolution that copied the replayed commit's file instead of
+    applying its change: the file at `before` (the HEAD the commit is replayed
+    onto) differs from the commit's parent file, so applying the change cannot
+    give the commit's file unless every difference of `before` was dropped.
+    """
+    theirs = git.blob_id(source, path)
+    if theirs is None or resolved != theirs:
+        return False
+    return git.blob_id(before, path) != git.blob_id(f"{source}^", path)
+
+
+def copy_message(git: Git, path: str, source: str, how: str) -> str:
+    sha = git.out("rev-parse", source)
+    return (f"{how} copied {sha[:10]}'s whole file instead of applying its change (the base file differs from "
+            f"its parent's): run `git rerere forget {path}` in this worktree, resolve by hand, or pass "
+            f"--allow-whole-copy {path} if that is intended")
+
+
+def cosmyx_owned(path: str) -> bool:
+    """True for a path Cosmyx owns: a cosmyx folder, a cosmyx- file, or an owned top-level entry."""
+    parts = path.split("/")
+    if parts[0] in OWNED_TOP:
+        return True
+    return any(part.lower() in OWNED_DIRS or part.lower().startswith("cosmyx-") for part in parts)
+
+
+def drift_rows(git: Git, base: str, tip: str, threshold: int,
+               allowed: tuple[str, ...] = DRIFT_ALLOWED) -> list[tuple[str, str, str]]:
+    """(path, added, deleted) of each path of base outside Cosmyx's that tip changed by more than threshold lines.
+
+    A binary change has no line count ("-") and is always reported.
+    """
+    in_base = set(git.out("ls-tree", "-r", "-z", "--name-only", base).split("\0"))
+    rows = []
+    for record in git.run("diff", "--numstat", "-z", "--no-renames", base, tip).stdout.split("\0"):
+        if not record:
+            continue
+        added, deleted, path = record.split("\t", 2)
+        if path not in in_base or path in allowed or cosmyx_owned(path):
+            continue
+        if added == "-" or int(added) + int(deleted) > threshold:
+            rows.append((path, added, deleted))
+    return sorted(rows)
 
 
 def report_unknown(label: str, outcome: Outcome, out) -> None:
@@ -554,7 +630,7 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     if replay_mode:
         sources, notes, stopped = replay_branches(git, wt, data, entries, base_sha,
                                                   base_name(args.base, remote), brand_hook, out, resolved,
-                                                  args.branch)
+                                                  args.branch, frozenset(args.allow_whole_copy or ()))
         if stopped:
             return 1
         wt.run("checkout", "-q", "-f", "-B", args.branch, base_sha)
@@ -583,6 +659,15 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
     tip = wt.out("rev-parse", "HEAD")
     table(rows, ("Branch", "Tip", "Result"), out)
     print(f"{args.branch} = {tip[:10]} (remote {old_tip[:10] if old_tip else 'absent'})", file=out)
+    if replay_mode:
+        drift = drift_rows(wt, base_sha, tip, args.drift_threshold)
+        if drift:
+            print(f"DRIFT WARNING: {len(drift)} path(s) of {base} changed by more than {args.drift_threshold} "
+                  f"lines (a replay may have copied a source file whole; check them):", file=out)
+            table(drift, ("Path", "Added", "Deleted"), out)
+            if args.strict_drift:
+                print(f"Stopped (--strict-drift): {args.branch} holds the result; nothing pushed.", file=out)
+                return 1
     if not args.push:
         print("Not pushed (use --push).", file=out)
         return 0
@@ -621,8 +706,8 @@ def integrate(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine,
 
 
 def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sha: str, name: str,
-                    brand_hook: BrandHook, out, resolved: dict[str, str],
-                    branch: str) -> tuple[dict[str, str], dict[str, str], bool]:
+                    brand_hook: BrandHook, out, resolved: dict[str, str], branch: str,
+                    allowed_copies: frozenset[str] = frozenset()) -> tuple[dict[str, str], dict[str, str], bool]:
     """Replay each branch's own commits onto BASE as `rebase/<name>/<branch>`, in list order.
 
     Returns (branch to merge per entry, table note per entry, stopped). A
@@ -648,7 +733,7 @@ def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sh
         # branch in this worktree, so that the next run finds it there.
         wt.run("checkout", "-q", "-f", "-B", branch, new_base)
         try:
-            kinds, _ = replay(wt, commits, brand_hook, strict=True, resolved=resolved)
+            kinds, _ = replay(wt, commits, brand_hook, strict=True, resolved=resolved, allowed_copies=allowed_copies)
         except ReplayStopped as stop:
             subject = git.out("log", "-1", "--format=%s", stop.commit)
             report_unknown(f"{remote}/{entry.name} ({tip[:10]}), replaying {stop.commit[:10]} \"{subject}\"",
@@ -755,18 +840,20 @@ def own_commits(git: Git, data: dict, entry: Entry, tip: str, dev: str) -> tuple
     return parent, git.out("rev-list", "--reverse", "--no-merges", f"{old_base}..{tip}").split()
 
 
-def pick(wt: Git, commit: str, brand_hook: BrandHook, record: bool) -> Outcome | None:
+def pick(wt: Git, commit: str, brand_hook: BrandHook, record: bool,
+         copy_guard: frozenset[str] | None = None) -> Outcome | None:
     """Cherry-pick one commit onto HEAD: None when clean, else the conflict outcome."""
     result = wt.run("cherry-pick", "--allow-empty", "--empty=drop", *(["-x"] if record else []), commit, check=False)
     if result.returncode == 0:
         return None
     if not wt.sha("CHERRY_PICK_HEAD"):
         raise SetupError(f"cherry-pick {commit[:10]} failed:\n{result.stderr}")
-    return resolve_conflicts(wt, "CHERRY_PICK_HEAD", brand_hook)
+    return resolve_conflicts(wt, "CHERRY_PICK_HEAD", brand_hook, copy_guard)
 
 
 def replay(wt: Git, commits: list[str], brand_hook: BrandHook, strict: bool = False,
-           resolved: dict[str, str] | None = None) -> tuple[list[str], list[str]]:
+           resolved: dict[str, str] | None = None,
+           allowed_copies: frozenset[str] = frozenset()) -> tuple[list[str], list[str]]:
     """Cherry-pick commits onto HEAD; return (auto-resolution kinds, conflicting files).
 
     An unknown conflict is overridden with the commit's side (dry run), or,
@@ -774,20 +861,31 @@ def replay(wt: Git, commits: list[str], brand_hook: BrandHook, strict: bool = Fa
     which carries a hand resolution forward), or else raises ReplayStopped
     with the cherry-pick left in progress. Strict picks record the original
     commit with `-x`, so that a hand-resolved commit can be found again.
+    Strict picks also refuse a resolution that copied the commit's whole file
+    (see copied_whole), unless the path is in allowed_copies.
     """
     kinds: list[str] = []
     conflicts: list[str] = []
+    guard = allowed_copies if strict else None
     for commit in commits:
-        outcome = pick(wt, commit, brand_hook, record=strict)
+        outcome = pick(wt, commit, brand_hook, record=strict, copy_guard=guard)
         if outcome is None:
             continue
         if outcome.unknown and strict and commit in (resolved or {}):
             # Its own message already names the original commit: no second -x line.
+            conflicted = [path for path, _ in outcome.unknown]
+            before = wt.out("rev-parse", "HEAD")
             wt.run("cherry-pick", "--abort")
-            outcome = pick(wt, resolved[commit], brand_hook, record=False)
+            outcome = pick(wt, resolved[commit], brand_hook, record=False, copy_guard=guard)
             if "earlier resolution" not in kinds:
                 kinds.append("earlier resolution")
             if outcome is None:
+                reject_copies(wt, commit, resolved[commit], conflicted, before, brand_hook, guard)
+                continue
+            if not outcome.unknown:
+                kinds.extend(kind for kind in outcome.kinds if kind not in kinds)
+                commit_pick(wt)
+                reject_copies(wt, commit, resolved[commit], conflicted, before, brand_hook, guard)
                 continue
         kinds.extend(kind for kind in outcome.kinds if kind not in kinds)
         if outcome.unknown and strict:
@@ -796,11 +894,36 @@ def replay(wt: Git, commits: list[str], brand_hook: BrandHook, strict: bool = Fa
             paths = [path for path, _ in outcome.unknown]
             conflicts.extend(f"{path} ({commit[:10]})" for path in paths)
             take_theirs(wt, paths)
-        if wt.run("diff", "--cached", "--quiet", check=False).returncode == 0:
-            wt.run("cherry-pick", "--skip")
-        else:
-            wt.run("commit", "-q", "--no-verify", "--no-edit", "--allow-empty")
+        commit_pick(wt)
     return kinds, conflicts
+
+
+def commit_pick(wt: Git) -> None:
+    """Commit the resolved cherry-pick in progress, or skip it when it changes nothing."""
+    if wt.run("diff", "--cached", "--quiet", check=False).returncode == 0:
+        wt.run("cherry-pick", "--skip")
+    else:
+        wt.run("commit", "-q", "--no-verify", "--no-edit", "--allow-empty")
+
+
+def reject_copies(wt: Git, commit: str, earlier: str, paths: list[str], before: str, brand_hook: BrandHook,
+                  allowed: frozenset[str]) -> None:
+    """Undo an earlier replay that copied `commit`'s whole file at one of its conflicted paths.
+
+    The replay just committed on `before` is dropped and `commit` is picked
+    again, left in progress for a hand resolution; raises ReplayStopped.
+    """
+    copied = [path for path in paths if path not in allowed
+              and copied_whole(wt, path, commit, before, wt.blob_id("HEAD", path))]
+    if not copied:
+        return
+    wt.run("reset", "-q", "--hard", before)
+    outcome = pick(wt, commit, brand_hook, record=True, copy_guard=allowed) or Outcome()
+    how = f"the earlier resolution {earlier[:10]}"
+    notes = {path: copy_message(wt, path, commit, how) for path in copied}
+    outcome.unknown = [(path, why + ([notes.pop(path)] if path in notes else [])) for path, why in outcome.unknown]
+    outcome.unknown += [(path, [note]) for path, note in notes.items()]
+    raise ReplayStopped(commit, outcome)
 
 
 def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engine) -> int:
@@ -880,6 +1003,14 @@ def parser() -> argparse.ArgumentParser:
                                       "integration/<BASE> for any other)")
     one.add_argument("--worktree", help=f"worktree path under the main checkout (default: {INTEGRATION_WORKTREE} "
                                         "for the list's base, .worktrees/integration-<BASE> for any other)")
+    one.add_argument("--allow-whole-copy", action="append", metavar="PATH",
+                     help="replay mode: accept a resolution that copies the replayed commit's whole file at PATH "
+                          "(repeatable)")
+    one.add_argument("--drift-threshold", type=int, default=DRIFT_THRESHOLD, metavar="LINES",
+                     help=f"replay mode: report upstream paths changed by more lines than this against BASE "
+                          f"(default {DRIFT_THRESHOLD})")
+    one.add_argument("--strict-drift", action="store_true",
+                     help="replay mode: exit 1 and push nothing when the drift table is not empty")
     one.add_argument("--no-train", action="store_true",
                      help="do not teach rerere from the current remote integration branch")
     one.add_argument("--push", action="store_true",
