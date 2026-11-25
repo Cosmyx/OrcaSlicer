@@ -1,0 +1,108 @@
+{
+    "type": "filament",
+    "name": "Cosmyx ULTEM @Cosmyx Nova",
+    "inherits": "fdm_filament_asa",
+    "from": "system",
+    "setting_id": "rBca7zQ74O2SnhZU",
+    "filament_id": "OFj6vv1Q",
+    "instantiation": "true",
+    "filament_settings_id": [
+        "Cosmyx ULTEM @Cosmyx Nova"
+    ],
+    "filament_type": [
+        "ULTEM"
+    ],
+    "filament_vendor": [
+        "Cosmyx"
+    ],
+    "chamber_temperature": [
+        "100"
+    ],
+    "enable_overhang_bridge_fan": [
+        "0"
+    ],
+    "fan_max_speed": [
+        "0"
+    ],
+    "fan_min_speed": [
+        "0"
+    ],
+    "filament_cost": [
+        "108"
+    ],
+    "filament_max_volumetric_speed": [
+        "5"
+    ],
+    "supertack_plate_temp": [
+        "170"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "170"
+    ],
+    "cool_plate_temp": [
+        "170"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "170"
+    ],
+    "textured_cool_plate_temp": [
+        "170"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "170"
+    ],
+    "eng_plate_temp": [
+        "170"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "170"
+    ],
+    "hot_plate_temp": [
+        "170"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "170"
+    ],
+    "textured_plate_temp": [
+        "170"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "170"
+    ],
+    "nozzle_temperature": [
+        "380"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "380"
+    ],
+    "nozzle_temperature_range_high": [
+        "440"
+    ],
+    "nozzle_temperature_range_low": [
+        "380"
+    ],
+    "overhang_fan_speed": [
+        "10"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "0"
+    ],
+    "slow_down_layer_time": [
+        "8"
+    ],
+    "slow_down_min_speed": [
+        "5"
+    ],
+    "temperature_vitrification": [
+        "360"
+    ],
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
+        "Cosmyx Nova Haute Temperature 0.25 nozzle",
+        "Cosmyx Nova Haute Temperature 0.4 nozzle",
+        "Cosmyx Nova Haute Temperature 0.6 nozzle",
+        "Cosmyx Nova Haute Temperature 0.8 nozzle"
+    ]
+}
