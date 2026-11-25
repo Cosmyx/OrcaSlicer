@@ -125,6 +125,20 @@ class TableTests(unittest.TestCase):
         self.assertTrue(any("another language" in e for e in errors), errors)
 
 
+def committed_bytes(path: Path) -> bytes:
+    """The bytes the repository holds for `path`: its index blob, not the
+    checkout, which a Windows checkout (core.autocrlf) turns into CRLF while
+    the repository keeps LF. Outside a git checkout, the file on disk."""
+    try:
+        relative = path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+        return subprocess.run(
+            ["git", "-C", str(REPO_ROOT), "cat-file", "blob", f":{relative}"],
+            capture_output=True, check=True,
+        ).stdout
+    except (OSError, ValueError, subprocess.CalledProcessError):
+        return path.read_bytes()
+
+
 class CommittedCataloguesTests(unittest.TestCase):
     def test_check_passes(self) -> None:
         self.assertEqual(languages.check(REPO_ROOT, ROWS), [])
@@ -156,7 +170,7 @@ class CommittedCataloguesTests(unittest.TestCase):
         for row in ROWS:
             if row.source == "Cosmyx":
                 with self.subTest(code=row.code):
-                    data = languages.cosmyx_catalogue(REPO_ROOT, row).read_bytes()
+                    data = committed_bytes(languages.cosmyx_catalogue(REPO_ROOT, row))
                     self.assertNotIn(b"\r\n", data)
                     data.decode("utf-8")
 
@@ -178,7 +192,7 @@ class CommittedCataloguesTests(unittest.TestCase):
                     with self.subTest(code=row.code):
                         self.assertEqual(
                             languages.cosmyx_catalogue(root, row).read_bytes(),
-                            languages.cosmyx_catalogue(REPO_ROOT, row).read_bytes(),
+                            committed_bytes(languages.cosmyx_catalogue(REPO_ROOT, row)),
                         )
 
     def test_msgfmt_accepts_every_cosmyx_catalogue(self) -> None:
