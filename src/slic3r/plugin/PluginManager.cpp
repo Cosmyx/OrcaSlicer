@@ -1,4 +1,5 @@
 #include "PluginManager.hpp"
+#include "slic3r/GUI/Cosmyx/PluginVerify.hpp" // Cosmyx
 
 #include <atomic>
 #include <boost/filesystem/path.hpp>
@@ -1835,6 +1836,7 @@ bool PluginManager::download_and_install_cloud_plugin(const std::string& plugin_
         BOOST_LOG_TRIVIAL(warning) << __FUNCTION__ << ": Failed to find plugin key " << plugin_key;
         return false;
     }
+    const GUI::Cosmyx::CloudInstallScope cosmyx_scope(descriptor); // Cosmyx: keeps the version floor, drops an uncommitted check (decision 0204)
 
     clear_plugin_error(plugin_key);
 
@@ -1868,6 +1870,10 @@ bool PluginManager::download_and_install_cloud_plugin(const std::string& plugin_
         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ": " << error;
         return false;
     }
+    if (!cosmyx_scope.commit(descriptor, error)) { // Cosmyx: refuses bytes not checked, before the entry is marked installed (decision 0204)
+        set_plugin_error(plugin_key, error); // Cosmyx
+        return false; // Cosmyx
+    } // Cosmyx
 
     PluginDescriptor updated_descriptor = descriptor;
     if (!requested_version.empty())

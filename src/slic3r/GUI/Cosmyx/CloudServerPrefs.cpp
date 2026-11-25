@@ -2,7 +2,9 @@
 
 #include <array>
 #include <cstddef>
+#include <string>
 
+#include <boost/log/trivial.hpp>
 #include <wx/colour.h>
 #include <wx/event.h>
 #include <wx/gdicmn.h>
@@ -18,12 +20,14 @@
 #include "slic3r/GUI/GUI_App.hpp"
 #include "slic3r/GUI/I18N.hpp"
 #include "slic3r/GUI/MsgDialog.hpp"
+#include "slic3r/GUI/format.hpp"
 #include "slic3r/GUI/Widgets/Button.hpp"
 #include "slic3r/GUI/Widgets/CheckBox.hpp"
 #include "slic3r/GUI/Widgets/Label.hpp"
 #include "slic3r/GUI/Widgets/StateColor.hpp"
 #include "slic3r/GUI/Widgets/TextInput.hpp"
 #include "logic/CloudServer.hpp"
+#include "logic/PluginTrust.hpp"
 
 namespace Slic3r {
 namespace GUI {
@@ -98,6 +102,8 @@ public:
             m_errors[field]->Hide();
             fields_sizer->Add(m_errors[field], 0, wxLEFT, m_fields->FromDIP(LEFT_MARGIN + LABEL_WIDTH + 5));
         }
+        add_plugin_rows(fields_sizer, input_bg);
+
         m_apply = new Button(m_fields, _L("Apply"));
         m_apply->SetStyle(ButtonStyle::Confirm, ButtonType::Parameter);
         m_apply->SetToolTip(_L("Check the addresses and save them."));
@@ -135,6 +141,55 @@ private:
         return label;
     }
 
+    // Plugin package signatures of the custom server (decision 0204): the key
+    // the user pins for the API address, and the opt-in to unverified plugins.
+    void add_plugin_rows(wxSizer* fields_sizer, const StateColor& input_bg)
+    {
+        const wxString key_tip = _L("Public key that signs this server's plugin packages, 64 hexadecimal characters. "
+                                    "The server lists it at /pkg/v1/keys; check its key id with the server's operator.");
+        auto* key_row = new wxBoxSizer(wxHORIZONTAL);
+        key_row->AddSpacer(m_fields->FromDIP(LEFT_MARGIN));
+        key_row->Add(make_label(m_fields, _L("Plugin signing key"), key_tip), 0, wxALIGN_CENTER_VERTICAL);
+        key_row->AddSpacer(m_fields->FromDIP(5));
+        m_plugin_key = new ::TextInput(m_fields, wxEmptyString, wxEmptyString, wxEmptyString, wxDefaultPosition,
+                                       wxSize(m_fields->FromDIP(INPUT_WIDTH), -1));
+        m_plugin_key->SetBackgroundColor(input_bg);
+        m_plugin_key->SetToolTip(key_tip);
+        key_row->Add(m_plugin_key, 0, wxALIGN_CENTER_VERTICAL);
+        fields_sizer->Add(key_row, 0, wxTOP, m_fields->FromDIP(4));
+
+        m_plugin_key_info = new wxStaticText(m_fields, wxID_ANY, wxEmptyString);
+        m_plugin_key_info->SetFont(::Label::Body_12);
+        m_plugin_key_info->Hide();
+        fields_sizer->Add(m_plugin_key_info, 0, wxLEFT, m_fields->FromDIP(LEFT_MARGIN + LABEL_WIDTH + 5));
+
+        const wxString allow_tip = _L("Install plugins from this server even when no signing key is pinned. Their size and "
+                                      "digest are still checked, but nothing proves who made them.");
+        auto* allow_row = new wxBoxSizer(wxHORIZONTAL);
+        allow_row->AddSpacer(m_fields->FromDIP(LEFT_MARGIN));
+        allow_row->Add(make_label(m_fields, _L("Allow unverified plugins from this server"), allow_tip), 0,
+                       wxALIGN_CENTER | wxTOP | wxBOTTOM, m_fields->FromDIP(3));
+        allow_row->AddSpacer(m_fields->FromDIP(5));
+        m_allow_unverified = new ::CheckBox(m_fields);
+        m_allow_unverified->SetToolTip(allow_tip);
+        allow_row->Add(m_allow_unverified, 0, wxALIGN_CENTER);
+        fields_sizer->Add(allow_row, 0, wxTOP, m_fields->FromDIP(4));
+    }
+
+    void show_key_info(const wxString& text, bool error)
+    {
+        m_plugin_key_info->SetForegroundColour(error ? ERROR_COLOUR : LABEL_COLOUR);
+        m_plugin_key_info->SetLabel(text);
+        m_plugin_key_info->Show(!text.empty());
+    }
+
+    void show_key_id(const std::string& public_key)
+    {
+        const std::string key_id = public_key_id(public_key);
+        // TRN %1% is a 64-character hexadecimal key id.
+        show_key_info(key_id.empty() ? wxString() : format_wxstr(_L("Key id: %1%"), key_id), false);
+    }
+
     void load_fields()
     {
         AppConfig* config = wxGetApp().app_config;
@@ -143,12 +198,29 @@ private:
         const CloudValues values = custom_cloud_values(*config);
         for (std::size_t field = 0; field < CLOUD_FIELD_COUNT; ++field)
             m_inputs[field]->GetTextCtrl()->SetValue(from_u8(values[field]));
+        load_pins(*config, values[ApiUrl]);
+    }
+
+    // Shows the pins stored for api_url and remembers that address: Apply only
+    // stores the rows for the server they were loaded for (pins_to_save()).
+    // The Cosmyx server's pins are never used, so its rows are disabled.
+    void load_pins(const AppConfig& config, const std::string& api_url)
+    {
+        m_pins_url             = api_url;
+        const bool       custom = server_kind(api_url) == ServerKind::Custom;
+        const ServerPins pins   = custom ? server_pins(config, api_url) : ServerPins();
+        m_plugin_key->GetTextCtrl()->SetValue(from_u8(pins.public_key));
+        m_allow_unverified->SetValue(pins.allow_unverified);
+        m_plugin_key->Enable(custom);
+        m_allow_unverified->Enable(custom);
+        show_key_id(pins.public_key);
     }
 
     void clear_errors()
     {
         for (wxStaticText* error : m_errors)
             error->Hide();
+        m_plugin_key_info->Hide();
     }
 
     void relayout()
@@ -195,10 +267,35 @@ private:
             relayout();
             return;
         }
+        // The rows hold the pins of the address they were loaded for; they are
+        // never stored for another server (decision 0204).
+        const PinsSave save = pins_to_save(m_pins_url, values[ApiUrl]);
+        ServerPins     pins;
+        if (save == PinsSave::Typed) {
+            const std::string typed_key = trim_value(into_u8(m_plugin_key->GetTextCtrl()->GetValue()));
+            if (!typed_key.empty() && public_key_id(typed_key, &pins.public_key).empty()) {
+                show_key_info(_L("The plugin signing key must be 64 hexadecimal characters."), true);
+                m_plugin_key->GetTextCtrl()->SetFocus();
+                relayout();
+                return;
+            }
+            pins.allow_unverified = m_allow_unverified->GetValue();
+        }
         // Show the values as they are stored.
         for (std::size_t field = 0; field < CLOUD_FIELD_COUNT; ++field)
             m_inputs[field]->GetTextCtrl()->SetValue(from_u8(values[field]));
         use_custom_cloud(*config, values);
+        const bool pins_saved = save != PinsSave::Typed || set_server_pins(*config, values[ApiUrl], pins);
+        load_pins(*config, values[ApiUrl]);
+        if (!pins_saved) {
+            BOOST_LOG_TRIVIAL(warning) << "Cosmyx plugin trust settings not saved: the stored " << PLUGIN_TRUST_KEY
+                                       << " value cannot be read";
+            show_key_info(_L("The plugin signing settings were not saved: the stored ones cannot be read."), true);
+        } else if (save == PinsSave::Keep) {
+            show_key_info(_L("The API address changed: these are the plugin signing settings of the new address. "
+                             "Check them and apply again to change them."),
+                          false);
+        }
         config->save();
         relayout();
         show_restart_note();
@@ -221,6 +318,10 @@ private:
     Button*                                        m_apply    = nullptr;
     std::array<::TextInput*, CLOUD_FIELD_COUNT>    m_inputs{};
     std::array<wxStaticText*, CLOUD_FIELD_COUNT>   m_errors{};
+    ::TextInput*                                   m_plugin_key       = nullptr;
+    wxStaticText*                                  m_plugin_key_info  = nullptr;
+    ::CheckBox*                                    m_allow_unverified = nullptr;
+    std::string                                    m_pins_url; // the API address the plugin rows were loaded for
 };
 
 } // namespace

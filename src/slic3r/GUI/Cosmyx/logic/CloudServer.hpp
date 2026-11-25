@@ -73,6 +73,13 @@ inline CloudValues cosmocloud_values()
 // Returns the number of cloud keys written.
 int apply_cloud_server(AppConfig& config);
 
+// The API address the cloud agent was created with: orca_api_url as
+// apply_cloud_server() left it, which the agent reads right after. A change in
+// Preferences only reaches the agent at the next start (decision 0203), so the
+// plugin package check (decision 0204) uses this address, not the current key.
+// Before the first apply_cloud_server(), the current orca_api_url.
+std::string active_api_url(const AppConfig& config);
+
 // --- Custom cloud instance (Preferences, decision 0203) ---------------------
 
 enum class CloudValueError {
@@ -93,9 +100,56 @@ struct CloudValidation
 // Leading and trailing spaces, tabs and line breaks removed.
 std::string trim_value(const std::string& value);
 
+// A server address in its one spelling (decision 0204).
+struct ServerAddress
+{
+    std::string scheme; // "https" or "http"
+    std::string host;   // lower case, no trailing dot; an IPv6 literal keeps its brackets
+    std::string port;   // decimal without leading zeros; empty for the scheme's default port
+    std::string path;   // as written, without trailing slashes: empty or starting with '/'
+
+    std::string url() const { return scheme + "://" + host + (port.empty() ? std::string() : ":" + port) + path; }
+};
+
+// Reads an address that is plainly scheme://host[:port][/path], surrounding
+// spaces trimmed: an explicit http or https scheme (any case), an ASCII host
+// name of letters, digits, '-', '_' and dots (one trailing dot allowed) or an
+// [IPv6] literal that inet_pton() would read (written back in its RFC 5952
+// form), an optional port 1-65535 (empty or with leading zeros is
+// read as written by libcurl), and a path with no "." or ".." segment. Any
+// other address is unrecognised and gives false: no scheme, user info ('@'),
+// percent-encoding ('%'), a query or fragment ('?', '#'), a backslash,
+// whitespace, control or non-ASCII characters. The cloud agent hands the
+// address to libcurl, which decodes, guesses or drops what such spellings
+// hold, so the client never tries to say which server they reach.
+bool parse_server_address(const std::string& url, ServerAddress& address);
+
+// How the plugin check reads a server address (decision 0204). The one rule
+// that both the plugin check (server_trust()) and Preferences
+// (check_cloud_url()) apply, so Preferences never takes an address whose
+// plugins would all be refused:
+// - empty: Cosmyx, since apply_cloud_server() fills an empty key with
+//   CLOUD_SERVER_URL; a blank (whitespace-only) value is kept and used as it
+//   is by the agent, so it is unrecognised;
+// - an address with any whitespace or control character, surrounding ones
+//   included (the agent does not trim it), or one parse_server_address()
+//   refuses: unrecognised;
+// - the host of CLOUD_SERVER_URL: Cosmyx with https on the default port,
+//   unrecognised with any other scheme or port;
+// - any other host: custom with https, or with plain http on a loopback host
+//   as check_cloud_url() reads it; unrecognised with plain http on any other
+//   host. address, when given, gets the parsed address.
+enum class ServerKind { Cosmyx, Custom, Unrecognised };
+ServerKind server_kind(const std::string& url, ServerAddress* address = nullptr);
+
 // Checks a trimmed address: https scheme (any case), or http on a loopback
-// host (localhost, *.localhost, 127.0.0.0/8, [::1]) for a local test server;
-// a host name, an optional port 1-65535, no spaces and no user info.
+// host for a local test server: localhost, *.localhost, 127.0.0.0/8 written
+// in plain dotted decimal (no leading zeros, which libcurl reads as octal or
+// as a name to resolve) or ::1 in any IPv6 spelling; "localhost." and
+// IPv4-mapped addresses are not loopback. Also a host name, an optional port
+// 1-65535, no spaces and no user info, and an address server_kind() does not
+// call unrecognised (Invalid otherwise), so the plugin check never refuses
+// an address that Preferences took.
 CloudValueError check_cloud_url(const std::string& url);
 
 // Checks a trimmed public key: not empty, no spaces.

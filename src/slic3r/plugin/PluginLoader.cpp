@@ -1,4 +1,5 @@
 #include "PluginLoader.hpp"
+#include "slic3r/GUI/Cosmyx/logic/PluginTrust.hpp" // Cosmyx
 
 // plugin_loader fills and tears down a Plugin, so it needs the complete type. The
 // declaration lives with the registry that owns it; the dependency is .cpp-only, so the
@@ -198,6 +199,8 @@ PyObject* import_plugin_module(const PluginDescriptor& descriptor,
 
     if (descriptor.entry_package.empty())
         return interpreter.load_module_from_file(descriptor.entry_path, error, &plugin_paths, &plugin_modules);
+    if (!GUI::Cosmyx::check_entry_package(descriptor.entry_path, descriptor.entry_package, error)) // Cosmyx: CosmoCloud 0077
+        return nullptr; // Cosmyx
 
     if (boost::filesystem::path(descriptor.entry_path).extension() == ".whl")
         return interpreter.load_module_from_whl(
