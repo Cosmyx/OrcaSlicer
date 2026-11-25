@@ -7,13 +7,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# AI Translated
 #. TRN Warning shown in Preferences before "Enable Bambu Cloud" or "Enable Bambu network plug-in" is turned on.
 msgid ""
 "This module has not been verified by Cosmyx and relies on machines the "
 "Cosmyx team does not support. Use it at your own risk."
 msgstr ""
+"Este módulo no ha sido verificado por Cosmyx y depende de máquinas que el "
+"equipo de Cosmyx no admite. Úselo bajo su propia responsabilidad."
 
+# AI Translated
 #. TRN Caption of the warning, named after the Preferences section holding the two toggles.
 #. TRN Title of the Preferences section holding the Bambu Cloud and Bambu network plug-in toggles.
 msgid "External machines"
-msgstr ""
+msgstr "Máquinas externas"
