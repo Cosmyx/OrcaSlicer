@@ -466,6 +466,10 @@ jobs:
               curl -sSf -X DELETE -H "Authorization: Bearer $GH_TOKEN" "$api/$id"
             done
       shell: bash
+    - name: Cosmyx package names flatpak # Cosmyx
+      uses: ./.github/actions/cosmyx-package-names # Cosmyx
+      with: # Cosmyx
+        stage: flatpak # Cosmyx
     - name: Upload artifacts Flatpak
       uses: actions/upload-artifact@v7
       with:

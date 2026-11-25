@@ -266,6 +266,105 @@ class G8ProductNameTest(TreeCase):
         write(self.root, "version.inc", 'set(SLIC3R_APP_NAME "CosmoSlice")\nset(SLIC3R_APP_KEY "OrcaSlicer")\n')
         self.assertEqual(guards.g8_product_name(ctx, "post"), [])
 
+    def app_key_case(self, rows, after: str) -> list:
+        write(self.root, "build.sh.in", "Name=@SLIC3R_APP_KEY@\nIcon=@SLIC3R_APP_KEY@\n")
+        self.tables(rows)
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, "build.sh.in", after)
+        return levels(guards.g8_product_name(ctx, "post"))
+
+    def test_a_row_may_rewire_a_line_naming_the_app_key(self) -> None:
+        row = {"file": "build.sh.in", "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1, "reason": "name"}
+        self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_NAME@\nIcon=@SLIC3R_APP_KEY@\n"), [])
+
+    def test_a_line_no_row_names_must_stay(self) -> None:
+        row = {"file": "build.sh.in", "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1, "reason": "name"}
+        self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_NAME@\nIcon=x\n"), ["error"])
+
+    def test_new_lines_naming_the_app_key_are_fine(self) -> None:
+        row = {"file": "build.sh.in", "old": "Icon=", "new": "Icon=", "count": 1, "reason": "same"}
+        self.assertEqual(self.app_key_case([row], "Name=@SLIC3R_APP_KEY@\nIcon=@SLIC3R_APP_KEY@\nX=SLIC3R_APP_KEY\n"), [])
+
+    APPIMAGE = "src/dev-utils/platform/unix/build_appimage.sh.in"
+    APPIMAGE_TEXT = (
+        'APP_IMAGE="@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"\n'
+        "cat <<EOF > com.orcaslicer.@SLIC3R_APP_KEY@.desktop\n[Desktop Entry]\nName=@SLIC3R_APP_KEY@\nEOF\n"
+        "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}\n"
+    )
+    APPIMAGE_ROW = {"file": APPIMAGE, "old": "Name=@SLIC3R_APP_KEY@\n", "new": "Name=@SLIC3R_APP_NAME@\n", "count": 1,
+                    "reason": "AppImage desktop entry name"}
+
+    def test_renaming_the_appimage_desktop_name_alone_is_an_error(self) -> None:
+        # Integration build 44545583808: appimagetool named the AppImage after
+        # the renamed desktop entry, and the script's mv of
+        # @SLIC3R_APP_KEY@-<arch>.AppImage found nothing.
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables([self.APPIMAGE_ROW])
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@", "Name=@SLIC3R_APP_NAME@"))
+        [finding] = guards.g8_product_name(ctx, "post")
+        self.assertEqual((finding.level, finding.path), ("error", self.APPIMAGE))
+        self.assertIn("go together", finding.message)
+
+    def test_appimage_name_and_move_renamed_together_pass(self) -> None:
+        # Decision 0210: the launcher says CosmoSlice and the mv follows it.
+        rows = [
+            dict(self.APPIMAGE_ROW, new="Name=CosmoSlice\n"),
+            {"file": self.APPIMAGE, "old": "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage", "new": "mv CosmoSlice-$(uname -m).AppImage",
+             "count": 1, "reason": "file appimagetool writes"},
+        ]
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables(rows)
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@", "Name=CosmoSlice")
+              .replace("mv @SLIC3R_APP_KEY@-", "mv CosmoSlice-"))
+        self.assertEqual(guards.g8_product_name(ctx, "post"), [])
+
+    def test_appimage_script_without_its_name_line_is_drift(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("Name=@SLIC3R_APP_KEY@\n", ""))
+        self.tables([self.PATCH])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(), "pre")), ["warning"])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(RELEASE), "pre")), ["error"])
+
+    def test_renaming_a_pinned_packaging_name_is_an_error(self) -> None:
+        row = {"file": self.APPIMAGE, "old": 'APP_IMAGE="@SLIC3R_APP_KEY@_', "new": 'APP_IMAGE="CosmoSlice_', "count": 1, "reason": "bad"}
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables([row])
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace('APP_IMAGE="@SLIC3R_APP_KEY@_', 'APP_IMAGE="CosmoSlice_'))
+        [finding] = guards.g8_product_name(ctx, "post")
+        self.assertIn("packaging identifier", finding.message)
+
+    def test_untouched_packaging_pins_pass(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT)
+        self.tables([self.PATCH])
+        ctx = self.ctx()
+        self.assertEqual(guards.g8_product_name(ctx, "pre"), [])
+        self.assertEqual(guards.g8_product_name(ctx, "post"), [])
+
+    def test_a_pinned_file_without_its_pin_is_drift(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace('APP_IMAGE="@SLIC3R_APP_KEY@_', 'APP_IMAGE="X_'))
+        self.tables([self.PATCH])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(), "pre")), ["warning"])
+        self.assertEqual(levels(guards.g8_product_name(self.ctx(RELEASE), "pre")), ["error"])
+
+    def test_crlf_pinned_file_still_matches(self) -> None:
+        write(self.root, self.APPIMAGE, self.APPIMAGE_TEXT.replace("\n", "\r\n"))
+        self.tables([self.PATCH])
+        self.assertEqual(guards.g8_product_name(self.ctx(), "pre"), [])
+
+    def test_the_app_key_definition_never_goes(self) -> None:
+        row = {"file": "version.inc", "old": 'set(SLIC3R_APP_KEY "OrcaSlicer")', "new": 'set(SLIC3R_APP_KEY "Other")', "count": 1, "reason": "bad"}
+        self.tables([row])
+        ctx = self.ctx()
+        guards.g8_product_name(ctx, "pre")
+        write(self.root, "version.inc", 'set(SLIC3R_APP_NAME "OrcaSlicer")\nset(SLIC3R_APP_KEY "Other")\n')
+        self.assertEqual(levels(guards.g8_product_name(ctx, "post")), ["error"])
+
 
 class StatusPolicyTest(TreeCase):
     def test_missing_warns_on_development(self) -> None:

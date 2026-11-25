@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "upstream": "OrcaSlicer",
+  "product": "CosmoSlice",
+  "mac": {
+    "bundle_dir": "build/{arch}/OrcaSlicer",
+    "app": "{product}.app",
+    "dmg": "{product}_Mac_{arch}_{ver}.dmg",
+    "dmg_staging": "build/{arch}/{product}_dmg",
+    "volume": "{product}",
+    "artifact": "{product}_Mac_{arch}_{ver}",
+    "validator_app": "{upstream}_profile_validator.app",
+    "validator_dmg": "{upstream}_profile_validator_Mac_universal_{ver}.dmg",
+    "validator_artifact": "{upstream}_profile_validator_Mac_universal_DMG_{ver}"
+  },
+  "windows": {
+    "portable_dir": "OrcaSlicer",
+    "portable_artifact": "{product}_Windows_{ver}{arch}_portable",
+    "installer_glob": "{product}_Windows_Installer_*.exe",
+    "installer_artifact": "{product}_Windows_{ver}{arch}",
+    "msix": "{product}_Windows_MSIX_{ver}{arch}.msix",
+    "msix_artifact": "{product}_Windows_MSIX_{ver}{arch}",
+    "validator_artifact": "{upstream}_profile_validator_Windows_{ver}"
+  },
+  "linux": {
+    "appimage": "build/{product}_Linux_AppImage{ubuntu_str}{arch}_{ver}.AppImage",
+    "artifact": "{product}_Linux_ubuntu_{ubuntu}{arch}_{ver}",
+    "validator": "build/src/Release/{upstream}_profile_validator"
+  },
+  "flatpak": {
+    "bundle": "{product}-Linux-flatpak_{ver}_{arch}.flatpak",
+    "artifact": "{product}-Linux-flatpak_{ver}_{arch}.flatpak"
+  }
+}
