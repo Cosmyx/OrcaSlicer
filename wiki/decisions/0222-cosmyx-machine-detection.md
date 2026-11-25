@@ -52,10 +52,12 @@ after the plater exists, so the early `plater() == nullptr` return of
     Preset::TYPE_PRINTER)`, right after `wxGetApp().switch_printer_agent();`:
     `Cosmyx::notify_printer_changed(); // Cosmyx`
   No second hook is needed for startup (see Context).
-- The branch is stacked on feat/cosmyx-models (#92) because its first
-  consumer, the models submenu gating (decision 0223), lives in the same pull
-  request: the integrate tool gives each branch a single parent, so a separate
-  gating branch on top of both #92 and this one is not possible.
+- The branch holds the hook only and is based on chore/cosmyx-foundation,
+  so it does not depend on any consumer. Each consumer lives on its own
+  branch: the models submenu gating (decision 0223) on
+  feat/cosmyx-models-cosmyx-only, which merges this branch into
+  feat/cosmyx-models (#92), and the Cosmyx physical printer dialog on
+  feat/cosmyx-printer-connection, based on this branch.
 
 ## Consequences
 
