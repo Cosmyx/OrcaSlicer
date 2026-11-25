@@ -7,46 +7,60 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "공개 키를 입력하세요."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "공개 키에는 공백이 포함될 수 없습니다."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "주소를 입력하세요."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "주소는 https://로 시작해야 합니다(http://는 localhost에서만 허용)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "주소에 호스트 이름이 없습니다."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "올바른 주소가 아닙니다."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
-msgstr ""
+msgstr "Cosmyx Cloud 대신 자체 클라우드 서버에 연결합니다. 클라우드는 스텔스 모드가 꺼져 있을 때만 사용됩니다."
 
+# AI Translated
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "사용자 지정 클라우드 인스턴스"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "API 주소"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "인증 주소"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "웹 주소"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "공개 키"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "주소를 확인하고 저장합니다."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "새 클라우드 서버에 연결하려면 애플리케이션을 다시 시작하세요."

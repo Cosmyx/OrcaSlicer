@@ -7,46 +7,63 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Nhập khóa công khai."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "Khóa công khai không được chứa khoảng trắng."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Nhập địa chỉ."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "Địa chỉ phải bắt đầu bằng https:// (chỉ dùng http:// cho localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "Địa chỉ không có tên máy chủ."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Địa chỉ này không hợp lệ."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Kết nối với máy chủ đám mây của riêng bạn thay vì Cosmyx Cloud. Đám mây chỉ "
+"được sử dụng khi Chế độ ẩn danh tắt."
 
+# AI Translated
+# Needs human review: check 'instance' wording (phien ban vs may chu) for a custom cloud server
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Phiên bản đám mây tùy chỉnh"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "Địa chỉ API"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Địa chỉ xác thực"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "Địa chỉ web"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Khóa công khai"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Kiểm tra các địa chỉ và lưu chúng."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "Khởi động lại ứng dụng để kết nối với máy chủ đám mây mới."

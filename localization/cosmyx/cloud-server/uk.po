@@ -9,46 +9,63 @@ msgstr ""
 "&& n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 "
 "&& n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Введіть відкритий ключ."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "Відкритий ключ не повинен містити пробілів."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Введіть адресу."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "Адреса має починатися з https:// (http:// — лише для localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "В адресі немає імені хоста."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Ця адреса недійсна."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Підключіться до власного хмарного сервера замість Cosmyx Cloud. Хмара "
+"використовується лише тоді, коли прихований режим вимкнено."
 
+# AI Translated
+# Needs human review: literal 'custom cloud instance'; chose 'own cloud server' for UI title
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Власний хмарний сервер"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "Адреса API"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Адреса автентифікації"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "Веб-адреса"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Відкритий ключ"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Перевірте адреси та збережіть їх."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "Перезапустіть програму, щоб підключитися до нового хмарного сервера."

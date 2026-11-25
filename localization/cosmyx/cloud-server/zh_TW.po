@@ -7,46 +7,61 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "請輸入公開金鑰。"
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "公開金鑰不可包含空格。"
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "請輸入位址。"
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "位址必須以 https:// 開頭（僅 localhost 可使用 http://）。"
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "此位址沒有主機名稱。"
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "此位址無效。"
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
-msgstr ""
+msgstr "連線至您自己的雲端伺服器，而非 Cosmyx Cloud。僅在無痕模式關閉時才會使用雲端。"
 
+# AI Translated
+# Needs human review: check wording of 'Instance' (執行個體 vs 實例) for a cloud server setting title
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "自訂雲端執行個體"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "API 位址"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "驗證位址"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "網頁位址"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "公開金鑰"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "檢查位址並儲存。"
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "請重新啟動應用程式以連線至新的雲端伺服器。"

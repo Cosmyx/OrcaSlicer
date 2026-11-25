@@ -7,46 +7,61 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "请输入公钥。"
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "公钥不能包含空格。"
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "请输入地址。"
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "地址必须以 https:// 开头（仅 localhost 可使用 http://）。"
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "该地址缺少主机名。"
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "该地址无效。"
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
-msgstr ""
+msgstr "连接到您自己的云服务器，而非 Cosmyx Cloud。仅在隐身模式关闭时才会使用云端。"
 
+# AI Translated
+# Needs human review: check 实例 wording for a self-hosted cloud server
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "自定义云实例"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "API 地址"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "认证地址"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "网页地址"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "公钥"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "检查地址并保存。"
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "请重启应用程序以连接到新的云服务器。"

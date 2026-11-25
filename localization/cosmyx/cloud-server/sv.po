@@ -7,46 +7,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Ange den publika nyckeln."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "Den publika nyckeln får inte innehålla mellanslag."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Ange en adress."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "Adressen måste börja med https:// (http:// endast för localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "Adressen saknar värdnamn."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Adressen är inte giltig."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Anslut till din egen molnserver i stället för Cosmyx Cloud. Molnet används "
+"endast när Stealth-läget är avstängt."
 
+# AI Translated
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Anpassad molninstans"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "API-adress"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Autentiseringsadress"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "Webbadress"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Publik nyckel"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Kontrollera adresserna och spara dem."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "Starta om programmet för att ansluta till den nya molnservern."

@@ -68,8 +68,10 @@ here; see the upstream release notes.
   sign-in, sync and the plugin hub, and stealth mode can be turned off again:
   it is on by default until the user opts out. Preferences can point the app
   at a custom cloud instance ("Custom Cloud Instance", translated into
-  French), over https or over plain http on the local machine (localhost) for
-  testing; cloud addresses set by the user always win.
+  French and machine-translated for review into the 20 other offered UI
+  languages; British English keeps the source text), over https or over plain
+  http on the local machine (localhost) for testing; cloud addresses set by
+  the user always win.
   Pull request: pending. Decisions: 0200, 0201, 0202, 0203.
 
 ### i18n

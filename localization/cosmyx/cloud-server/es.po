@@ -7,46 +7,62 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Introduzca la clave pública."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "La clave pública no debe contener espacios."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Introduzca una dirección."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "La dirección debe empezar por https:// (http:// solo para localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "La dirección no tiene nombre de host."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Esta dirección no es válida."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Conéctese a su propio servidor en la nube en lugar de Cosmyx Cloud. La nube "
+"solo se usa cuando el modo sigiloso está desactivado."
 
+# AI Translated
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Instancia de nube personalizada"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "Dirección de la API"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Dirección de autenticación"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "Dirección web"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Clave pública"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Compruebe las direcciones y guárdelas."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "Reinicie la aplicación para conectarse al nuevo servidor en la nube."

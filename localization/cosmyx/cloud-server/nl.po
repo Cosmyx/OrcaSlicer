@@ -7,46 +7,64 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Voer de openbare sleutel in."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "De openbare sleutel mag geen spaties bevatten."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Voer een adres in."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "Het adres moet beginnen met https:// (http:// alleen voor localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "Het adres heeft geen hostnaam."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Dit adres is ongeldig."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Maak verbinding met uw eigen cloudserver in plaats van Cosmyx Cloud. De "
+"cloud wordt alleen gebruikt als de Stealth-modus uit staat."
 
+# AI Translated
+# Needs human review: check 'Eigen cloudinstantie' as section title for a self-hosted cloud server
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Eigen cloudinstantie"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "API-adres"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Authenticatieadres"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "Webadres"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Openbare sleutel"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Controleer de adressen en sla ze op."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr ""
+"Start de applicatie opnieuw om verbinding te maken met de nieuwe cloudserver."
