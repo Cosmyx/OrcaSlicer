@@ -171,11 +171,11 @@ _Limit from `version.inc`, where `COSMYX_PATCH_VERSION` is "7", which is also th
 
 Rebase on the latest OrcaSlicer release, 2.5.2.
 
-Bundle 8 holds what bundle 7 already had, carried over to OrcaSlicer 2.5.2, plus the new integration and build tooling. "Ported" means the feature of an earlier bundle is carried over as it was, "Reworked" that it was rewritten or changed.
+Bundle 8, named CosmoSlice, holds what bundle 7 already had, carried over to OrcaSlicer 2.5.2, plus the CosmoSlice name and install paths, the application logos, and the new integration and build tooling. "Ported" means the feature of an earlier bundle is carried over as it was, "Reworked" that it was rewritten or changed.
 
 Version
 
-- The version reads as the OrcaSlicer version followed by the Cosmyx patch (for example 2.5.2-8) in About, the splash screen and the troubleshooting dialogs. Reworked from bundle 4 (Cosmyx version in the About dialog).
+- The version reads as the CosmoSlice version, the OrcaSlicer version followed by the Cosmyx patch (for example 2.5.2-8), in About, the splash screen and the troubleshooting dialogs. Reworked from bundle 4 (Cosmyx version in the About dialog).
 
 Printing features
 
@@ -186,6 +186,11 @@ Printing features
 Profiles and models
 
 - A "Cosmyx 3D Models" menu adds the Cosmyx calibration models (Calage 1, 2 and 3 SNDT, Calage 1 Nova, Cosmyx Cube, two-colour cube) and handy models (belt tension control, spool holder), with their suggested settings. The menu shows only when a Cosmyx printer is selected: the app recognises a Cosmyx machine from its printer profile and updates the menu when the printer changes. Ported from bundle 4.
+
+Branding and product name
+
+- The application is named CosmoSlice everywhere: window titles, About, menus, installers, shortcuts, packages and the interface texts in every language. "Orca Cloud" is shown as "Cosmyx Cloud". New.
+- The CosmoSlice logos replace the OrcaSlicer ones for the application icons (window, taskbar, Dock and Windows package), the About dialog logo and the splash screen. New.
 
 Cloud and updates
 
@@ -198,11 +203,12 @@ Languages and translations
 
 Installation and signing
 
+- CosmoSlice installs next to OrcaSlicer and keeps its settings in its own Cosmyx folder; nothing is taken over from an OrcaSlicer install. New.
 - Windows builds are signed: the application, the installer and the uninstaller. Reworked from bundles 4, 6 and 7 (Windows signing).
 
 Build and tooling
 
-- Internal groundwork, not visible in the application: the Cosmyx foundation and its tests, the scheduled OrcaSlicer upstream sync, the artifact checks and launch smoke tests on every OS, macOS signing and notarisation, the integration and rebase recipes, the dev build workflow, retries for cancelled macOS jobs, the Flatpak build turned off, and the rebase guide for agents. New.
+- Internal groundwork, not visible in the application: the Cosmyx foundation and its tests, the scheduled OrcaSlicer upstream sync, the artifact checks and launch smoke tests on every OS, macOS signing and notarisation, the build-time branding engine, the integration and rebase recipes, the dev build workflow, retries for cancelled macOS jobs, the Flatpak build turned off, and the rebase guide for agents. New.
 
 **============== UNDER THIS, IT'S THE CONTENT ADDED BY BUNDLE 9 =========**
 
@@ -210,8 +216,7 @@ New features on top of bundle 8. "New" means no earlier bundle had the feature.
 
 Branding and product name
 
-- The application is named CosmoSlice everywhere: window titles, About, menus, installers, shortcuts, packages and the interface texts in every language. New.
-- The CosmoSlice logos replace the OrcaSlicer ones: application icons, About banner, splash screen and bed texture. New.
+- The other CosmoSlice logos replace the OrcaSlicer ones: bed texture, home page logo, file-type icons and setup wizard image. New.
 - The interface uses the Cosmyx violets instead of the OrcaSlicer teal, the icons included. New.
 - The pictures in the texture displacement tooltips and on the home web pages are shown in the Cosmyx colours. New.
 - The application always runs in dark mode, on every OS. New.
@@ -236,9 +241,8 @@ Languages and translations
 
 Installation
 
-- CosmoSlice installs next to OrcaSlicer and keeps its settings in its own Cosmyx folder; nothing is taken over from an OrcaSlicer install. New.
 - Cosmyx features write their own log file next to the OrcaSlicer log. New.
 
 Build and tooling
 
-- Internal groundwork, not visible in the application: the GUI screenshot goldens and the build-time branding engine. New.
+- Internal groundwork, not visible in the application: the GUI screenshot goldens. New.
