@@ -52,7 +52,8 @@ here; see the upstream release notes.
   Head ones (Calage 1 Nova, Cosmyx Cube) and handy models (belt tension
   control, spool holder). Calage 1 offers 0 degree infill directions; Calage 3
   offers its base settings and adds its modifier boxes to the loaded objects
-  only. Pull request: pending. Decisions: 0050, 0051, 0052, 0053, 0054, 0055.
+  only. The menu icon uses the grey and violet of its sibling menu icons.
+  Pull request: pending. Decisions: 0050, 0051, 0052, 0053, 0054, 0055.
 
 <!-- cosmyx-slot: T6 -->
 
