@@ -5,6 +5,7 @@
 
 #include <boost/log/trivial.hpp>
 
+#include <wx/arrstr.h>
 #include <wx/translation.h>
 
 #include "libslic3r_version.h"
