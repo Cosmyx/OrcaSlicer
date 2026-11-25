@@ -136,9 +136,11 @@ The scopes are the GUI sources (`src/slic3r/`, except
 `src/slic3r/GUI/Cosmyx/`), the web pages (`resources/web/` `.css`, `.html`,
 `.htm`, `.js`, except the vendored Elegoo page and xterm) and, for literal
 rows only, `src/libslic3r/Color.hpp`. Filament colours stay as they are
-(`PresetBundle.cpp`, the profiles, the colour picker swatches), and so do the
-functional highlights drawn on the 3D scene (gizmos, UV editor, sketch snaps):
-those have `allow_residue` rows with their reason. `#00AE42` (the green the
+(the profiles, the colour picker swatches), except the default filament
+colour: one literal row turns the `#26A69A` fallback of `PresetBundle.cpp`
+into the dark grey `#242323` (decision 0128). The
+functional highlights drawn on the 3D scene (gizmos, UV editor, sketch snaps)
+stay too: those have `allow_residue` rows with their reason. `#00AE42` (the green the
 SVG icons use as a placeholder) and `#1F8EEA` are not teal for the engine;
 `#FEFFFF` (near white) is ignored too.
 

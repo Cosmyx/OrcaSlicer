@@ -215,6 +215,13 @@
       "reason": "brand #009688 -> #8000FF as an ABGR integer (SVG colour change for ImGui textures)"
     },
     {
+      "file": "src/libslic3r/PresetBundle.cpp",
+      "find": "filament_colors.resize(filament_presets.size(), \"#26A69A\");",
+      "replace": "filament_colors.resize(filament_presets.size(), \"#242323\");",
+      "count": 2,
+      "reason": "default filament colour #26A69A -> #242323 (user's dark grey; a filament colour, not the accent)"
+    },
+    {
       "file": "resources/web/dialog/ColorPickerDialog/colorpicker.browser.test.js",
       "find": "rgb(0, 103, 91",
       "replace": "rgb(164, 114, 245",

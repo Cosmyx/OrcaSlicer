@@ -7,7 +7,7 @@ Accepted.
 ## Context
 
 After the rewrite, some teal is not branding: colour picker swatches,
-default filament colours, cyan highlights drawn on the 3D scene, test data,
+filament swatches, cyan highlights drawn on the 3D scene, test data,
 vendored third-party pages. The build must still catch any teal nobody
 decided about, including a new shade upstream adds.
 

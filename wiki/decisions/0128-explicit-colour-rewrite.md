@@ -29,10 +29,18 @@ colours and 3D highlights, and could not be reviewed.
   `replaces["#8000FF"] = "#A472F5"` to the dark map of `BitmapCache.cpp`:
   `std::map` applies the quoted keys first, so the bare key reaches only the
   CSS-form fills the quoted key misses.
+- The default filament colour is `#242323` (dark grey, chosen by the user on
+  2026-11-25), not the teal and not a violet: `#26A69A` is both the accent
+  hover and the colour `PresetBundle.cpp` gives a filament slot that has no
+  saved colour. One hand-written literal row replaces exactly that fallback
+  (`filament_colors.resize(filament_presets.size(), "#26A69A");`, count 2),
+  so the `#26A69A` mapping keeps turning every accent use violet. The option
+  default (`#F2754E` in `PrintConfig.cpp` and `AppConfig.cpp`) and the vendor
+  profiles are not teal and stay as they are.
 - Scopes: `src/slic3r/` C++ and Objective-C++ sources except
   `src/slic3r/GUI/Cosmyx/`, `resources/web/` `.css`, `.html`, `.htm`, `.js`,
-  and `src/libslic3r/Color.hpp`. `PresetBundle.cpp` (the `#26A69A` filament
-  default) and the profiles stay out.
+  and `src/libslic3r/Color.hpp`. `PresetBundle.cpp` (reached only by the
+  default filament colour row above) and the profiles stay out.
 - The teal family recogniser never rewrites: it only finds leftovers.
 
 ## Consequences
