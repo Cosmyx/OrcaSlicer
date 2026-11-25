@@ -217,7 +217,7 @@
     {
       "name": "feat/cosmyx-languages",
       "pr": 123,
-      "parent": "feat/cosmyx-translations-fill",
+      "parents": ["feat/cosmyx-translations-fill", "feat/cosmyx-update-check"],
       "bundle": 9
     },
     {
