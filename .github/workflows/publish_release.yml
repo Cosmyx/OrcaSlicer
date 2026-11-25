@@ -48,6 +48,14 @@ jobs:
           fi
           echo "Authorized: @${{ github.actor }}"
 
+      - name: Cosmyx checkout # Cosmyx
+        uses: actions/checkout@v7 # Cosmyx
+        with: # Cosmyx
+          sparse-checkout: scripts/cosmyx # Cosmyx
+
+      - name: Cosmyx check the tag and create the draft release # Cosmyx
+        run: python3 scripts/cosmyx/release_publish.py prepare --tag "$TAG" --run-id "$RUN_ID" # Cosmyx
+
       - name: Verify target is a draft release
         run: |
           if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft >/dev/null 2>&1; then
@@ -72,6 +80,7 @@ jobs:
           fi
 
       - name: Download release artifacts from build run
+        if: ${{ false }} # Cosmyx: replaced by the CosmoSlice step below (decision 0221)
         run: |
           # Windows_V* (not Windows_*) keeps the MSIX Store artifact out: it goes to Partner Center, not GitHub releases.
           gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --dir artifacts \
@@ -84,6 +93,7 @@ jobs:
           ls -1 artifacts
 
       - name: Assemble release assets
+        if: ${{ false }} # Cosmyx: replaced by the CosmoSlice step below (decision 0221)
         run: |
           set -euo pipefail
           mkdir -p upload
@@ -123,6 +133,9 @@ jobs:
             echo "::error::No assets assembled. Check the run_id and that its artifacts haven't expired."
             exit 1
           fi
+
+      - name: Cosmyx download and assemble the CosmoSlice assets # Cosmyx
+        run: python3 scripts/cosmyx/release_publish.py download --run-id "$RUN_ID" && python3 scripts/cosmyx/release_publish.py assemble # Cosmyx
 
       - name: Upload assets to draft release
         run: |
