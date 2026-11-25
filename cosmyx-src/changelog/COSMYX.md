@@ -1,6 +1,6 @@
 # Cosmyx changelog
 
-Every commit of `spyder-2.3.1-7` since official OrcaSlicer 2.3.1 (`f2d10a0b57`), merges included: **129 commits** (bundles 1 to 7). Bundle 8 is listed by feature, not by commit.
+Every commit of `spyder-2.3.1-7` since official OrcaSlicer 2.3.1 (`f2d10a0b57`), merges included: **129 commits** (bundles 1 to 7). Bundles 8 and 9 are listed by feature, not by commit: bundle 8 carries the bundle 7 content over to OrcaSlicer 2.5.2, bundle 9 adds the new features.
 Each commit is listed once, oldest first.
 
 **============== UNDER THIS, IT'S THE CONTENT ADDED BY BUNDLE 1 =========**
@@ -171,7 +171,42 @@ _Limit from `version.inc`, where `COSMYX_PATCH_VERSION` is "7", which is also th
 
 Rebase on the latest OrcaSlicer release, 2.5.2.
 
-Features reviewed, ported or reworked for bundle 8. "Ported" means the feature of an earlier bundle is carried over as it was, "Reworked" that it was rewritten or changed, "New" that no earlier bundle had it.
+Bundle 8 holds what bundle 7 already had, carried over to OrcaSlicer 2.5.2, plus the new integration and build tooling. "Ported" means the feature of an earlier bundle is carried over as it was, "Reworked" that it was rewritten or changed.
+
+Version
+
+- The version reads as the OrcaSlicer version followed by the Cosmyx patch (for example 2.5.2-8) in About, the splash screen and the troubleshooting dialogs. Reworked from bundle 4 (Cosmyx version in the About dialog).
+
+Printing features
+
+- CHT nozzles (HRC 65) can be chosen as a printer nozzle type; tungsten carbide now comes from OrcaSlicer itself. Ported from bundle 1.
+- Each filament can set its own ironing temperature, used while ironing and restored afterwards, on multi-tool printers too. Ported from bundle 4.
+- On a tool change, the part cooling fan command follows the tool change, so printers with one fan per tool drive the right fan. Reworked from bundles 2 and 3 (M106 multi-head fan fix).
+
+Profiles and models
+
+- A "Cosmyx 3D Models" menu adds the Cosmyx calibration models (Calage 1, 2 and 3 SNDT, Calage 1 Nova, Cosmyx Cube, two-colour cube) and handy models (belt tension control, spool holder), with their suggested settings. The menu shows only when a Cosmyx printer is selected: the app recognises a Cosmyx machine from its printer profile and updates the menu when the printer changes. Ported from bundle 4.
+
+Cloud and updates
+
+- Stealth mode is on by default: no cloud login, profile sync or online vendor update, and the setup guide skips the stealth and network plugin pages. Ported from bundle 1.
+- The update check offers only the published Cosmyx releases, never dev builds or pre-releases, and never goes online in Stealth mode. Reworked from bundle 4 (update popup turned off).
+
+Languages and translations
+
+- The Cosmyx texts (CHT nozzle, ironing temperature, Cosmyx models) are translated in all 22 OrcaSlicer languages, using the OrcaSlicer terms. Reworked from bundles 1 to 4 (Cosmyx translations).
+
+Installation and signing
+
+- Windows builds are signed: the application, the installer and the uninstaller. Reworked from bundles 4, 6 and 7 (Windows signing).
+
+Build and tooling
+
+- Internal groundwork, not visible in the application: the Cosmyx foundation and its tests, the scheduled OrcaSlicer upstream sync, the artifact checks and launch smoke tests on every OS, macOS signing and notarisation, the integration and rebase recipes, the dev build workflow, retries for cancelled macOS jobs, the Flatpak build turned off, and the rebase guide for agents. New.
+
+**============== UNDER THIS, IT'S THE CONTENT ADDED BY BUNDLE 9 =========**
+
+New features on top of bundle 8. "New" means no earlier bundle had the feature.
 
 Branding and product name
 
@@ -180,39 +215,30 @@ Branding and product name
 - The interface uses the Cosmyx violets instead of the OrcaSlicer teal, the icons included. New.
 - The pictures in the texture displacement tooltips and on the home web pages are shown in the Cosmyx colours. New.
 - The application always runs in dark mode, on every OS. New.
-- The version reads as the OrcaSlicer version followed by the Cosmyx patch (for example 2.6.0-8) in About, the splash screen and the troubleshooting dialogs. Reworked from bundle 4 (Cosmyx version in the About dialog).
 
 Printing features
 
-- CHT nozzles (HRC 65) can be chosen as a printer nozzle type; tungsten carbide now comes from OrcaSlicer itself. Ported from bundle 1.
-- Each filament can set its own ironing temperature, used while ironing and restored afterwards, on multi-tool printers too. Ported from bundle 4.
-- On a tool change, the part cooling fan command follows the tool change, so printers with one fan per tool drive the right fan. Reworked from bundles 2 and 3 (M106 multi-head fan fix).
 - A bed temperature of -1 turns the bed heater off instead of waiting for it. New.
 
-Profiles and models
+Printers
 
-- A "Cosmyx 3D Models" menu adds the Cosmyx calibration models (Calage 1, 2 and 3 SNDT, Calage 1 Nova, Cosmyx Cube, two-colour cube) and handy models (belt tension control, spool holder), with their suggested settings. Ported from bundle 4.
+- On a Cosmyx printer, the connection button opens a Cosmyx physical printer dialog. Its Setup tab holds the printer name, the machine IP address or host name, the API key and a Test connection button. Its Machine information tab, available once the settings are saved and the connection test succeeds, shows what the machine reports about itself: its identity, installed options, hot ends and camera. Other printers keep the OrcaSlicer dialog. New.
 
 Cloud and plugins
 
-- Stealth mode is on by default: no cloud login, profile sync or online vendor update, and the setup guide skips the stealth and network plugin pages. Ported from bundle 1.
 - The app uses the Cosmyx cloud, CosmoCloud, for sign-in, sync and the plugin hub, and stealth mode can now be turned off; a custom cloud server can be set in Preferences. New, reworks the bundle 1 stealth mode.
 - Cloud plugins are installed only when their signature verifies, and never downgraded. New.
 - The Bambu cloud and network plugin switches are gathered in an "External machines" section of Preferences, and turning one on asks for confirmation first. New.
-- The update check offers only the published CosmoSlice releases, never dev builds or pre-releases, and never goes online in Stealth mode. Reworked from bundle 4 (update popup turned off).
 
 Languages and translations
 
-- The Cosmyx texts (CHT nozzle, ironing temperature, Cosmyx models) are translated in all 22 OrcaSlicer languages, using the OrcaSlicer terms. Reworked from bundles 1 to 4 (Cosmyx translations).
-- The language list offers exactly the 24 Cosmyx languages, each named in its own language; a user whose language is no longer offered starts in British English. New.
+- The language list offers exactly the 22 Cosmyx languages, each named in its own language; a user whose language is no longer offered starts in British English. New.
 
-Installation and signing
+Installation
 
-- Windows builds are signed: the application, the installer and the uninstaller. Reworked from bundles 4, 6 and 7 (Windows signing).
-- macOS builds are signed with the Cosmyx Developer ID and notarised, so macOS opens them without warning. New.
 - CosmoSlice installs next to OrcaSlicer and keeps its settings in its own Cosmyx folder; nothing is taken over from an OrcaSlicer install. New.
 - Cosmyx features write their own log file next to the OrcaSlicer log. New.
 
 Build and tooling
 
-- Internal groundwork, not visible in the application: the Cosmyx foundation and its tests, the scheduled OrcaSlicer upstream sync, the build-time branding engine, the artifact checks and launch smoke tests on every OS, the GUI screenshot goldens, the integration and rebase recipes, the dev build workflow, retries for cancelled macOS jobs, the Flatpak build turned off, and the rebase guide for agents. New.
+- Internal groundwork, not visible in the application: the GUI screenshot goldens and the build-time branding engine. New.
