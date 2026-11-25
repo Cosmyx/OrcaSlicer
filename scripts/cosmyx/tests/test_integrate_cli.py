@@ -929,6 +929,16 @@ class BranchListTests(unittest.TestCase):
         self.assertLess(names.index("feat/cosmyx-version"), names.index("feat/cosmyx-update-check"))
         self.assertLess(names.index("chore/cosmyx-foundation"), names.index("feat/cosmyx-external-machines"))
 
+    def test_shipped_list_stacks_the_languages_on_the_translations_fill(self) -> None:
+        # feat/cosmyx-languages merges feat/cosmyx-translations-fill, so its own
+        # commits are only those after the fill tip; a foundation parent would
+        # replay the whole fill a second time.
+        entries = {entry.name: entry for entry in cli.load_branches()[1]}
+        names = list(entries)
+        self.assertEqual(entries["feat/cosmyx-languages"].parent, "feat/cosmyx-translations-fill")
+        self.assertLess(names.index("feat/cosmyx-translations-fill"), names.index("feat/cosmyx-languages"))
+        self.assertEqual(entries["docs/cosmyx-changelogs"].parent, "chore/cosmyx-foundation")
+
     def test_ci_base_branch_names(self) -> None:
         git = cli.Git(Path.cwd())
         self.assertEqual(cli.ci_base_branch(git, "origin/DEV", "origin"), "cosmyx-ci/DEV")
