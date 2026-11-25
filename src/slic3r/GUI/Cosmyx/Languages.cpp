@@ -65,11 +65,9 @@ wxString ui_language_name(const wxLanguageInfo* info, const wxString& fallback)
     return wxString::FromUTF8(row->native_name.data(), row->native_name.size());
 }
 
-const wxLanguageInfo* ui_language_info(const wxLanguageInfo* requested, const wxLanguageInfo* resolved)
+const wxLanguageInfo* ui_language_info(const wxLanguageInfo* resolved)
 {
-    const UiLocale* row = row_of(requested);
-    if (row == nullptr)
-        row = row_of(resolved);
+    const UiLocale* row = row_of(resolved);
     if (row == nullptr)
         row = &fallback_ui_locale();
     const wxLanguageInfo* info = wx_info(*row);

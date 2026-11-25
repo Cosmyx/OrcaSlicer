@@ -23,11 +23,9 @@ void select_ui_languages(std::vector<const wxLanguageInfo*>& infos);
 wxString ui_language_name(const wxLanguageInfo* info, const wxString& fallback);
 
 // The language GUI_App::load_language() switches to: the offered language
-// matching `requested` (the app config value, right-to-left ones included,
-// which upstream refuses), else the one matching `resolved` (what upstream
-// picked from the system and the available translations), else British
-// English. Never nullptr.
-const wxLanguageInfo* ui_language_info(const wxLanguageInfo* requested, const wxLanguageInfo* resolved);
+// matching `resolved` (what upstream picked from the app config, the system
+// and the available translations), else British English. Never nullptr.
+const wxLanguageInfo* ui_language_info(const wxLanguageInfo* resolved);
 
 } // namespace Cosmyx
 } // namespace GUI

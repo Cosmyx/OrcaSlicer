@@ -21,9 +21,10 @@ std::string code_of(const CX::UiLocale* row) { return row == nullptr ? std::stri
 
 TEST_CASE("The table lists exactly the offered languages", "[cosmyx][UiLocales]")
 {
-    const std::vector<std::string> expected{"ar_SA", "da_DK", "de_DE", "el_GR", "en_GB", "es_ES", "fi_FI", "fr_FR",
-                                            "ga_IE", "hi_IN", "it_IT", "ja_JP", "ko_KR", "nb_NO", "nl_BE", "nl_NL",
-                                            "pl_PL", "pt_PT", "sv_SE", "uk_UA", "vi_VN", "zh_CN", "zh_HK", "zh_TW"};
+    const std::vector<std::string> expected{"da_DK", "de_DE", "el_GR", "en_GB", "es_ES", "fi_FI", "fr_FR", "ga_IE",
+                                            "it_IT", "ja_JP", "ko_KR", "nb_NO", "nl_BE", "nl_NL", "pl_PL", "pt_PT",
+                                            "sv_SE", "uk_UA", "vi_VN", "zh_CN", "zh_HK", "zh_TW"};
+    REQUIRE(expected.size() == 22);
     std::vector<std::string> codes;
     std::set<std::string_view> catalogs;
     for (const CX::UiLocale& row : CX::ui_locales()) {
@@ -58,13 +59,12 @@ TEST_CASE("Locale names match their offered language", "[cosmyx][UiLocales]")
         CHECK(code_of(CX::match_ui_locale("zh")) == "zh_CN");
         CHECK(code_of(CX::match_ui_locale("zh_HK")) == "zh_HK");
         CHECK(code_of(CX::match_ui_locale("zh_MO")) == "zh_CN");
-        CHECK(code_of(CX::match_ui_locale("ar_EG")) == "ar_SA");
         CHECK(code_of(CX::match_ui_locale("nb")) == "nb_NO");
     }
 
     SECTION("languages that are not offered match nothing")
     {
-        for (const char* name : {"ru_RU", "cs", "tr_TR", "th", "", "_", "@latin", "no_NO"})
+        for (const char* name : {"ru_RU", "cs", "tr_TR", "th", "", "_", "@latin", "no_NO", "ar_SA", "ar_EG", "ar", "hi_IN", "hi"})
             CHECK(CX::match_ui_locale(name) == nullptr);
     }
 

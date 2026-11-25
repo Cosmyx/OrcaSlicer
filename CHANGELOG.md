@@ -62,11 +62,12 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11f -->
 
 <!-- cosmyx-slot: T25 -->
-- Offer exactly 24 UI languages: the Preferences selector lists only ar_SA,
-  da_DK, de_DE, el_GR, en_GB, es_ES, fi_FI, fr_FR, ga_IE, hi_IN, it_IT, ja_JP,
-  ko_KR, nb_NO, nl_BE, nl_NL, pl_PL, pt_PT, sv_SE, uk_UA, vi_VN, zh_CN, zh_HK
-  and zh_TW, each named in its own language; any other language starts in
-  British English. Arabic loads right-to-left. The eleven languages OrcaSlicer
+- Offer exactly 22 UI languages: the Preferences selector lists only da_DK,
+  de_DE, el_GR, en_GB, es_ES, fi_FI, fr_FR, ga_IE, it_IT, ja_JP, ko_KR, nb_NO,
+  nl_BE, nl_NL, pl_PL, pt_PT, sv_SE, uk_UA, vi_VN, zh_CN, zh_HK and zh_TW,
+  each named in its own language; any other language starts in British
+  English. Arabic and Hindi are not offered yet: they need fonts and text
+  shaping the 3D scene lacks. The nine languages OrcaSlicer
   lacks get catalogues under `localization/cosmyx/i18n` (en_GB, nl_BE, pt_PT
   and zh_HK copied from en, nl, pt_BR and zh_TW for review, the others
   untranslated), packaged like the upstream ones; the unused upstream

@@ -8621,7 +8621,6 @@ bool GUI_App::load_language(wxString language, bool initial)
     	BOOST_LOG_TRIVIAL(error) << boost::format("Language code \"%1%\" is not supported") % language.ToUTF8().data();
 	}
 
-    const wxLanguageInfo *cosmyx_requested = language_info; // Cosmyx
 	if (language_info != nullptr && language_info->LayoutDirection == wxLayout_RightToLeft) {
     	BOOST_LOG_TRIVIAL(trace) << boost::format("The following language code requires right to left layout, which is not supported by OrcaSlicer: %1%") % language_info->CanonicalName.ToUTF8().data();
 		language_info = nullptr;
@@ -8637,7 +8636,7 @@ bool GUI_App::load_language(wxString language, bool initial)
 			language_info = wxLocale::GetLanguageInfo(wxLANGUAGE_ENGLISH_US);
     }
 
-    language_info = Cosmyx::ui_language_info(cosmyx_requested, language_info); // Cosmyx: offered languages only, right-to-left ones included (decision 0220)
+    language_info = Cosmyx::ui_language_info(language_info); // Cosmyx: offered languages only (decision 0220)
     const wxLanguageInfo *translation_language_info = language_info;
     const wxString requested_language_code = translation_language_info->CanonicalName;
     const wxLanguageInfo *locale_language_info = translation_language_info;

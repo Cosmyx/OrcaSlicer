@@ -24,7 +24,6 @@
 //                 upstream catalogue, whose own header is authoritative
 //
 // COSMYX_UI_LOCALE(code, wx id, catalogue, source, seed, name, rtl, script, plural forms)
-COSMYX_UI_LOCALE("ar_SA", ARABIC_SAUDI_ARABIA,  "ar_SA", Cosmyx,   "",      "العربية",                  true,  Arabic,     "nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);")
 COSMYX_UI_LOCALE("da_DK", DANISH,               "da_DK", Cosmyx,   "",      "Dansk",                    false, Latin,      "nplurals=2; plural=(n != 1);")
 COSMYX_UI_LOCALE("de_DE", GERMAN,               "de",    Upstream, "",      "Deutsch",                  false, Latin,      "")
 COSMYX_UI_LOCALE("el_GR", GREEK,                "el_GR", Cosmyx,   "",      "Ελληνικά",                 false, Greek,      "nplurals=2; plural=(n != 1);")
@@ -33,7 +32,6 @@ COSMYX_UI_LOCALE("es_ES", SPANISH,              "es",    Upstream, "",      "Esp
 COSMYX_UI_LOCALE("fi_FI", FINNISH,              "fi_FI", Cosmyx,   "",      "Suomi",                    false, Latin,      "nplurals=2; plural=(n != 1);")
 COSMYX_UI_LOCALE("fr_FR", FRENCH,               "fr",    Upstream, "",      "Français",                 false, Latin,      "")
 COSMYX_UI_LOCALE("ga_IE", IRISH,                "ga_IE", Cosmyx,   "",      "Gaeilge",                  false, Latin,      "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : n>=7 && n<=10 ? 3 : 4);")
-COSMYX_UI_LOCALE("hi_IN", HINDI,                "hi_IN", Cosmyx,   "",      "हिन्दी",                    false, Devanagari, "nplurals=2; plural=(n > 1);")
 COSMYX_UI_LOCALE("it_IT", ITALIAN,              "it",    Upstream, "",      "Italiano",                 false, Latin,      "")
 COSMYX_UI_LOCALE("ja_JP", JAPANESE,             "ja",    Upstream, "",      "日本語",                   false, Japanese,   "")
 COSMYX_UI_LOCALE("ko_KR", KOREAN,               "ko",    Upstream, "",      "한국어",                   false, Hangul,     "")

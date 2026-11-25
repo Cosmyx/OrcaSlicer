@@ -31,20 +31,18 @@ g = sys.modules["i18n_graft"]
 
 # The user's decision, written out independently of the table.
 OFFERED = [
-    "ar_SA", "da_DK", "de_DE", "el_GR", "en_GB", "es_ES", "fi_FI", "fr_FR", "ga_IE", "hi_IN", "it_IT", "ja_JP",
-    "ko_KR", "nb_NO", "nl_BE", "nl_NL", "pl_PL", "pt_PT", "sv_SE", "uk_UA", "vi_VN", "zh_CN", "zh_HK", "zh_TW",
+    "da_DK", "de_DE", "el_GR", "en_GB", "es_ES", "fi_FI", "fr_FR", "ga_IE", "it_IT", "ja_JP", "ko_KR",
+    "nb_NO", "nl_BE", "nl_NL", "pl_PL", "pt_PT", "sv_SE", "uk_UA", "vi_VN", "zh_CN", "zh_HK", "zh_TW",
 ]
 DROPPED = ["ca", "cs", "eu", "hu", "lt", "pt_BR", "ru", "th", "tr"]
 
 # Plural rules of the languages Cosmyx adds (CLDR integer rules).
 PLURAL_FORMS = {
-    "ar_SA": "nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);",
     "da_DK": "nplurals=2; plural=(n != 1);",
     "el_GR": "nplurals=2; plural=(n != 1);",
     "en_GB": "nplurals=2; plural=(n != 1);",
     "fi_FI": "nplurals=2; plural=(n != 1);",
     "ga_IE": "nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : n>=7 && n<=10 ? 3 : 4);",
-    "hi_IN": "nplurals=2; plural=(n > 1);",
     "nb_NO": "nplurals=2; plural=(n != 1);",
     "nl_BE": "nplurals=2; plural=(n != 1);",
     "pt_PT": "nplurals=2; plural=(n != 1);",
@@ -64,13 +62,23 @@ def find_msgfmt() -> str | None:
 
 class TableTests(unittest.TestCase):
     def test_exactly_the_offered_languages(self) -> None:
+        self.assertEqual(len(OFFERED), 22)
         self.assertEqual([row.code for row in ROWS], OFFERED)
 
     def test_table_keeps_its_rules(self) -> None:
         self.assertEqual(languages.table_errors(ROWS), [])
 
-    def test_only_arabic_is_right_to_left(self) -> None:
-        self.assertEqual([row.code for row in ROWS if row.rtl], ["ar_SA"])
+    def test_no_language_needs_unbundled_glyphs_or_shaping(self) -> None:
+        # Arabic and Devanagari need fonts ImGui lacks and text shaping (decision 0220).
+        self.assertEqual([row.code for row in ROWS if row.rtl or row.script in ("Arabic", "Devanagari")], [])
+
+    def test_no_catalogue_of_a_language_not_offered(self) -> None:
+        offered = {row.catalog for row in ROWS if row.source == "Cosmyx"}
+        cosmyx = REPO_ROOT / "localization" / "cosmyx"
+        self.assertEqual(sorted(p.name for p in (cosmyx / "i18n").iterdir() if p.is_dir()), sorted(offered))
+        for folder in (p for p in cosmyx.iterdir() if p.is_dir() and p.name != "i18n"):
+            for code in ("ar_SA", "hi_IN"):
+                self.assertFalse((folder / f"{code}.po").exists(), f"{folder.name}/{code}.po")
 
     def test_cosmyx_rows_and_seeds(self) -> None:
         cosmyx = {row.code: row.seed for row in ROWS if row.source == "Cosmyx"}
@@ -361,8 +369,7 @@ class WiringTests(unittest.TestCase):
         expected = {
             "GUI_App.cpp": [
                 '#include "Cosmyx/Languages.hpp" // Cosmyx',
-                "const wxLanguageInfo *cosmyx_requested = language_info; // Cosmyx",
-                "language_info = Cosmyx::ui_language_info(cosmyx_requested, language_info); // Cosmyx",
+                "language_info = Cosmyx::ui_language_info(language_info); // Cosmyx",
             ],
             "Preferences.cpp": [
                 '#include "Cosmyx/Languages.hpp" // Cosmyx',
@@ -376,16 +383,16 @@ class WiringTests(unittest.TestCase):
                 with self.subTest(file=name, hook=hook):
                     self.assertEqual(text.count(hook), 1)
         app = (gui / "GUI_App.cpp").read_text(encoding="utf-8")
-        # The requested language is captured before upstream refuses the
-        # right-to-left ones, and applied after its fallback chain.
-        self.assertLess(app.index("cosmyx_requested = language_info"), app.index("which is not supported by OrcaSlicer"))
+        # Applied after upstream's fallback chain; no right-to-left language is
+        # offered, so nothing is captured before upstream refuses those.
+        self.assertNotIn("cosmyx_requested", app)
         self.assertLess(app.index("Cosmyx::ui_language_info("), app.index("const wxLanguageInfo *translation_language_info = language_info;"))
         self.assertGreater(app.index("Cosmyx::ui_language_info("), app.index("language_info = wxLocale::GetLanguageInfo(wxLANGUAGE_ENGLISH_US);"))
 
     def test_cli(self) -> None:
         result = subprocess.run([sys.executable, str(COSMYX_DIR / "languages.py"), "check"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("24 languages", result.stdout)
+        self.assertIn("22 languages", result.stdout)
 
 
 if __name__ == "__main__":

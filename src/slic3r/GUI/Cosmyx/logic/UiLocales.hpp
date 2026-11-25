@@ -68,8 +68,8 @@ const UiLocale& fallback_ui_locale();
 std::vector<const UiLocale*> offered_ui_locales(const std::vector<std::string>& available_catalogs);
 
 // Whether the fonts OrcaSlicer bundles for ImGui (resources/fonts) hold the
-// glyphs of a script. False for Arabic and Devanagari: the 3D scene overlays
-// show those languages' text as missing glyphs (decision 0220).
+// glyphs of a script. False for Arabic and Devanagari, which is one reason no
+// language written in them is offered yet (decision 0220).
 bool imgui_fonts_cover(Script script);
 
 } // namespace Cosmyx
