@@ -68,7 +68,8 @@ here; see the upstream release notes.
   printer bundle (vendor id `Cosmyx`). A custom printer with no system parent
   is not one. Cosmyx-only features use this flag and follow it each time the
   printer changes, the first preset load at startup included. Nothing visible
-  changes by itself. Pull request: pending. Decision: 0222.
+  changes by itself. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/125.
+  Decision: 0222.
 
 ### i18n
 
