@@ -53,7 +53,11 @@ here; see the upstream release notes.
   control, spool holder). Calage 1 offers 0 degree infill directions; Calage 3
   offers its base settings and adds its modifier boxes to the loaded objects
   only. The menu icon uses the grey and violet of its sibling menu icons.
-  Pull request: pending. Decisions: 0050, 0051, 0052, 0053, 0054, 0055.
+  The menu is shown only while the selected printer is a Cosmyx machine: it
+  disappears when another printer is selected and comes back right after "Add
+  Handy models" when a Cosmyx printer is selected again. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/129. Decisions: 0050, 0051, 0052,
+  0053, 0054, 0055, 0223.
 
 <!-- cosmyx-slot: T6 -->
 
