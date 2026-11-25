@@ -66,7 +66,8 @@ The `logos` rows come from two sources (decisions 0124-0126):
 - **Derived** (source `derived`): rasters rendered from the vendored master
   `overlay/resources/images/OrcaSlicer.svg`, as listed in
   `scripts/cosmyx/branding/derive/derived-assets.toml`: the multi-size Windows
-  icon, the macOS app icon and the four MSIX tiles. Never edit one by hand. To change them,
+  icon, the macOS `.icns` files, the four MSIX tiles, the grayscale and title
+  logos, and the web header logo. Never edit one by hand. To change them,
   change the master or the list, then:
 
   ```text
@@ -78,11 +79,6 @@ The `logos` rows come from two sources (decisions 0124-0126):
   fresh render, `just brand-derive-stable` renders twice and compares. They
   render in the pinned resvg image (`scripts/cosmyx/branding/derive/Dockerfile`),
   so they need Docker with Linux containers.
-
-The overlay covers the application icon (window, taskbar, dock, executable,
-installer, Linux desktop and MSIX icons), the About dialog logos and the splash
-screen. The other `logos` rows stay `missing`, so the build keeps the Orca
-files for them.
 
 Still missing, to be provided (never drawn here):
 
