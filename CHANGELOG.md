@@ -34,6 +34,12 @@ here; see the upstream release notes.
   changelog, the decision register under `wiki/decisions/`, the justfile and
   the Cosmyx checks workflow. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/86. Decisions: 0001, 0002, 0003, 0004, 0005.
 
+<!-- cosmyx-slot: T27 -->
+- Add the versioned changelogs under `cosmyx-src/changelog/`: `ORCASLICER.md`
+  lists the OrcaSlicer changes from 2.0.0 to 2.5.2, the base CosmoSlice
+  bundle 8 is rebased on, and `COSMYX.md` lists the content of each Cosmyx
+  bundle, commits for bundles 1 to 7 and features for bundle 8. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/124.
+
 ### libslic3r
 
 <!-- cosmyx-slot: T1 -->
