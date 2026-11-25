@@ -21,21 +21,37 @@ if str(COSMYX_DIR) not in sys.path:
 
 from branding import OVERLAY_DIR, file_sha256  # noqa: E402
 from branding import manifest as manifest_module  # noqa: E402
-from branding.derive import derive, icns, ico, raster  # noqa: E402
+from branding.derive import derive, icns, ico  # noqa: E402
 from branding_fixture import skip_in_prepare  # noqa: E402
 
 PREFIX = OVERLAY_DIR + "/"
-# Upstream SVGs whose CosmoSlice replacement is the square master, not the upstream aspect ratio. Both are
-# unreferenced upstream (no call site loads them); the reviewer sees this in the review table.
-SQUARE_MASTER_EXCEPTIONS = {
-    "resources/images/OrcaSlicer_gradient_narrow.svg",
-    "resources/images/studio_logo.svg",
-}
+# Upstream SVGs whose CosmoSlice replacement is the square master, not the upstream aspect ratio.
+SQUARE_MASTER_EXCEPTIONS: set = set()
 # Rows with no source yet: the asset must come from the user (never drawn or approximated here).
 EXPECTED_MISSING = {
     "resources/images/OrcaSlicer_horizontal_dark.svg",
     "resources/images/OrcaSlicer_horizontal_light.svg",
     "resources/web/image/logo2.png",
+}
+# Rows outside the application icon, About dialog and splash screen: not overlaid here, the build keeps
+# the Orca file.
+NOT_OVERLAID = {
+    "resources/images/OrcaSlicer-mac_128px.png",
+    "resources/images/OrcaSlicer.icns",
+    "resources/images/OrcaSlicerTitle.png",
+    "resources/images/OrcaSlicer_154.png",
+    "resources/images/OrcaSlicer_154_title.png",
+    "resources/images/OrcaSlicer_192px_grayscale.png",
+    "resources/images/OrcaSlicer_192px_transparent.png",
+    "resources/images/OrcaSlicer_64.png",
+    "resources/images/OrcaSlicer_gradient.svg",
+    "resources/images/OrcaSlicer_gradient_circle.svg",
+    "resources/images/OrcaSlicer_gradient_narrow.svg",
+    "resources/images/OrcaSlicer_gray.svg",
+    "resources/images/gcode.icns",
+    "resources/images/stl.icns",
+    "resources/images/studio_logo.svg",
+    "resources/web/image/logo.png",
 }
 
 
@@ -76,7 +92,7 @@ class LogoRowsTest(unittest.TestCase):
     def test_every_overlay_row_has_a_source_and_waits_for_review(self) -> None:
         for row in logo_rows():
             with self.subTest(path=row["path"]):
-                if row["path"] in EXPECTED_MISSING:
+                if row["path"] in EXPECTED_MISSING | NOT_OVERLAID:
                     self.assertEqual(row["status"], "missing")
                     self.assertFalse(manifest_module.overlay_path(REPO_ROOT, row["path"]).exists())
                     continue
@@ -125,12 +141,6 @@ class LogoRowsTest(unittest.TestCase):
         self.assertEqual(
             [kind for size, kind, _ in entries], ["png" if size == 256 else "bmp" for size, _, _ in entries]
         )
-
-    def test_grayscale_logo_is_gray(self) -> None:
-        path = manifest_module.overlay_path(REPO_ROOT, "resources/images/OrcaSlicer_192px_grayscale.png")
-        image = raster.decode(path.read_bytes())
-        pixels = image.rgba
-        self.assertTrue(all(pixels[i] == pixels[i + 1] == pixels[i + 2] for i in range(0, len(pixels), 4)))
 
 
 def _svg_tag(row: dict) -> bytes:
