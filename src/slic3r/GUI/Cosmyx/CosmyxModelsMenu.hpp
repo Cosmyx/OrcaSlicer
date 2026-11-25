@@ -13,6 +13,11 @@ namespace Cosmyx {
 // same menu before is destroyed first, so a menu rebuilt in place (see
 // MenuFactory::update_default_menu) never shows the submenu twice. `parent` is
 // the window that updates the menu items (MenuFactory's parent).
+//
+// The submenu is shown only while the selected printer is a Cosmyx machine
+// (decision 0223): on another printer it is left out, and it is removed or put
+// back, right after the item it was appended after ("Add Handy models"), each
+// time the Cosmyx machine flag flips (CosmyxMachineHook.hpp).
 void append_models_submenu(wxMenu* menu, wxWindow* parent);
 
 } // namespace Cosmyx
