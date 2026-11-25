@@ -87,23 +87,28 @@ class BrandingRecipeLayoutTests(unittest.TestCase):
 class PrepareProfileTest(unittest.TestCase):
     """The build legs run only the hermetic branding tests (see branding_fixture.PROFILE_ENV)."""
 
-    def branding_test_step(self) -> str:
-        steps = PREPARE_ACTION.read_text(encoding="utf-8").split("    - name: ")[1:]
-        found = [step for step in steps if "test_branding_*.py" in step]
-        self.assertEqual(len(found), 1, "exactly one prepare step runs the branding tests")
+    def prepare_steps(self) -> list[str]:
+        return PREPARE_ACTION.read_text(encoding="utf-8").split("    - name: ")[1:]
+
+    def step_index(self, marker: str, what: str) -> int:
+        # Steps are found by the command they run, not by their name, so other
+        # branches can rename or extend a step without breaking these checks.
+        found = [index for index, step in enumerate(self.prepare_steps()) if marker in step]
+        self.assertEqual(len(found), 1, f"exactly one prepare step {what}")
         return found[0]
+
+    def branding_test_step(self) -> str:
+        return self.prepare_steps()[self.step_index("test_branding_*.py", "runs the branding tests")]
 
     def test_prepare_action_exports_the_branding_mode_first(self) -> None:
         # The mode (strict unless the tree's upstream base is not DEV) is
         # chosen once and exported, so the real-tree tests and apply agree.
-        steps = PREPARE_ACTION.read_text(encoding="utf-8").split("    - name: ")[1:]
-        names = [step.splitlines()[0] for step in steps]
-        mode = [index for index, step in enumerate(steps) if "branding/cli.py mode" in step]
-        self.assertEqual(len(mode), 1, "exactly one prepare step exports the branding mode")
-        self.assertIn('COSMYX_BRAND_MODE=', steps[mode[0]])
-        self.assertIn('"$GITHUB_ENV"', steps[mode[0]])
-        self.assertLess(mode[0], names.index("Test the graft, the worktree helper and the branding engine"))
-        self.assertLess(mode[0], names.index("Apply Cosmyx branding"))
+        steps = self.prepare_steps()
+        mode = self.step_index("branding/cli.py mode", "exports the branding mode")
+        self.assertIn('COSMYX_BRAND_MODE=', steps[mode])
+        self.assertIn('"$GITHUB_ENV"', steps[mode])
+        self.assertLess(mode, self.step_index("test_branding_*.py", "runs the branding tests"))
+        self.assertLess(mode, self.step_index("branding/cli.py apply", "applies the branding"))
 
     def test_prepare_action_sets_the_profile_on_the_branding_tests(self) -> None:
         self.assertRegex(self.branding_test_step(), r"(?m)^\s+COSMYX_TEST_PROFILE: prepare$")
