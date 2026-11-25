@@ -83,7 +83,7 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T8 -->
 - Fill the Cosmyx catalogues in all 22 OrcaSlicer languages (CHT nozzle,
-  ironing temperature, Cosmyx models), using each language's OrcaSlicer terms
+  ironing temperature, Cosmyx models, update check), using each language's OrcaSlicer terms
   for shared words. Pull request: pending.
 - Translate the Cosmyx strings: per-feature catalogues under
   `localization/cosmyx/` (cht-nozzle, ironing-temperature, models) for every
