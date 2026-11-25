@@ -7,8 +7,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 #. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
 msgid ""
 "Checking for updates is turned off while Stealth mode is on. Turn off "
 "Stealth mode in Preferences to check for a new release."
-msgstr ""
+msgstr "스텔스 모드가 켜져 있는 동안에는 업데이트 확인이 꺼집니다. 새 릴리스를 확인하려면 기본 설정에서 스텔스 모드를 끄세요."

@@ -79,7 +79,9 @@ here; see the upstream release notes.
   files of a Build all run, refuses a tag outside that convention or a build
   of another version, and creates the draft on the run's commit when it is
   missing (the `RELEASE_PUBLISHER` repository variable must name who may run
-  it). Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/122.
+  it). The Stealth mode message is translated into French and
+  machine-translated for review into the 20 other offered UI languages.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/122.
   Decision: 0221.
 
 ### i18n
