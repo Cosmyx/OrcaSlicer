@@ -10,8 +10,8 @@ patch them) is renamed here, by the `cosmyx-package-names` action that the
 
 - `mac-app` (after "Create DMG without notary", before the Cosmyx signing):
   renames the universal `OrcaSlicer.app` to `CosmoSlice.app`, drops the
-  profile validator app and DMG, drops the unsigned `OrcaSlicer_` DMG and
-  builds `CosmoSlice_Mac_universal_<ver>.dmg` (volume CosmoSlice) with
+  profile validator app and DMG, drops the unsigned `OrcaSlicer_` DMG,
+  seals the app (see `seal_command`) and builds `CosmoSlice_Mac_universal_<ver>.dmg` (volume CosmoSlice) with
   upstream's scripts/create_dmg.sh. The signing, when on, signs every app of
   the folder and rebuilds the DMG under the app's name, so it keeps this name.
   A pull-request leg builds no universal app and ships its arch's own DMG
@@ -115,6 +115,27 @@ def run_bash(command: str) -> None:
     subprocess.run(["bash", "-c", command], check=True)
 
 
+def seal_command(app: Path) -> str:
+    """Make the bundle's signature verify before it goes into a DMG.
+
+    Upstream's unsigned build leaves only the linker's ad-hoc signature on each
+    Mach-O and never seals the bundle (no _CodeSignature), so `codesign --verify`
+    fails with "code has no resources but signature indicates they must be
+    present" and Gatekeeper calls the downloaded app damaged. A signature that
+    already verifies (the Developer ID one of a signed build) is kept; one made
+    with an identity that no longer verifies fails, so it is never silently
+    replaced; anything else is sealed ad hoc. The final strict verification
+    fails the step when the bundle still does not verify."""
+    return (
+        f"set -e; app={shlex.quote(str(app))}; "
+        'if codesign --verify --deep --strict "$app" 2>/dev/null; then echo "$app: signature kept"; '
+        "elif codesign -dv \"$app\" 2>&1 | grep -q '^Authority='; then "
+        'echo "::error::$app is signed with an identity but no longer verifies" >&2; exit 1; '
+        'else codesign --force --deep --sign - "$app"; fi; '
+        'codesign --verify --deep --strict --verbose=2 "$app"'
+    )
+
+
 def build_dmg(root: Path, app: Path, staging: Path, volume: str, output: Path, runner=run_bash) -> None:
     """Upstream's DMG layout: the app (copied with ditto, which keeps the bundle's
     links, modes and extended attributes) and an /Applications link, made into a
@@ -167,6 +188,7 @@ def stage_mac_app(table: dict, root: Path, workspace: Path, env: dict, runner=ru
     remove(folder / names.new("validator_app"))
     remove(workspace / names.new("validator_dmg"))
     remove(workspace / names.old("dmg"))
+    runner(seal_command(new_app))
     build_dmg(root, new_app, workspace / names.new("dmg_staging"), names.new("volume"), workspace / names.new("dmg"), runner)
     return {}
 

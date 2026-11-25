@@ -8,6 +8,7 @@ import io
 import json
 import re
 import shlex
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -202,9 +203,12 @@ class MacTest(Workspace):
         self.assertEqual(sorted(path.name for path in bundle.iterdir()), ["CosmoSlice.app"])
         self.assertEqual(sorted(path.name for path in self.ws.glob("*.dmg")), [])  # the fake runner wrote none
         self.assertEqual(list((self.ws / "build/universal/CosmoSlice_dmg").iterdir()), [])
-        [command] = self.commands
+        # The renamed app is sealed and verified first, then made into the DMG.
+        [seal, command] = self.commands
         # Paths are shell-quoted; on Windows the temp paths hold backslashes, so they get quotes.
         q = lambda path: shlex.quote(str(path))  # noqa: E731
+        self.assertEqual(seal, pn.seal_command(bundle / "CosmoSlice.app"))
+        self.assertIn(f"app={q(bundle / 'CosmoSlice.app')}", seal)
         staging = self.ws / "build/universal/CosmoSlice_dmg"
         self.assertIn(f"ditto {q(bundle / 'CosmoSlice.app')} {q(staging / 'CosmoSlice.app')}", command)
         self.assertIn("ln -s /Applications", command)
@@ -216,7 +220,8 @@ class MacTest(Workspace):
         env = self.env("macOS", VER=DEV_TAG)
         self.run_stage("mac-app", env)
         self.run_stage("mac-app", env)
-        self.assertEqual(len(self.commands), 2)
+        self.assertEqual(len(self.commands), 4)
+        self.assertEqual(self.commands[0], self.commands[2])  # a rerun seals again
 
     def test_both_apps_present_fails(self) -> None:
         self.universal()
@@ -250,7 +255,8 @@ class MacTest(Workspace):
                 self.assertEqual(self.run_stage("mac-app", env), {})
                 self.assertEqual(sorted(path.name for path in bundle.iterdir()), ["CosmoSlice.app"])
                 self.assertEqual(list(self.ws.glob("*.dmg")), [])
-                [command] = self.commands
+                [seal, command] = self.commands
+                self.assertEqual(seal, pn.seal_command(bundle / "CosmoSlice.app"))
                 staging = self.ws / f"build/{arch}/CosmoSlice_dmg"
                 self.assertIn(f"ditto {q(bundle / 'CosmoSlice.app')} {q(staging / 'CosmoSlice.app')}", command)
                 self.assertTrue(command.endswith(f"create_dmg CosmoSlice {q(staging)} {q(self.ws / f'CosmoSlice_Mac_{arch}_{DEV_TAG}.dmg')}"))
@@ -279,6 +285,87 @@ class MacTest(Workspace):
         (self.ws / self.BUNDLE).mkdir(parents=True)
         with self.assertRaisesRegex(pn.PackageError, "mac-app"):
             self.run_stage("mac-upload", self.env("macOS", VER=DEV_TAG))
+
+
+class SealCommandTest(unittest.TestCase):
+    """The seal command: keep a signature that verifies, refuse a broken
+    identity signature, re-seal anything else ad hoc, then always verify."""
+
+    def test_order_and_flags(self) -> None:
+        command = pn.seal_command(Path("build") / "my app" / "CosmoSlice.app")
+        self.assertTrue(command.startswith("set -e; "))
+        self.assertIn(f"app={shlex.quote(str(Path('build') / 'my app' / 'CosmoSlice.app'))}", command)
+        verify_first = command.index('codesign --verify --deep --strict "$app"')
+        identity = command.index("grep -q '^Authority='")
+        reseal = command.index('codesign --force --deep --sign - "$app"')
+        final = command.rindex('codesign --verify --deep --strict --verbose=2 "$app"')
+        self.assertLess(verify_first, identity)
+        self.assertLess(identity, reseal)
+        self.assertLess(reseal, final)
+        self.assertTrue(command.endswith('codesign --verify --deep --strict --verbose=2 "$app"'))
+
+
+@unittest.skipUnless(shutil.which("codesign") and shutil.which("ditto"), "codesign and ditto exist on macOS only")
+class SealOnMacTest(unittest.TestCase):
+    """A real bundle in the state the upstream unsigned build leaves it: a main
+    executable carrying only its own ad-hoc (linker) signature and no sealed
+    resources, which `codesign --verify` rejects and Gatekeeper calls damaged."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def unsealed_app(self) -> Path:
+        app = self.root / "OrcaSlicer.app"
+        (app / "Contents" / "MacOS").mkdir(parents=True)
+        (app / "Contents" / "Resources").mkdir()
+        (app / "Contents" / "Resources" / "data.txt").write_text("x", encoding="utf-8")
+        (app / "Contents" / "Info.plist").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0"><dict>'
+            "<key>CFBundleExecutable</key><string>OrcaSlicer</string>"
+            "<key>CFBundleIdentifier</key><string>com.example.dummy</string>"
+            "<key>CFBundlePackageType</key><string>APPL</string></dict></plist>\n",
+            encoding="utf-8",
+        )
+        # Sign the executable on its own, outside the bundle, like the linker does.
+        exe = self.root / "OrcaSlicer"
+        shutil.copyfile("/usr/bin/true", exe)
+        subprocess.run(["codesign", "--remove-signature", str(exe)], check=True)
+        subprocess.run(["codesign", "--force", "--sign", "-", "--identifier", "OrcaSlicer", str(exe)], check=True)
+        exe.rename(app / "Contents" / "MacOS" / "OrcaSlicer")
+        return app
+
+    def verifies(self, app: Path) -> bool:
+        return subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], capture_output=True).returncode == 0
+
+    def test_renamed_unsealed_app_is_sealed_and_verifies(self) -> None:
+        app = self.unsealed_app()
+        renamed = app.with_name("CosmoSlice.app")
+        app.rename(renamed)
+        self.assertFalse(self.verifies(renamed))  # the reported bug
+        pn.run_bash(pn.seal_command(renamed))
+        self.assertTrue(self.verifies(renamed))
+        copy = self.root / "staging" / "CosmoSlice.app"
+        subprocess.run(["ditto", str(renamed), str(copy)], check=True)
+        self.assertTrue(self.verifies(copy))  # the DMG copy keeps the seal
+
+    def test_valid_signature_is_kept(self) -> None:
+        app = self.unsealed_app()
+        subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(app)], check=True)
+        before = (app / "Contents" / "_CodeSignature" / "CodeResources").read_bytes()
+        pn.run_bash(pn.seal_command(app))
+        self.assertEqual((app / "Contents" / "_CodeSignature" / "CodeResources").read_bytes(), before)
+
+    def test_app_changed_after_sealing_is_resealed(self) -> None:
+        app = self.unsealed_app()
+        subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(app)], check=True)
+        (app / "Contents" / "Resources" / "data.txt").write_text("changed", encoding="utf-8")
+        self.assertFalse(self.verifies(app))
+        pn.run_bash(pn.seal_command(app))
+        self.assertTrue(self.verifies(app))
 
 
 class OtherLegTest(Workspace):
