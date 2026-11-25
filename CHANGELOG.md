@@ -11,7 +11,8 @@ here; see the upstream release notes.
   Open a new period when the first change of a month lands.
 - Inside a period, lines are grouped by area, always in this order:
   `repo` (tooling, layout, docs), `libslic3r` (slicing core), `GUI`,
-  `i18n` (translations), `CI-release` (workflows, signing, releases).
+  `i18n` (translations), `CI-release` (workflows, signing, releases),
+  `profiles` (vendor printer, process and filament presets).
 - Each line says what changed for someone reading the history, not how. It
   ends with the pull request link and the decisions it implements
   (`wiki/decisions/NNNN-slug.md`).
@@ -77,3 +78,15 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+
+### profiles
+
+<!-- cosmyx-slot: T30 -->
+- Add the Cosmyx vendor bundle: the eight Cosmyx printer models (Nova,
+  Nova can-out, Nova Haute Temperature, Nova Double Tete, Nova Metal
+  Ceramique, SuperNova, SuperNova Double Tete and its Metal Ceramique
+  version) with their processes and filaments, from the 2.3.1 standard line,
+  as bundle version 02.00.00.00. **Removed:** the Cosmyx bed type; every
+  printer now defaults to the Textured PEI Plate. Preset names are kept,
+  so user presets made from the old Cosmyx pack still find their parents;
+  setting and filament ids are new. Pull request: pending. Decision: 0224.

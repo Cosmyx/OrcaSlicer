@@ -77,6 +77,7 @@ SLOTS_BY_AREA = {
     "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f"],
     "i18n": ["T8"],
     "CI-release": ["T9", "T10", "T11a", "T13"],
+    "profiles": ["T30"],
 }
 
 
@@ -131,6 +132,8 @@ class ChecksWorkflowTests(unittest.TestCase):
             ".github/cosmyx/**", ".github/workflows/cosmyx-*.yml",
             "localization/cosmyx/**", "scripts/sign_windows.ps1",
             ".github/workflows/build_orca.yml", ".github/workflows/build_flatpak.yml",
+            "resources/profiles/Cosmyx/**", "resources/profiles/Cosmyx.json",
+            "scripts/orca_profile_tool.py",
         )
         for path in required:
             with self.subTest(path=path):
