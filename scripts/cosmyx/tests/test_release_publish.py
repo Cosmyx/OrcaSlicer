@@ -230,6 +230,13 @@ class WorkflowHookTests(unittest.TestCase):
         self.assertGreater(step, self.step_index("Assemble release assets"))
         self.assertLess(step, self.step_index("Upload assets to draft release"))
 
+    def test_no_product_name_in_the_upstream_file(self) -> None:
+        # The branding engine applies the product name at build time; the hook
+        # lines in this upstream file must name Cosmyx only (brand-check G7).
+        for number, line in enumerate(self.lines, start=1):
+            with self.subTest(line=number):
+                self.assertNotIn("CosmoSlice", line)
+
     def test_every_added_line_is_tagged(self) -> None:
         added = subprocess.run(
             ["git", "diff", "-U0", "origin/DEV", "--", str(WORKFLOW.relative_to(REPO_ROOT))],

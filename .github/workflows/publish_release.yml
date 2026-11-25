@@ -80,7 +80,7 @@ jobs:
           fi
 
       - name: Download release artifacts from build run
-        if: ${{ false }} # Cosmyx: replaced by the CosmoSlice step below (decision 0221)
+        if: ${{ false }} # Cosmyx: replaced by the Cosmyx step below (decision 0221)
         run: |
           # Windows_V* (not Windows_*) keeps the MSIX Store artifact out: it goes to Partner Center, not GitHub releases.
           gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --dir artifacts \
@@ -93,7 +93,7 @@ jobs:
           ls -1 artifacts
 
       - name: Assemble release assets
-        if: ${{ false }} # Cosmyx: replaced by the CosmoSlice step below (decision 0221)
+        if: ${{ false }} # Cosmyx: replaced by the Cosmyx step below (decision 0221)
         run: |
           set -euo pipefail
           mkdir -p upload
@@ -134,7 +134,7 @@ jobs:
             exit 1
           fi
 
-      - name: Cosmyx download and assemble the CosmoSlice assets # Cosmyx
+      - name: Cosmyx download and assemble the release assets # Cosmyx
         run: python3 scripts/cosmyx/release_publish.py download --run-id "$RUN_ID" && python3 scripts/cosmyx/release_publish.py assemble # Cosmyx
 
       - name: Upload assets to draft release
