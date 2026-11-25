@@ -285,6 +285,13 @@ class IntegrateTests(Sandbox):
 
         return gh, calls
 
+    def test_drift_is_not_checked_on_the_list_base(self) -> None:
+        tail = "".join(f"added {number}\n" for number in range(50))
+        self.branch("feat/big", "chore/foundation", {"src/app.txt": "one\ntwo\nthree\n" + tail}, from_ref=self.base)
+        code, out = self.run_cli(["integrate", "--no-fetch", "--strict-drift", "--data", self.data()])
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("DRIFT", out)
+
     def test_push_also_pushes_the_ci_base_at_the_base_commit(self) -> None:
         self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
         self.push("ci/cosmyx-integration")  # an old remote tip (DEV)
@@ -639,6 +646,90 @@ class ReplayIntegrateTests(Sandbox):
         self.assertEqual(list(resolve.marker_order(self.file_at("integration/v1", "CHANGELOG.md"))),
                          ["T0", "T21", "T17", "T5"])
 
+    def test_a_rerere_resolution_that_copies_the_source_file_whole_stops(self) -> None:
+        self.branch("feat/clash", "DEV", {"src/app.txt": "one\ntwo mine\nthree\n"}, from_ref=self.base)
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        worktree = self.work / ".worktrees" / "integration-v1"
+        # A bad recorded resolution: the branch's whole file, which drops the release's own change.
+        (worktree / "src" / "app.txt").write_bytes(b"one\ntwo mine\nthree\n")
+        self.git(["-c", "rerere.enabled=true", "rerere"], cwd=worktree)
+        self.git(["cherry-pick", "--abort"], cwd=worktree)
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        source = self.git(["rev-parse", "origin/feat/clash"])
+        self.assertIn("UNKNOWN CONFLICT in origin/feat/clash", out)
+        self.assertIn("src/app.txt", out)
+        self.assertIn(f"copied {source[:10]}'s whole file", out)
+        self.assertIn("git rerere forget src/app.txt", out)
+        self.assertEqual(cli.Git(worktree).sha("CHERRY_PICK_HEAD"), source)
+        # A path allowed on purpose goes through.
+        self.git(["cherry-pick", "--abort"], cwd=worktree)
+        code, out = self.run_v1("--allow-whole-copy", "src/app.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.file_at("integration/v1", "src/app.txt"), "one\ntwo mine\nthree")
+
+    def test_an_earlier_resolution_that_copies_the_source_file_whole_is_not_reused(self) -> None:
+        self.branch("feat/clash", "DEV", {"src/app.txt": "one\ntwo mine\nthree\n"}, from_ref=self.base)
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        worktree = self.work / ".worktrees" / "integration-v1"
+        (worktree / "src" / "app.txt").write_bytes(b"one\ntwo mine\nthree\n")
+        self.git(["add", "src/app.txt"], cwd=worktree)
+        self.git(["-c", "core.editor=true", "cherry-pick", "--continue"], cwd=worktree)
+        # Only the committed bad replay is left to reuse, not what rerere learned.
+        shutil.rmtree(self.work / ".git" / "rr-cache", ignore_errors=True)
+        code, out = self.run_v1()
+        self.assertEqual(code, 1, out)
+        source = self.git(["rev-parse", "origin/feat/clash"])
+        self.assertIn("src/app.txt", out)
+        self.assertIn(f"copied {source[:10]}'s whole file", out)
+        self.assertIn("earlier resolution", out)
+        wt = cli.Git(worktree)
+        # The bad replay is dropped and the source commit's cherry-pick is left in progress.
+        self.assertEqual(wt.sha("CHERRY_PICK_HEAD"), source)
+        self.assertEqual(wt.sha("HEAD"), self.git(["rev-parse", "rebase/v1/chore/foundation"]))
+
+    def test_a_good_earlier_resolution_is_still_reused(self) -> None:
+        self.branch("feat/clash", "DEV", {"src/app.txt": "one\ntwo mine\nthree\n"}, from_ref=self.base)
+        self.run_v1()
+        worktree = self.work / ".worktrees" / "integration-v1"
+        (worktree / "src" / "app.txt").write_bytes(b"one\ntwo upstream\ntwo mine\nthree\n")
+        self.git(["add", "src/app.txt"], cwd=worktree)
+        self.git(["-c", "core.editor=true", "cherry-pick", "--continue"], cwd=worktree)
+        shutil.rmtree(self.work / ".git" / "rr-cache", ignore_errors=True)
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        self.assertIn("earlier resolution", out)
+        self.assertEqual(self.file_at("integration/v1", "src/app.txt"), "one\ntwo upstream\ntwo mine\nthree")
+
+    def big_change_branch(self) -> None:
+        tail = "".join(f"added {number}\n" for number in range(50))
+        self.branch("feat/big", "DEV", {"src/app.txt": "one\ntwo\nthree\n" + tail}, from_ref=self.base)
+
+    def test_drift_from_the_base_is_warned_in_a_table(self) -> None:
+        self.big_change_branch()
+        code, out = self.run_v1("--push")
+        self.assertEqual(code, 0, out)
+        self.assertIn("DRIFT WARNING", out)
+        rows = [line for line in out.splitlines() if line.startswith("| src/app.txt")]
+        self.assertEqual(len(rows), 1, out)
+        self.assertIn("| 50 ", rows[0])
+        self.assertIsNotNone(self.remote_sha("integration/v1"))
+
+    def test_strict_drift_stops_before_the_push(self) -> None:
+        self.big_change_branch()
+        code, out = self.run_v1("--push", "--strict-drift")
+        self.assertEqual(code, 1, out)
+        self.assertIn("src/app.txt", out)
+        self.assertIsNone(self.remote_sha("integration/v1"))
+
+    def test_drift_threshold_is_configurable(self) -> None:
+        self.big_change_branch()
+        code, out = self.run_v1("--strict-drift", "--drift-threshold", "60")
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("DRIFT WARNING", out)
+
     def test_integration_branch_held_by_another_clean_worktree_is_reused(self) -> None:
         self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
         holder = self.work / ".worktrees" / "rebase-v1" / "integration"
@@ -763,6 +854,56 @@ class RebaseCheckTests(Sandbox):
         with mock.patch.object(cli, "replay", boom), self.assertRaises(RuntimeError):
             self.run_cli(["rebase-check", "v1", "--no-fetch", "--data", self.data()])
         self.assertEqual(len(self.worktrees()), 1)
+
+
+class GuardTests(Sandbox):
+    """The whole-file copy check and the drift table on a small history."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.wt = cli.Git(self.work)
+
+    def test_copied_whole_needs_the_source_file_over_a_different_file(self) -> None:
+        start = self.base
+        self.git(["checkout", "-q", "-B", "source", start])
+        source = self.commit({"src/app.txt": "one\ntwo mine\nthree\n"}, "source")
+        self.git(["checkout", "-q", "-B", "head", start])
+        head = self.commit({"src/app.txt": "one upstream\ntwo\nthree\n"}, "head")
+        theirs = self.wt.blob_id(source, "src/app.txt")
+        self.assertTrue(cli.copied_whole(self.wt, "src/app.txt", source, head, theirs))
+        # The HEAD file is the source's parent file: taking the source file is the change itself.
+        self.assertFalse(cli.copied_whole(self.wt, "src/app.txt", source, start, theirs))
+        # A real merge of both changes is not a copy.
+        (self.work / "merged.txt").write_bytes(b"one upstream\ntwo mine\nthree\n")
+        merged = self.git(["hash-object", "merged.txt"])
+        self.assertFalse(cli.copied_whole(self.wt, "src/app.txt", source, head, merged))
+        # A path the source commit does not have.
+        self.assertFalse(cli.copied_whole(self.wt, "src/none.txt", source, head, theirs))
+
+    def test_drift_rows_skip_owned_new_allowed_and_small_paths(self) -> None:
+        many = "".join(f"line {number}\n" for number in range(50))
+        start = self.commit({
+            "src/big.txt": "big\n", "src/small.txt": "small\n", "src/Cosmyx/own.txt": "own\n",
+            "scripts/cosmyx-tool.sh": "tool\n", "wiki/page.md": "page\n", "cosmyx-src/data.txt": "data\n",
+            ".github/workflows/build_orca.yml": "build\n",
+        }, "start")
+        tip = self.commit({
+            "src/big.txt": "big\n" + many, "src/small.txt": "small\nsmall\n", "src/Cosmyx/own.txt": "own\n" + many,
+            "scripts/cosmyx-tool.sh": "tool\n" + many, "wiki/page.md": "page\n" + many,
+            "cosmyx-src/data.txt": "data\n" + many, ".github/workflows/build_orca.yml": "build\n" + many,
+            "src/new.txt": many, "CHANGELOG.md": CHANGELOG + many,
+        }, "tip")
+        self.assertEqual(cli.drift_rows(self.wt, start, tip, 40), [("src/big.txt", "50", "0")])
+        self.assertEqual(cli.drift_rows(self.wt, start, tip, 50), [])
+        self.assertEqual(cli.drift_rows(self.wt, start, tip, 40, allowed=()),
+                         [(".github/workflows/build_orca.yml", "50", "0"), ("src/big.txt", "50", "0")])
+
+    def test_cosmyx_owned_paths(self) -> None:
+        for path in ("src/slic3r/GUI/Cosmyx/a.cpp", "scripts/cosmyx/x.py", ".github/workflows/cosmyx-build.yml",
+                     "wiki/x.md", ".claude/a.md", "CHANGELOG.md", "cosmyx-src/branding/a.json"):
+            self.assertTrue(cli.cosmyx_owned(path), path)
+        for path in ("src/slic3r/plugin/PluginManager.cpp", "justfile", "src/cosmyxless.cpp", "docs/CHANGELOG.md"):
+            self.assertFalse(cli.cosmyx_owned(path), path)
 
 
 class BranchListTests(unittest.TestCase):
