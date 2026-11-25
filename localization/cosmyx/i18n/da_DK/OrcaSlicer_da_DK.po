@@ -3073,7 +3073,7 @@ msgid ""
 "Please note, application settings will be lost, but printer profiles will "
 "not be affected."
 msgstr ""
-"OrcaSlicers konfigurationsfil er muligvis beskadiget og kan ikke fortolkes.\n"
+"CosmoSlices konfigurationsfil er muligvis beskadiget og kan ikke fortolkes.\n"
 "OrcaSlicer har forsøgt at genskabe konfigurationsfilen.\n"
 "Bemærk, at programindstillingerne går tabt, men printerprofilerne påvirkes "
 "ikke."
@@ -3620,7 +3620,7 @@ msgstr "Omdøb"
 
 # AI Translated
 msgid "Orca Slicer GUI initialization failed"
-msgstr "Initialisering af Orca Slicers brugerflade mislykkedes"
+msgstr "Initialisering af CosmoSlices brugerflade mislykkedes"
 
 # AI Translated
 #, possible-boost-format
@@ -28676,7 +28676,7 @@ msgstr ""
 "Hvis du vil behandle output-G-code med brugerdefinerede scripts, skal du "
 "blot angive deres absolutte stier her. Adskil flere scripts med et "
 "semikolon. Scripts får den absolutte sti til G-code-filen som første "
-"argument, og de kan få adgang til Orca Slicers konfigurationsindstillinger "
+"argument, og de kan få adgang til CosmoSlices konfigurationsindstillinger "
 "ved at læse miljøvariabler."
 
 # AI Translated
@@ -39034,7 +39034,7 @@ msgid ""
 "file. OrcaSlicer desktop file was probably created successfully."
 msgstr ""
 "Skrivebordsintegration mislykkedes - kunne ikke oprette skrivebordsfil til "
-"Gcodeviewer. OrcaSlicers skrivebordsfil blev sandsynligvis oprettet."
+"Gcodeviewer. CosmoSlices skrivebordsfil blev sandsynligvis oprettet."
 
 # AI Translated
 msgid ""
@@ -50062,7 +50062,7 @@ msgstr ""
 "Fuld adgang omgår kontrollen af tilladelser. Pluginet kan læse og skrive de "
 "fleste filer, du har adgang til; ændring af opstarts- eller programfiler kan "
 "lade kode køre uden for disse kontroller. Direkte Python-adgang til "
-"OrcaSlicers stier for konfiguration, hemmeligheder, certifikater og "
+"CosmoSlices stier for konfiguration, hemmeligheder, certifikater og "
 "installationstilstand forbliver blokeret, men underprocesser begrænses ikke."
 
 # AI Translated
@@ -50265,7 +50265,7 @@ msgstr ""
 "længere. Pluginet kan læse og skrive de fleste filer, din brugerkonto har "
 "adgang til, herunder opstartsscripts, SSH-nøgler og en skrivbar "
 "OrcaSlicer-installation. Ændring af opstarts- eller programfiler kan lade "
-"kode køre uden for disse kontroller. Direkte Python-adgang til OrcaSlicers "
+"kode køre uden for disse kontroller. Direkte Python-adgang til CosmoSlices "
 "stier for konfiguration, hemmeligheder, certifikater og "
 "installationstilstand forbliver blokeret, men underprocesser er ikke "
 "begrænsede. Fuld adgang er ikke en sandkasse.\n"
