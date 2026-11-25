@@ -67,7 +67,7 @@ here; see the upstream release notes.
   (French "Machines externes"). Turning either on now asks for confirmation
   first, warning that Cosmyx has not verified the module and does not support
   the machines it relies on; Cancel leaves it off. Turning one off never asks.
-  Pull request: pending. Decision: 0219.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/121. Decision: 0219.
 
 ### i18n
 
