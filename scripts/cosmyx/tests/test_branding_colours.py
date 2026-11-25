@@ -40,6 +40,11 @@ def present_in(root: Path, row: dict) -> bool:
     """True when the file of a literal row exists and holds its text."""
     path = root / row["file"]
     return path.is_file() and row["find"] in path.read_text(encoding="utf-8", errors="replace").replace("\r\n", "\n")
+# The default filament colour fallbacks (decision 0128).
+PRESET_BUNDLE = "src/libslic3r/PresetBundle.cpp"
+FILAMENT_GREY = "#242323"
+FILAMENT_FIND = 'filament_colors.resize(filament_presets.size(), "#26A69A");'
+FILAMENT_REPLACE = f'filament_colors.resize(filament_presets.size(), "{FILAMENT_GREY}");'
 WIDGET = "src/slic3r/GUI/Widget.cpp"
 CSS = "resources/web/css/global.css"
 
@@ -429,7 +434,16 @@ class CommittedTableTest(unittest.TestCase):
         self.assertIn("!src/slic3r/GUI/Cosmyx/*", scopes)
         libslic3r = [scope for scope in scopes if scope.startswith("src/libslic3r")]
         self.assertEqual(libslic3r, ["src/libslic3r/Color.hpp"])
-        self.assertFalse([row for row in self.table["literals"] if row["file"].startswith("src/libslic3r/PresetBundle")])
+
+    def test_default_filament_colour_rows(self) -> None:
+        # The default filament colour is the user's dark grey (decision 0128):
+        # one row on the two fallbacks of PresetBundle.cpp, nothing else there.
+        rows = [row for row in self.table["literals"] if row["file"] == PRESET_BUNDLE]
+        self.assertEqual([(row["find"], row["replace"], row["count"]) for row in rows], [(FILAMENT_FIND, FILAMENT_REPLACE, 2)])
+        self.assertFalse(rows[0]["reason"].startswith(colours.TUPLE_REASON))
+        # The grey is never an accent target: the teal accent still maps to violet.
+        self.assertEqual(colours.mapping_table(self.table)["#26A69A"], "#A472F5")
+        self.assertNotIn(FILAMENT_GREY, colours.mapping_table(self.table).values())
 
     def test_wiki_table_is_current(self) -> None:
         wiki = (REPO_ROOT / "wiki" / "cosmyx" / "branding.md").read_text(encoding="utf-8")
@@ -443,6 +457,14 @@ class CommittedTableTest(unittest.TestCase):
         # std::map applies quoted keys ('"' sorts before '#') first: the bare
         # key only reaches the CSS-form fills the quoted dark key misses.
         self.assertLess('"#8000FF"', "#8000FF")
+
+
+# Accent usages of #26A69A, which stay violet (not filament grey).
+ACCENT_FILES = (
+    "src/slic3r/GUI/Widgets/HyperLink.cpp",
+    "src/slic3r/GUI/Widgets/StateColor.cpp",
+    "src/slic3r/GUI/ImGuiWrapper.cpp",
+)
 
 
 class RealTreeColoursTest(unittest.TestCase):
@@ -483,6 +505,21 @@ class RealTreeColoursTest(unittest.TestCase):
         self.assertIn("0xFFFF0080", bitmap)
         apply_module.revert(self.root)
         self.assertEqual(snapshot(self.root), before)
+
+    def test_default_filament_colour_is_grey_and_accents_stay_violet(self) -> None:
+        before = {relative: colours.read_scope_text(self.root, relative).count(FILAMENT_GREY) for relative in (PRESET_BUNDLE, *ACCENT_FILES)}
+        lines = []
+        self.assertEqual(apply_module.apply(self.root, env=REAL_TREE_ENV, out=lines.append), 0, "\n".join(lines))
+        bundle = colours.read_scope_text(self.root, PRESET_BUNDLE)
+        self.assertEqual(bundle.count(FILAMENT_REPLACE), 2)
+        self.assertNotIn("#26A69A", bundle.upper())
+        for relative in ACCENT_FILES:
+            text = colours.read_scope_text(self.root, relative)
+            self.assertEqual(text.count(FILAMENT_GREY), before[relative], relative)
+            self.assertNotIn("#26A69A", text.upper(), relative)
+            self.assertIn("#A472F5", text, relative)
+        apply_module.revert(self.root)
+        self.assertEqual(colours.read_scope_text(self.root, PRESET_BUNDLE).count(FILAMENT_FIND), 2)
 
     def test_literal_rows_are_the_same_on_a_crlf_checkout(self) -> None:
         table = branding.load_json(self.root / branding.COLOURS_FILE)
