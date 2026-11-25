@@ -54,10 +54,9 @@ after the plater exists, so the early `plater() == nullptr` return of
   No second hook is needed for startup (see Context).
 - The branch holds the hook only and is based on chore/cosmyx-foundation,
   so it does not depend on any consumer. Each consumer lives on its own
-  branch: the models submenu gating (decision 0223) on
-  feat/cosmyx-models-cosmyx-only, which merges this branch into
-  feat/cosmyx-models (#92), and the Cosmyx physical printer dialog on
-  feat/cosmyx-printer-connection, based on this branch.
+  branch: the "Cosmyx 3D Models" menu and its gating (decision 0223) on
+  feat/cosmyx-models-cosmyx-only, and the Cosmyx physical printer dialog on
+  feat/cosmyx-printer-connection, both based on this branch.
 
 ## Consequences
 
