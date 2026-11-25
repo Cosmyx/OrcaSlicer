@@ -60,7 +60,7 @@ class JustfileTests(unittest.TestCase):
 
     def test_planned_feature_imports_are_present(self) -> None:
         for name in (
-            "branding", "goldens", "i18n", "macos-signing", "signing", "sync", "tests", "version",
+            "branding", "goldens", "i18n", "languages", "macos-signing", "signing", "sync", "tests", "version",
         ):
             with self.subTest(name=name):
                 self.assertTrue(self.text_has_optional_import(f"scripts/cosmyx/just/{name}.just"))
@@ -74,7 +74,7 @@ class JustfileTests(unittest.TestCase):
 SLOTS_BY_AREA = {
     "repo": ["T0"],
     "libslic3r": ["T1", "T2", "T3", "T4"],
-    "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f"],
+    "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f", "T25"],
     "i18n": ["T8"],
     "CI-release": ["T9", "T10", "T11a", "T13"],
 }

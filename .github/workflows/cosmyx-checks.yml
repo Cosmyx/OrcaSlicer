@@ -18,6 +18,9 @@ on:
       - '.github/cosmyx/**'
       - '.github/workflows/cosmyx-*.yml'
       - 'localization/cosmyx/**'
+      # The UI language table and the template the Cosmyx catalogues follow (decision 0220).
+      - 'src/slic3r/GUI/Cosmyx/logic/UiLocaleTable.inc'
+      - 'localization/i18n/OrcaSlicer.pot'
       - 'scripts/sign_windows.ps1'
       # Upstream build workflows carry Cosmyx hooks whose wiring tests must
       # run when upstream edits them.
@@ -37,6 +40,9 @@ on:
       - '.github/cosmyx/**'
       - '.github/workflows/cosmyx-*.yml'
       - 'localization/cosmyx/**'
+      # The UI language table and the template the Cosmyx catalogues follow (decision 0220).
+      - 'src/slic3r/GUI/Cosmyx/logic/UiLocaleTable.inc'
+      - 'localization/i18n/OrcaSlicer.pot'
       - 'scripts/sign_windows.ps1'
       # Upstream build workflows carry Cosmyx hooks whose wiring tests must
       # run when upstream edits them.

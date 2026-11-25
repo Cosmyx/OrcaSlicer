@@ -1,0 +1,97 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Este modelo de calibração funciona melhor com as direções de preenchimento "
+"definidas como 0 grau. Para obter os melhores resultados de calibração, "
+"recomenda-se definir tanto a 'Direção do preenchimento' quanto a 'Direção do "
+"preenchimento sólido' como 0.\n"
+"Sim - Alterar estas configurações automaticamente\n"
+"Não - Não alterar estas configurações para mim"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Calibration Suggestion"
+msgstr "Sugestão de calibração"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Este modelo de calibração funciona melhor com configurações de preenchimento "
+"específicas.\n"
+"Para obter os melhores resultados de calibração, recomenda-se definir:\n"
+"- Direção do preenchimento: %.0f°\n"
+"- Direção do preenchimento sólido: %.0f°\n"
+"- Parede única na primeira camada: %s\n"
+"\n"
+"Sim - Alterar estas configurações automaticamente\n"
+"Não - Não alterar estas configurações para mim"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cosmyx 3D Models"
+msgstr "Modelos 3D Cosmyx"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Calibration Models Dual Head"
+msgstr "Modelos de calibração para cabeçote duplo"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Calibration Models Single Head"
+msgstr "Modelos de calibração para cabeçote único"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cosmyx Handy Models"
+msgstr "Modelos úteis Cosmyx"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Calage 1 SNDT"
+msgstr "Calibração 1 SNDT"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Calibração 2 SNDT"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Calibração 3 SNDT"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cube Bicolore"
+msgstr "Cubo bicolor"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Calibração 1 Nova"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Cosmyx Cube"
+msgstr "Cubo Cosmyx"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Control Tension Belt"
+msgstr "Controle de tensão da correia"
+
+# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
+msgid "Support Bobine"
+msgstr "Suporte de bobina"

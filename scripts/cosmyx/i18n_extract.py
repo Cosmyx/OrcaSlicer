@@ -36,7 +36,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from i18n_graft import Catalogue, Entry, PoError, parse_po, read_po, write_text  # noqa: E402
+from i18n_graft import LANGUAGES_DIR_NAME, Catalogue, Entry, PoError, all_languages, parse_po, read_po, write_text  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -101,8 +101,10 @@ def cosmyx_sources(src_root: Path) -> list[Path]:
     return sorted(files, key=lambda p: p.as_posix())
 
 
-def languages(i18n_dir: Path) -> list[str]:
-    return sorted(p.name for p in i18n_dir.iterdir() if p.is_dir() and (p / f"OrcaSlicer_{p.name}.po").is_file())
+def languages(i18n_dir: Path) -> dict[str, Path]:
+    """Every language with a catalogue: OrcaSlicer's, plus the ones Cosmyx adds
+    in the sibling cosmyx/i18n folder (decision 0220)."""
+    return all_languages(i18n_dir, i18n_dir.parent / "cosmyx")
 
 
 def run_xgettext(xgettext: str, src_root: Path, files: list[Path], output: Path) -> None:
@@ -173,7 +175,7 @@ def extract(root: Path, src_root: Path, xgettext: str) -> dict[str, int]:
     """Refresh every feature's template and language files. Returns msgid counts."""
     cosmyx_dir = root / "localization" / "cosmyx"
     i18n_dir = root / "localization" / "i18n"
-    known = {p.name for p in cosmyx_dir.iterdir() if p.is_dir()} if cosmyx_dir.is_dir() else set()
+    known = {p.name for p in cosmyx_dir.iterdir() if p.is_dir() and p.name != LANGUAGES_DIR_NAME} if cosmyx_dir.is_dir() else set()
     sources = cosmyx_sources(src_root)
     known |= {STEM_FEATURES.get(p.stem, base_name(p)) for p in sources}
     by_feature: dict[str, list[Path]] = {}
@@ -190,7 +192,7 @@ def extract(root: Path, src_root: Path, xgettext: str) -> dict[str, int]:
                 continue
             counts[feature] = len(template.messages())
             write_feature(cosmyx_dir / feature, feature, template, i18n_dir)
-    existing = {p.name for p in cosmyx_dir.iterdir() if p.is_dir()} if cosmyx_dir.is_dir() else set()
+    existing = {p.name for p in cosmyx_dir.iterdir() if p.is_dir() and p.name != LANGUAGES_DIR_NAME} if cosmyx_dir.is_dir() else set()
     for feature in sorted(existing - set(counts)):
         print(f"warning: feature {feature!r} has no strings in the sources; its catalogues are left as they are", file=sys.stderr)
     return counts
@@ -207,8 +209,7 @@ def write_feature(folder: Path, feature: str, template: Catalogue, i18n_dir: Pat
             text = old
     write_text(pot, text)
     template = parse_po(text)
-    for language in languages(i18n_dir):
-        orca_po = i18n_dir / language / f"OrcaSlicer_{language}.po"
+    for language, orca_po in sorted(languages(i18n_dir).items()):
         target = folder / f"{language}.po"
         existing = read_po(target) if target.is_file() else None
         merged = merge_language(template, existing, new_header(feature, orca_po), plural_count(orca_po))
