@@ -272,6 +272,16 @@ own key, or none at all.
   namespace package folder is accepted, unlike the server's upload rule, so
   existing local wheels keep loading; the identifier rule alone closes the path
   escape.
+- **Translations.** The plugin rows of `CloudServerPrefs.cpp` are part of
+  the custom cloud feature, so their strings join the
+  `localization/cosmyx/cloud-server/` catalogues that decision 0203 added,
+  rather than a second folder fed by the same source file: this branch is
+  stacked on that one and regenerates the folder after it with
+  `just i18n-extract`, so once both are merged the folder is what extraction
+  of both gives. `PluginVerify.cpp` gets its own folder,
+  `localization/cosmyx/plugin-verify/`, the name `feature_for()` already
+  gives it (decision 0081), so no `STEM_FEATURES` entry is needed. French is
+  translated; the other languages are left empty for the per-language pass.
 - **Fork-only reasons**, outside the server vectors: `downgrade`,
   `no_pinned_key`, `unrecognised_server` (see above), `no_row` (the row did
   not reach the check), `app_gone` (the app closed before the download could
@@ -307,7 +317,8 @@ own key, or none at all.
   `PluginLoader.cpp`, the files `logic/PluginSigning.*`,
   `logic/PluginTrust.*` and `PluginVerify.*`, `parse_server_address()` and
   its use in `check_cloud_url()` (`logic/CloudServer.*`), the plugin rows of
-  `CloudServerPrefs.cpp`, and their tests.
+  `CloudServerPrefs.cpp` and their msgids in `localization/cosmyx/cloud-server/`,
+  the folder `localization/cosmyx/plugin-verify/`, and their tests.
 - Checked by `cosmyx_tests` (`test_cosmyx_plugin_signing.cpp`,
   `test_cosmyx_plugin_trust.cpp`, and the breakers' reproductions
   `test_cosmyx_plugin_signing_break_a.cpp`,

@@ -65,5 +65,59 @@ msgid "Check the addresses and save them."
 msgstr "Vérifier les adresses et les enregistrer."
 
 # AI Translated
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+"Clé publique qui signe les paquets de plugins de ce serveur, 64 caractères "
+"hexadécimaux. Le serveur la publie à /pkg/v1/keys ; vérifiez son identifiant "
+"de clé auprès de l'opérateur du serveur."
+
+# AI Translated
+msgid "Plugin signing key"
+msgstr "Clé de signature des plugins"
+
+# AI Translated
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+"Installer les plugins de ce serveur même si aucune clé de signature n'est "
+"épinglée. Leur taille et leur empreinte sont toujours vérifiées, mais rien "
+"ne prouve qui les a créés."
+
+# AI Translated
+msgid "Allow unverified plugins from this server"
+msgstr "Autoriser les plugins non vérifiés de ce serveur"
+
+# AI Translated
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr "Identifiant de clé : %1%"
+
+# AI Translated
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr ""
+"La clé de signature des plugins doit comporter 64 caractères hexadécimaux."
+
+# AI Translated
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr ""
+"Les paramètres de signature des plugins n'ont pas été enregistrés : ceux qui "
+"sont enregistrés ne peuvent pas être lus."
+
+# AI Translated
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr ""
+"L'adresse de l'API a changé : voici les paramètres de signature des plugins "
+"de la nouvelle adresse. Vérifiez-les, puis appliquez de nouveau pour les "
+"modifier."
+
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr "Redémarrez l'application pour vous connecter au nouveau serveur cloud."
