@@ -8,80 +8,116 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
 "|| n%100>14) ? 1 : 2);\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Wprowadź klucz publiczny."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "Klucz publiczny nie może zawierać spacji."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Wprowadź adres."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "Adres musi zaczynać się od https:// (http:// tylko dla localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "Adres nie zawiera nazwy hosta."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Ten adres jest nieprawidłowy."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Połącz się z własnym serwerem chmury zamiast z Cosmyx Cloud. Chmura jest "
+"używana tylko wtedy, gdy tryb Stealth jest wyłączony."
 
+# AI Translated
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Własna instancja chmury"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "Adres API"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Adres uwierzytelniania"
 
+# AI Translated
+# Needs human review: check whether this is the web portal address of the cloud server
 msgid "Web address"
-msgstr ""
+msgstr "Adres strony WWW"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Klucz publiczny"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Sprawdź adresy i zapisz je."
 
+# AI Translated
 msgid ""
 "Public key that signs this server's plugin packages, 64 hexadecimal "
 "characters. The server lists it at /pkg/v1/keys; check its key id with the "
 "server's operator."
 msgstr ""
+"Klucz publiczny, którym podpisywane są pakiety wtyczek tego serwera, złożony "
+"z 64 znaków szesnastkowych. Serwer udostępnia go pod adresem /pkg/v1/keys; "
+"zweryfikuj jego identyfikator klucza u operatora serwera."
 
+# AI Translated
 msgid "Plugin signing key"
-msgstr ""
+msgstr "Klucz podpisywania wtyczek"
 
+# AI Translated
 msgid ""
 "Install plugins from this server even when no signing key is pinned. Their "
 "size and digest are still checked, but nothing proves who made them."
 msgstr ""
+"Instaluj wtyczki z tego serwera nawet wtedy, gdy nie przypięto klucza "
+"podpisywania. Ich rozmiar i skrót są nadal sprawdzane, ale nic nie "
+"potwierdza, kto je utworzył."
 
+# AI Translated
 msgid "Allow unverified plugins from this server"
-msgstr ""
+msgstr "Zezwalaj na niezweryfikowane wtyczki z tego serwera"
 
+# AI Translated
 #. TRN %1% is a 64-character hexadecimal key id.
 #, possible-boost-format
 msgid "Key id: %1%"
-msgstr ""
+msgstr "Identyfikator klucza: %1%"
 
+# AI Translated
 msgid "The plugin signing key must be 64 hexadecimal characters."
 msgstr ""
+"Klucz podpisywania wtyczek musi składać się z 64 znaków szesnastkowych."
 
+# AI Translated
 msgid ""
 "The plugin signing settings were not saved: the stored ones cannot be read."
 msgstr ""
+"Ustawienia podpisywania wtyczek nie zostały zapisane: nie można odczytać "
+"zapisanych ustawień."
 
+# AI Translated
 msgid ""
 "The API address changed: these are the plugin signing settings of the new "
 "address. Check them and apply again to change them."
 msgstr ""
+"Adres API się zmienił: są to ustawienia podpisywania wtyczek dla nowego "
+"adresu. Sprawdź je i zastosuj ponownie, aby je zmienić."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "Uruchom ponownie aplikację, aby połączyć się z nowym serwerem chmury."

@@ -7,80 +7,118 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
+# AI Translated
 msgid "Enter the public key."
-msgstr ""
+msgstr "Ange den publika nyckeln."
 
+# AI Translated
 msgid "The public key must not contain spaces."
-msgstr ""
+msgstr "Den publika nyckeln får inte innehålla mellanslag."
 
+# AI Translated
 msgid "Enter an address."
-msgstr ""
+msgstr "Ange en adress."
 
+# AI Translated
 msgid "The address must start with https:// (http:// only for localhost)."
-msgstr ""
+msgstr "Adressen måste börja med https:// (http:// endast för localhost)."
 
+# AI Translated
 msgid "The address has no host name."
-msgstr ""
+msgstr "Adressen saknar värdnamn."
 
+# AI Translated
 msgid "This address is not valid."
-msgstr ""
+msgstr "Adressen är inte giltig."
 
+# AI Translated
 msgid ""
 "Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
 "used when stealth mode is off."
 msgstr ""
+"Anslut till din egen molnserver i stället för Cosmyx Cloud. Molnet används "
+"endast när Stealth-läget är avstängt."
 
+# AI Translated
 msgid "Custom Cloud Instance"
-msgstr ""
+msgstr "Anpassad molninstans"
 
+# AI Translated
 msgid "API address"
-msgstr ""
+msgstr "API-adress"
 
+# AI Translated
 msgid "Authentication address"
-msgstr ""
+msgstr "Autentiseringsadress"
 
+# AI Translated
 msgid "Web address"
-msgstr ""
+msgstr "Webbadress"
 
+# AI Translated
 msgid "Public key"
-msgstr ""
+msgstr "Publik nyckel"
 
+# AI Translated
 msgid "Check the addresses and save them."
-msgstr ""
+msgstr "Kontrollera adresserna och spara dem."
 
+# AI Translated
+# Needs human review: check 'operatör' (server operator/administrator) wording
 msgid ""
 "Public key that signs this server's plugin packages, 64 hexadecimal "
 "characters. The server lists it at /pkg/v1/keys; check its key id with the "
 "server's operator."
 msgstr ""
+"Publik nyckel som signerar den här serverns insticksmodulpaket, 64 "
+"hexadecimala tecken. Servern listar den på /pkg/v1/keys; kontrollera dess "
+"nyckel-id med serverns operatör."
 
+# AI Translated
 msgid "Plugin signing key"
-msgstr ""
+msgstr "Signeringsnyckel för insticksmoduler"
 
+# AI Translated
+# Needs human review: check 'fäst' for pinned key and 'kontrollsumma' for digest
 msgid ""
 "Install plugins from this server even when no signing key is pinned. Their "
 "size and digest are still checked, but nothing proves who made them."
 msgstr ""
+"Installera insticksmoduler från den här servern även när ingen "
+"signeringsnyckel är fäst. Deras storlek och kontrollsumma kontrolleras "
+"fortfarande, men inget bevisar vem som har skapat dem."
 
+# AI Translated
 msgid "Allow unverified plugins from this server"
-msgstr ""
+msgstr "Tillåt overifierade insticksmoduler från den här servern"
 
+# AI Translated
 #. TRN %1% is a 64-character hexadecimal key id.
 #, possible-boost-format
 msgid "Key id: %1%"
-msgstr ""
+msgstr "Nyckel-id: %1%"
 
+# AI Translated
 msgid "The plugin signing key must be 64 hexadecimal characters."
 msgstr ""
+"Signeringsnyckeln för insticksmoduler måste bestå av 64 hexadecimala tecken."
 
+# AI Translated
 msgid ""
 "The plugin signing settings were not saved: the stored ones cannot be read."
 msgstr ""
+"Signeringsinställningarna för insticksmoduler sparades inte: de lagrade "
+"inställningarna kan inte läsas."
 
+# AI Translated
 msgid ""
 "The API address changed: these are the plugin signing settings of the new "
 "address. Check them and apply again to change them."
 msgstr ""
+"API-adressen har ändrats: det här är signeringsinställningarna för "
+"insticksmoduler för den nya adressen. Kontrollera dem och tillämpa igen för "
+"att ändra dem."
 
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
-msgstr ""
+msgstr "Starta om programmet för att ansluta till den nya molnservern."
