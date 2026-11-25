@@ -170,6 +170,16 @@
       "parent": "chore/cosmyx-foundation"
     },
     {
+      "name": "feat/cosmyx-languages",
+      "pr": 123,
+      "parent": "feat/cosmyx-translations-fill"
+    },
+    {
+      "name": "docs/cosmyx-changelogs",
+      "pr": 124,
+      "parent": "chore/cosmyx-foundation"
+    },
+    {
       "name": "docs/cosmyx-rebase-skill",
       "pr": 111,
       "parent": "DEV",
