@@ -3,8 +3,9 @@ description: >-
   Apply the Cosmyx build-time edits to the checked-out tree before a build:
   graft the Cosmyx feature catalogues (localization/cosmyx) into the
   OrcaSlicer catalogues (localization/i18n) in place, after their unit tests,
-  then hide the edited tracked files from git diff so the build is not marked
-  "-dirty". Works on Linux, macOS and Windows runners.
+  apply the Cosmyx branding (cosmyx-src/branding), then hide the edited
+  tracked files from git diff so the build is not marked "-dirty". Works on
+  Linux, macOS and Windows runners.
 
 runs:
   using: composite
@@ -52,14 +53,34 @@ runs:
         PYTHON_PATH: ${{ steps.container.outputs.python || steps.python.outputs.python-path }}
       run: echo "COSMYX_PYTHON=$PYTHON_PATH" >> "$GITHUB_ENV"
 
-    - name: Test the graft and the worktree helper
+    # The branding tables are written for DEV. A build of a tree whose upstream
+    # base is not DEV (a pull request into cosmyx-ci/<tag>, an integration/<tag>
+    # branch) brands in tolerant mode: a row whose target file or text that
+    # older tree lacks is skipped with a warning. Everything else stays strict.
+    # Exported once, so the real-tree tests and apply below use the same mode.
+    - name: Choose the branding mode
       shell: bash
       working-directory: ${{ github.workspace }}
       env:
         PYTHONDONTWRITEBYTECODE: '1'
       run: |
+        mode="$("$COSMYX_PYTHON" scripts/cosmyx/branding/cli.py mode)"
+        echo "Cosmyx branding mode: $mode"
+        echo "COSMYX_BRAND_MODE=$mode" >> "$GITHUB_ENV"
+
+    # Only fast, hermetic tests run here, on every build leg: the profile makes
+    # the tests that need Docker, the network or a long build skip themselves
+    # (they run in cosmyx-checks and `just test-scripts`).
+    - name: Test the graft, the worktree helper and the branding engine
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+        COSMYX_TEST_PROFILE: prepare
+      run: |
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_i18n_graft.py -t scripts/cosmyx/tests
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_worktree_clean.py -t scripts/cosmyx/tests
+        "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p 'test_branding_*.py' -t scripts/cosmyx/tests
 
     - name: Graft the Cosmyx translations
       shell: bash
@@ -67,6 +88,15 @@ runs:
       env:
         PYTHONDONTWRITEBYTECODE: '1'
       run: '"$COSMYX_PYTHON" scripts/cosmyx/i18n_graft.py'
+
+    # Vendored images, colours and product name from cosmyx-src/branding.
+    # Unvalidated rows warn on development builds and fail release builds.
+    - name: Apply Cosmyx branding
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/branding/cli.py apply --ci'
 
     # Every step that edits tracked files goes above this one: hide must stay
     # last, so it covers all of them.
