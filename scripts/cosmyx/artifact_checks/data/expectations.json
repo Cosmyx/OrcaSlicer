@@ -41,7 +41,28 @@
   "windows": {
     "seven_zip_min": "23.01",
     "own_names": ["OrcaSlicer*.exe", "orca-slicer.exe", "CosmoSlice*.exe", "CosmoSlice.exe", "Uninstall.exe", "OrcaSlicer_profile_validator.exe"],
-    "nsis_prefixes": ["$INSTDIR"]
+    "nsis_prefixes": ["$INSTDIR"],
+    "app_exe": ["CosmoSlice.exe", "orca-slicer.exe"],
+    "run_archs": ["x64"],
+    "smoke_timeout": 60,
+    "slice_timeout": 300
+  },
+  "macos": {
+    "smoke_timeout": 60,
+    "slice_timeout": 300
+  },
+  "mesa_win": {
+    "version": "26.2.5",
+    "url": "https://github.com/pal1000/mesa-dist-win/releases/download/26.2.5/mesa3d-26.2.5-release-msvc.7z",
+    "sha256": "997123ef4ce8896204ab912d5b54f19372c487ff9835bcefafa2fca23b8953c2",
+    "size": 70248244,
+    "license": "MIT",
+    "files": {
+      "x64/opengl32.dll": "c8511461ba71a0288750467e3be2f5c1c2bbbceaaf0ab5d8c496b0ba7302daa8",
+      "x64/libgallium_wgl.dll": "700e1fb7b9487d9d1c53752b03aeb040d22f3731b46aa254d88830b6279474de",
+      "x64/dxil.dll": "64be2368211d257a038a7d4ea6bb3e24c878eb8d588c7b8414fccf759b69c2ac"
+    },
+    "env": {"GALLIUM_DRIVER": "llvmpipe"}
   },
   "linux": {
     "smoke_timeout": 60,
