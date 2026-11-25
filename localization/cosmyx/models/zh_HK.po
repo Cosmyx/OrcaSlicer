@@ -7,7 +7,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid ""
 "This calibration model works best with infill directions set to 0 degrees. "
 "For optimal calibration results, it is advisable to set both 'Infill "
@@ -19,11 +18,9 @@ msgstr ""
 "是 - 自動變更這些設定\n"
 "否 - 不要為我變更這些設定"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Calibration Suggestion"
 msgstr "校正建議"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 #, possible-c-format, possible-boost-format
 msgid ""
 "This calibration model works best with specific infill settings.\n"
@@ -44,50 +41,38 @@ msgstr ""
 "是 - 自動變更這些設定\n"
 "否 - 不要為我變更這些設定"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cosmyx 3D Models"
 msgstr "Cosmyx 3D 模型"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Calibration Models Dual Head"
 msgstr "校正模型（雙頭）"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Calibration Models Single Head"
 msgstr "校正模型（單頭）"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cosmyx Handy Models"
 msgstr "Cosmyx 實用模型"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Calage 1 SNDT"
 msgstr "校準墊 1 SNDT"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cosmyx Calage 2 SNDT"
 msgstr "Cosmyx 校準墊 2 SNDT"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cosmyx Calage 3 SNDT"
 msgstr "Cosmyx 校準墊 3 SNDT"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cube Bicolore"
 msgstr "雙色立方體"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cosmyx Calage 1 Nova"
 msgstr "Cosmyx 校準墊 1 Nova"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Cosmyx Cube"
 msgstr "Cosmyx 立方體"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Control Tension Belt"
 msgstr "皮帶張力檢測"
 
-# Needs human review: copied from the zh_TW catalogue, check it reads right for zh_HK
 msgid "Support Bobine"
 msgstr "線材盤支架"

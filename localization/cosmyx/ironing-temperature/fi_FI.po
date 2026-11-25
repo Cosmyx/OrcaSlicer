@@ -7,10 +7,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# AI Translated
 msgid "Ironing temperature"
-msgstr ""
+msgstr "Silityslämpötila"
 
+# AI Translated
 msgid ""
 "Nozzle temperature while this filament irons. The nozzle goes back to the "
 "print temperature once ironing is done. 0 means no change."
 msgstr ""
+"Suuttimen lämpötila, kun tällä filamentilla silitetään. Suutin palaa "
+"tulostuslämpötilaan silityksen päätyttyä. 0 tarkoittaa, ettei muutosta tehdä."

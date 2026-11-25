@@ -129,22 +129,28 @@ class CommittedCataloguesTests(unittest.TestCase):
     def test_check_passes(self) -> None:
         self.assertEqual(languages.check(REPO_ROOT, ROWS), [])
 
-    def test_seeded_entries_are_marked_for_review(self) -> None:
+    def test_translated_entries_carry_their_origin(self) -> None:
+        # Every translation of a Cosmyx catalogue says where it comes from: a
+        # machine pass ("# AI Translated"), a copy from the seed catalogue not
+        # reviewed yet (the review marker, and still the seed's text), or the
+        # seed's own translation that a review kept as is.
         for row in ROWS:
-            if row.source != "Cosmyx" or not row.seed:
+            if row.source != "Cosmyx":
                 continue
             with self.subTest(code=row.code):
                 catalogue = g.read_po(languages.cosmyx_catalogue(REPO_ROOT, row))
+                seed = {}
+                if row.seed:
+                    seed = {e.key: e for e in g.read_po(REPO_ROOT / "localization" / "i18n" / row.seed / f"OrcaSlicer_{row.seed}.po").messages()}
                 for entry in catalogue.messages():
-                    if entry.translated:
-                        self.assertTrue(any(c.startswith(languages.REVIEW_PREFIX) for c in entry.comments), entry.msgid)
-
-    def test_unseeded_catalogues_start_untranslated(self) -> None:
-        for row in ROWS:
-            if row.source == "Cosmyx" and not row.seed:
-                with self.subTest(code=row.code):
-                    catalogue = g.read_po(languages.cosmyx_catalogue(REPO_ROOT, row))
-                    self.assertFalse([e.msgid for e in catalogue.messages() if e.translated])
+                    if not entry.translated:
+                        continue
+                    donor = seed.get(entry.key)
+                    from_seed = donor is not None and donor.msgstr == entry.msgstr and donor.msgstr_plural == entry.msgstr_plural
+                    if any(c.startswith(languages.REVIEW_PREFIX) for c in entry.comments):
+                        self.assertTrue(from_seed, entry.msgid)
+                    else:
+                        self.assertTrue("# AI Translated" in entry.comments or from_seed, entry.msgid)
 
     def test_catalogues_are_lf_utf8(self) -> None:
         for row in ROWS:

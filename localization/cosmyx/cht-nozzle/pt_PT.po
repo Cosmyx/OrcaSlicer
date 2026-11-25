@@ -7,6 +7,5 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
 msgid "CHT"
 msgstr "CHT"

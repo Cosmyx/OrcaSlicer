@@ -8,10 +8,15 @@ msgstr ""
 "Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : "
 "n>=7 && n<=10 ? 3 : 4);\n"
 
+# AI Translated
 msgid "Ironing temperature"
-msgstr ""
+msgstr "Teocht iarnála"
 
+# AI Translated
 msgid ""
 "Nozzle temperature while this filament irons. The nozzle goes back to the "
 "print temperature once ironing is done. 0 means no change."
 msgstr ""
+"Teocht an tsoic fad a iarnálann an filiméad seo. Filleann an soc ar an "
+"teocht phriontála nuair a bhíonn an iarnáil críochnaithe. Ciallaíonn 0 gan "
+"athrú."

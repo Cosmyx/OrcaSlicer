@@ -68,9 +68,12 @@ here; see the upstream release notes.
   each named in its own language; any other language starts in British
   English. Arabic and Hindi are not offered yet: they need fonts and text
   shaping the 3D scene lacks. The nine languages OrcaSlicer
-  lacks get catalogues under `localization/cosmyx/i18n` (en_GB, nl_BE, pt_PT
-  and zh_HK copied from en, nl, pt_BR and zh_TW for review, the others
-  untranslated), packaged like the upstream ones; the unused upstream
+  lacks get catalogues under `localization/cosmyx/i18n`, packaged like the
+  upstream ones: nl_BE, pt_PT and zh_HK start from nl, pt_BR and zh_TW,
+  reviewed and completed by a machine pass; da_DK, el_GR, fi_FI, ga_IE and
+  nb_NO are machine-translated; en_GB holds only the British spellings and
+  falls back to the source text elsewhere. Machine translations, the Cosmyx
+  strings included, are marked for review; the unused upstream
   catalogues (ca, cs, eu, hu, lt, pt_BR, ru, th, tr) are no longer packaged.
   **Migration:** a user whose language was one of those now gets British
   English and can pick another in Preferences. Pull request:

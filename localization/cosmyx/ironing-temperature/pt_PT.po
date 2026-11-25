@@ -7,11 +7,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
 msgid "Ironing temperature"
 msgstr "Temperatura de alisamento"
 
-# Needs human review: copied from the pt_BR catalogue, check it reads right for pt_PT
 msgid ""
 "Nozzle temperature while this filament irons. The nozzle goes back to the "
 "print temperature once ironing is done. 0 means no change."

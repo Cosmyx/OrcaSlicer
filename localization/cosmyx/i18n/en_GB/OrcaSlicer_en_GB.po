@@ -552,8 +552,9 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+# AI Translated
 msgid "Color Painting"
-msgstr ""
+msgstr "Colour Painting"
 
 msgid "Brush shape"
 msgstr ""
@@ -611,8 +612,9 @@ msgstr ""
 msgid "Height Range"
 msgstr ""
 
+# AI Translated
 msgid "Remove painted color"
-msgstr ""
+msgstr "Remove painted colour"
 
 #, possible-boost-format
 msgid "Painted using: Filament %1%"
@@ -621,14 +623,17 @@ msgstr ""
 msgid "To:"
 msgstr ""
 
+# AI Translated
 msgid "Entering color painting"
-msgstr ""
+msgstr "Entering colour painting"
 
+# AI Translated
 msgid "Leaving color painting"
-msgstr ""
+msgstr "Leaving colour painting"
 
+# AI Translated
 msgid "Color painting editing"
-msgstr ""
+msgstr "Colour painting editing"
 
 msgid "Paint-on fuzzy skin"
 msgstr ""
@@ -673,8 +678,9 @@ msgstr ""
 msgid "Gizmo-Rotate"
 msgstr ""
 
+# AI Translated
 msgid "Optimize orientation"
-msgstr ""
+msgstr "Optimise orientation"
 
 msgctxt "Verb"
 msgid "Scale"
@@ -780,8 +786,9 @@ msgstr ""
 msgid "Align left"
 msgstr ""
 
+# AI Translated
 msgid "Align left-right center"
-msgstr ""
+msgstr "Align left-right centre"
 
 msgid "Align right"
 msgstr ""
@@ -789,8 +796,9 @@ msgstr ""
 msgid "Align front"
 msgstr ""
 
+# AI Translated
 msgid "Align front-back center"
-msgstr ""
+msgstr "Align front-back centre"
 
 msgid "Align back"
 msgstr ""
@@ -798,8 +806,9 @@ msgstr ""
 msgid "Align bottom"
 msgstr ""
 
+# AI Translated
 msgid "Align top-bottom center"
-msgstr ""
+msgstr "Align top-bottom centre"
 
 msgid "Align top"
 msgstr ""
@@ -1175,8 +1184,9 @@ msgstr ""
 msgid "Operation already cancelling. Please wait a few seconds."
 msgstr ""
 
+# AI Translated
 msgid "Model simplification has been canceled"
-msgstr ""
+msgstr "Model simplification has been cancelled"
 
 msgid "Wiki Guide"
 msgstr ""
@@ -1463,9 +1473,10 @@ msgctxt "Alignment"
 msgid "Left"
 msgstr ""
 
+# AI Translated
 msgctxt "Alignment"
 msgid "Center"
-msgstr ""
+msgstr "Centre"
 
 msgctxt "Alignment"
 msgid "Right"
@@ -1517,8 +1528,9 @@ msgstr ""
 msgid "Undo translation"
 msgstr ""
 
+# AI Translated
 msgid "Distance of the center of the text to the model surface."
-msgstr ""
+msgstr "Distance of the centre of the text to the model surface."
 
 msgid "Undo rotation"
 msgstr ""
@@ -1647,9 +1659,10 @@ msgstr ""
 msgid "Opacity (%1%)"
 msgstr ""
 
+# AI Translated
 #, possible-boost-format
 msgid "Color gradient (%1%)"
-msgstr ""
+msgstr "Colour gradient (%1%)"
 
 msgid "Undefined fill type"
 msgstr ""
@@ -1768,8 +1781,9 @@ msgstr ""
 msgid "Reset scale"
 msgstr ""
 
+# AI Translated
 msgid "Distance of the center of the SVG to the model surface."
-msgstr ""
+msgstr "Distance of the centre of the SVG to the model surface."
 
 msgid "Reset distance"
 msgstr ""
@@ -1834,11 +1848,13 @@ msgstr ""
 msgid "Point on plane"
 msgstr ""
 
+# AI Translated
 msgid "Center of edge"
-msgstr ""
+msgstr "Centre of edge"
 
+# AI Translated
 msgid "Center of circle"
-msgstr ""
+msgstr "Centre of circle"
 
 msgid "Select"
 msgstr ""
@@ -1937,8 +1953,9 @@ msgstr ""
 msgid "Parallel"
 msgstr ""
 
+# AI Translated
 msgid "Center coincidence"
-msgstr ""
+msgstr "Centre coincidence"
 
 msgid "Feature 1"
 msgstr ""
@@ -1946,8 +1963,9 @@ msgstr ""
 msgid "Reverse rotation"
 msgstr ""
 
+# AI Translated
 msgid "Rotate around center:"
-msgstr ""
+msgstr "Rotate around centre:"
 
 msgid "Parallel distance:"
 msgstr ""
@@ -2047,14 +2065,18 @@ msgstr ""
 msgid "Machine"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The configuration package was loaded, but some values were not recognized."
 msgstr ""
+"The configuration package was loaded, but some values were not recognised."
 
+# AI Translated
 #, possible-boost-format
 msgid ""
 "The configuration file “%1%” was loaded, but some values were not recognized."
 msgstr ""
+"The configuration file “%1%” was loaded, but some values were not recognised."
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -2126,10 +2148,13 @@ msgstr ""
 msgid "Fatal error"
 msgstr ""
 
+# AI Translated
 msgid ""
 "OrcaSlicer will terminate because of a localization error. It will be "
 "appreciated if you report the specific scenario this issue happened."
 msgstr ""
+"OrcaSlicer will terminate because of a localisation error. It will be "
+"appreciated if you report the specific scenario this issue happened."
 
 msgid "Critical error"
 msgstr ""
@@ -2244,9 +2269,10 @@ msgstr ""
 msgid "Plugin %s is no longer available."
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Plugin %s access is unauthorized."
-msgstr ""
+msgstr "Plugin %s access is unauthorised."
 
 msgid "Loading printer & filament profiles"
 msgstr ""
@@ -2530,9 +2556,10 @@ msgstr ""
 msgid "Bundle %s is no longer available."
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Bundle %s access is unauthorized."
-msgstr ""
+msgstr "Bundle %s access is unauthorised."
 
 msgid "Loading user preset"
 msgstr ""
@@ -2633,8 +2660,9 @@ msgstr ""
 msgid "Rename"
 msgstr ""
 
+# AI Translated
 msgid "Orca Slicer GUI initialization failed"
-msgstr ""
+msgstr "Orca Slicer GUI initialisation failed"
 
 #, possible-boost-format
 msgid "Fatal error, exception: %1%"
@@ -2933,11 +2961,13 @@ msgstr ""
 msgid "Restore to Inch"
 msgstr ""
 
+# AI Translated
 msgid "Convert from Meters"
-msgstr ""
+msgstr "Convert from Metres"
 
+# AI Translated
 msgid "Restore to Meter"
-msgstr ""
+msgstr "Restore to Metre"
 
 msgid "Assemble"
 msgstr ""
@@ -2999,8 +3029,9 @@ msgstr ""
 msgid "Precise Seam Type"
 msgstr ""
 
+# AI Translated
 msgid "Seam Center"
-msgstr ""
+msgstr "Seam Centre"
 
 msgid "Seam Left"
 msgstr ""
@@ -3065,8 +3096,9 @@ msgstr ""
 msgid "Merge with"
 msgstr ""
 
+# AI Translated
 msgid "Decompose Color"
-msgstr ""
+msgstr "Decompose Colour"
 
 msgid "Delete this filament"
 msgstr ""
@@ -3161,8 +3193,9 @@ msgstr ""
 msgid "Subdivision mesh"
 msgstr ""
 
+# AI Translated
 msgid "Center"
-msgstr ""
+msgstr "Centre"
 
 msgid "Align/Distribute"
 msgstr ""
@@ -3248,8 +3281,9 @@ msgstr ""
 msgid "Click the icon to edit support painting of the object"
 msgstr ""
 
+# AI Translated
 msgid "Click the icon to edit color painting for the object"
-msgstr ""
+msgstr "Click the icon to edit colour painting for the object"
 
 msgid "Click the icon to shift this object to the bed"
 msgstr ""
@@ -3384,10 +3418,13 @@ msgstr ""
 msgid "Merge parts to an object"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Using variable layer height together with mixed color sublayer may result in "
 "poor color mixing quality."
 msgstr ""
+"Using variable layer height together with mixed colour sublayer may result "
+"in poor colour mixing quality."
 
 msgid "Add layers"
 msgstr ""
@@ -3474,8 +3511,9 @@ msgid_plural "%1$d model objects needed no repair."
 msgstr[0] ""
 msgstr[1] ""
 
+# AI Translated
 msgid "Repairing was canceled"
-msgstr ""
+msgstr "Repairing was cancelled"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -3556,8 +3594,9 @@ msgstr ""
 msgid "Reset parameter"
 msgstr ""
 
+# AI Translated
 msgid "Multicolor Print"
-msgstr ""
+msgstr "Multicolour Print"
 
 msgid "Line Type"
 msgstr ""
@@ -3575,8 +3614,9 @@ msgstr ""
 msgid "Open documentation in web browser"
 msgstr ""
 
+# AI Translated
 msgid "Color"
-msgstr ""
+msgstr "Colour"
 
 msgid "Pause"
 msgstr ""
@@ -3704,8 +3744,9 @@ msgid ""
 "set target filament's informations."
 msgstr ""
 
+# AI Translated
 msgid "AMS has not been initialized. Please initialize it before use."
-msgstr ""
+msgstr "AMS has not been initialised. Please initialise it before use."
 
 msgid ""
 "Changing fan speed during printing may affect print quality, please choose "
@@ -3925,8 +3966,9 @@ msgstr ""
 msgid "Developer mode"
 msgstr ""
 
+# AI Translated
 msgid "Launch troubleshoot center"
-msgstr ""
+msgstr "Launch troubleshoot centre"
 
 msgid "Set nozzle count"
 msgstr ""
@@ -4027,8 +4069,9 @@ msgstr ""
 msgid "Arranging %1%"
 msgstr ""
 
+# AI Translated
 msgid "Arranging canceled."
-msgstr ""
+msgstr "Arranging cancelled."
 
 msgid ""
 "Arranging complete, but some items were not able to be arranged. Reduce "
@@ -4067,8 +4110,9 @@ msgstr ""
 msgid "Orienting %1%"
 msgstr ""
 
+# AI Translated
 msgid "Orienting canceled."
-msgstr ""
+msgstr "Orienting cancelled."
 
 msgid "Filling"
 msgstr ""
@@ -4078,8 +4122,9 @@ msgstr ""
 msgid "Filling %1%"
 msgstr ""
 
+# AI Translated
 msgid "Bed filling canceled."
-msgstr ""
+msgstr "Bed filling cancelled."
 
 msgid "Bed filling done."
 msgstr ""
@@ -4087,8 +4132,9 @@ msgstr ""
 msgid "Searching for optimal orientation"
 msgstr ""
 
+# AI Translated
 msgid "Orientation search canceled."
-msgstr ""
+msgstr "Orientation search cancelled."
 
 msgid "Orientation found."
 msgstr ""
@@ -4096,18 +4142,24 @@ msgstr ""
 msgid "Best surface quality"
 msgstr ""
 
+# AI Translated
 msgid "Optimize object rotation for best surface quality."
-msgstr ""
+msgstr "Optimise object rotation for best surface quality."
 
 msgid "Reduced overhang slopes"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Optimize object rotation to have minimum amount of overhangs needing support "
 "structures.\n"
 "Note that this method will try to find the best surface of the object for "
 "touching the print bed if no elevation is set."
 msgstr ""
+"Optimise object rotation to have minimum amount of overhangs needing support "
+"structures.\n"
+"Note that this method will try to find the best surface of the object for "
+"touching the print bed if no elevation is set."
 
 msgid "Lowest Z height"
 msgstr ""
@@ -4127,8 +4179,9 @@ msgstr ""
 msgid "Abnormal print file data: please slice again."
 msgstr ""
 
+# AI Translated
 msgid "Task canceled."
-msgstr ""
+msgstr "Task cancelled."
 
 msgid "Upload task timed out. Please check the network status and try again."
 msgstr ""
@@ -4299,16 +4352,20 @@ msgstr ""
 msgid "An unexpected error occurred"
 msgstr ""
 
+# AI Translated
 msgid "Thermal Preconditioning for first layer optimization"
-msgstr ""
+msgstr "Thermal Preconditioning for first layer optimisation"
 
 msgid "Remaining time: Calculating..."
 msgstr ""
 
+# AI Translated
 msgid ""
 "The heated bed's thermal preconditioning helps optimize the first layer "
 "print quality. Printing will start once preconditioning is complete."
 msgstr ""
+"The heated bed's thermal preconditioning helps optimise the first layer "
+"print quality. Printing will start once preconditioning is complete."
 
 #, possible-c-format, possible-boost-format
 msgid "Remaining time: %dmin%ds"
@@ -4322,8 +4379,9 @@ msgid ""
 "printer presets first before importing that SLA archive."
 msgstr ""
 
+# AI Translated
 msgid "Importing canceled."
-msgstr ""
+msgstr "Importing cancelled."
 
 msgid "Importing done."
 msgstr ""
@@ -4348,8 +4406,9 @@ msgstr ""
 msgid "Download failed"
 msgstr ""
 
+# AI Translated
 msgid "Canceled"
-msgstr ""
+msgstr "Cancelled"
 
 msgid "Installed successfully"
 msgstr ""
@@ -4360,14 +4419,16 @@ msgstr ""
 msgid "Install failed"
 msgstr ""
 
+# AI Translated
 msgid "License Info"
-msgstr ""
+msgstr "Licence Info"
 
 msgid "Copyright"
 msgstr ""
 
+# AI Translated
 msgid "License"
-msgstr ""
+msgstr "Licence"
 
 msgid "Orca Slicer is licensed under "
 msgstr ""
@@ -4489,8 +4550,9 @@ msgstr ""
 msgid "Are you sure you want to clear the filament information?"
 msgstr ""
 
+# AI Translated
 msgid "You need to select the material type and color first."
-msgstr ""
+msgstr "You need to select the material type and colour first."
 
 #, possible-c-format, possible-boost-format
 msgid "Please input a valid value (K in %.1f~%.1f)"
@@ -4500,8 +4562,9 @@ msgstr ""
 msgid "Please input a valid value (K in %.1f~%.1f, N in %.1f~%.1f)"
 msgstr ""
 
+# AI Translated
 msgid "Favorite filaments"
-msgstr ""
+msgstr "Favourite filaments"
 
 msgid "All filaments"
 msgstr ""
@@ -4515,11 +4578,13 @@ msgstr ""
 msgid "AMS"
 msgstr ""
 
+# AI Translated
 msgid "Other Color"
-msgstr ""
+msgstr "Other Colour"
 
+# AI Translated
 msgid "Custom Color"
-msgstr ""
+msgstr "Custom Colour"
 
 msgid "Dynamic flow calibration"
 msgstr ""
@@ -4715,8 +4780,9 @@ msgid ""
 "following order."
 msgstr ""
 
+# AI Translated
 msgid "Identical filament: same brand, type and color."
-msgstr ""
+msgstr "Identical filament: same brand, type and colour."
 
 msgid "Group"
 msgstr ""
@@ -4733,11 +4799,15 @@ msgid ""
 "AMS filament backup is not enabled; please enable it in the AMS settings."
 msgstr ""
 
+# AI Translated
 msgid ""
 "When the current filament runs out, the printer will use identical filament "
 "to continue printing.\n"
 "*Identical filament: same brand, type and color."
 msgstr ""
+"When the current filament runs out, the printer will use identical filament "
+"to continue printing.\n"
+"*Identical filament: same brand, type and colour."
 
 msgid "DRY"
 msgstr ""
@@ -4988,10 +5058,13 @@ msgid ""
 "rectangle."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Diameter of the print bed. It is assumed that origin (0,0) is located in the "
 "center."
 msgstr ""
+"Diameter of the print bed. It is assumed that origin (0,0) is located in the "
+"centre."
 
 msgid "Rectangular"
 msgstr ""
@@ -5088,6 +5161,7 @@ msgid ""
 "temperature for the material is %d"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid ""
 "The minimal chamber temperature (%d℃) is higher than the target chamber "
@@ -5095,6 +5169,10 @@ msgid ""
 "starts while the chamber keeps heating toward the target, so it should not "
 "exceed it. It will be clamped to the target."
 msgstr ""
+"The minimal chamber temperature (%d℃) is higher than the target chamber "
+"temperature (%d℃). The minimal value is the threshold at which printing "
+"starts while the chamber keeps heating towards the target, so it should not "
+"exceed it. It will be clamped to the target."
 
 #, possible-c-format, possible-boost-format
 msgid "Layer height is too small. It will be set to the minimum (%g mm)."
@@ -5333,17 +5411,21 @@ msgid ""
 "extrusion roles."
 msgstr ""
 
+# AI Translated
 msgid "This setting requires the Marlin firmware G-code flavor."
-msgstr ""
+msgstr "This setting requires the Marlin firmware G-code flavour."
 
 msgid ""
 "Jerk settings are unavailable while the printer uses junction deviation."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Set the printer junction deviation limit above zero with the Marlin firmware "
 "G-code flavor to edit this setting."
 msgstr ""
+"Set the printer junction deviation limit above zero with the Marlin firmware "
+"G-code flavour to edit this setting."
 
 msgid ""
 "Set default jerk above zero to edit jerk for individual extrusion roles."
@@ -5642,16 +5724,20 @@ msgstr ""
 msgid "Enable inward wiping to edit inward wipe distance."
 msgstr ""
 
+# AI Translated
 msgid "This setting requires the Klipper G-code flavor."
-msgstr ""
+msgstr "This setting requires the Klipper G-code flavour."
 
 msgid "Enable acceleration to deceleration to edit its factor."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Enable excluding objects with the Klipper G-code flavor to edit the outline "
 "tolerance."
 msgstr ""
+"Enable excluding objects with the Klipper G-code flavour to edit the outline "
+"tolerance."
 
 msgid "Enable making overhangs printable to use this setting."
 msgstr ""
@@ -5766,8 +5852,9 @@ msgstr ""
 msgid "Printing"
 msgstr ""
 
+# AI Translated
 msgid "Auto bed leveling"
-msgstr ""
+msgstr "Auto bed levelling"
 
 msgid "Heatbed preheating"
 msgstr ""
@@ -5883,8 +5970,9 @@ msgstr ""
 msgid "Nozzle offset calibration"
 msgstr ""
 
+# AI Translated
 msgid "High temperature auto bed leveling"
-msgstr ""
+msgstr "High temperature auto bed levelling"
 
 msgid "Auto Check: Quick Release Lever"
 msgstr ""
@@ -5904,11 +5992,13 @@ msgstr ""
 msgid "Calibrating BirdsEye Camera"
 msgstr ""
 
+# AI Translated
 msgid "Auto bed leveling -phase 1"
-msgstr ""
+msgstr "Auto bed levelling -phase 1"
 
+# AI Translated
 msgid "Auto bed leveling -phase 2"
-msgstr ""
+msgstr "Auto bed levelling -phase 2"
 
 msgid "Heating chamber"
 msgstr ""
@@ -6314,8 +6404,9 @@ msgstr ""
 msgid "Tool Change"
 msgstr ""
 
+# AI Translated
 msgid "Color Change"
-msgstr ""
+msgstr "Colour Change"
 
 msgid "Pause Print"
 msgstr ""
@@ -6395,8 +6486,9 @@ msgstr ""
 msgid "Tool: "
 msgstr ""
 
+# AI Translated
 msgid "Color: "
-msgstr ""
+msgstr "Colour: "
 
 msgid "Acceleration: "
 msgstr ""
@@ -6598,8 +6690,9 @@ msgstr ""
 msgid "Tool changes"
 msgstr ""
 
+# AI Translated
 msgid "Color change"
-msgstr ""
+msgstr "Colour change"
 
 msgctxt "Noun"
 msgid "Print"
@@ -6679,20 +6772,25 @@ msgstr ""
 msgid "Sequence"
 msgstr ""
 
+# AI Translated
 msgid "Plate center of mass"
-msgstr ""
+msgstr "Plate centre of mass"
 
+# AI Translated
 msgid "Part center of mass"
-msgstr ""
+msgstr "Part centre of mass"
 
+# AI Translated
 msgid "Support center of mass"
-msgstr ""
+msgstr "Support centre of mass"
 
+# AI Translated
 msgid "Assembly center of mass"
-msgstr ""
+msgstr "Assembly centre of mass"
 
+# AI Translated
 msgid "Object center of mass"
-msgstr ""
+msgstr "Object centre of mass"
 
 msgid "Finished print"
 msgstr ""
@@ -6707,8 +6805,9 @@ msgstr ""
 msgid "Volume"
 msgstr ""
 
+# AI Translated
 msgid "Center in bounding box"
-msgstr ""
+msgstr "Centre in bounding box"
 
 msgid "Bounding box size"
 msgstr ""
@@ -6722,8 +6821,9 @@ msgstr ""
 msgid "1~16 number keys"
 msgstr ""
 
+# AI Translated
 msgid "Number keys can quickly change the color of objects"
-msgstr ""
+msgstr "Number keys can quickly change the colour of objects"
 
 msgid ""
 "Following objects are laid over the boundary of plate or exceeds the height "
@@ -6794,8 +6894,9 @@ msgstr ""
 msgid "Enable rotation"
 msgstr ""
 
+# AI Translated
 msgid "Optimize support interface area"
-msgstr ""
+msgstr "Optimise support interface area"
 
 msgid "Orient"
 msgstr ""
@@ -6953,8 +7054,9 @@ msgstr ""
 msgid "Labels"
 msgstr ""
 
+# AI Translated
 msgid "Center of mass"
-msgstr ""
+msgstr "Centre of mass"
 
 msgid "Show raw G-code (belt only)"
 msgstr ""
@@ -7064,10 +7166,13 @@ msgstr ""
 msgid "The prime tower extends beyond the plate boundary."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Partial flushing volume set to 0. Multi-color printing may cause color "
 "mixing in models. Please readjust flushing settings."
 msgstr ""
+"Partial flushing volume set to 0. Multi-colour printing may cause colour "
+"mixing in models. Please readjust flushing settings."
 
 msgid "Click Wiki for help."
 msgstr ""
@@ -7084,8 +7189,9 @@ msgstr ""
 msgid "Micro lidar calibration"
 msgstr ""
 
+# AI Translated
 msgid "Bed leveling"
-msgstr ""
+msgstr "Bed levelling"
 
 msgid "High-temperature Heatbed Calibration"
 msgstr ""
@@ -7096,11 +7202,15 @@ msgstr ""
 msgid "Calibration program"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The calibration program detects the status of your device automatically to "
 "minimize deviation.\n"
 "It keeps the device performing optimally."
 msgstr ""
+"The calibration program detects the status of your device automatically to "
+"minimise deviation.\n"
+"It keeps the device performing optimally."
 
 msgid "Calibration Flow"
 msgstr ""
@@ -7254,8 +7364,9 @@ msgid ""
 "were made for"
 msgstr ""
 
+# AI Translated
 msgid "Troubleshoot Center"
-msgstr ""
+msgstr "Troubleshoot Centre"
 
 msgid "Open Network Test"
 msgstr ""
@@ -7704,6 +7815,7 @@ msgstr ""
 msgid "The project is no longer available."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Do you want to synchronize your personal data from Orca Cloud?\n"
 "It contains the following information:\n"
@@ -7711,9 +7823,15 @@ msgid ""
 "2. The Filament presets\n"
 "3. The Printer presets"
 msgstr ""
+"Do you want to synchronise your personal data from Orca Cloud?\n"
+"It contains the following information:\n"
+"1. The Process presets\n"
+"2. The Filament presets\n"
+"3. The Printer presets"
 
+# AI Translated
 msgid "Synchronization"
-msgstr ""
+msgstr "Synchronisation"
 
 msgid "The device cannot handle more conversations. Please retry later."
 msgstr ""
@@ -7724,10 +7842,13 @@ msgstr ""
 msgid "The player is not loaded; please click the \"play\" button to retry."
 msgstr ""
 
+# AI Translated
 msgid ""
 "The player is not loaded because the GStreamer GTK video sink is missing or "
 "failed to initialize."
 msgstr ""
+"The player is not loaded because the GStreamer GTK video sink is missing or "
+"failed to initialise."
 
 msgid "Please confirm if the printer is connected."
 msgstr ""
@@ -7735,8 +7856,9 @@ msgstr ""
 msgid "Sign in to OrcaCloud to view the camera."
 msgstr ""
 
+# AI Translated
 msgid "Initializing..."
-msgstr ""
+msgstr "Initialising..."
 
 msgid "Playing..."
 msgstr ""
@@ -7790,9 +7912,10 @@ msgid ""
 "Do you want to stop this virtual camera?"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Virtual camera initialize failed (%s)!"
-msgstr ""
+msgstr "Virtual camera initialise failed (%s)!"
 
 msgid "Network unreachable"
 msgstr ""
@@ -8122,10 +8245,13 @@ msgstr ""
 msgid "Clear"
 msgstr ""
 
+# AI Translated
 msgid ""
 "You have completed printing the mall model,\n"
 "but synchronizing rating information has failed."
 msgstr ""
+"You have completed printing the mall model,\n"
+"but synchronising rating information has failed."
 
 msgid "How do you like this printing file?"
 msgstr ""
@@ -8353,8 +8479,9 @@ msgid ""
 "\n"
 msgstr ""
 
+# AI Translated
 msgid "Synchronizing the printing results. Please retry a few seconds later."
-msgstr ""
+msgstr "Synchronising the printing results. Please retry a few seconds later."
 
 msgid "Upload failed\n"
 msgstr ""
@@ -8630,8 +8757,9 @@ msgstr ""
 msgid "Split to Parts"
 msgstr ""
 
+# AI Translated
 msgid "Center Selected on Plate"
-msgstr ""
+msgstr "Centre Selected on Plate"
 
 msgid "Drop to Bed"
 msgstr ""
@@ -8675,11 +8803,13 @@ msgstr ""
 msgid "No plates available."
 msgstr ""
 
+# AI Translated
 msgid "Synchronize Filament List from AMS"
-msgstr ""
+msgstr "Synchronise Filament List from AMS"
 
+# AI Translated
 msgid "Connect a printer to synchronize the AMS filament list."
-msgstr ""
+msgstr "Connect a printer to synchronise the AMS filament list."
 
 msgid "Open Preset Bundle"
 msgstr ""
@@ -8777,11 +8907,12 @@ msgid_plural "%1$d Objects have custom supports."
 msgstr[0] ""
 msgstr[1] ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "%1$d Object has color painting."
 msgid_plural "%1$d Objects have color painting."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$d Object has colour painting."
+msgstr[1] "%1$d Objects have colour painting."
 
 #, possible-c-format, possible-boost-format
 msgid "%1$d object was loaded as a part of cut object."
@@ -8805,8 +8936,9 @@ msgstr ""
 msgid "%d%% - %.2f of %.2fMB uploaded"
 msgstr ""
 
+# AI Translated
 msgid "CANCELED"
-msgstr ""
+msgstr "CANCELLED"
 
 msgid "Cancel upload"
 msgstr ""
@@ -8905,8 +9037,9 @@ msgstr ""
 msgid "This setting does not specify a plugin capability type."
 msgstr ""
 
+# AI Translated
 msgid "This setting specifies an unrecognized plugin capability type: "
-msgstr ""
+msgstr "This setting specifies an unrecognised plugin capability type: "
 
 msgid "Plugin Selection"
 msgstr ""
@@ -8950,10 +9083,13 @@ msgstr ""
 msgid "Enable detection of build plate position"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The localization tag of the build plate will be detected, and printing will "
 "be paused if the tag is not in predefined range."
 msgstr ""
+"The localisation tag of the build plate will be detected, and printing will "
+"be paused if the tag is not in predefined range."
 
 msgid "Build Plate Detection"
 msgstr ""
@@ -9152,11 +9288,15 @@ msgstr ""
 msgid "The process flow ratio cannot be edited in this panel."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Each mode names the tool heads that take part and the role each one plays. "
 "Click a tool button to cycle its role — hover a color below for what each "
 "role does."
 msgstr ""
+"Each mode names the tool heads that take part and the role each one plays. "
+"Click a tool button to cycle its role — hover a colour below for what each "
+"role does."
 
 msgid "Add Mode"
 msgstr ""
@@ -9168,10 +9308,13 @@ msgstr ""
 msgid "G-code"
 msgstr ""
 
+# AI Translated
 msgid ""
 "How the mode is labeled in the plate's IDEX/IQEX mode selector. Required — a "
 "mode with no name cannot be selected."
 msgstr ""
+"How the mode is labelled in the plate's IDEX/IQEX mode selector. Required — "
+"a mode with no name cannot be selected."
 
 msgid ""
 "Which tool heads take part in the mode and what role each one plays. Click a "
@@ -9226,10 +9369,13 @@ msgid ""
 "across the boundary between the two zones."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Marks a tool on the Primary's gantry as its multicolor partner. Required to "
 "allow multi-color printing in paired-gantry modes."
 msgstr ""
+"Marks a tool on the Primary's gantry as its multicolour partner. Required to "
+"allow multi-colour printing in paired-gantry modes."
 
 msgid "Primary"
 msgstr ""
@@ -9305,8 +9451,9 @@ msgid ""
 "correctly."
 msgstr ""
 
+# AI Translated
 msgid "Customize current plate"
-msgstr ""
+msgstr "Customise current plate"
 
 #, possible-c-format, possible-boost-format
 msgid "The left nozzle cannot print %s."
@@ -9316,11 +9463,15 @@ msgstr ""
 msgid "The right nozzle cannot print %s."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Printing mixed-color filament on a single-extruder printer requires frequent "
 "filament changes and flushing, which may significantly increase waste and "
 "the risk of nozzle / waste-chute clogging."
 msgstr ""
+"Printing mixed-colour filament on a single-extruder printer requires "
+"frequent filament changes and flushing, which may significantly increase "
+"waste and the risk of nozzle / waste-chute clogging."
 
 #, possible-boost-format
 msgid "Mixing %1% with %2% in printing is not recommended.\n"
@@ -9393,10 +9544,13 @@ msgid ""
 "extruders. The slicer will auto-assign for optimal printing."
 msgstr ""
 
+# AI Translated
 msgid ""
 "A filament switcher is detected but not calibrated and thus currently "
 "unavailable. Please calibrate it on the printer and synchronize before use."
 msgstr ""
+"A filament switcher is detected but not calibrated and thus currently "
+"unavailable. Please calibrate it on the printer and synchronise before use."
 
 msgid "Tips"
 msgstr ""
@@ -9410,10 +9564,13 @@ msgid ""
 "Are you sure to continue syncing?"
 msgstr ""
 
+# AI Translated
 msgid ""
 "There are unset nozzle types. Please set the nozzle types of all extruders "
 "before synchronizing."
 msgstr ""
+"There are unset nozzle types. Please set the nozzle types of all extruders "
+"before synchronising."
 
 msgid "Sync extruder infomation"
 msgstr ""
@@ -9421,8 +9578,9 @@ msgstr ""
 msgid "Connection"
 msgstr ""
 
+# AI Translated
 msgid "Synchronize nozzle information and the number of AMS"
-msgstr ""
+msgstr "Synchronise nozzle information and the number of AMS"
 
 msgid "Click to edit preset"
 msgstr ""
@@ -9449,8 +9607,9 @@ msgstr ""
 msgid "Remove last filament"
 msgstr ""
 
+# AI Translated
 msgid "Synchronize filament list from AMS"
-msgstr ""
+msgstr "Synchronise filament list from AMS"
 
 msgid "Set filaments to use"
 msgstr ""
@@ -9517,13 +9676,17 @@ msgid ""
 "update to system presets."
 msgstr ""
 
+# AI Translated
 msgid "Only filament color information has been synchronized from printer."
-msgstr ""
+msgstr "Only filament colour information has been synchronised from printer."
 
+# AI Translated
 msgid ""
 "Filament type and color information have been synchronized, but slot "
 "information is not included."
 msgstr ""
+"Filament type and colour information have been synchronised, but slot "
+"information is not included."
 
 #, possible-boost-format
 msgid "Do you want to save changes to \"%1%\"?"
@@ -9621,11 +9784,14 @@ msgid ""
 "template settings?"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid ""
 "The 3MF file version %s is newer than %s's version %s, found the following "
 "unrecognized keys:"
 msgstr ""
+"The 3MF file version %s is newer than %s's version %s, found the following "
+"unrecognised keys:"
 
 msgid "You should update your software.\n"
 msgstr ""
@@ -9654,16 +9820,18 @@ msgstr ""
 msgid "Modified G-code"
 msgstr ""
 
+# AI Translated
 msgid "The 3MF has the following customized filament or printer presets:"
-msgstr ""
+msgstr "The 3MF has the following customised filament or printer presets:"
 
 msgid ""
 "Please confirm that the G-code within these presets is safe to prevent any "
 "damage to the machine!"
 msgstr ""
 
+# AI Translated
 msgid "Customized Preset"
-msgstr ""
+msgstr "Customised Preset"
 
 msgid "Some published settings could not be applied:"
 msgstr ""
@@ -9690,11 +9858,14 @@ msgstr ""
 msgid "The volume of the object is zero"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid ""
 "The object from file %s is too small, and may be in meters or inches.\n"
 "Do you want to scale to millimeters?"
 msgstr ""
+"The object from file %s is too small, and may be in metres or inches.\n"
+"Do you want to scale to millimetres?"
 
 msgid "Object too small"
 msgstr ""
@@ -9886,8 +10057,9 @@ msgstr ""
 msgid "Invalid data"
 msgstr ""
 
+# AI Translated
 msgid "Slicing Canceled"
-msgstr ""
+msgstr "Slicing Cancelled"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -9948,6 +10120,7 @@ msgid ""
 "The loaded file contains G-code only, cannot enter the Prepare page."
 msgstr ""
 
+# AI Translated
 msgid ""
 "The nozzle type and AMS quantity information has not been synced from the "
 "connected printer.\n"
@@ -9955,6 +10128,11 @@ msgid ""
 "slicing.\n"
 "Would you like to sync now?"
 msgstr ""
+"The nozzle type and AMS quantity information has not been synced from the "
+"connected printer.\n"
+"After syncing, software can optimise printing time and filament usage when "
+"slicing.\n"
+"Would you like to sync now?"
 
 msgid "Sync now"
 msgstr ""
@@ -9978,14 +10156,16 @@ msgid ""
 "geometry only."
 msgstr ""
 
+# AI Translated
 msgid "Applying texture colors..."
-msgstr ""
+msgstr "Applying texture colours..."
 
 msgid "Updating 3D view..."
 msgstr ""
 
+# AI Translated
 msgid "Texture colors applied."
-msgstr ""
+msgstr "Texture colours applied."
 
 msgid "You can keep the modified presets for the new project or discard them"
 msgstr ""
@@ -10243,11 +10423,13 @@ msgstr ""
 msgid "Send to printer"
 msgstr ""
 
+# AI Translated
 msgid "Custom supports and color painting were removed before repairing."
-msgstr ""
+msgstr "Custom supports and colour painting were removed before repairing."
 
+# AI Translated
 msgid "Optimize Rotation"
-msgstr ""
+msgstr "Optimise Rotation"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -10277,18 +10459,22 @@ msgid ""
 "screen or software device page to set the filament type."
 msgstr ""
 
+# AI Translated
 #. TRN %s is the connected printer's name.
 #, possible-c-format, possible-boost-format
 msgid ""
 "%s is connected, but no filament system (AMS, CFS or other multi-material "
 "unit) was found on it, so there are no filaments to synchronize."
 msgstr ""
+"%s is connected, but no filament system (AMS, CFS or other multi-material "
+"unit) was found on it, so there are no filaments to synchronise."
 
 msgid "Device Page"
 msgstr ""
 
+# AI Translated
 msgid "Synchronize AMS Filament Information"
-msgstr ""
+msgstr "Synchronise AMS Filament Information"
 
 msgid "OrcaCloud plugins required by the current preset are not installed:"
 msgstr ""
@@ -10626,12 +10812,15 @@ msgstr ""
 msgid "Clear my choice on the unsaved presets."
 msgstr ""
 
+# AI Translated
 msgid "Synchronizing printer preset"
-msgstr ""
+msgstr "Synchronising printer preset"
 
+# AI Translated
 msgid ""
 "Clear my choice for synchronizing printer preset after loading the file."
 msgstr ""
+"Clear my choice for synchronising printer preset after loading the file."
 
 msgid "Files"
 msgstr ""
@@ -10648,8 +10837,9 @@ msgstr ""
 msgid "Load Geometry Only"
 msgstr ""
 
+# AI Translated
 msgid "Load behavior"
-msgstr ""
+msgstr "Load behaviour"
 
 msgid ""
 "Should printer/filament/process settings be loaded when opening a 3MF file?"
@@ -10779,6 +10969,7 @@ msgstr ""
 msgid "bits"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Controls the quantization bit depth used when compressing the mesh to Draco "
 "format.\n"
@@ -10787,6 +10978,12 @@ msgid ""
 "Lower values produce smaller files but lose more geometric detail; higher "
 "values preserve more detail at the cost of larger files."
 msgstr ""
+"Controls the quantisation bit depth used when compressing the mesh to Draco "
+"format.\n"
+"0 = lossless compression (geometry is preserved at full precision). Valid "
+"lossy values range from 8 to 30.\n"
+"Lower values produce smaller files but lose more geometric detail; higher "
+"values preserve more detail at the cost of larger files."
 
 msgid "Associate files to OrcaSlicer"
 msgstr ""
@@ -10885,6 +11082,7 @@ msgstr ""
 msgid "Default view type"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The color scheme the sliced preview opens with.\n"
 "Automatic: Filament for multi material prints, Line Type for single material "
@@ -10893,6 +11091,12 @@ msgid ""
 "Any other value always opens that view type.\n"
 "You can still switch the view type in the preview afterwards."
 msgstr ""
+"The colour scheme the sliced preview opens with.\n"
+"Automatic: Filament for multi material prints, Line Type for single material "
+"ones.\n"
+"Last used: the view type you selected last.\n"
+"Any other value always opens that view type.\n"
+"You can still switch the view type in the preview afterwards."
 
 msgid "Dim lower layers"
 msgstr ""
@@ -10936,14 +11140,16 @@ msgstr ""
 msgid "By vendor"
 msgstr ""
 
+# AI Translated
 msgid "Optimize filaments area height for..."
-msgstr ""
+msgstr "Optimise filaments area height for..."
 
 msgid "filaments"
 msgstr ""
 
+# AI Translated
 msgid "Optimizes filament area maximum height by chosen filament count."
-msgstr ""
+msgstr "Optimises filament area maximum height by chosen filament count."
 
 msgid "Show shared profiles notification"
 msgstr ""
@@ -11031,10 +11237,13 @@ msgstr ""
 msgid "Zoom to mouse position"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Zoom in towards the mouse pointer's position in the 3D view, rather than the "
 "2D window center."
 msgstr ""
+"Zoom in towards the mouse pointer's position in the 3D view, rather than the "
+"2D window centre."
 
 msgid "Use free camera"
 msgstr ""
@@ -11094,11 +11303,15 @@ msgstr ""
 msgid "Translucent filaments"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Draw the toolpaths of filaments whose color is partly transparent as "
 "see-through, as the 3D view draws their objects. Turn it off to draw every "
 "filament opaque."
 msgstr ""
+"Draw the toolpaths of filaments whose colour is partly transparent as "
+"see-through, as the 3D view draws their objects. Turn it off to draw every "
+"filament opaque."
 
 msgid "Phong shading"
 msgstr ""
@@ -11308,15 +11521,19 @@ msgstr ""
 msgid "Filament sync mode"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Choose whether sync updates both filament preset and color, or only color."
 msgstr ""
+"Choose whether sync updates both filament preset and colour, or only colour."
 
+# AI Translated
 msgid "Filament & Color"
-msgstr ""
+msgstr "Filament & Colour"
 
+# AI Translated
 msgid "Color only"
-msgstr ""
+msgstr "Colour only"
 
 msgid "Update built-in presets automatically."
 msgstr ""
@@ -11371,20 +11588,28 @@ msgstr ""
 msgid "Keep painted feature after mesh change"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Attempt to keep painted features (color/seam/support/fuzzy etc.) after "
 "changing the object mesh (such as cut/reload from disk/simplify/fix etc.)\n"
 "Highly experimental! Slow and may create artifact."
 msgstr ""
+"Attempt to keep painted features (colour/seam/support/fuzzy etc.) after "
+"changing the object mesh (such as cut/reload from disk/simplify/fix etc.)\n"
+"Highly experimental! Slow and may create artefact."
 
 msgid "Use printer agents instead of print hosts"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Route print jobs for non-Bambu printers through printer plug-in agents "
 "instead of the classic print-host upload flow.\n"
 "When disabled, OrcaSlicer uses the legacy print-host behavior."
 msgstr ""
+"Route print jobs for non-Bambu printers through printer plug-in agents "
+"instead of the classic print-host upload flow.\n"
+"When disabled, OrcaSlicer uses the legacy print-host behaviour."
 
 msgid "Allow Abnormal Storage"
 msgstr ""
@@ -11487,8 +11712,9 @@ msgstr ""
 msgid "Right filaments"
 msgstr ""
 
+# AI Translated
 msgid "Click to select filament color"
-msgstr ""
+msgstr "Click to select filament colour"
 
 msgid "Add/Remove presets"
 msgstr ""
@@ -11496,8 +11722,9 @@ msgstr ""
 msgid "Edit preset"
 msgstr ""
 
+# AI Translated
 msgid "Change extruder color"
-msgstr ""
+msgstr "Change extruder colour"
 
 msgid "Unspecified"
 msgstr ""
@@ -11561,8 +11788,9 @@ msgctxt "Layer range"
 msgid "End"
 msgstr ""
 
+# AI Translated
 msgid "Customize"
-msgstr ""
+msgstr "Customise"
 
 msgid "Other layer filament sequence"
 msgstr ""
@@ -11851,9 +12079,10 @@ msgstr ""
 msgid "Matching tabs: %s"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Favorites are full (%s max)"
-msgstr ""
+msgstr "Favourites are full (%s max)"
 
 #, possible-c-format, possible-boost-format
 msgid "Go to %s%% of the layer range"
@@ -11869,17 +12098,20 @@ msgstr ""
 msgid "Go to tab"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Favorite %s (%s)"
-msgstr ""
+msgstr "Favourite %s (%s)"
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Pin to favorites (%s)"
-msgstr ""
+msgstr "Pin to favourites (%s)"
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Unpin from favorites (%s)"
-msgstr ""
+msgstr "Unpin from favourites (%s)"
 
 msgid "Move left"
 msgstr ""
@@ -11929,8 +12161,9 @@ msgstr ""
 msgid "Don't ask again for this action"
 msgstr ""
 
+# AI Translated
 msgid "Task canceled"
-msgstr ""
+msgstr "Task cancelled"
 
 msgid "Bambu Cool Plate"
 msgstr ""
@@ -11959,11 +12192,14 @@ msgstr ""
 msgid "Not satisfied with the grouping of filaments? Regroup and slice ->"
 msgstr ""
 
+# AI Translated
 msgid "Manually change external spool during printing for multi-color printing"
 msgstr ""
+"Manually change external spool during printing for multi-colour printing"
 
+# AI Translated
 msgid "Multi-color with external"
-msgstr ""
+msgstr "Multi-colour with external"
 
 msgid "Your filament grouping method in the sliced file is not optimal."
 msgstr ""
@@ -11976,15 +12212,21 @@ msgstr ""
 msgid "Select timelapse storage location"
 msgstr ""
 
+# AI Translated
 msgid "Auto Bed Leveling"
-msgstr ""
+msgstr "Auto Bed Levelling"
 
+# AI Translated
 msgid ""
 "This checks the flatness of heatbed. Leveling makes extruded height "
 "uniform.\n"
 "*Automatic mode: Run a leveling check(about 10 seconds). Skip if surface is "
 "fine."
 msgstr ""
+"This checks the flatness of heatbed. Levelling makes extruded height "
+"uniform.\n"
+"*Automatic mode: Run a levelling check(about 10 seconds). Skip if surface is "
+"fine."
 
 msgid "Flow Dynamics Calibration"
 msgstr ""
@@ -12138,9 +12380,11 @@ msgid ""
 "Please click the confirm button if you still want to proceed with printing."
 msgstr ""
 
+# AI Translated
 msgid ""
 "This checks the flatness of heatbed. Leveling makes extruded height uniform."
 msgstr ""
+"This checks the flatness of heatbed. Levelling makes extruded height uniform."
 
 msgid ""
 "This process determines the dynamic flow values to improve overall print "
@@ -12365,11 +12609,13 @@ msgstr ""
 msgid "Connecting to server..."
 msgstr ""
 
+# AI Translated
 msgid "Synchronizing device information..."
-msgstr ""
+msgstr "Synchronising device information..."
 
+# AI Translated
 msgid "Synchronizing device information timed out."
-msgstr ""
+msgstr "Synchronising device information timed out."
 
 msgid "Cannot send a print job when the printer is not at FDM mode."
 msgstr ""
@@ -12500,10 +12746,13 @@ msgstr ""
 msgid "The printer does not support sending to printer storage."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Failed to initialize the printer file transfer. Please check the connection "
 "and try again."
 msgstr ""
+"Failed to initialise the printer file transfer. Please check the connection "
+"and try again."
 
 msgid "Sending..."
 msgstr ""
@@ -12651,15 +12900,21 @@ msgstr ""
 msgid "Search in preset"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Synchronization of different extruder drives or nozzle volume types is not "
 "supported."
 msgstr ""
+"Synchronisation of different extruder drives or nozzle volume types is not "
+"supported."
 
+# AI Translated
 msgid ""
 "Synchronize the modification of parameters to the corresponding parameters "
 "of another extruder."
 msgstr ""
+"Synchronise the modification of parameters to the corresponding parameters "
+"of another extruder."
 
 msgid "Parameters with this icon can be configured per nozzle."
 msgstr ""
@@ -12768,19 +13023,29 @@ msgid ""
 "printing issues. Are you sure you want to enable this option?"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Experimental feature: Retracting and cutting off the filament at a greater "
 "distance during filament changes to minimize flush. Although it can notably "
 "reduce flush, it may also elevate the risk of nozzle clogs or other printing "
 "complications."
 msgstr ""
+"Experimental feature: Retracting and cutting off the filament at a greater "
+"distance during filament changes to minimise flush. Although it can notably "
+"reduce flush, it may also elevate the risk of nozzle clogs or other printing "
+"complications."
 
+# AI Translated
 msgid ""
 "Experimental feature: Retracting and cutting off the filament at a greater "
 "distance during filament changes to minimize flush. Although it can notably "
 "reduce flush, it may also elevate the risk of nozzle clogs or other printing "
 "complications. Please use with the latest printer firmware."
 msgstr ""
+"Experimental feature: Retracting and cutting off the filament at a greater "
+"distance during filament changes to minimise flush. Although it can notably "
+"reduce flush, it may also elevate the risk of nozzle clogs or other printing "
+"complications. Please use with the latest printer firmware."
 
 msgid ""
 "When recording timelapse without toolhead, it is recommended to add a "
@@ -12966,11 +13231,15 @@ msgstr ""
 msgid "Frequent"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Custom filament print order is unavailable while the plate contains "
 "mixed-color filaments."
 msgstr ""
+"Custom filament print order is unavailable while the plate contains "
+"mixed-colour filaments."
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid ""
 "Following line %s contains reserved keywords.\n"
@@ -12981,7 +13250,13 @@ msgid_plural ""
 "Please remove them, or G-code visualization and print time estimation will "
 "be broken."
 msgstr[0] ""
+"Following line %s contains reserved keywords.\n"
+"Please remove it, or G-code visualisation and print time estimation will be "
+"broken."
 msgstr[1] ""
+"Following lines %s contain reserved keywords.\n"
+"Please remove them, or G-code visualisation and print time estimation will "
+"be broken."
 
 #. TRN %1% is the name of the custom G-code setting, e.g. "Machine start G-code".
 #, possible-boost-format
@@ -13243,8 +13518,9 @@ msgstr ""
 msgid "Invalid value provided for parameter %1%: %2%"
 msgstr ""
 
+# AI Translated
 msgid "G-code flavor is switched"
-msgstr ""
+msgstr "G-code flavour is switched"
 
 msgid "Cooling Fan"
 msgstr ""
@@ -13381,10 +13657,13 @@ msgstr ""
 msgid "Z-Hop"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Power loss recovery requires a Bambu Lab printer or the Marlin firmware "
 "G-code flavor."
 msgstr ""
+"Power loss recovery requires a Bambu Lab printer or the Marlin firmware "
+"G-code flavour."
 
 msgid "Build plate tilt is derived from the belt tilt on belt printers."
 msgstr ""
@@ -13555,18 +13834,24 @@ msgid ""
 "Jerk limits are unavailable while Marlin uses nonzero junction deviation."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Emitting machine limits requires the Marlin legacy, Marlin or RepRapFirmware "
 "G-code flavor."
 msgstr ""
+"Emitting machine limits requires the Marlin legacy, Marlin or RepRapFirmware "
+"G-code flavour."
 
 msgid "Enable resonance avoidance to edit its speed range."
 msgstr ""
 
+# AI Translated
 msgid ""
 "This input shaping setting requires the Marlin or RepRapFirmware G-code "
 "flavor."
 msgstr ""
+"This input shaping setting requires the Marlin or RepRapFirmware G-code "
+"flavour."
 
 msgid ""
 "Enable emitting machine limits to G-code to emit input shaping settings."
@@ -13577,10 +13862,13 @@ msgid ""
 "setting."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Enable emitting machine limits and input shaping to G-code with the Marlin "
 "firmware G-code flavor to edit separate Y-axis values."
 msgstr ""
+"Enable emitting machine limits and input shaping to G-code with the Marlin "
+"firmware G-code flavour to edit separate Y-axis values."
 
 msgid ""
 "Switching to a printer with different extruder types or numbers will discard "
@@ -13981,11 +14269,15 @@ msgstr ""
 msgid "The configuration is up to date."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Synchronizing AMS filaments will discard your modified but unsaved filament "
 "presets.\n"
 "Are you sure you want to continue?"
 msgstr ""
+"Synchronising AMS filaments will discard your modified but unsaved filament "
+"presets.\n"
+"Are you sure you want to continue?"
 
 msgctxt "Sync_AMS"
 msgid "Original"
@@ -14021,10 +14313,13 @@ msgstr ""
 msgid "Advanced Options"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Check heatbed flatness. Leveling makes extruded height uniform.\n"
 "*Automatic mode: Level first (about 10 seconds). Skip if surface is fine."
 msgstr ""
+"Check heatbed flatness. Levelling makes extruded height uniform.\n"
+"*Automatic mode: Level first (about 10 seconds). Skip if surface is fine."
 
 msgid ""
 "Calibrate nozzle offsets to enhance print quality.\n"
@@ -14037,9 +14332,12 @@ msgstr ""
 msgid "Tip"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Only synchronize filament type and color, not including AMS slot information."
 msgstr ""
+"Only synchronise filament type and colour, not including AMS slot "
+"information."
 
 msgid ""
 "Replace the project filaments list sequentially based on printer filaments. "
@@ -14050,33 +14348,43 @@ msgstr ""
 msgid "Add unused AMS filaments to filaments list."
 msgstr ""
 
+# AI Translated
 msgid "Automatically merge the same colors in the model after mapping."
-msgstr ""
+msgstr "Automatically merge the same colours in the model after mapping."
 
 msgid "After being synced, this action cannot be undone."
 msgstr ""
 
+# AI Translated
 msgid ""
 "After being synced, the project's filament presets and colors will be "
 "replaced with the mapped filament types and colors. This action cannot be "
 "undone."
 msgstr ""
+"After being synced, the project's filament presets and colours will be "
+"replaced with the mapped filament types and colours. This action cannot be "
+"undone."
 
+# AI Translated
 msgid "Are you sure to synchronize the filaments?"
-msgstr ""
+msgstr "Are you sure to synchronise the filaments?"
 
+# AI Translated
 msgid "Synchronize now"
-msgstr ""
+msgstr "Synchronise now"
 
+# AI Translated
 msgid "Synchronize Filament Information"
-msgstr ""
+msgstr "Synchronise Filament Information"
 
 msgid "Add unused filaments to filaments list."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Only synchronize filament type and color, not including slot information."
 msgstr ""
+"Only synchronise filament type and colour, not including slot information."
 
 msgid "Ext spool"
 msgstr ""
@@ -14104,27 +14412,32 @@ msgid ""
 "will need manually change external filament."
 msgstr ""
 
+# AI Translated
 msgid "Successfully synchronized nozzle information."
-msgstr ""
+msgstr "Successfully synchronised nozzle information."
 
+# AI Translated
 msgid "Successfully synchronized nozzle and AMS number information."
-msgstr ""
+msgstr "Successfully synchronised nozzle and AMS number information."
 
 msgid "Do you want to continue to sync filaments?"
 msgstr ""
 
+# AI Translated
 msgid "Successfully synchronized filament color from printer."
-msgstr ""
+msgstr "Successfully synchronised filament colour from printer."
 
+# AI Translated
 msgid "Successfully synchronized color and type of filament from printer."
-msgstr ""
+msgstr "Successfully synchronised colour and type of filament from printer."
 
 msgctxt "FinishSyncAms"
 msgid "OK"
 msgstr ""
 
+# AI Translated
 msgid "Ramming customization"
-msgstr ""
+msgstr "Ramming customisation"
 
 msgid ""
 "Ramming denotes the rapid extrusion just before a tool change in a "
@@ -14151,11 +14464,15 @@ msgstr ""
 msgid "Ramming line"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Orca would re-calculate your flushing volumes everytime the filaments color "
 "changed or filaments changed. You could disable the auto-calculate in Orca "
 "Slicer > Preferences"
 msgstr ""
+"Orca would re-calculate your flushing volumes everytime the filaments colour "
+"changed or filaments changed. You could disable the auto-calculate in Orca "
+"Slicer > Preferences"
 
 msgid "Flushing volume (mm³) for each filament pair."
 msgstr ""
@@ -14363,8 +14680,9 @@ msgstr ""
 msgid "Available anywhere in the window."
 msgstr ""
 
+# AI Translated
 msgid "Run favorite 1 to 10"
-msgstr ""
+msgstr "Run favourite 1 to 10"
 
 msgid "Pin or unpin the selected action"
 msgstr ""
@@ -14406,16 +14724,20 @@ msgstr ""
 msgid "Painting"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Available while a painting gizmo is open: supports, seam, fuzzy skin or "
 "color painting."
 msgstr ""
+"Available while a painting gizmo is open: supports, seam, fuzzy skin or "
+"colour painting."
 
 msgid "Move: press to snap by 1mm"
 msgstr ""
 
+# AI Translated
 msgid "Support/Color Painting: adjust pen radius"
-msgstr ""
+msgstr "Support/Colour Painting: adjust pen radius"
 
 msgid "Objects list"
 msgstr ""
@@ -14448,8 +14770,9 @@ msgstr ""
 msgid "Scroll slider 5x faster"
 msgstr ""
 
+# AI Translated
 msgid "Not customizable"
-msgstr ""
+msgstr "Not customisable"
 
 #, possible-c-format, possible-boost-format
 msgid "%s is assigned to %s. Reassign it to %s?"
@@ -14848,10 +15171,13 @@ msgstr ""
 msgid "set_accel_and_jerk() is only supported by Klipper"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Input shaping is not supported by Marlin < 2.1.2.\n"
 "Check your firmware version and update your G-code flavor to ´Marlin 2´."
 msgstr ""
+"Input shaping is not supported by Marlin < 2.1.2.\n"
+"Check your firmware version and update your G-code flavour to ´Marlin 2´."
 
 msgid ""
 "Input shaping is only supported by Klipper, RepRapFirmware and Marlin 2."
@@ -15055,19 +15381,29 @@ msgstr ""
 msgid "unknown error"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Multi-color prints in IDEX/IQEX parallel modes require each filament to have "
 "its own dedicated physical extruder. Two or more of the active filaments are "
 "routed to the same physical head via the printer's physical extruder map (an "
 "MMU/AFC manifold), which the slaved gantry cannot follow."
 msgstr ""
+"Multi-colour prints in IDEX/IQEX parallel modes require each filament to "
+"have its own dedicated physical extruder. Two or more of the active "
+"filaments are routed to the same physical head via the printer's physical "
+"extruder map (an MMU/AFC manifold), which the slaved gantry cannot follow."
 
+# AI Translated
 msgid ""
 "The active IDEX/IQEX mode does not define a primary tool, so multi-color "
 "printing cannot be scheduled. Open the printer settings IDEX/IQEX Modes "
 "editor and assign a Primary role to one tool."
 msgstr ""
+"The active IDEX/IQEX mode does not define a primary tool, so multi-colour "
+"printing cannot be scheduled. Open the printer settings IDEX/IQEX Modes "
+"editor and assign a Primary role to one tool."
 
+# AI Translated
 msgid ""
 "Multi-color in this mode isn't a parallel-print scenario — all of the active "
 "tools sit on a single gantry, so there's no second gantry being copied or "
@@ -15075,7 +15411,13 @@ msgid ""
 "single gantry, or define an IDEX/IQEX mode that includes tools on a second "
 "gantry."
 msgstr ""
+"Multi-colour in this mode isn't a parallel-print scenario — all of the "
+"active tools sit on a single gantry, so there's no second gantry being "
+"copied or mirrored to. Switch the plate to Primary mode for multi-colour "
+"printing on a single gantry, or define an IDEX/IQEX mode that includes tools "
+"on a second gantry."
 
+# AI Translated
 msgid ""
 "Multi-color prints in IDEX/IQEX parallel modes require a Span tool on the "
 "primary's gantry — without one, the mode doesn't declare a within-gantry "
@@ -15083,7 +15425,13 @@ msgid ""
 "Primary mode, or open the printer settings IDEX/IQEX Modes editor and mark a "
 "tool on the primary's gantry as Span."
 msgstr ""
+"Multi-colour prints in IDEX/IQEX parallel modes require a Span tool on the "
+"primary's gantry — without one, the mode doesn't declare a within-gantry "
+"multicolour partner. Either reduce the print to a single filament, switch to "
+"Primary mode, or open the printer settings IDEX/IQEX Modes editor and mark a "
+"tool on the primary's gantry as Span."
 
+# AI Translated
 #. TRN %1% is a list of tools such as "T0/T1", %2% a filament number.
 #, possible-boost-format
 msgid ""
@@ -15091,7 +15439,11 @@ msgid ""
 "routed to any tool. Use filaments routed to %1%, or switch this plate to "
 "Primary mode."
 msgstr ""
+"In this Span mode, colours are printed only by %1%, but filament %2% isn't "
+"routed to any tool. Use filaments routed to %1%, or switch this plate to "
+"Primary mode."
 
+# AI Translated
 #. TRN %1% is a list of tools such as "T0/T1", %2% a filament number, %3% a tool number.
 #, possible-boost-format
 msgid ""
@@ -15099,6 +15451,9 @@ msgid ""
 "routed to T%3%. Use filaments routed to %1%, or switch this plate to Primary "
 "mode."
 msgstr ""
+"In this Span mode, colours are printed only by %1%, but filament %2% is "
+"routed to T%3%. Use filaments routed to %1%, or switch this plate to Primary "
+"mode."
 
 #, possible-boost-format
 msgid ""
@@ -15264,10 +15619,13 @@ msgid ""
 "printed as an ordinary outer brim."
 msgstr ""
 
+# AI Translated
 msgid ""
 "A gradient mixed filament is used, but 'Mixed color sublayer' is disabled. "
 "The gradient will not be printed."
 msgstr ""
+"A gradient mixed filament is used, but 'Mixed colour sublayer' is disabled. "
+"The gradient will not be printed."
 
 msgid ""
 "Smooth mode of timelapse is not supported when \"by object\" sequence is "
@@ -15495,9 +15853,11 @@ msgstr ""
 msgid "Plate %d: %s does not support filament %s"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Setting the jerk speed too low could lead to artifacts on curved surfaces"
 msgstr ""
+"Setting the jerk speed too low could lead to artefacts on curved surfaces"
 
 msgid ""
 "The jerk setting exceeds the printer's maximum jerk "
@@ -15585,6 +15945,7 @@ msgstr ""
 msgid "Failed to process the G-code file %1% from the previous 3MF file."
 msgstr ""
 
+# AI Translated
 #, possible-boost-format
 msgid ""
 "The belt purge tower cannot absorb the full purge volume: %1% mm³ in total "
@@ -15592,6 +15953,10 @@ msgid ""
 "color bleeding. Increase the belt purge tower width, or reduce flushing "
 "volumes."
 msgstr ""
+"The belt purge tower cannot absorb the full purge volume: %1% mm³ in total "
+"could not be purged (worst layer: %2% mm³ at height %3%). The print may show "
+"colour bleeding. Increase the belt purge tower width, or reduce flushing "
+"volumes."
 
 msgid "Processing of the filename_format template failed."
 msgstr ""
@@ -15653,8 +16018,9 @@ msgid ""
 "non-convex volume."
 msgstr ""
 
+# AI Translated
 msgid "Collision volume behavior"
-msgstr ""
+msgstr "Collision volume behaviour"
 
 msgid ""
 "Choose whether all nozzles use the same collision volumes, derive "
@@ -15827,8 +16193,9 @@ msgstr ""
 msgid "Names of presets related to the physical printer."
 msgstr ""
 
+# AI Translated
 msgid "Authorization Type"
-msgstr ""
+msgstr "Authorisation Type"
 
 msgid "API key"
 msgstr ""
@@ -15845,10 +16212,13 @@ msgstr ""
 msgid "Avoid crossing walls"
 msgstr ""
 
+# AI Translated
 msgid ""
 "This detours to avoid traveling across walls, which may cause blobs on the "
 "surface."
 msgstr ""
+"This detours to avoid travelling across walls, which may cause blobs on the "
+"surface."
 
 msgid "Avoid crossing walls - Max detour length"
 msgstr ""
@@ -15980,12 +16350,17 @@ msgstr ""
 msgid "Bottom paint penetration layers"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The number of layers, including the bottom surface layer, that take the "
 "color painted on a bottom surface. Set to 0 to use the bottom shell layers. "
 "A value larger than the bottom shell also colors the sparse infill above the "
 "painted area."
 msgstr ""
+"The number of layers, including the bottom surface layer, that take the "
+"colour painted on a bottom surface. Set to 0 to use the bottom shell layers. "
+"A value larger than the bottom shell also colours the sparse infill above "
+"the painted area."
 
 msgid "Apply gap fill"
 msgstr ""
@@ -16333,6 +16708,7 @@ msgstr ""
 msgid "One wall threshold"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "If a top surface has to be printed and it's partially covered by another "
@@ -16345,6 +16721,15 @@ msgid ""
 "on the next layer, like letters. Set this setting to 0 to remove these "
 "artifacts."
 msgstr ""
+"If a top surface has to be printed and it's partially covered by another "
+"layer, it won't be considered at a top layer where its width is below this "
+"value. This can be useful to not let the 'one perimeter on top' trigger on "
+"surface that should be covered only by perimeters. This value can be a mm or "
+"a % of the perimeter extrusion width.\n"
+"\n"
+"Warning: If enabled, artefacts can be created if you have some thin features "
+"on the next layer, like letters. Set this setting to 0 to remove these "
+"artefacts."
 
 msgid "Only one wall on first layer"
 msgstr ""
@@ -16438,6 +16823,7 @@ msgstr ""
 msgid "Slow down for curled perimeters"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "Enable this option to slow down printing in areas where perimeters may have "
@@ -16471,6 +16857,36 @@ msgid ""
 "supporting them from underneath, the 75% overhang speed will be applied, "
 "limited by the bridge speed."
 msgstr ""
+"Enable this option to slow down printing in areas where perimeters may have "
+"curled upwards.\n"
+"For example, additional slowdown will be applied when printing overhangs on "
+"sharp corners like the front of the Benchy hull, reducing curling which "
+"compounds over multiple layers.\n"
+"\n"
+"It is generally recommended to have this option switched on unless your "
+"printer cooling is powerful enough or the print speed is slow enough that "
+"perimeter curling does not happen.\n"
+"If printing with a high external perimeter speed, this parameter may "
+"introduce wall artefacts when slowing down, due to the potentially large "
+"variance in print speeds causing the extruder to be unable to keep up with "
+"the requested flow change.\n"
+"Root cause of these artefacts is most likely PA tuning being slightly off, "
+"especially when combined with a high PA smooth time.\n"
+"\n"
+"Recommendations when enabling this option:\n"
+"1. Reduce Pressure Advance smooth time to 0.015 - 0.02 so the extruder "
+"reacts quickly to the speed changes.\n"
+"2. Increase the minimum print speeds to limit the magnitude of the slowdown "
+"and reduce the variance between fast and slow segments.\n"
+"3. If artefacts still appear, enable Extrusion Rate Smoothing (ERS) to "
+"further smooth the flow transitions.\n"
+"\n"
+"Note: When this option is enabled, overhang perimeters are treated like "
+"overhangs, meaning the overhang speed is applied even if the overhanging "
+"perimeter is part of a bridge.\n"
+"For example, when the perimeters are 100% overhanging, with no wall "
+"supporting them from underneath, the 75% overhang speed will be applied, "
+"limited by the bridge speed."
 
 msgid "mm/s or %"
 msgstr ""
@@ -16532,10 +16948,13 @@ msgstr ""
 msgid "Brim type"
 msgstr ""
 
+# AI Translated
 msgid ""
 "This controls the generation of the brim at outer and/or inner side of "
 "models. Auto means the brim width is analyzed and calculated automatically."
 msgstr ""
+"This controls the generation of the brim at outer and/or inner side of "
+"models. Auto means the brim width is analysed and calculated automatically."
 
 msgid "Leading edge only"
 msgstr ""
@@ -16645,6 +17064,7 @@ msgstr ""
 msgid "Intra-layer order"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Order in which object instances are visited within a single layer, which "
 "controls how much travel is spent moving between them.\n"
@@ -16666,6 +17086,25 @@ msgid ""
 "orders the instances within each filament group, so the overall sequence may "
 "not look like the shortest path across the plate."
 msgstr ""
+"Order in which object instances are visited within a single layer, which "
+"controls how much travel is spent moving between them.\n"
+"\n"
+"Default: nearest-neighbour chaining, refined with 2-opt and crossing "
+"removal. A good general choice.\n"
+"As object list: instances are printed in the same order as the object list, "
+"without any path optimisation. Use it when you need a predictable, manually "
+"controlled order.\n"
+"Best of all (shortest path): every strategy is evaluated and the shortest "
+"one is used. The object instance order is decided once for the whole print, "
+"while the ordering of individual islands is decided per layer, so different "
+"layers may end up using different strategies. Slightly slower to slice.\n"
+"Snake: serpentine row-by-row traversal, refined with 2-opt. Well suited to "
+"regular grids of many small parts.\n"
+"\n"
+"With multiple filaments or tools in the same layer, minimising tool changes "
+"takes priority: objects are grouped by filament first and this setting only "
+"orders the instances within each filament group, so the overall sequence may "
+"not look like the shortest path across the plate."
 
 msgid "As object list"
 msgstr ""
@@ -16843,6 +17282,7 @@ msgstr ""
 msgid "Filter out small internal bridges"
 msgstr ""
 
+# AI Translated
 msgid ""
 "This option can help reduce pillowing on top surfaces in heavily slanted or "
 "curved models.\n"
@@ -16866,6 +17306,27 @@ msgid ""
 "overhang. This option is useful for heavily slanted top surface models; "
 "however, in most cases, it creates too many unnecessary bridges."
 msgstr ""
+"This option can help reduce pillowing on top surfaces in heavily slanted or "
+"curved models.\n"
+"By default, small internal bridges are filtered out and the internal solid "
+"infill is printed directly over the sparse infill. This works well in most "
+"cases, speeding up printing without too much compromise on top surface "
+"quality.\n"
+"However, in heavily slanted or curved models, especially where too low a "
+"sparse infill density is used, this may result in curling of the unsupported "
+"solid infill, causing pillowing.\n"
+"Enabling limited filtering or no filtering will print internal bridge layer "
+"over slightly unsupported internal solid infill. The options below control "
+"the sensitivity of the filtering, i.e. they control where internal bridges "
+"are created:\n"
+"1. Filter - enables this option. This is the default behaviour and works "
+"well in most cases\n"
+"2. Limited filtering - creates internal bridges on heavily slanted surfaces "
+"while avoiding unnecessary bridges. This works well for most difficult "
+"models\n"
+"3. No filtering - creates internal bridges on every potential internal "
+"overhang. This option is useful for heavily slanted top surface models; "
+"however, in most cases, it creates too many unnecessary bridges."
 
 msgid "Filter"
 msgstr ""
@@ -17032,6 +17493,7 @@ msgstr ""
 msgid "Top surface fill order"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Direction in which top surfaces are filled when using a center-based pattern "
 "(Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
@@ -17040,10 +17502,17 @@ msgid ""
 "and ends with the tight curves at the center.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
+"Direction in which top surfaces are filled when using a centre-based pattern "
+"(Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
+"Outward starts at the centre of the surface, so any excess material is "
+"pushed towards the edge where it is least visible. Inward starts at the edge "
+"and ends with the tight curves at the centre.\n"
+"Default uses shortest-path ordering, which may run in either direction."
 
 msgid "Bottom surface fill order"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Direction in which bottom surfaces are filled when using a center-based "
 "pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
@@ -17053,6 +17522,13 @@ msgid ""
 "edge.\n"
 "Default uses shortest-path ordering, which may run in either direction."
 msgstr ""
+"Direction in which bottom surfaces are filled when using a centre-based "
+"pattern (Concentric, Spiral Inset, Archimedean Chords, Octagram Spiral).\n"
+"Inward starts each surface with the wider outer curves, which improves first "
+"layer adhesion on build plates where the tight curves at the centre may not "
+"stick. Outward starts at the centre, pushing any excess material towards the "
+"edge.\n"
+"Default uses shortest-path ordering, which may run in either direction."
 
 msgid "Internal solid infill pattern"
 msgstr ""
@@ -17260,8 +17736,9 @@ msgstr ""
 msgid "Grab length"
 msgstr ""
 
+# AI Translated
 msgid "Extruder Color"
-msgstr ""
+msgstr "Extruder Colour"
 
 msgid "Only used as a visual help on UI."
 msgstr ""
@@ -17302,6 +17779,7 @@ msgstr ""
 msgid "Enable adaptive pressure advance (beta)"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "With increasing print speeds (and hence increasing volumetric flow through "
@@ -17323,10 +17801,29 @@ msgid ""
 "and for when tool changing.\n"
 "\n"
 msgstr ""
+"With increasing print speeds (and hence increasing volumetric flow through "
+"the nozzle) and increasing accelerations, it has been observed that the "
+"effective PA value typically decreases. This means that a single PA value is "
+"not always 100% optimal for all features and a compromise value is usually "
+"used that does not cause too much bulging on features with lower flow speed "
+"and accelerations while also not causing gaps on faster features.\n"
+"\n"
+"This feature aims to address this limitation by modelling the response of "
+"your printer's extrusion system depending on the volumetric flow speed and "
+"acceleration it is printing at. Internally, it generates a fitted model that "
+"can extrapolate the needed pressure advance for any given volumetric flow "
+"speed and acceleration, which is then emitted to the printer depending on "
+"the current print conditions.\n"
+"\n"
+"When enabled, the pressure advance value above is overridden. However, a "
+"reasonable default value above is strongly recommended to act as a fallback "
+"and for when tool changing.\n"
+"\n"
 
 msgid "Adaptive pressure advance measurements (beta)"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "Add sets of pressure advance (PA) values, the volumetric flow speeds and "
@@ -17356,6 +17853,32 @@ msgid ""
 "3. Enter the triplets of PA values, Flow and Accelerations in the text box "
 "here and save your filament profile."
 msgstr ""
+"Add sets of pressure advance (PA) values, the volumetric flow speeds and "
+"accelerations they were measured at, separated by a comma. One set of values "
+"per line. For example\n"
+"0.04,3.96,3000\n"
+"0.033,3.96,10000\n"
+"0.029,7.91,3000\n"
+"0.026,7.91,10000\n"
+"\n"
+"How to calibrate:\n"
+"1. Run the pressure advance test for at least 3 speeds per acceleration "
+"value. It is recommended that the test is run for at least the speed of the "
+"external perimeters, the speed of the internal perimeters and the fastest "
+"feature print speed in your profile (usually its the sparse or solid "
+"infill). Then run them for the same speeds for the slowest and fastest print "
+"accelerations, and no faster than the recommended maximum acceleration as "
+"given by the Klipper input shaper\n"
+"2. Take note of the optimal PA value for each volumetric flow speed and "
+"acceleration. You can find the flow number by selecting flow from the colour "
+"scheme drop down and move the horizontal slider over the PA pattern lines. "
+"The number should be visible at the bottom of the page. The ideal PA value "
+"should be decreasing the higher the volumetric flow is. If it is not, "
+"confirm that your extruder is functioning correctly. The slower and with "
+"less acceleration you print, the larger the range of acceptable PA values. "
+"If no difference is visible, use the PA value from the faster test\n"
+"3. Enter the triplets of PA values, Flow and Accelerations in the text box "
+"here and save your filament profile."
 
 msgid "Enable adaptive pressure advance within features (beta)"
 msgstr ""
@@ -17401,6 +17924,7 @@ msgstr ""
 msgid "Don't slow down outer walls"
 msgstr ""
 
+# AI Translated
 msgid ""
 "If enabled, this setting will ensure external perimeters are not slowed down "
 "to meet the minimum layer time. This is particularly helpful in the below "
@@ -17411,6 +17935,14 @@ msgid ""
 "3. To avoid printing at speeds which cause VFAs (fine artifacts) on the "
 "external walls"
 msgstr ""
+"If enabled, this setting will ensure external perimeters are not slowed down "
+"to meet the minimum layer time. This is particularly helpful in the below "
+"scenarios:\n"
+"1. To avoid changes in shine when printing glossy filaments\n"
+"2. To avoid changes in external wall speed which may create slight wall "
+"artefacts that appear like Z banding\n"
+"3. To avoid printing at speeds which cause VFAs (fine artefacts) on the "
+"external walls"
 
 msgid "Layer time"
 msgstr ""
@@ -17425,13 +17957,17 @@ msgctxt "second"
 msgid "s"
 msgstr ""
 
+# AI Translated
 msgid "Default color"
-msgstr ""
+msgstr "Default colour"
 
+# AI Translated
 msgid ""
 "Default filament color.\n"
 "Right click to reset value to system default."
 msgstr ""
+"Default filament colour.\n"
+"Right click to reset value to system default."
 
 msgid "Filament notes"
 msgstr ""
@@ -17641,14 +18177,19 @@ msgstr ""
 msgid "Speed used for stamping."
 msgstr ""
 
+# AI Translated
 msgid "Stamping distance measured from the center of the cooling tube"
-msgstr ""
+msgstr "Stamping distance measured from the centre of the cooling tube"
 
+# AI Translated
 msgid ""
 "If set to non-zero value, filament is moved toward the nozzle between the "
 "individual cooling moves (\"stamping\"). This option configures how long "
 "this movement should be before the filament is retracted again."
 msgstr ""
+"If set to non-zero value, filament is moved towards the nozzle between the "
+"individual cooling moves (\"stamping\"). This option configures how long "
+"this movement should be before the filament is retracted again."
 
 msgid "Speed of the first cooling move"
 msgstr ""
@@ -17774,10 +18315,13 @@ msgstr ""
 msgid "Filament ramming length"
 msgstr ""
 
+# AI Translated
 msgid ""
 "When changing the extruder, it is recommended to extrude a certain length of "
 "filament from the original extruder. This helps minimize nozzle oozing."
 msgstr ""
+"When changing the extruder, it is recommended to extrude a certain length of "
+"filament from the original extruder. This helps minimise nozzle oozing."
 
 msgid "Support material"
 msgstr ""
@@ -17956,6 +18500,7 @@ msgstr ""
 msgid "Adaptive density (experimental)"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Grades the Gyroid and TPMS infill inside the object: its cells grow from the "
 "surface of the object towards its center. The sparse infill density is used "
@@ -17975,6 +18520,23 @@ msgid ""
 " - Normal Z, Y or X: follows the sections of the object normal to that axis, "
 "so the density does not change along it."
 msgstr ""
+"Grades the Gyroid and TPMS infill inside the object: its cells grow from the "
+"surface of the object towards its centre. The sparse infill density is used "
+"at the surface and the interior density at the centre.\n"
+"Distance warp, Smooth blend and Stepped shells follow the distance to the "
+"nearest surface, including the top and bottom, with the interior density at "
+"the point farthest from it:\n"
+" - Distance warp: one continuous pattern, stretched and sheared where the "
+"distance changes across directions, as in plates and long parts.\n"
+" - Smooth blend: the patterns of neighbouring densities blended into each "
+"other, with small loops where they meet.\n"
+" - Stepped shells: shells of the regular pattern at densities about 1.5 "
+"times apart, their lines joined along the shell boundaries.\n"
+" - Lobes: follows the 3D shape of the object, including its top and bottom. "
+"Every lobe, a part joined to the rest by a narrower neck, is graded towards "
+"its own centre.\n"
+" - Normal Z, Y or X: follows the sections of the object normal to that axis, "
+"so the density does not change along it."
 
 msgid "Distance warp"
 msgstr ""
@@ -18000,12 +18562,14 @@ msgstr ""
 msgid "Interior density"
 msgstr ""
 
+# AI Translated
 msgid "Density of the adaptive infill at the center of the object."
-msgstr ""
+msgstr "Density of the adaptive infill at the centre of the object."
 
 msgid "Adaptive gradient"
 msgstr ""
 
+# AI Translated
 msgid ""
 "How the density changes from the surface to the center of the object.\n"
 "Linear: the density changes at a constant rate.\n"
@@ -18014,6 +18578,12 @@ msgid ""
 "Exponential: the density changes quickly just below the surface and levels "
 "off towards the center."
 msgstr ""
+"How the density changes from the surface to the centre of the object.\n"
+"Linear: the density changes at a constant rate.\n"
+"Quadratic: the density stays close to the sparse infill density near the "
+"surface and changes faster towards the centre.\n"
+"Exponential: the density changes quickly just below the surface and levels "
+"off towards the centre."
 
 msgid "Linear"
 msgstr ""
@@ -18024,8 +18594,9 @@ msgstr ""
 msgid "Exponential"
 msgstr ""
 
+# AI Translated
 msgid "Z-buckling bias optimization (experimental)"
-msgstr ""
+msgstr "Z-buckling bias optimisation (experimental)"
 
 #, no-c-format, no-boost-format
 msgid ""
@@ -18291,35 +18862,48 @@ msgstr ""
 msgid "Ironing flow"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Filament-specific override for ironing flow. This allows you to customize "
 "the ironing flow for each filament type. Too high value results in "
 "overextrusion on the surface."
 msgstr ""
+"Filament-specific override for ironing flow. This allows you to customise "
+"the ironing flow for each filament type. Too high value results in "
+"overextrusion on the surface."
 
 msgid "Ironing line spacing"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Filament-specific override for ironing line spacing. This allows you to "
 "customize the spacing between ironing lines for each filament type."
 msgstr ""
+"Filament-specific override for ironing line spacing. This allows you to "
+"customise the spacing between ironing lines for each filament type."
 
 msgid "Ironing inset"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Filament-specific override for ironing inset. This allows you to customize "
 "the distance to keep from the edges when ironing for each filament type."
 msgstr ""
+"Filament-specific override for ironing inset. This allows you to customise "
+"the distance to keep from the edges when ironing for each filament type."
 
 msgid "Ironing speed"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Filament-specific override for ironing speed. This allows you to customize "
 "the print speed of ironing lines for each filament type."
 msgstr ""
+"Filament-specific override for ironing speed. This allows you to customise "
+"the print speed of ironing lines for each filament type."
 
 msgid ""
 "This setting makes the toolhead randomly jitter while printing walls so that "
@@ -18721,8 +19305,9 @@ msgstr ""
 msgid "Enable this if the printer supports a cooling filter"
 msgstr ""
 
+# AI Translated
 msgid "G-code flavor"
-msgstr ""
+msgstr "G-code flavour"
 
 msgid "What kind of G-code the printer is compatible with."
 msgstr ""
@@ -18760,6 +19345,7 @@ msgstr ""
 msgid "Label objects"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Enable this to add comments into the G-code labeling print moves with what "
 "object they belong to, which is useful for the Octoprint CancelObject "
@@ -18768,6 +19354,12 @@ msgid ""
 "This setting is NOT compatible with Single Extruder Multi Material setup and "
 "Wipe into Object / Wipe into Infill."
 msgstr ""
+"Enable this to add comments into the G-code labelling print moves with what "
+"object they belong to, which is useful for the Octoprint CancelObject "
+"plug-in.\n"
+"\n"
+"This setting is NOT compatible with Single Extruder Multi Material setup and "
+"Wipe into Object / Wipe into Infill."
 
 msgid "Exclude objects"
 msgstr ""
@@ -18799,6 +19391,7 @@ msgstr ""
 msgid "High precision G-code (experimental)"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Write X, Y, Z, I and J with 4 decimal places instead of 3, and E with 6 "
 "instead of 5, to reduce rounding errors in the G-code. With relative E "
@@ -18813,6 +19406,18 @@ msgid ""
 "The G-code file becomes about 10 percent larger, which may slow down "
 "printers that parse G-code slowly."
 msgstr ""
+"Write X, Y, Z, I and J with 4 decimal places instead of 3, and E with 6 "
+"instead of 5, to reduce rounding errors in the G-code. With relative E "
+"distances, the rounding error of each move is also carried over to the next "
+"one. Supports are removed after printing, so they keep the standard "
+"precision. This may help stabilise extrusion with small nozzles (e.g. 0.2 "
+"mm) and thin layers (e.g. 0.08 mm or less), where each move extrudes so "
+"little material that rounding errors matter most. The effect depends "
+"strongly on how well the rest of the settings are tuned and may be hard to "
+"notice unless the print profile is well calibrated.\n"
+"\n"
+"The G-code file becomes about 10 percent larger, which may slow down "
+"printers that parse G-code slowly."
 
 msgid "Infill combination"
 msgstr ""
@@ -18926,6 +19531,7 @@ msgstr ""
 msgid "Infill combination - Max layer height"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Maximum layer height for the combined sparse infill.\n"
 "\n"
@@ -18938,6 +19544,16 @@ msgid ""
 "Use either absolute mm values (eg. 0.32mm for a 0.4mm nozzle) or % values "
 "(eg 80%). This value must not be larger than the nozzle diameter."
 msgstr ""
+"Maximum layer height for the combined sparse infill.\n"
+"\n"
+"Set it to 0 or 100% to use the nozzle diameter (for maximum reduction in "
+"print time) or a value of ~80% to maximise sparse infill strength.\n"
+"\n"
+"The number of layers over which infill is combined is derived by dividing "
+"this value with the layer height and rounded down to the nearest decimal.\n"
+"\n"
+"Use either absolute mm values (eg. 0.32mm for a 0.4mm nozzle) or % values "
+"(eg 80%). This value must not be larger than the nozzle diameter."
 
 msgid "Enable clumping detection"
 msgstr ""
@@ -19052,6 +19668,7 @@ msgstr ""
 msgid "Infill/wall overlap"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "This allows the infill area to be enlarged slightly to overlap with walls "
@@ -19059,10 +19676,15 @@ msgid ""
 "width. Set this value to ~10-15% to minimize potential over extrusion and "
 "accumulation of material resulting in rough top surfaces."
 msgstr ""
+"This allows the infill area to be enlarged slightly to overlap with walls "
+"for better bonding. The percentage value is relative to the inner wall line "
+"width. Set this value to ~10-15% to minimise potential over extrusion and "
+"accumulation of material resulting in rough top surfaces."
 
 msgid "Top/Bottom solid infill/wall overlap"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "Top solid infill area is enlarged slightly to overlap with wall for better "
@@ -19071,6 +19693,11 @@ msgid ""
 "appearance of pinholes. The percentage value is relative to the inner wall "
 "line width."
 msgstr ""
+"Top solid infill area is enlarged slightly to overlap with wall for better "
+"bonding and to minimise the appearance of pinholes where the top infill "
+"meets the walls. A value of 25-30% is a good starting point, minimising the "
+"appearance of pinholes. The percentage value is relative to the inner wall "
+"line width."
 
 msgid "This is the speed for internal sparse infill."
 msgstr ""
@@ -19218,8 +19845,9 @@ msgstr ""
 msgid "Enable Z-layer contouring (aka Z-layer anti-aliasing)."
 msgstr ""
 
+# AI Translated
 msgid "Minimize wall height angle"
-msgstr ""
+msgstr "Minimise wall height angle"
 
 msgid ""
 "Reduce the height of top-surface perimeters to match the model edge height.\n"
@@ -19253,10 +19881,13 @@ msgstr ""
 msgid "Machine limits"
 msgstr ""
 
+# AI Translated
 msgid ""
 "If enabled, the machine limits will be emitted to G-code file.\n"
 "This option will be ignored if the G-code flavor is set to Klipper."
 msgstr ""
+"If enabled, the machine limits will be emitted to G-code file.\n"
+"This option will be ignored if the G-code flavour is set to Klipper."
 
 msgid ""
 "This G-code will be used as a code for the pause print. Users can insert "
@@ -19532,6 +20163,7 @@ msgstr ""
 msgid "Extrusion rate smoothing"
 msgstr ""
 
+# AI Translated
 msgid ""
 "This parameter smooths out sudden extrusion rate changes that happen when "
 "the printer transitions from printing a high flow (high speed/larger width) "
@@ -19560,6 +20192,32 @@ msgid ""
 "\n"
 "Note: this parameter disables arc fitting."
 msgstr ""
+"This parameter smooths out sudden extrusion rate changes that happen when "
+"the printer transitions from printing a high flow (high speed/larger width) "
+"extrusion to a lower flow (lower speed/smaller width) extrusion and vice "
+"versa.\n"
+"\n"
+"It defines the maximum rate by which the extruded volumetric flow in mm³/s "
+"can change over time. Higher values mean higher extrusion rate changes are "
+"allowed, resulting in faster speed transitions.\n"
+"\n"
+"A value of 0 disables the feature.\n"
+"\n"
+"For a high speed, high flow direct drive printer (like the Bambu lab or "
+"Voron) this value is usually not needed. However it can provide some "
+"marginal benefit in certain cases where feature speeds vary greatly. For "
+"example, when there are aggressive slowdowns due to overhangs. In these "
+"cases a high value of around 300-350 mm³/s² is recommended as this allows "
+"for just enough smoothing to assist pressure advance achieve a smoother flow "
+"transition.\n"
+"\n"
+"For slower printers without pressure advance, the value should be set much "
+"lower. A value of 10-15 mm³/s² is a good starting point for direct drive "
+"extruders and 5-10 mm³/s² for Bowden style.\n"
+"\n"
+"This feature is known as Pressure Equaliser in Prusa slicer.\n"
+"\n"
+"Note: this parameter disables arc fitting."
 
 msgid "mm³/s²"
 msgstr ""
@@ -19659,8 +20317,10 @@ msgstr ""
 msgid "Cooling tube position"
 msgstr ""
 
+# AI Translated
 msgid "Distance of the center-point of the cooling tube from the extruder tip."
 msgstr ""
+"Distance of the centre-point of the cooling tube from the extruder tip."
 
 msgid "Cooling tube length"
 msgstr ""
@@ -19940,12 +20600,17 @@ msgstr ""
 msgid "Long retraction when cut (beta)"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Experimental feature: Retracting and cutting off the filament at a longer "
 "distance during changes to minimize purge. While this reduces flush "
 "significantly, it may also raise the risk of nozzle clogs or other printing "
 "problems."
 msgstr ""
+"Experimental feature: Retracting and cutting off the filament at a longer "
+"distance during changes to minimise purge. While this reduces flush "
+"significantly, it may also raise the risk of nozzle clogs or other printing "
+"problems."
 
 msgid "Retraction distance when cut"
 msgstr ""
@@ -19973,12 +20638,17 @@ msgstr ""
 msgid "Z-hop height"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Whenever there is a retraction, the nozzle is lifted a little to create "
 "clearance between the nozzle and the print. This prevents the nozzle from "
 "hitting the print when traveling more. Using spiral lines to lift Z can "
 "prevent stringing."
 msgstr ""
+"Whenever there is a retraction, the nozzle is lifted a little to create "
+"clearance between the nozzle and the print. This prevents the nozzle from "
+"hitting the print when travelling more. Using spiral lines to lift Z can "
+"prevent stringing."
 
 msgid "Z-hop lower boundary"
 msgstr ""
@@ -20011,13 +20681,17 @@ msgstr ""
 msgid "Spiral"
 msgstr ""
 
+# AI Translated
 msgid "Traveling angle"
-msgstr ""
+msgstr "Travelling angle"
 
+# AI Translated
 msgid ""
 "Traveling angle for Slope and Spiral Z-hop type. Setting it to 90° results "
 "in Normal Lift."
 msgstr ""
+"Travelling angle for Slope and Spiral Z-hop type. Setting it to 90° results "
+"in Normal Lift."
 
 msgid "Only lift Z above"
 msgstr ""
@@ -20038,10 +20712,13 @@ msgstr ""
 msgid "On surfaces"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Enforce Z-Hop behavior. This setting is impacted by the above settings (Only "
 "lift Z above/below)."
 msgstr ""
+"Enforce Z-Hop behaviour. This setting is impacted by the above settings "
+"(Only lift Z above/below)."
 
 msgid "All Surfaces"
 msgstr ""
@@ -20165,18 +20842,25 @@ msgstr ""
 msgid "Seam gap"
 msgstr ""
 
+# AI Translated
 msgid ""
 "In order to reduce the visibility of the seam in a closed loop extrusion, "
 "the loop is interrupted and shortened by a specified amount.\n"
 "This amount can be specified in millimeters or as a percentage of the nozzle "
 "diameter. The default value for this parameter is 10%."
 msgstr ""
+"In order to reduce the visibility of the seam in a closed loop extrusion, "
+"the loop is interrupted and shortened by a specified amount.\n"
+"This amount can be specified in millimetres or as a percentage of the nozzle "
+"diameter. The default value for this parameter is 10%."
 
 msgid "Scarf joint seam (beta)"
 msgstr ""
 
+# AI Translated
 msgid "Use scarf joint to minimize seam visibility and increase seam strength."
 msgstr ""
+"Use scarf joint to minimise seam visibility and increase seam strength."
 
 msgid "Conditional scarf joint"
 msgstr ""
@@ -20233,11 +20917,15 @@ msgstr ""
 msgid "Scarf start height"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Start height of the scarf.\n"
 "This amount can be specified in millimeters or as a percentage of the "
 "current layer height. The default value for this parameter is 0."
 msgstr ""
+"Start height of the scarf.\n"
+"This amount can be specified in millimetres or as a percentage of the "
+"current layer height. The default value for this parameter is 0."
 
 msgid "Scarf around entire wall"
 msgstr ""
@@ -20268,24 +20956,33 @@ msgstr ""
 msgid "Role based wipe speed"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The wipe speed is determined by the speed of the current extrusion role. "
 "e.g. if a wipe action is executed immediately following an outer wall "
 "extrusion, the speed of the outer wall extrusion will be utilized for the "
 "wipe action."
 msgstr ""
+"The wipe speed is determined by the speed of the current extrusion role. "
+"e.g. if a wipe action is executed immediately following an outer wall "
+"extrusion, the speed of the outer wall extrusion will be utilised for the "
+"wipe action."
 
 msgid "Wipe on loops"
 msgstr ""
 
+# AI Translated
 msgid ""
 "To minimize the visibility of the seam in a closed loop extrusion, a small "
 "inward movement is executed before the extruder leaves the loop."
 msgstr ""
+"To minimise the visibility of the seam in a closed loop extrusion, a small "
+"inward movement is executed before the extruder leaves the loop."
 
 msgid "Wipe inward"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Applies only to external walls, including hole boundaries. Moves the hot "
 "nozzle toward the inner walls during wiping to reduce reheating of freshly "
@@ -20298,10 +20995,21 @@ msgid ""
 "as in single-wall areas, or if no supported inward path can be found, for "
 "example at tight corners or seam gaps."
 msgstr ""
+"Applies only to external walls, including hole boundaries. Moves the hot "
+"nozzle towards the inner walls during wiping to reduce reheating of freshly "
+"printed plastic and seam marks.\n"
+"\n"
+"Especially useful at layer heights below 0.1 mm, where wipe marks are more "
+"visible.\n"
+"\n"
+"Uses the regular wipe where the outer wall has no adjacent inner wall, such "
+"as in single-wall areas, or if no supported inward path can be found, for "
+"example at tight corners or seam gaps."
 
 msgid "Wipe inward distance"
 msgstr ""
 
+# AI Translated
 #, no-c-format, no-boost-format
 msgid ""
 "The distance the wipe path is shifted away from the external perimeter, "
@@ -20319,10 +21027,25 @@ msgid ""
 "printed after the outer wall. This also applies to equivalent distances "
 "specified in millimeters."
 msgstr ""
+"The distance the wipe path is shifted away from the external perimeter, "
+"specified in millimetres or as a percentage of the actual outer-wall "
+"extrusion width.\n"
+"\n"
+"For example, 50% shifts the path by half of the outer-wall width. The "
+"effective offset is limited by both the actual outer-wall width and the "
+"available spacing to the adjacent wall, so values above 100% or an "
+"equivalent absolute distance have no additional effect. Set to 0 to disable "
+"the offset.\n"
+"\n"
+"With Outer/Inner or Inner/Outer/Inner wall order, the offset is limited to "
+"50% of the actual outer-wall width because the adjacent inner wall is "
+"printed after the outer wall. This also applies to equivalent distances "
+"specified in millimetres."
 
 msgid "Wipe before external loop"
 msgstr ""
 
+# AI Translated
 msgid ""
 "To minimize visibility of potential overextrusion at the start of an "
 "external perimeter when printing with Outer/Inner or Inner/Outer/Inner wall "
@@ -20334,6 +21057,15 @@ msgid ""
 "print order as in these modes it is more likely an external perimeter is "
 "printed immediately after a de-retraction move."
 msgstr ""
+"To minimise visibility of potential overextrusion at the start of an "
+"external perimeter when printing with Outer/Inner or Inner/Outer/Inner wall "
+"print order, the de-retraction is performed slightly on the inside from the "
+"start of the external perimeter. That way any potential over extrusion is "
+"hidden from the outside surface.\n"
+"\n"
+"This is useful when printing with Outer/Inner or Inner/Outer/Inner wall "
+"print order as in these modes it is more likely an external perimeter is "
+"printed immediately after a de-retraction move."
 
 msgid "Wipe speed"
 msgstr ""
@@ -20354,10 +21086,13 @@ msgstr ""
 msgid "Skirt start point"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Angle from the object center to skirt start point. Zero is the most right "
 "position, counter clockwise is positive angle."
 msgstr ""
+"Angle from the object centre to skirt start point. Zero is the most right "
+"position, counter clockwise is positive angle."
 
 msgid "Skirt height"
 msgstr ""
@@ -20527,11 +21262,15 @@ msgstr ""
 msgid "Farthest point timelapse"
 msgstr ""
 
+# AI Translated
 msgid ""
 "When enabled, the timelapse snapshot is taken at the farthest point from "
 "camera instead of traveling to the wipe tower or excess chute. Only "
 "effective in traditional timelapse mode on non-I3 printers."
 msgstr ""
+"When enabled, the timelapse snapshot is taken at the farthest point from "
+"camera instead of travelling to the wipe tower or excess chute. Only "
+"effective in traditional timelapse mode on non-I3 printers."
 
 msgid "Temperature variation"
 msgstr ""
@@ -20599,6 +21338,7 @@ msgstr ""
 msgid "Firmware-managed zones"
 msgstr ""
 
+# AI Translated
 msgid ""
 "When enabled, the slicer emits G-code with the primary zone's contents "
 "centered on bed origin (0,0). The printer firmware is responsible for "
@@ -20606,6 +21346,11 @@ msgid ""
 "printers whose firmware applies its own zone offsets in copy/mirror mode "
 "(e.g. RepRapFirmware IDEX duplication mode). Has no effect in Primary mode."
 msgstr ""
+"When enabled, the slicer emits G-code with the primary zone's contents "
+"centred on bed origin (0,0). The printer firmware is responsible for placing "
+"copies/mirrors at each physical zone position. Enable only on printers whose "
+"firmware applies its own zone offsets in copy/mirror mode (e.g. "
+"RepRapFirmware IDEX duplication mode). Has no effect in Primary mode."
 
 msgid "Gantry Count"
 msgstr ""
@@ -20657,13 +21402,17 @@ msgid ""
 "is a visual reminder to leave extra clearance near the zone edge."
 msgstr ""
 
+# AI Translated
 msgid "Visualization Theme"
-msgstr ""
+msgstr "Visualisation Theme"
 
+# AI Translated
 msgid ""
 "Color theme for IDEX/IQEX bed zone visualization. Choose a "
 "colorblind-friendly theme if needed."
 msgstr ""
+"Colour theme for IDEX/IQEX bed zone visualisation. Choose a "
+"colorblind-friendly theme if needed."
 
 msgid "Deuteranopia / Protanopia (red-green)"
 msgstr ""
@@ -20822,6 +21571,7 @@ msgstr ""
 msgid "Toolchange ordering"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Determines the order of tool changes on each layer.\n"
 "- Default: Starts with the last used extruder to minimize tool changes.\n"
@@ -20829,6 +21579,11 @@ msgid ""
 "better surface quality, as the extra toolchanges allow layers more time to "
 "cool."
 msgstr ""
+"Determines the order of tool changes on each layer.\n"
+"- Default: Starts with the last used extruder to minimise tool changes.\n"
+"- Cyclic: Uses a fixed tool sequence each layer. This sacrifices speed for "
+"better surface quality, as the extra toolchanges allow layers more time to "
+"cool."
 
 msgid "Cyclic"
 msgstr ""
@@ -20847,6 +21602,7 @@ msgstr ""
 msgid "Apply cyclic order to first layer"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Applies the cyclic toolchange order to the first layer as well.\n"
 "By default this is disabled, because the first layer is instead ordered for "
@@ -20860,6 +21616,17 @@ msgid ""
 "Enable this only if you need the exact same tool sequence on every layer, "
 "including the first, at the cost of that adhesion optimization."
 msgstr ""
+"Applies the cyclic toolchange order to the first layer as well.\n"
+"By default this is disabled, because the first layer is instead ordered for "
+"the best bed adhesion: filaments that print small, fragile first-layer "
+"features are printed last, so the following tool changes and travel moves "
+"are less likely to knock those weakly anchored parts loose. This first-layer "
+"order also honors a custom first layer filament sequence when one is set. "
+"The cyclic order's benefit (extra tool changes give each layer more time to "
+"cool) does not apply to the first layer, which is printed slowly and hot for "
+"adhesion.\n"
+"Enable this only if you need the exact same tool sequence on every layer, "
+"including the first, at the cost of that adhesion optimisation."
 
 msgid "Slice gap closing radius"
 msgstr ""
@@ -21126,11 +21893,15 @@ msgstr ""
 msgid "Independent support layer height"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Support layer uses layer height independent with object layer. This is to "
 "support customizing Z-gap and save print time. This option will be invalid "
 "when the prime tower is enabled."
 msgstr ""
+"Support layer uses layer height independent with object layer. This is to "
+"support customising Z-gap and save print time. This option will be invalid "
+"when the prime tower is enabled."
 
 msgid "Threshold angle"
 msgstr ""
@@ -21156,6 +21927,7 @@ msgstr ""
 msgid "Build plate tilt X"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Tilt angle of the build plate along the X axis. A positive value tilts the "
 "plate so the +X side is higher, shifting gravity toward -X and increasing "
@@ -21163,16 +21935,26 @@ msgid ""
 "0 for no X-axis tilt. In belt printer mode, this is automatically synced to "
 "the belt angle."
 msgstr ""
+"Tilt angle of the build plate along the X axis. A positive value tilts the "
+"plate so the +X side is higher, shifting gravity towards -X and increasing "
+"overhangs on the +X side. A negative value tilts the -X side higher. Set to "
+"0 for no X-axis tilt. In belt printer mode, this is automatically synced to "
+"the belt angle."
 
 msgid "Build plate tilt Y"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Tilt angle of the build plate along the Y axis. A positive value tilts the "
 "plate so the +Y side is higher, shifting gravity toward -Y and increasing "
 "overhangs on the +Y side. A negative value tilts the -Y side higher. Set to "
 "0 for no Y-axis tilt."
 msgstr ""
+"Tilt angle of the build plate along the Y axis. A positive value tilts the "
+"plate so the +Y side is higher, shifting gravity towards -Y and increasing "
+"overhangs on the +Y side. A negative value tilts the -Y side higher. Set to "
+"0 for no Y-axis tilt."
 
 msgid "Enable belt printing"
 msgstr ""
@@ -21342,9 +22124,11 @@ msgstr ""
 msgid "Tree support branch distance"
 msgstr ""
 
+# AI Translated
 msgid ""
 "This setting determines the distance between neighboring tree support nodes."
 msgstr ""
+"This setting determines the distance between neighbouring tree support nodes."
 
 msgid "Branch Density"
 msgstr ""
@@ -21473,6 +22257,7 @@ msgid ""
 "chamber heater is installed."
 msgstr ""
 
+# AI Translated
 msgid ""
 "This is the chamber temperature at which printing should start, while the "
 "chamber continues heating toward the \"Target\" chamber temperature. For "
@@ -21488,6 +22273,19 @@ msgid ""
 "M141/M191 commands; it only exposes the value to your custom G-code. It "
 "should not exceed the \"Target\" chamber temperature."
 msgstr ""
+"This is the chamber temperature at which printing should start, while the "
+"chamber continues heating towards the \"Target\" chamber temperature. For "
+"example, set the Target to 60 and the Minimal to 50 to begin printing once "
+"the chamber reaches 50℃, without waiting for the full 60℃.\n"
+"\n"
+"It sets a G-code variable named chamber_minimal_temperature, which can be "
+"passed to your print start macro or a heat soak macro, like this:\n"
+"PRINT_START (other variables) "
+"CHAMBER_MIN_TEMP=[chamber_minimal_temperature]\n"
+"\n"
+"Unlike the \"Target\" chamber temperature, this option does not emit any "
+"M141/M191 commands; it only exposes the value to your custom G-code. It "
+"should not exceed the \"Target\" chamber temperature."
 
 msgid "Chamber minimal temperature"
 msgstr ""
@@ -21550,16 +22348,22 @@ msgstr ""
 msgid "Top paint penetration layers"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The number of layers, including the top surface layer, that take the color "
 "painted on a top surface. Set to 0 to use the top shell layers. A value "
 "larger than the top shell also colors the sparse infill below the painted "
 "area."
 msgstr ""
+"The number of layers, including the top surface layer, that take the colour "
+"painted on a top surface. Set to 0 to use the top shell layers. A value "
+"larger than the top shell also colours the sparse infill below the painted "
+"area."
 
 msgid "Separated infills"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Centers the internal infill of each part on itself, as if it were sliced on "
 "its own, instead of on the whole assembly. Parts that touch or overlap are "
@@ -21570,10 +22374,20 @@ msgid ""
 "Adaptive Cubic and Support Cubic always center each part on itself, and "
 "Lightning infill is generated for the whole object and is unaffected."
 msgstr ""
+"Centres the internal infill of each part on itself, as if it were sliced on "
+"its own, instead of on the whole assembly. Parts that touch or overlap are "
+"treated as one body and share a centre; separate parts (or distinct 3D "
+"objects) each get their own.\n"
+"Useful when an assembly groups several objects that should each keep a "
+"consistent, self-centred infill.\n"
+"Adaptive Cubic and Support Cubic always centre each part on itself, and "
+"Lightning infill is generated for the whole object and is unaffected."
 
+# AI Translated
 msgid "Center surface pattern on"
-msgstr ""
+msgstr "Centre surface pattern on"
 
+# AI Translated
 msgid ""
 "Chooses where the centering point of centered top/bottom surface patterns "
 "(Archimedean Chords, Octagram Spiral) is placed.\n"
@@ -21585,6 +22399,15 @@ msgid ""
 " - Each Assembly: uses a single shared center for the whole object or "
 "assembly."
 msgstr ""
+"Chooses where the centring point of centred top/bottom surface patterns "
+"(Archimedean Chords, Octagram Spiral) is placed.\n"
+" - Each Surface: centres the pattern on every individual surface region, so "
+"each island is symmetric on its own.\n"
+" - Each Model: centres the pattern on each connected body. Parts that touch "
+"or overlap share one centre; parts detached from the rest each get their "
+"own.\n"
+" - Each Assembly: uses a single shared centre for the whole object or "
+"assembly."
 
 msgid "Each Surface"
 msgstr ""
@@ -21595,17 +22418,22 @@ msgstr ""
 msgid "Each Assembly"
 msgstr ""
 
+# AI Translated
 msgid "This is the speed at which traveling is done."
-msgstr ""
+msgstr "This is the speed at which travelling is done."
 
 msgid "Wipe while retracting"
 msgstr ""
 
+# AI Translated
 msgid ""
 "This moves the nozzle along the last extrusion path when retracting to clean "
 "any leaked material on the nozzle. This can minimize blobs when printing a "
 "new part after traveling."
 msgstr ""
+"This moves the nozzle along the last extrusion path when retracting to clean "
+"any leaked material on the nozzle. This can minimise blobs when printing a "
+"new part after travelling."
 
 msgid "Wipe distance"
 msgstr ""
@@ -21621,20 +22449,29 @@ msgid ""
 "any excess retraction before the wipe, else it will be performed after."
 msgstr ""
 
+# AI Translated
 msgid "Mixed color sublayer"
-msgstr ""
+msgstr "Mixed colour sublayer"
 
+# AI Translated
 msgid ""
 "Enable mixed color sublayer splitting. When enabled, layers containing mixed "
 "color filaments will be split into sub-layers to achieve color mixing "
 "effects."
 msgstr ""
+"Enable mixed colour sublayer splitting. When enabled, layers containing "
+"mixed colour filaments will be split into sub-layers to achieve colour "
+"mixing effects."
 
+# AI Translated
 msgid ""
 "The wiping tower can be used to clean up residue on the nozzle and stabilize "
 "the chamber pressure inside the nozzle in order to avoid appearance defects "
 "when printing objects."
 msgstr ""
+"The wiping tower can be used to clean up residue on the nozzle and stabilise "
+"the chamber pressure inside the nozzle in order to avoid appearance defects "
+"when printing objects."
 
 msgid "Internal ribs"
 msgstr ""
@@ -21693,13 +22530,17 @@ msgid ""
 "on the height of prime tower."
 msgstr ""
 
+# AI Translated
 msgid "Stabilization cone apex angle"
-msgstr ""
+msgstr "Stabilisation cone apex angle"
 
+# AI Translated
 msgid ""
 "Angle at the apex of the cone that is used to stabilize the wipe tower. "
 "Larger angle means wider base."
 msgstr ""
+"Angle at the apex of the cone that is used to stabilise the wipe tower. "
+"Larger angle means wider base."
 
 msgid "Maximum wipe tower print speed"
 msgstr ""
@@ -21729,6 +22570,7 @@ msgstr ""
 msgid "Wall type"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Wipe tower outer wall type.\n"
 "1. Rectangle: A rectangle with fixed width and height.\n"
@@ -21737,6 +22579,12 @@ msgid ""
 "3. Rib: The default wall type, which adds four ribs to the tower wall for "
 "enhanced stability."
 msgstr ""
+"Wipe tower outer wall type.\n"
+"1. Rectangle: A rectangle with fixed width and height.\n"
+"2. Cone: A cone with a fillet at the bottom to help stabilise the wipe "
+"tower.\n"
+"3. Rib: The default wall type, which adds four ribs to the tower wall for "
+"enhanced stability."
 
 msgid "Rectangle"
 msgstr ""
@@ -21788,10 +22636,13 @@ msgstr ""
 msgid "Enable tower interface features"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Enable optimized prime tower interface behavior when different materials "
 "meet."
 msgstr ""
+"Enable optimised prime tower interface behaviour when different materials "
+"meet."
 
 msgid "Cool down from interface boost during prime tower"
 msgstr ""
@@ -21808,12 +22659,17 @@ msgstr ""
 msgid "Infill gap."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Purging after filament change will be done inside objects' infills. This may "
 "lower the amount of waste and decrease the print time. If the walls are "
 "printed with transparent filament, the mixed color infill will be visible. "
 "It will not take effect unless the prime tower is enabled."
 msgstr ""
+"Purging after filament change will be done inside objects' infills. This may "
+"lower the amount of waste and decrease the print time. If the walls are "
+"printed with transparent filament, the mixed colour infill will be visible. "
+"It will not take effect unless the prime tower is enabled."
 
 msgid ""
 "Purging after filament change will be done inside objects' support. This may "
@@ -21821,11 +22677,15 @@ msgid ""
 "effect unless a prime tower is enabled."
 msgstr ""
 
+# AI Translated
 msgid ""
 "This object will be used to purge the nozzle after a filament change to save "
 "filament and decrease the print time. Colors of the objects will be mixed as "
 "a result. It will not take effect unless the prime tower is enabled."
 msgstr ""
+"This object will be used to purge the nozzle after a filament change to save "
+"filament and decrease the print time. Colours of the objects will be mixed "
+"as a result. It will not take effect unless the prime tower is enabled."
 
 msgid "Belt purge tower object"
 msgstr ""
@@ -21983,6 +22843,7 @@ msgstr ""
 msgid "Wall transitioning threshold angle"
 msgstr ""
 
+# AI Translated
 msgid ""
 "When to create transitions between even and odd numbers of walls. A wedge "
 "shape with an angle greater than this setting will not have transitions and "
@@ -21990,14 +22851,22 @@ msgid ""
 "this setting reduces the number and length of these center walls, but may "
 "leave gaps or overextrude."
 msgstr ""
+"When to create transitions between even and odd numbers of walls. A wedge "
+"shape with an angle greater than this setting will not have transitions and "
+"no walls will be printed in the centre to fill the remaining space. Reducing "
+"this setting reduces the number and length of these centre walls, but may "
+"leave gaps or overextrude."
 
 msgid "Wall distribution count"
 msgstr ""
 
+# AI Translated
 msgid ""
 "The number of walls, counted from the center, over which the variation needs "
 "to be spread. Lower values mean that the outer walls don't change in width."
 msgstr ""
+"The number of walls, counted from the centre, over which the variation needs "
+"to be spread. Lower values mean that the outer walls don't change in width."
 
 msgid "Minimum feature size"
 msgstr ""
@@ -22072,10 +22941,13 @@ msgstr ""
 msgid "Hotend change"
 msgstr ""
 
+# AI Translated
 msgid ""
 "When changing the hotend, it is recommended to extrude a certain length of "
 "filament from the original nozzle. This helps minimize nozzle oozing."
 msgstr ""
+"When changing the hotend, it is recommended to extrude a certain length of "
+"filament from the original nozzle. This helps minimise nozzle oozing."
 
 msgid "Extruder change"
 msgstr ""
@@ -22121,10 +22993,13 @@ msgstr ""
 msgid "Support fast purge mode"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Whether this printer supports fast purge mode with optimized temperature and "
 "multiplier."
 msgstr ""
+"Whether this printer supports fast purge mode with optimised temperature and "
+"multiplier."
 
 msgid "Filament change"
 msgstr ""
@@ -22275,22 +23150,32 @@ msgstr ""
 msgid "Inspect mesh (JSON to stdout)"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Print a JSON summary of each loaded object to stdout, then exit: its "
 "bounding boxes and the convex hull faces it can be laid on, with their "
 "normals, areas and centers. These are the faces the --ground-* options "
 "choose from. Machine-readable alternative to --info."
 msgstr ""
+"Print a JSON summary of each loaded object to stdout, then exit: its "
+"bounding boxes and the convex hull faces it can be laid on, with their "
+"normals, areas and centres. These are the faces the --ground-* options "
+"choose from. Machine-readable alternative to --info."
 
 msgid "Inspect paint (JSON to stdout)"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Print a structured JSON summary of every painted layer (supports, seam, MMU "
 "color, fuzzy-skin) already stored on the loaded model — per-state facet "
 "count, surface area, and mesh-local bounding box — then exit. "
 "Machine-readable alternative to opening the paint gizmos in the GUI."
 msgstr ""
+"Print a structured JSON summary of every painted layer (supports, seam, MMU "
+"colour, fuzzy-skin) already stored on the loaded model — per-state facet "
+"count, surface area, and mesh-local bounding box — then exit. "
+"Machine-readable alternative to opening the paint gizmos in the GUI."
 
 msgid "Export Settings"
 msgstr ""
@@ -22390,6 +23275,7 @@ msgstr ""
 msgid "Ground face at point"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Lay each object on the convex hull face that contains the point X,Y,Z and "
 "drop it onto the bed. The point is in object coordinates, which include the "
@@ -22398,6 +23284,12 @@ msgid ""
 "no object has one. --orient 1 runs after all transforms and replaces the "
 "orientation."
 msgstr ""
+"Lay each object on the convex hull face that contains the point X,Y,Z and "
+"drop it onto the bed. The point is in object coordinates, which include the "
+"rotations given before this option; --inspect-mesh reports face centres in "
+"them. Objects without such a face are left as they are, and the run fails if "
+"no object has one. --orient 1 runs after all transforms and replaces the "
+"orientation."
 
 msgid "Scale the model by a float factor."
 msgstr ""
@@ -22518,11 +23410,13 @@ msgstr ""
 msgid "Load filament IDs for each object."
 msgstr ""
 
+# AI Translated
 msgid "Allow multiple colors on one plate"
-msgstr ""
+msgstr "Allow multiple colours on one plate"
 
+# AI Translated
 msgid "If enabled, Arrange will allow multiple colors on one plate."
-msgstr ""
+msgstr "If enabled, Arrange will allow multiple colours on one plate."
 
 msgid "Allow rotation when arranging"
 msgstr ""
@@ -22849,13 +23743,17 @@ msgid ""
 "value during post-processing."
 msgstr ""
 
+# AI Translated
 msgid "Filament length (meters)"
-msgstr ""
+msgstr "Filament length (metres)"
 
+# AI Translated
 msgid ""
 "Total filament length used in meters. Replaced with actual value during "
 "post-processing."
 msgstr ""
+"Total filament length used in metres. Replaced with actual value during "
+"post-processing."
 
 msgid "Number of objects"
 msgstr ""
@@ -22929,8 +23827,9 @@ msgstr ""
 msgid "Size of the print bed bounding box"
 msgstr ""
 
+# AI Translated
 msgid "First layer center without wipe tower"
-msgstr ""
+msgstr "First layer centre without wipe tower"
 
 msgid "Height of the first layer."
 msgstr ""
@@ -23582,8 +24481,9 @@ msgstr ""
 msgid "Generating support"
 msgstr ""
 
+# AI Translated
 msgid "Optimizing toolpath"
-msgstr ""
+msgstr "Optimising toolpath"
 
 msgid "Slicing mesh"
 msgstr ""
@@ -23593,11 +24493,15 @@ msgid ""
 "size or thickness and retry.\n"
 msgstr ""
 
+# AI Translated
 msgid ""
 "An object's XY size compensation will not be used because it is also "
 "color-painted.\n"
 "XY Size compensation cannot be combined with color-painting."
 msgstr ""
+"An object's XY size compensation will not be used because it is also "
+"colour-painted.\n"
+"XY Size compensation cannot be combined with colour-painting."
 
 msgid ""
 "An object has enabled XY Size compensation which will not be used because it "
@@ -23783,10 +24687,13 @@ msgstr ""
 msgid "Cannot assign a vector value to a scalar variable."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Cannot create vector variable from an empty initializer list, because its "
 "type cannot be deduced."
 msgstr ""
+"Cannot create vector variable from an empty initialiser list, because its "
+"type cannot be deduced."
 
 msgid "Right side is not valid: Mixing numeric and boolean types."
 msgstr ""
@@ -24128,6 +25035,7 @@ msgstr ""
 msgid "About this calibration"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Please find the details of Flow Dynamics Calibration from our wiki.\n"
 "\n"
@@ -24147,6 +25055,23 @@ msgid ""
 "cause the result not exactly the same in each calibration. We are still "
 "investigating the root cause to do improvements with new updates."
 msgstr ""
+"Please find the details of Flow Dynamics Calibration from our wiki.\n"
+"\n"
+"Usually the calibration is unnecessary. When you start a single "
+"colour/material print, with the \"flow dynamics calibration\" option checked "
+"in the print start menu, the printer will follow the old way, calibrate the "
+"filament before the print; When you start a multi colour/material print, the "
+"printer will use the default compensation parameter for the filament during "
+"every filament switch which will have a good result in most cases.\n"
+"\n"
+"Please note that there are a few cases that can make the calibration results "
+"unreliable, such as insufficient adhesion on the build plate. Improving "
+"adhesion can be achieved by washing the build plate or applying glue. For "
+"more information on this topic, please refer to our Wiki.\n"
+"\n"
+"The calibration results have about 10 percent jitter in our test, which may "
+"cause the result not exactly the same in each calibration. We are still "
+"investigating the root cause to do improvements with new updates."
 
 msgid "When to use Flow Rate Calibration"
 msgstr ""
@@ -24178,6 +25103,7 @@ msgid ""
 "more details, please check out the wiki article."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Auto Flow Rate Calibration utilizes Bambu Lab's Micro-Lidar technology, "
 "directly measuring the calibration patterns. However, please be advised that "
@@ -24196,6 +25122,22 @@ msgid ""
 "can lead to sub-par prints or printer damage. Please make sure to carefully "
 "read and understand the process before doing it."
 msgstr ""
+"Auto Flow Rate Calibration utilises Bambu Lab's Micro-Lidar technology, "
+"directly measuring the calibration patterns. However, please be advised that "
+"the efficacy and accuracy of this method may be compromised with specific "
+"types of materials. Particularly, filaments that are transparent or "
+"semi-transparent, have sparkles, or have a highly-reflective finish may not "
+"be suitable for this calibration and can produce less-than-desirable "
+"results.\n"
+"\n"
+"The calibration results may vary between each calibration or filament. We "
+"are still improving the accuracy and compatibility of this calibration "
+"through firmware updates over time.\n"
+"\n"
+"Caution: Flow Rate Calibration is an advanced process, to be attempted only "
+"by those who fully understand its purpose and implications. Incorrect usage "
+"can lead to sub-par prints or printer damage. Please make sure to carefully "
+"read and understand the process before doing it."
 
 msgid "When you need Max Volumetric Speed Calibration"
 msgstr ""
@@ -24324,11 +25266,13 @@ msgstr ""
 msgid "- ℃"
 msgstr ""
 
+# AI Translated
 msgid "Synchronize nozzle and AMS information"
-msgstr ""
+msgstr "Synchronise nozzle and AMS information"
 
+# AI Translated
 msgid "Please connect the printer first before synchronizing."
-msgstr ""
+msgstr "Please connect the printer first before synchronising."
 
 msgid ""
 "Printer right nozzle information has not been set. Please configure it "
@@ -24399,8 +25343,9 @@ msgstr ""
 msgid "Step value"
 msgstr ""
 
+# AI Translated
 msgid "The nozzle diameter has been synchronized from the printer Settings"
-msgstr ""
+msgstr "The nozzle diameter has been synchronised from the printer Settings"
 
 msgid "From Volumetric Speed"
 msgstr ""
@@ -24851,8 +25796,9 @@ msgstr ""
 msgid "Top Surface Pattern"
 msgstr ""
 
+# AI Translated
 msgid "Choose a slot for the selected color"
-msgstr ""
+msgstr "Choose a slot for the selected colour"
 
 msgid "Material in the material station"
 msgstr ""
@@ -24882,8 +25828,9 @@ msgstr ""
 msgid "Upload"
 msgstr ""
 
+# AI Translated
 msgid "Leveling before print"
-msgstr ""
+msgstr "Levelling before print"
 
 msgid "Time-lapse"
 msgstr ""
@@ -24957,8 +25904,9 @@ msgstr ""
 msgid "Uploading"
 msgstr ""
 
+# AI Translated
 msgid "Canceling"
-msgstr ""
+msgstr "Cancelling"
 
 msgid "Error uploading to print host"
 msgstr ""
@@ -24968,8 +25916,9 @@ msgid ""
 "starting the print."
 msgstr ""
 
+# AI Translated
 msgid "Heated Bed Leveling"
-msgstr ""
+msgstr "Heated Bed Levelling"
 
 msgid "Textured Build Plate (Side A)"
 msgstr ""
@@ -25388,6 +26337,7 @@ msgid ""
 "set them carefully."
 msgstr ""
 
+# AI Translated
 msgid ""
 "\n"
 "\n"
@@ -25396,6 +26346,12 @@ msgid ""
 "page.\n"
 "Click \"Sync user presets\" to enable the synchronization function."
 msgstr ""
+"\n"
+"\n"
+"Orca has detected that your user presets synchronisation function is not "
+"enabled, which may result in unsuccessful Filament settings on the Device "
+"page.\n"
+"Click \"Sync user presets\" to enable the synchronisation function."
 
 msgid "Printer Setting"
 msgstr ""
@@ -25415,8 +26371,9 @@ msgstr ""
 msgid "Process presets(.zip)"
 msgstr ""
 
+# AI Translated
 msgid "initialize fail"
-msgstr ""
+msgstr "initialise fail"
 
 msgid "add file fail"
 msgstr ""
@@ -25424,8 +26381,9 @@ msgstr ""
 msgid "add bundle structure file fail"
 msgstr ""
 
+# AI Translated
 msgid "finalize fail"
-msgstr ""
+msgstr "finalise fail"
 
 msgid "open zip written fail"
 msgstr ""
@@ -25647,10 +26605,13 @@ msgstr ""
 msgid "Generate API Key"
 msgstr ""
 
+# AI Translated
 msgid ""
 "API Key created. Go to the physical printer and hit \"authorize\" on the "
 "screen, then run \"Test\" again."
 msgstr ""
+"API Key created. Go to the physical printer and hit \"authorise\" on the "
+"screen, then run \"Test\" again."
 
 msgid "API Key created."
 msgstr ""
@@ -25852,8 +26813,9 @@ msgstr ""
 msgid "Printer type not found, please select manually."
 msgstr ""
 
+# AI Translated
 msgid "Authorizing..."
-msgstr ""
+msgstr "Authorising..."
 
 msgid "Maximum login retries exceeded"
 msgstr ""
@@ -25866,8 +26828,9 @@ msgstr ""
 msgid "Could not parse server response."
 msgstr ""
 
+# AI Translated
 msgid "Error. Can't get API token for authorization"
-msgstr ""
+msgstr "Error. Can't get API token for authorisation"
 
 msgid "Error saving session to file"
 msgstr ""
@@ -26206,10 +27169,13 @@ msgstr ""
 msgid "Removed"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Enable smart filament assign: Assign one filament to multiple nozzles to "
 "maximize savings"
 msgstr ""
+"Enable smart filament assign: Assign one filament to multiple nozzles to "
+"maximise savings"
 
 msgid "File Saving"
 msgstr ""
@@ -26226,10 +27192,13 @@ msgstr ""
 msgid "Custom Mode"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Generates filament grouping for the left and right nozzles based on the most "
 "filament-saving principles to minimize waste."
 msgstr ""
+"Generates filament grouping for the left and right nozzles based on the most "
+"filament-saving principles to minimise waste."
 
 msgid ""
 "Generates filament grouping for the left and right nozzles based on the "
@@ -26439,14 +27408,17 @@ msgstr ""
 msgid "The provided state is not correct."
 msgstr ""
 
+# AI Translated
 msgid "Please give the required permissions when authorizing this application."
 msgstr ""
+"Please give the required permissions when authorising this application."
 
 msgid "Something unexpected happened when trying to log in, please try again."
 msgstr ""
 
+# AI Translated
 msgid "User canceled."
-msgstr ""
+msgstr "User cancelled."
 
 msgid "Max angle"
 msgstr ""
@@ -26548,17 +27520,20 @@ msgstr ""
 msgid "Select Filament"
 msgstr ""
 
+# AI Translated
 msgid "Null Color"
-msgstr ""
+msgstr "Null Colour"
 
+# AI Translated
 msgid "Multiple Color"
-msgstr ""
+msgstr "Multiple Colour"
 
 msgid "Official Filament"
 msgstr ""
 
+# AI Translated
 msgid "More Colors"
-msgstr ""
+msgstr "More Colours"
 
 msgid "Network Plug-in Update Available"
 msgstr ""
@@ -26804,8 +27779,9 @@ msgstr ""
 msgid "Update available"
 msgstr ""
 
+# AI Translated
 msgid "Unauthorized bundle"
-msgstr ""
+msgstr "Unauthorised bundle"
 
 msgid "Open this bundle in your browser"
 msgstr ""
@@ -27226,8 +28202,9 @@ msgstr ""
 msgid "Rectangle — click two opposite corners"
 msgstr ""
 
+# AI Translated
 msgid "Circle — click center, then radius"
-msgstr ""
+msgstr "Circle — click centre, then radius"
 
 msgid "Arc — click start, end, then a point"
 msgstr ""
@@ -27235,8 +28212,9 @@ msgstr ""
 msgid "Slot — two centerline ends, then the width"
 msgstr ""
 
+# AI Translated
 msgid "Ellipse — center, major end, minor point"
-msgstr ""
+msgstr "Ellipse — centre, major end, minor point"
 
 msgid "Spline — click control points"
 msgstr ""
@@ -27265,8 +28243,9 @@ msgstr ""
 msgid "Chamfer — pick two lines, set the distance"
 msgstr ""
 
+# AI Translated
 msgid "Polygon — click center, then a vertex"
-msgstr ""
+msgstr "Polygon — click centre, then a vertex"
 
 msgid ""
 "Nothing here has a value to type — pick a line, an arc, a circle, or two "
@@ -27525,8 +28504,9 @@ msgstr ""
 msgid "Cut — needs a solid body to slice"
 msgstr ""
 
+# AI Translated
 msgid "Color — set the selected body's display color"
-msgstr ""
+msgstr "Colour — set the selected body's display colour"
 
 msgid "Select a feature, or a body, first — then rename it"
 msgstr ""
@@ -27572,8 +28552,9 @@ msgctxt "Design"
 msgid "Hole"
 msgstr ""
 
+# AI Translated
 msgid "Drill a hole, centered on a picked face or placed on a plane"
-msgstr ""
+msgstr "Drill a hole, centred on a picked face or placed on a plane"
 
 msgid "Pick a face or a plane to drill into"
 msgstr ""
@@ -27627,11 +28608,13 @@ msgstr ""
 msgid "Click two opposite corners"
 msgstr ""
 
+# AI Translated
 msgid "Center rectangle"
-msgstr ""
+msgstr "Centre rectangle"
 
+# AI Translated
 msgid "Click center, then a corner"
-msgstr ""
+msgstr "Click centre, then a corner"
 
 msgid "Oblique rectangle"
 msgstr ""
@@ -27645,11 +28628,13 @@ msgstr ""
 msgid "Click two opposite corners, then a point for the corner radius"
 msgstr ""
 
+# AI Translated
 msgid "Center circle"
-msgstr ""
+msgstr "Centre circle"
 
+# AI Translated
 msgid "Click center, then radius"
-msgstr ""
+msgstr "Click centre, then radius"
 
 msgid "2-point circle"
 msgstr ""
@@ -27678,11 +28663,13 @@ msgstr ""
 msgid "Click start (on the last entity) then end"
 msgstr ""
 
+# AI Translated
 msgid "Center-point arc"
-msgstr ""
+msgstr "Centre-point arc"
 
+# AI Translated
 msgid "Click center, then start, then a point for the end angle"
-msgstr ""
+msgstr "Click centre, then start, then a point for the end angle"
 
 msgid "Slot"
 msgstr ""
@@ -27693,20 +28680,23 @@ msgstr ""
 msgid "Arc slot"
 msgstr ""
 
+# AI Translated
 msgid "Click center, start, end, then a point for the width"
-msgstr ""
+msgstr "Click centre, start, end, then a point for the width"
 
 msgid "Ellipse"
 msgstr ""
 
+# AI Translated
 msgid "Click center, a major-axis end, then a point for the minor axis"
-msgstr ""
+msgstr "Click centre, a major-axis end, then a point for the minor axis"
 
 msgid "Elliptical arc"
 msgstr ""
 
+# AI Translated
 msgid "Click center, major-axis end, minor point, then arc start and end"
-msgstr ""
+msgstr "Click centre, major-axis end, minor point, then arc start and end"
 
 msgid "Spline"
 msgstr ""
@@ -27814,17 +28804,19 @@ msgid ""
 "Pick entities, drag the sweep handle, click the count; click empty to apply"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Click center then a vertex — %d side, circumscribed"
 msgid_plural "Click center then a vertex — %d sides, circumscribed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Click centre then a vertex — %d side, circumscribed"
+msgstr[1] "Click centre then a vertex — %d sides, circumscribed"
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Click center then a vertex — %d side, inscribed"
 msgid_plural "Click center then a vertex — %d sides, inscribed"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Click centre then a vertex — %d side, inscribed"
+msgstr[1] "Click centre then a vertex — %d sides, inscribed"
 
 msgid "Polygon"
 msgstr ""
@@ -28154,10 +29146,13 @@ msgstr ""
 msgid "Insert"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Drag a corner to size, the center to move.\n"
 "Confirm or Cancel in the toolbar above."
 msgstr ""
+"Drag a corner to size, the centre to move.\n"
+"Confirm or Cancel in the toolbar above."
 
 msgid "Midplane"
 msgstr ""
@@ -28696,8 +29691,9 @@ msgstr ""
 msgid "Text unchanged"
 msgstr ""
 
+# AI Translated
 msgid "Text canceled"
-msgstr ""
+msgstr "Text cancelled"
 
 msgid "Import SVG"
 msgstr ""
@@ -28809,13 +29805,17 @@ msgstr ""
 msgid "%s — drag to place/size, then Confirm"
 msgstr ""
 
+# AI Translated
 msgid "Insert canceled"
-msgstr ""
+msgstr "Insert cancelled"
 
+# AI Translated
 msgid ""
 "Drag a corner to scale, the center to move — Enter or ✓ when done, Esc to "
 "discard"
 msgstr ""
+"Drag a corner to scale, the centre to move — Enter or ✓ when done, Esc to "
+"discard"
 
 #, possible-c-format, possible-boost-format
 msgid "Sketch added (plane: %s) — select it, then right-click to Extrude"
@@ -28984,10 +29984,13 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+# AI Translated
 msgid ""
 "Select — click an entity to pick it  ·  drag an endpoint or center to move "
 "it  ·  Shift-click adds  ·  Del removes"
 msgstr ""
+"Select — click an entity to pick it  ·  drag an endpoint or centre to move "
+"it  ·  Shift-click adds  ·  Del removes"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29026,11 +30029,13 @@ msgstr ""
 msgid "Rectangle — click the opposite corner"
 msgstr ""
 
+# AI Translated
 msgid "Center rectangle — click the center"
-msgstr ""
+msgstr "Centre rectangle — click the centre"
 
+# AI Translated
 msgid "Center rectangle — click a corner"
-msgstr ""
+msgstr "Centre rectangle — click a corner"
 
 msgid "Oblique rectangle — click the start of the base edge"
 msgstr ""
@@ -29051,8 +30056,9 @@ msgstr ""
 msgid "Rounded rectangle — click to set the corner radius"
 msgstr ""
 
+# AI Translated
 msgid "Circle — click the center"
-msgstr ""
+msgstr "Circle — click the centre"
 
 msgid "Circle — click to set the radius; it can then be typed"
 msgstr ""
@@ -29087,14 +30093,17 @@ msgstr ""
 msgid "Tangent arc — click its far end"
 msgstr ""
 
+# AI Translated
 msgid "Center arc — click the center"
-msgstr ""
+msgstr "Centre arc — click the centre"
 
+# AI Translated
 msgid "Center arc — click the start point (this sets the radius)"
-msgstr ""
+msgstr "Centre arc — click the start point (this sets the radius)"
 
+# AI Translated
 msgid "Center arc — click the end point"
-msgstr ""
+msgstr "Centre arc — click the end point"
 
 msgid "Slot — click one end of the centerline"
 msgstr ""
@@ -29105,8 +30114,9 @@ msgstr ""
 msgid "Slot — click to set the width"
 msgstr ""
 
+# AI Translated
 msgid "Arc slot — click the center the slot curves about"
-msgstr ""
+msgstr "Arc slot — click the centre the slot curves about"
 
 msgid "Arc slot — click the start of the centerline (this sets the radius)"
 msgstr ""
@@ -29117,14 +30127,16 @@ msgstr ""
 msgid "Arc slot — click to set the width"
 msgstr ""
 
+# AI Translated
 msgid "Polygon — click the center"
-msgstr ""
+msgstr "Polygon — click the centre"
 
 msgid "Polygon — click a vertex (this sets size and orientation)"
 msgstr ""
 
+# AI Translated
 msgid "Ellipse — click the center"
-msgstr ""
+msgstr "Ellipse — click the centre"
 
 msgid "Ellipse — click the end of the major axis"
 msgstr ""
@@ -29132,8 +30144,9 @@ msgstr ""
 msgid "Ellipse — click a point on the minor axis"
 msgstr ""
 
+# AI Translated
 msgid "Elliptical arc — click the center"
-msgstr ""
+msgstr "Elliptical arc — click the centre"
 
 msgid "Elliptical arc — click the end of the major axis"
 msgstr ""
@@ -29253,10 +30266,13 @@ msgid ""
 "·  Enter applies"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Drag a corner to scale, the center to move  ·  Enter or ✓ when done, Esc to "
 "discard"
 msgstr ""
+"Drag a corner to scale, the centre to move  ·  Enter or ✓ when done, Esc to "
+"discard"
 
 msgid "  ·  Esc goes back to Select"
 msgstr ""
@@ -29447,9 +30463,10 @@ msgstr ""
 msgid "Select a body first"
 msgstr ""
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Body %d color set"
-msgstr ""
+msgstr "Body %d colour set"
 
 msgid "Click a face on the solid, then press F"
 msgstr ""
@@ -29878,8 +30895,9 @@ msgstr ""
 msgid "Face %d (push/pull)"
 msgstr ""
 
+# AI Translated
 msgid "Move canceled"
-msgstr ""
+msgstr "Move cancelled"
 
 msgid "Discard this sketch and everything drawn in it?"
 msgstr ""
@@ -30312,12 +31330,14 @@ msgctxt "Design"
 msgid "Delete Face"
 msgstr ""
 
+# AI Translated
 msgctxt "Design"
 msgid "Color"
-msgstr ""
+msgstr "Colour"
 
+# AI Translated
 msgid "Set the selected body's display color"
-msgstr ""
+msgstr "Set the selected body's display colour"
 
 msgctxt "Design"
 msgid "Zoom to selection"
@@ -30357,9 +31377,10 @@ msgctxt "Design"
 msgid "Rectangle"
 msgstr ""
 
+# AI Translated
 msgctxt "Design"
 msgid "Center rectangle"
-msgstr ""
+msgstr "Centre rectangle"
 
 msgctxt "Design"
 msgid "Oblique rectangle"
@@ -30369,9 +31390,10 @@ msgctxt "Design"
 msgid "Rounded rectangle"
 msgstr ""
 
+# AI Translated
 msgctxt "Design"
 msgid "Center circle"
-msgstr ""
+msgstr "Centre circle"
 
 msgctxt "Design"
 msgid "Circle"
@@ -30397,9 +31419,10 @@ msgctxt "Design"
 msgid "Tangent arc"
 msgstr ""
 
+# AI Translated
 msgctxt "Design"
 msgid "Center-point arc"
-msgstr ""
+msgstr "Centre-point arc"
 
 msgctxt "Design"
 msgid "Slot"
@@ -30429,43 +31452,49 @@ msgctxt "Design"
 msgid "Polygon"
 msgstr ""
 
+# AI Translated
 msgid "Triangle — click center, then a vertex"
-msgstr ""
+msgstr "Triangle — click centre, then a vertex"
 
 msgctxt "Design"
 msgid "Square"
 msgstr ""
 
+# AI Translated
 msgid "Square — click center, then a vertex"
-msgstr ""
+msgstr "Square — click centre, then a vertex"
 
 msgctxt "Design"
 msgid "Pentagon"
 msgstr ""
 
+# AI Translated
 msgid "Pentagon — click center, then a vertex"
-msgstr ""
+msgstr "Pentagon — click centre, then a vertex"
 
 msgctxt "Design"
 msgid "Hexagon"
 msgstr ""
 
+# AI Translated
 msgid "Hexagon — click center, then a vertex"
-msgstr ""
+msgstr "Hexagon — click centre, then a vertex"
 
 msgctxt "Design"
 msgid "Octagon"
 msgstr ""
 
+# AI Translated
 msgid "Octagon — click center, then a vertex"
-msgstr ""
+msgstr "Octagon — click centre, then a vertex"
 
 msgctxt "Design"
 msgid "Dodecagon"
 msgstr ""
 
+# AI Translated
 msgid "Dodecagon — click center, then a vertex"
-msgstr ""
+msgstr "Dodecagon — click centre, then a vertex"
 
 msgctxt "Design"
 msgid "Inscribed"
@@ -31476,11 +32505,13 @@ msgstr ""
 msgid "Standard Mode Recommendations"
 msgstr ""
 
+# AI Translated
 msgid "Target Color"
-msgstr ""
+msgstr "Target Colour"
 
+# AI Translated
 msgid "Select Color Decomposition"
-msgstr ""
+msgstr "Select Colour Decomposition"
 
 msgid "Arbitrary Mode"
 msgstr ""
@@ -31496,6 +32527,7 @@ msgid ""
 "decomposition"
 msgstr ""
 
+# AI Translated
 #, possible-boost-format
 msgid ""
 "The material list supports at most %1% color. After Material List "
@@ -31506,8 +32538,15 @@ msgid_plural ""
 "decomposition, the material count would exceed %1%. Please delete unused "
 "filaments on the main screen before decomposing."
 msgstr[0] ""
+"The material list supports at most %1% colour. After Material List "
+"decomposition, the material count would exceed %1%. Please delete unused "
+"filaments on the main screen before decomposing."
 msgstr[1] ""
+"The material list supports at most %1% colours. After Material List "
+"decomposition, the material count would exceed %1%. Please delete unused "
+"filaments on the main screen before decomposing."
 
+# AI Translated
 #. TRN %2% is the decomposition mode name, "CMYW" or "RYBW"
 #, possible-boost-format
 msgid ""
@@ -31519,7 +32558,13 @@ msgid_plural ""
 "material count would exceed %1%. Please delete unused filaments on the main "
 "screen before decomposing."
 msgstr[0] ""
+"The material list supports at most %1% colour. After %2% decomposition, the "
+"material count would exceed %1%. Please delete unused filaments on the main "
+"screen before decomposing."
 msgstr[1] ""
+"The material list supports at most %1% colours. After %2% decomposition, the "
+"material count would exceed %1%. Please delete unused filaments on the main "
+"screen before decomposing."
 
 msgid "Cyan"
 msgstr ""
@@ -31561,11 +32606,13 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
+# AI Translated
 msgid "Color Picker"
-msgstr ""
+msgstr "Colour Picker"
 
+# AI Translated
 msgid "Basic Colors"
-msgstr ""
+msgstr "Basic Colours"
 
 #. TRN: Keep the brand name "Orca" unchanged; translate only the palette descriptor.
 msgid "Orca Palette"
@@ -31591,42 +32638,52 @@ msgstr ""
 msgid "Gradient end"
 msgstr ""
 
+# AI Translated
 msgid "Gradient color"
-msgstr ""
+msgstr "Gradient colour"
 
+# AI Translated
 msgid "Add color"
-msgstr ""
+msgstr "Add colour"
 
+# AI Translated
 msgid "Remove color"
-msgstr ""
+msgstr "Remove colour"
 
 msgid "Saturation"
 msgstr ""
 
+# AI Translated
 msgid "Original color"
-msgstr ""
+msgstr "Original colour"
 
+# AI Translated
 #. TRN: Clicking the current color preview adds it to the saved favorites.
 msgid "Save current color"
-msgstr ""
+msgstr "Save current colour"
 
 msgid "Palettes"
 msgstr ""
 
+# AI Translated
 msgid "Pick color from screen"
-msgstr ""
+msgstr "Pick colour from screen"
 
+# AI Translated
 msgid "Search colors"
-msgstr ""
+msgstr "Search colours"
 
+# AI Translated
 msgid "Filter colors"
-msgstr ""
+msgstr "Filter colours"
 
+# AI Translated
 msgid "No matching colors"
-msgstr ""
+msgstr "No matching colours"
 
+# AI Translated
 msgid "Hex color"
-msgstr ""
+msgstr "Hex colour"
 
 msgid "Opacity"
 msgstr ""
@@ -31634,19 +32691,25 @@ msgstr ""
 msgid "Opacity percent"
 msgstr ""
 
+# AI Translated
 msgid "Save color"
-msgstr ""
+msgstr "Save colour"
 
+# AI Translated
 msgid "Enter a complete hexadecimal color"
-msgstr ""
+msgstr "Enter a complete hexadecimal colour"
 
+# AI Translated
 msgid ""
 "The current multi-color selection is kept until you choose a different color."
 msgstr ""
+"The current multi-colour selection is kept until you choose a different "
+"colour."
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid "Up to %d colors supported."
-msgstr ""
+msgstr "Up to %d colours supported."
 
 msgid "Crimson"
 msgstr ""
@@ -31864,14 +32927,17 @@ msgstr ""
 msgid "Teal"
 msgstr ""
 
+# AI Translated
 msgid "Dark slate gray"
-msgstr ""
+msgstr "Dark slate grey"
 
+# AI Translated
 msgid "Light slate gray"
-msgstr ""
+msgstr "Light slate grey"
 
+# AI Translated
 msgid "Slate gray"
-msgstr ""
+msgstr "Slate grey"
 
 msgid "Deep sky blue"
 msgstr ""
@@ -32161,8 +33227,9 @@ msgstr ""
 msgid "Seashell white"
 msgstr ""
 
+# AI Translated
 msgid "Pebble gray"
-msgstr ""
+msgstr "Pebble grey"
 
 msgid "Storm cloud"
 msgstr ""
@@ -33293,8 +34360,9 @@ msgid ""
 "without altering the image, and is the one to reach for first."
 msgstr ""
 
+# AI Translated
 msgid "This texture is grayscale, so it has no hue to shift."
-msgstr ""
+msgstr "This texture is greyscale, so it has no hue to shift."
 
 msgid ""
 "The model updates when you release a slider. Save as copy writes the "
@@ -33635,6 +34703,7 @@ msgstr ""
 msgid "Midlevel"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Which gray stays where the surface already is. At 0 the texture only pushes "
 "outwards; at 0.5 mid-gray stays put, so darker grays cut in and lighter ones "
@@ -33643,6 +34712,12 @@ msgid ""
 "What cuts in has to fit: inside a sharp corner or through a thin wall, a "
 "deep cut can pass through the other side."
 msgstr ""
+"Which grey stays where the surface already is. At 0 the texture only pushes "
+"outwards; at 0.5 mid-grey stays put, so darker greys cut in and lighter ones "
+"still push out - one image both embosses and engraves.\n"
+"\n"
+"What cuts in has to fit: inside a sharp corner or through a thin wall, a "
+"deep cut can pass through the other side."
 
 msgid "Deep inward displacement may self-intersect."
 msgstr ""
@@ -33674,36 +34749,52 @@ msgid ""
 "round. The same as using a negative of the image."
 msgstr ""
 
+# AI Translated
 msgid "Colors"
-msgstr ""
+msgstr "Colours"
 
+# AI Translated
 msgid ""
 "Prints the painted area in the texture's colors as well as its relief. Each "
 "color is matched to the nearest of your loaded filaments; anything you did "
 "not paint keeps the object's own."
 msgstr ""
+"Prints the painted area in the texture's colours as well as its relief. Each "
+"colour is matched to the nearest of your loaded filaments; anything you did "
+"not paint keeps the object's own."
 
+# AI Translated
 msgid ""
 "This texture is a grayscale height map, so it has no colors to apply. Import "
 "a color image to use this."
 msgstr ""
+"This texture is a greyscale height map, so it has no colours to apply. "
+"Import a colour image to use this."
 
 msgid "Mix filaments"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Interleaves two filaments to fake the colors in between, so a handful of "
 "filaments can cover a photo or a gradient. An image of flat colors prints "
 "the same either way. Off uses one filament per area."
 msgstr ""
+"Interleaves two filaments to fake the colours in between, so a handful of "
+"filaments can cover a photo or a gradient. An image of flat colours prints "
+"the same either way. Off uses one filament per area."
 
+# AI Translated
 msgid "Mixed colors"
-msgstr ""
+msgstr "Mixed colours"
 
+# AI Translated
 msgid ""
 "The most mixed filaments a bake may add. They are picked from the texture's "
 "colors, and only the ones the bake actually uses are created."
 msgstr ""
+"The most mixed filaments a bake may add. They are picked from the texture's "
+"colours, and only the ones the bake actually uses are created."
 
 msgid "Few"
 msgstr ""
@@ -33718,21 +34809,26 @@ msgid_plural "from %1% filaments"
 msgstr[0] ""
 msgstr[1] ""
 
+# AI Translated
 #. TRN %1% is the number of printable colors, %2% is "from N filaments".
 #, possible-boost-format
 msgid "%1% printable color %2%"
 msgid_plural "%1% printable colors %2%"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1% printable colour %2%"
+msgstr[1] "%1% printable colours %2%"
 
 msgid "Denoise"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Cleans up single stray triangles of the wrong color, which detail finer than "
 "the mesh leaves behind. Raise it if the result looks speckled, lower it if "
 "small features are being swallowed."
 msgstr ""
+"Cleans up single stray triangles of the wrong colour, which detail finer "
+"than the mesh leaves behind. Raise it if the result looks speckled, lower it "
+"if small features are being swallowed."
 
 msgctxt "Texture Displacement"
 msgid "Mapping"
@@ -33746,18 +34842,24 @@ msgid ""
 "between them, so a patch wrapping around a sharp edge has no seam."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Cylindrical - wraps the texture around the painted area's own center, for "
 "round shapes."
 msgstr ""
+"Cylindrical - wraps the texture around the painted area's own centre, for "
+"round shapes."
 
 msgid "Spherical"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Spherical - wraps the texture around the painted area's own center in both "
 "directions."
 msgstr ""
+"Spherical - wraps the texture around the painted area's own centre in both "
+"directions."
 
 msgid "Unwrap (LSCM)"
 msgstr ""
@@ -33998,15 +35100,21 @@ msgid ""
 "triangles along the outline. 0 turns it off."
 msgstr ""
 
+# AI Translated
 msgid "Color detail"
-msgstr ""
+msgstr "Colour detail"
 
+# AI Translated
 msgid ""
 "Triangle size where two colors meet. Each triangle prints in one filament, "
 "so a color edge can only be as sharp as the triangles along it - and nothing "
 "else refines there, since the surface is flat across a change of color. 0 "
 "turns it off."
 msgstr ""
+"Triangle size where two colours meet. Each triangle prints in one filament, "
+"so a colour edge can only be as sharp as the triangles along it - and "
+"nothing else refines there, since the surface is flat across a change of "
+"colour. 0 turns it off."
 
 msgid "Triangle budget: set with Triangles, below."
 msgstr ""
@@ -34148,6 +35256,7 @@ msgstr ""
 msgid "Experimental: classic bake pipeline"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Bake by moving the vertices the mesh already has, after preparing it "
 "(remesh, adaptive subdivision, and a cut along sharp steps in the texture). "
@@ -34155,6 +35264,11 @@ msgid ""
 "refines, cleans up sliver triangles, displaces and simplifies in one run; "
 "nothing needs preparing first, but it does not produce colors yet."
 msgstr ""
+"Bake by moving the vertices the mesh already has, after preparing it "
+"(remesh, adaptive subdivision, and a cut along sharp steps in the texture). "
+"Keeps the topology, which is what colours need. The default pipeline instead "
+"refines, cleans up sliver triangles, displaces and simplifies in one run; "
+"nothing needs preparing first, but it does not produce colours yet."
 
 msgid "Align mesh to texture edges"
 msgstr ""
@@ -34930,8 +36044,9 @@ msgstr ""
 msgid "Enable %s"
 msgstr ""
 
+# AI Translated
 msgid "Unauthorized for updates"
-msgstr ""
+msgstr "Unauthorised for updates"
 
 msgid "Loading the plugin…"
 msgstr ""
@@ -34980,10 +36095,13 @@ msgstr ""
 msgid "A newer plugin version is available."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Cloud updates are unavailable because this plugin is unauthorized for "
 "updates."
 msgstr ""
+"Cloud updates are unavailable because this plugin is unauthorised for "
+"updates."
 
 #, possible-c-format, possible-boost-format
 msgid "Failed to activate \"%s\"."
@@ -35044,8 +36162,9 @@ msgstr ""
 msgid "Deactivated \"%s\"."
 msgstr ""
 
+# AI Translated
 msgid "Unauthorized cloud plugins cannot be installed."
-msgstr ""
+msgstr "Unauthorised cloud plugins cannot be installed."
 
 msgid "Plugin manifest was not found."
 msgstr ""
@@ -35230,18 +36349,24 @@ msgid ""
 "print quality."
 msgstr ""
 
+# AI Translated
 msgid ""
 "Uses optimized purge temperature, multiplier and stronger extrusion for "
 "faster purging. May cause slight color mixing in some extreme cases."
 msgstr ""
+"Uses optimised purge temperature, multiplier and stronger extrusion for "
+"faster purging. May cause slight colour mixing in some extreme cases."
 
 msgid "Prime Saving"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Reduces prime waste and prints faster. May cause slight color mixing or "
 "small surface defects."
 msgstr ""
+"Reduces prime waste and prints faster. May cause slight colour mixing or "
+"small surface defects."
 
 msgid "Terminal"
 msgstr ""
@@ -35303,29 +36428,37 @@ msgstr ""
 msgid "Original"
 msgstr ""
 
+# AI Translated
 msgid "Multi-Color"
-msgstr ""
+msgstr "Multi-Colour"
 
 msgid "Your input texture model"
 msgstr ""
 
+# AI Translated
 msgid "Processed multi-color model"
-msgstr ""
+msgstr "Processed multi-colour model"
 
+# AI Translated
 msgid "Color Count"
-msgstr ""
+msgstr "Colour Count"
 
 msgid "Smooth Level"
 msgstr ""
 
+# AI Translated
 msgid ""
 "Automatically determine the optimal color count only and recompute filament "
 "mapping"
 msgstr ""
+"Automatically determine the optimal colour count only and recompute filament "
+"mapping"
 
+# AI Translated
 msgid ""
 "Convert texture to painting using the specified color count and smooth level"
 msgstr ""
+"Convert texture to painting using the specified colour count and smooth level"
 
 msgid "Reminder: parameters changed, click Apply to take effect"
 msgstr ""
@@ -35336,8 +36469,9 @@ msgstr ""
 msgid "Reset filament mapping to the state before one-click mixing"
 msgstr ""
 
+# AI Translated
 msgid "Choose the one-click auto-mix mode for texture color import"
-msgstr ""
+msgstr "Choose the one-click auto-mix mode for texture colour import"
 
 msgid "Auto-merge same filament"
 msgstr ""
@@ -35350,14 +36484,16 @@ msgstr ""
 msgid "Skip Matching"
 msgstr ""
 
+# AI Translated
 msgid "Skip filament mapping and import as a single-color model"
-msgstr ""
+msgstr "Skip filament mapping and import as a single-colour model"
 
 msgid "Processing"
 msgstr ""
 
+# AI Translated
 msgid "Computing texture colors..."
-msgstr ""
+msgstr "Computing texture colours..."
 
 msgid "Repairing mesh"
 msgstr ""
@@ -35498,8 +36634,9 @@ msgid ""
 "Checker - a test grid; squares stay square where the unwrap does not stretch"
 msgstr ""
 
+# AI Translated
 msgid "Distortion - color each island by how much the unwrap stretches it"
-msgstr ""
+msgstr "Distortion - colour each island by how much the unwrap stretches it"
 
 msgid "Unwrap"
 msgstr ""
@@ -35948,8 +37085,9 @@ msgstr ""
 msgid "Exporter"
 msgstr ""
 
+# AI Translated
 msgid "Visualization"
-msgstr ""
+msgstr "Visualisation"
 
 msgid "Script"
 msgstr ""
@@ -35983,10 +37121,11 @@ msgstr ""
 msgid "Plugin installation failed: %1%"
 msgstr ""
 
+# AI Translated
 #. TRN %1% is the plugin's cloud ID.
 #, possible-boost-format
 msgid "%1%: installed plugin was not found in the catalog."
-msgstr ""
+msgstr "%1%: installed plugin was not found in the catalogue."
 
 msgid "Cloud plugin key is missing UUID."
 msgstr ""
@@ -36005,8 +37144,9 @@ msgstr ""
 msgid "Failed to fetch the plugin download URL (result %1%)."
 msgstr ""
 
+# AI Translated
 msgid "You are not authorized to download this cloud plugin."
-msgstr ""
+msgstr "You are not authorised to download this cloud plugin."
 
 msgid "No plugin package is available for this operating system."
 msgstr ""
@@ -36115,9 +37255,10 @@ msgstr ""
 msgid "Failed to add .whl dependency to sys.path: %1%"
 msgstr ""
 
+# AI Translated
 #, possible-boost-format
 msgid "Python interpreter not initialized: %1%"
-msgstr ""
+msgstr "Python interpreter not initialised: %1%"
 
 #, possible-boost-format
 msgid "Plugin manifest is invalid: %1%"
@@ -36143,12 +37284,14 @@ msgstr ""
 msgid "Plugin declares duplicate capability '%1%' for type %2%"
 msgstr ""
 
+# AI Translated
 #, possible-boost-format
 msgid "Plugin capability materialization failed: %1%"
-msgstr ""
+msgstr "Plugin capability materialisation failed: %1%"
 
+# AI Translated
 msgid "Plugin capability materialization failed"
-msgstr ""
+msgstr "Plugin capability materialisation failed"
 
 #. TRN on_load is the name of the plugin's startup function; keep it untranslated.
 #, possible-boost-format
@@ -36755,12 +37898,16 @@ msgid ""
 "settings for each object/part?"
 msgstr ""
 
+# AI Translated
 #: resources/data/hints.ini: [hint:Split to Objects/Parts]
 msgid ""
 "Split to Objects/Parts\n"
 "Did you know that you can split a big object into small ones for easy "
 "colorizing or printing?"
 msgstr ""
+"Split to Objects/Parts\n"
+"Did you know that you can split a big object into small ones for easy "
+"colourising or printing?"
 
 #: resources/data/hints.ini: [hint:Subtract a Part]
 msgid ""
@@ -36779,6 +37926,7 @@ msgid ""
 "lower resolution STL. Give it a try!"
 msgstr ""
 
+# AI Translated
 #: resources/data/hints.ini: [hint:Z seam location]
 msgid ""
 "Z seam location\n"
@@ -36786,6 +37934,10 @@ msgid ""
 "paint it on your print, to have it in a less visible location? This improves "
 "the overall look of your model. Check it out!"
 msgstr ""
+"Z seam location\n"
+"Did you know that you can customise the location of the Z seam, and even "
+"paint it on your print, to have it in a less visible location? This improves "
+"the overall look of your model. Check it out!"
 
 #: resources/data/hints.ini: [hint:Fine-tuning for flow rate]
 msgid ""

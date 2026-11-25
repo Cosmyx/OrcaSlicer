@@ -7,6 +7,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# AI Translated
 msgid ""
 "This calibration model works best with infill directions set to 0 degrees. "
 "For optimal calibration results, it is advisable to set both 'Infill "
@@ -14,10 +15,17 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Denne kalibreringsmodellen fungerer best med fyllretningen satt til 0 "
+"grader. For best kalibreringsresultat anbefales det å sette både "
+"«Fyllretning» og «Retning for massivt fyll» til 0.\n"
+"Ja – Endre disse innstillingene automatisk\n"
+"Nei – Ikke endre disse innstillingene for meg"
 
+# AI Translated
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Kalibreringsforslag"
 
+# AI Translated
 #, possible-c-format, possible-boost-format
 msgid ""
 "This calibration model works best with specific infill settings.\n"
@@ -29,39 +37,62 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Denne kalibreringsmodellen fungerer best med bestemte fyllinnstillinger.\n"
+"For best kalibreringsresultat anbefales det å sette:\n"
+"- Fyllretning: %.0f°\n"
+"- Retning for massivt fyll: %.0f°\n"
+"- Bare én vegg på første lag: %s\n"
+"\n"
+"Ja – Endre disse innstillingene automatisk\n"
+"Nei – Ikke endre disse innstillingene for meg"
 
+# AI Translated
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Cosmyx 3D-modeller"
 
+# AI Translated
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Kalibreringsmodeller, dobbelt hode"
 
+# AI Translated
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Kalibreringsmodeller, enkelt hode"
 
+# AI Translated
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Cosmyx nyttige modeller"
 
+# AI Translated
+# Needs human review: French model name kept as is; confirm it is a proper name
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Calage 1 SNDT"
 
+# AI Translated
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Calage 2 SNDT"
 
+# AI Translated
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Calage 3 SNDT"
 
+# AI Translated
+# Needs human review: French model name 'Cube Bicolore' translated; keep the French name if it is a product name
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Tofarget kube"
 
+# AI Translated
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Calage 1 Nova"
 
+# AI Translated
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx-kube"
 
+# AI Translated
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Kontroll av beltestramming"
 
+# AI Translated
+# Needs human review: French 'Support Bobine' read as spool holder model; confirm
 msgid "Support Bobine"
-msgstr ""
+msgstr "Spoleholder"
