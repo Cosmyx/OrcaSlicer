@@ -213,6 +213,13 @@ here; see the upstream release notes.
   and so is a plugin download that ends after the app was closed.
   Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/112. Decision: 0204.
 
+<!-- cosmyx-slot: T11g -->
+- The pictures in the Texture displacement tool tips and on the web pages
+  (home buttons, empty project, setup region) are shown in the Cosmyx
+  colours. The bed plates, the Hex Tiles texture and
+  the connection animation keep their upstream look. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/114.
+  Decisions: 0214.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->
