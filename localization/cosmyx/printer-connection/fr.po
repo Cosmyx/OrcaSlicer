@@ -12,8 +12,8 @@ msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
 msgstr ""
-"La machine a refusé la clé API (HTTP 401). Vérifiez la clé API dans l'onglet"
-" Configuration."
+"La machine a refusé la clé API (HTTP 401). Vérifiez la clé API dans l'onglet "
+"Configuration."
 
 # AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
