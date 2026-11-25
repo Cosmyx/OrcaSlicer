@@ -56,6 +56,18 @@
       "source": "cosmyx"
     },
     {
+      "kind": "literal",
+      "old": "Sign in to OrcaCloud to update this plugin.",
+      "new": "Sign in to Cosmyx Cloud to update this plugin.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "The running app: version, build, mode, language, app_config_version (the version that wrote the app config before this run, empty when there was none), stealth_mode, is_signed_in (Orca Cloud), is_bambu_signed_in (Bambu Cloud), network_plugin_version (empty when the Bambu network plugin is not loaded) and network_plugin_error (empty unless it failed to load).",
+      "new": "The running app: version, build, mode, language, app_config_version (the version that wrote the app config before this run, empty when there was none), stealth_mode, is_signed_in (Cosmyx Cloud), is_bambu_signed_in (Bambu Cloud), network_plugin_version (empty when the Bambu network plugin is not loaded) and network_plugin_error (empty unless it failed to load).",
+      "source": "cosmyx"
+    },
+    {
       "kind": "msgid",
       "old": "\n\nOrca has detected that your user presets synchronization function is not enabled, which may result in unsuccessful Filament settings on the Device page.\nClick \"Sync user presets\" to enable the synchronization function.",
       "new": "\n\nCosmoSlice has detected that your user presets synchronization function is not enabled, which may result in unsuccessful Filament settings on the Device page.\nClick \"Sync user presets\" to enable the synchronization function.",
@@ -65,6 +77,12 @@
       "kind": "msgid",
       "old": "1. Please confirm Orca Slicer and your printer are in the same LAN.",
       "new": "1. Please confirm CosmoSlice and your printer are in the same LAN.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "A preset with this name already exists in OrcaCloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
+      "new": "A preset with this name already exists in Cosmyx Cloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
       "source": "cosmyx"
     },
     {
@@ -84,6 +102,12 @@
       "old": "Air filtration/Exhaust Fan\nDid you know that OrcaSlicer can support Air filtration/Exhaust Fan?",
       "new": "Air filtration/Exhaust Fan\nDid you know that CosmoSlice can support Air filtration/Exhaust Fan?",
       "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage.",
+      "new": "Allow logging into Bambu Cloud alongside Cosmyx Cloud. When enabled, a Bambu login section appears on the homepage.",
+      "source": "cosmyx"
     },
     {
       "kind": "msgid",
@@ -189,6 +213,12 @@
     },
     {
       "kind": "msgid",
+      "old": "Do you want to synchronize your personal data from Orca Cloud?\nIt contains the following information:\n1. The Process presets\n2. The Filament presets\n3. The Printer presets",
+      "new": "Do you want to synchronize your personal data from Cosmyx Cloud?\nIt contains the following information:\n1. The Process presets\n2. The Filament presets\n3. The Printer presets",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "Each object in the file is loaded on its own, as OrcaSlicer always loaded AMF files.",
       "new": "Each object in the file is loaded on its own, as CosmoSlice always loaded AMF files.",
       "source": "cosmyx"
@@ -207,8 +237,26 @@
     },
     {
       "kind": "msgid",
+      "old": "Existing user presets were found in %s.\nDo you want to migrate them to your OrcaCloud profile?\nThis will copy your presets so they are available under your new account.",
+      "new": "Existing user presets were found in %s.\nDo you want to migrate them to your Cosmyx Cloud profile?\nThis will copy your presets so they are available under your new account.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Export to OrcaCloud",
+      "new": "Export to Cosmyx Cloud",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "Failed to install the plug-in. The plug-in file may be in use. Please restart OrcaSlicer and try again. Also check whether it is blocked or has been deleted by anti-virus software.",
       "new": "Failed to install the plug-in. The plug-in file may be in use. Please restart CosmoSlice and try again. Also check whether it is blocked or has been deleted by anti-virus software.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Find on OrcaCloud",
+      "new": "Find on Cosmyx Cloud",
       "source": "cosmyx"
     },
     {
@@ -321,6 +369,12 @@
     },
     {
       "kind": "msgid",
+      "old": "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud.",
+      "new": "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Cosmyx Cloud.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "Object (%1%) has duplicated connectors. Some connectors may be missing in slicing result.\nPlease report to the OrcaSlicer team in which scenario this issue happened.\nThank you.",
       "new": "Object (%1%) has duplicated connectors. Some connectors may be missing in slicing result.\nPlease report to the CosmoSlice team in which scenario this issue happened.\nThank you.",
       "source": "cosmyx"
@@ -335,6 +389,12 @@
       "kind": "msgid",
       "old": "On a computer with two GPUs, run OrcaSlicer on the discrete GPU instead of the one that drives the display. Some Wayland systems cannot show frames rendered on the other GPU, or fail to open the window at all. Turn this off if the 3D view stays empty; if OrcaSlicer no longer starts, start it once with DRI_PRIME=0 in the environment to get back here.",
       "new": "On a computer with two GPUs, run CosmoSlice on the discrete GPU instead of the one that drives the display. Some Wayland systems cannot show frames rendered on the other GPU, or fail to open the window at all. Turn this off if the 3D view stays empty; if CosmoSlice no longer starts, start it once with DRI_PRIME=0 in the environment to get back here.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Opens OrcaCloud in the Home page to browse for plugins.",
+      "new": "Opens Cosmyx Cloud in the Home page to browse for plugins.",
       "source": "cosmyx"
     },
     {
@@ -399,6 +459,12 @@
     },
     {
       "kind": "msgid",
+      "old": "OrcaCloud plugins required by the current preset are not installed:",
+      "new": "Cosmyx Cloud plugins required by the current preset are not installed:",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "OrcaSlicer Version:",
       "new": "CosmoSlice Version:",
       "source": "cosmoslice"
@@ -447,6 +513,12 @@
     },
     {
       "kind": "msgid",
+      "old": "Orphaned: This plugin is no longer subscribed or available in OrcaCloud. The local copy remains installed and can still be used.",
+      "new": "Orphaned: This plugin is no longer subscribed or available in Cosmyx Cloud. The local copy remains installed and can still be used.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "Performing desktop integration failed - could not create Gcodeviewer desktop file. OrcaSlicer desktop file was probably created successfully.",
       "new": "Performing desktop integration failed - could not create Gcodeviewer desktop file. CosmoSlice desktop file was probably created successfully.",
       "source": "cosmoslice"
@@ -483,6 +555,12 @@
     },
     {
       "kind": "msgid",
+      "old": "Pull and apply the latest presets from OrcaCloud",
+      "new": "Pull and apply the latest presets from Cosmyx Cloud",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "RepRap detected: Jerk in mm/s.\nOrcaSlicer will convert the values to mm/min when necessary.",
       "new": "RepRap detected: Jerk in mm/s.\nCosmoSlice will convert the values to mm/min when necessary.",
       "source": "cosmyx"
@@ -513,6 +591,24 @@
     },
     {
       "kind": "msgid",
+      "old": "Sign in to OrcaCloud to install this plugin.",
+      "new": "Sign in to Cosmyx Cloud to install this plugin.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Sign in to OrcaCloud to view the camera.",
+      "new": "Sign in to Cosmyx Cloud to view the camera.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Since version 2.4.0, OrcaSlicer syncs user profiles through Orca Cloud instead of Bambu Cloud.\n\nTo migrate your existing profiles, log in to Orca Cloud and they will be transferred automatically. To learn more about how OrcaSlicer stores and syncs your profiles, or to migrate your presets manually, check out our wiki.\n\nIf you did not use Bambu Cloud to sync profiles, this change does not affect you and you can safely ignore this message.",
+      "new": "Since version 2.4.0, CosmoSlice syncs user profiles through Cosmyx Cloud instead of Bambu Cloud.\n\nTo migrate your existing profiles, log in to Cosmyx Cloud and they will be transferred automatically. To learn more about how CosmoSlice stores and syncs your profiles, or to migrate your presets manually, check out our wiki.\n\nIf you did not use Bambu Cloud to sync profiles, this change does not affect you and you can safely ignore this message.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "Some original names contain characters that OrcaSlicer cannot use. Choose how to change them before importing.",
       "new": "Some original names contain characters that CosmoSlice cannot use. Choose how to change them before importing.",
       "source": "cosmyx"
@@ -521,6 +617,12 @@
       "kind": "msgid",
       "old": "Something went wrong. Please return to OrcaSlicer and try again.",
       "new": "Something went wrong. Please return to CosmoSlice and try again.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Subscribed cloud plugin was not returned by OrcaCloud.",
+      "new": "Subscribed cloud plugin was not returned by Cosmyx Cloud.",
       "source": "cosmyx"
     },
     {
@@ -669,6 +771,18 @@
     },
     {
       "kind": "msgid",
+      "old": "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.",
+      "new": "This disables all cloud features, including Cosmyx Cloud profile syncing. Users who prefer to work entirely offline can enable this option.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud.",
+      "new": "This disables all cloud features, including Cosmyx Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Cosmyx Cloud.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. OrcaSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (99999, 99999), which means there are no limits, thus allowing probing across the entire bed.",
       "new": "This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. CosmoSlice ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (99999, 99999), which means there are no limits, thus allowing probing across the entire bed.",
       "source": "cosmyx"
@@ -677,6 +791,12 @@
       "kind": "msgid",
       "old": "This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. OrcaSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (-99999, -99999), which means there are no limits, thus allowing probing across the entire bed.",
       "new": "This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. CosmoSlice ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (-99999, -99999), which means there are no limits, thus allowing probing across the entire bed.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This preset has a newer version in OrcaCloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
+      "new": "This preset has a newer version in Cosmyx Cloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
       "source": "cosmyx"
     },
     {
@@ -693,6 +813,12 @@
     },
     {
       "kind": "msgid",
+      "old": "Updates are available for your OrcaCloud plugins.",
+      "new": "Updates are available for your Cosmyx Cloud plugins.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
       "old": "Updating your OrcaSlicer could enable all functionality in the 3MF file.",
       "new": "Updating your CosmoSlice could enable all functionality in the 3MF file.",
       "source": "cosmyx"
@@ -701,6 +827,12 @@
       "kind": "msgid",
       "old": "Use the body names stored in the file, when there are any. When disabled, the usual OrcaSlicer names are used; existing project names are kept.",
       "new": "Use the body names stored in the file, when there are any. When disabled, the usual CosmoSlice names are used; existing project names are kept.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "View on OrcaCloud <a>here</a>",
+      "new": "View on Cosmyx Cloud <a>here</a>",
       "source": "cosmyx"
     },
     {
@@ -725,6 +857,12 @@
       "kind": "msgid",
       "old": "You can return to OrcaSlicer. This window will close automatically.",
       "new": "You can return to CosmoSlice. This window will close automatically.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "your Orca Cloud profile (user ID: \"%s\")",
+      "new": "your Cosmyx Cloud profile (user ID: \"%s\")",
       "source": "cosmyx"
     }
   ]

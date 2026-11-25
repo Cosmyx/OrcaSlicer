@@ -3,7 +3,8 @@
 ## Status
 
 Accepted. Ports CosmoSlice D-005 and D-006. Amended: inflected names and
-the inflection table; texts asserted by upstream tests are kept.
+the inflection table; texts asserted by upstream tests are kept; the
+upstream cloud name (Orca Cloud) is residue too, renamed Cosmyx Cloud.
 
 ## Context
 
@@ -32,6 +33,12 @@ sync on every new string.
   hints, and the translated elements of the setup-guide pages. That residue is
   drift: a warning on development builds, an error on release builds, like
   G3 and G4.
+- The upstream cloud name (decision 0134) counts as naming the product
+  everywhere above: a visible "Orca Cloud" or "OrcaCloud" left after apply is
+  residue. A cloud name a translation writes after an elision or the
+  Hungarian article "az", without its inflection row, is reported as "needs
+  inflection row", like an inflected name. The setup-guide, homepage,
+  preset-export and plugin pages' fallback texts are fixed by patch rows.
 - An inflected name (decision 0134) left in a confirmed translation of a
   renamed msgid because `inflections.json` has no row for it is reported as
   "needs inflection row (<language>): <form>", at the drift level: a warning
@@ -48,7 +55,7 @@ sync on every new string.
 - `allowlist.json` rows are `msgid`, `literal` (file, source text, exact
   count) or `text` (guide page), each with a reason starting with its
   category: `asset`, `cli`, `compared`, `credit`, `dev-tool`, `external`,
-  `internal`, `kept-name`, `persisted`, `url`. 62 rows today: the About
+  `internal`, `kept-name`, `persisted`, `url`. 61 rows today: the About
   credits and copyright, the upstream releases named in messages, the CLI
   `result.json` texts, compared and persisted tags, client ids sent to
   third-party services, icon names, developer tools, and the plugin host's

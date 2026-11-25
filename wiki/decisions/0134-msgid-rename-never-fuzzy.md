@@ -6,7 +6,8 @@ Accepted. Replaces CosmoSlice D-004's fuzzy marking for this fork. Amended:
 the token rule (all capitals, combining marks, names tied to the app key)
 and the inflection table. Amended by decision 0210: `OrcaSlicer.app` and
 `OrcaSlicer.AppImage` in a text become `CosmoSlice.app` and
-`CosmoSlice.AppImage`; `OrcaSlicer.conf` and the data folder stay.
+`CosmoSlice.AppImage`; `OrcaSlicer.conf` and the data folder stay. Amended:
+the upstream cloud service is renamed Cosmyx Cloud instead of being kept.
 
 ## Context
 
@@ -30,7 +31,7 @@ catalogues the T8 graft has already merged.
   so every renamed string keeps showing its translation. Catalogues are read
   with the T8 parser; untouched entries keep their bytes.
 - The name is replaced outside URLs, file and path names, dotted ids,
-  embedded source comment markers and the kept names: Orca Cloud, Orca Cube,
+  embedded source comment markers and the kept names: Orca Cube,
   Orca String Hell, Orca Tolerance Test, Orca YOLO, Orca Arena, Orca Palette,
   Orca Badge, OrcaSliced Combo, Orca Preset Bundle, Orca Filament Library
   (they name an upstream service, a built-in model or calibration, or a
@@ -38,6 +39,20 @@ catalogues the T8 graft has already merged.
   `ORCA_CAD_GLYPH`) never match, and neither does a name followed by a
   combining mark ("Orca" + U+0301 is another word). All capitals count as
   one name: "ORCA SLICER" and "ORCASLICER" become "CosmoSlice".
+- The upstream cloud service (Orca Cloud, OrcaCloud, Orca cloud, and the
+  misspellings "orca Cloud" and "OrcaSloud" of two translations) becomes
+  "Cosmyx Cloud", never CosmoSlice, and before the product name is looked
+  at, so "Orca" in "Orca Cloud" is never read as the product. Cosmyx runs
+  its own cloud server; the interface names that service. It is a brand
+  name, the same in every language. A lowercase suffix glued to it stays
+  (hu "Orca Cloudba" -> "Cosmyx Cloudba", eu "OrcaClouden", tr
+  "Orca Cloud'a"): the new name ends with the same word, so the suffix still
+  fits. A word before it that depends on its first sound cannot be guessed:
+  an elision (ca "d'OrcaCloud", fr "d’Orca Cloud" -> "de Cosmyx Cloud")
+  or the Hungarian article "az" (-> "a"). Such a name needs an inflection
+  row whose `old` names the cloud; it renames the words around the name and
+  keeps a suffix glued to it. Without one the name stays and G8 reports it.
+  Identifiers (`OrcaCloudServiceAgent`), URLs and file names never match.
 - Names derived from the app key point at real files and folders, which keep
   the key (decision 0133): `OrcaSlicer.conf`, `OrcaSlicer.app`,
   `OrcaSlicer.AppImage` and a Windows folder after a backslash
@@ -67,7 +82,14 @@ catalogues the T8 graft has already merged.
   a row only where the suffix must change.
 - Refresh against DEV: 48 of CosmoSlice's 76 pairs still match (28 dropped:
   their text is gone upstream); 64 msgid rows and 9 literal rows were added
-  for text upstream added since, 121 rows in all. `just brand-name-candidates`
+  for text upstream added since, then 21 msgid rows and 2 literal rows for
+  the cloud name, 144 rows in all. The profile-migration message, which
+  names the 2.4.0 release, is renamed whole ("Since version 2.4.0,
+  CosmoSlice syncs user profiles through Cosmyx Cloud"): its translations
+  get both names, so keeping one of them in the msgid would leave the two
+  out of step. "Sign in to OrcaCloud to update this plugin." is a literal
+  row because the template does not carry it yet; once upstream extracts
+  it, G8 asks for it to become a msgid row. `just brand-name-candidates`
   proposes rows for what later upstream merges bring.
 - The renamed catalogues compile with `msgfmt --check-format` (checked on a
   scratch copy of DEV).

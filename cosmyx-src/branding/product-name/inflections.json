@@ -2,6 +2,18 @@
   "schema": 1,
   "rows": [
     {
+      "language": "ca",
+      "old": "d'Orca Cloud",
+      "new": "de Cosmyx Cloud",
+      "source": "Elided 'd'' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant, so the preposition is written in full ('de')."
+    },
+    {
+      "language": "ca",
+      "old": "d'OrcaCloud",
+      "new": "de Cosmyx Cloud",
+      "source": "Elided 'd'' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant, so the preposition is written in full ('de')."
+    },
+    {
       "language": "cs",
       "old": "Orca Sliceru",
       "new": "CosmoSlice",
@@ -98,6 +110,12 @@
       "source": "ergative: vowel-stem Orca-k becomes consonant-stem CosmoSlice-ek; CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
     },
     {
+      "language": "fr",
+      "old": "d’Orca Cloud",
+      "new": "de Cosmyx Cloud",
+      "source": "Elided 'd’' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant, so the preposition is written in full ('de')."
+    },
+    {
       "language": "hu",
       "old": "Az Orca",
       "new": "A CosmoSlice",
@@ -114,6 +132,12 @@
       "old": "Az Orca Slicerbe",
       "new": "A CosmoSlice-ba",
       "source": "hu illative, back harmony (o-o-a): CosmoSlice-ba, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "Az OrcaCloud",
+      "new": "A Cosmyx Cloud",
+      "source": "Article 'az' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant and takes 'a'. A suffix glued to 'Cloud' stays."
     },
     {
       "language": "hu",
@@ -147,6 +171,12 @@
     },
     {
       "language": "hu",
+      "old": "az Orca Cloud",
+      "new": "a Cosmyx Cloud",
+      "source": "Article 'az' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant and takes 'a'. A suffix glued to 'Cloud' stays."
+    },
+    {
+      "language": "hu",
       "old": "az Orca Slicer",
       "new": "a CosmoSlice",
       "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
@@ -168,6 +198,12 @@
       "old": "az Orca Slicert",
       "new": "a CosmoSlice-t",
       "source": "hu accusative: CosmoSlice-t (final /s/, silent e, hyphenated); article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaCloud",
+      "new": "a Cosmyx Cloud",
+      "source": "Article 'az' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant and takes 'a'. A suffix glued to 'Cloud' stays."
     },
     {
       "language": "hu",
