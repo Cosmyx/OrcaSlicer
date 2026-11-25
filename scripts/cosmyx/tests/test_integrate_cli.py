@@ -142,6 +142,7 @@ class Sandbox(unittest.TestCase):
     def data(self, extra: list[dict] | None = None) -> str:
         path = self.tmp / "branches.json"
         rows = [{"name": "chore/foundation", "parent": "DEV"}] + self.rows + (extra or [])
+        rows = [{"bundle": 1, **row} for row in rows]
         path.write_text(json.dumps({"remote": "origin", "base": "DEV", "foundation": "chore/foundation",
                                     "branches": rows}), encoding="utf-8")
         return str(path)
@@ -514,6 +515,36 @@ class IntegrateTests(Sandbox):
             self.run_cli(["integrate", "origin/gone", "--no-fetch", "--data", self.data()])
         self.assertFalse((self.work / ".worktrees").exists())
 
+    def test_bundle_keeps_only_the_branches_of_that_bundle_or_earlier(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.branch("feat/b", "chore/foundation", {"src/b.txt": "b\n"}, from_ref=self.base)
+        self.rows[-1]["bundle"] = 2
+        code, out = self.run_cli(["integrate", "--no-fetch", "--data", self.data(), "--bundle", "1"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("bundle 1: 2 branch(es) of bundle 1 or earlier", out)
+        self.assertIn("| feat/a", out)
+        self.assertNotIn("feat/b", out)
+        self.assertEqual(self.integration_file("src/a.txt"), "a")
+        self.assertNotIn("src/b.txt", self.git(["ls-tree", "-r", "--name-only", "ci/cosmyx-integration"]))
+
+    def test_without_bundle_every_branch_is_kept(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.branch("feat/b", "chore/foundation", {"src/b.txt": "b\n"}, from_ref=self.base)
+        self.rows[-1]["bundle"] = 2
+        code, out = self.run_cli(["integrate", "--no-fetch", "--data", self.data()])
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("bundle", out)
+        self.assertEqual(self.integration_file("src/b.txt"), "b")
+
+    def test_a_parent_in_a_later_bundle_is_refused_before_any_work(self) -> None:
+        self.branch("feat/a", "chore/foundation", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.rows[-1]["bundle"] = 2
+        self.branch("feat/a-child", "feat/a", {"src/c.txt": "c\n"}, from_ref=self.base)
+        with self.assertRaisesRegex(cli.SetupError, r"feat/a-child \(bundle 1\): parent feat/a is in the later "
+                                                    r"bundle 2"):
+            self.run_cli(["integrate", "--no-fetch", "--data", self.data(), "--bundle", "1"])
+        self.assertFalse((self.work / ".worktrees").exists())
+
 
 class ReplayIntegrateTests(Sandbox):
     """`integrate` on a base that is not the list's: replay, then merge the replayed branches."""
@@ -833,6 +864,14 @@ class RebaseCheckTests(Sandbox):
         self.assertEqual(code, 0, out)
         self.assertEqual(len(self.worktrees()), 1)
 
+    def test_bundle_leaves_later_bundles_out_of_the_table(self) -> None:
+        self.branch("feat/later", "DEV", {"src/later.txt": "l\n"}, from_ref=self.base)
+        self.rows[-1]["bundle"] = 2
+        code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data", self.data(), "--bundle", "1"])
+        self.assertNotIn("feat/later", out)
+        code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data", self.data()])
+        self.assertIn("feat/later", out)
+
     def test_branch_not_on_the_remote_is_a_warning(self) -> None:
         self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
         code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data",
@@ -970,6 +1009,62 @@ class BranchListTests(unittest.TestCase):
                          ("integration/release/v2.5.3", Path(".worktrees") / "integration-release-v2.5.3"))
         with self.assertRaises(cli.SetupError):
             cli.integration_target(git, "origin/DEV~1", "origin", "DEV")
+
+    def test_shipped_list_gives_every_branch_a_bundle_and_no_parent_a_later_one(self) -> None:
+        data = json.loads(cli.DATA_FILE.read_text(encoding="utf-8"))
+        rows = {row["name"]: row for row in data["branches"]}
+        for name, row in rows.items():
+            self.assertIn(row.get("bundle"), (8, 9), name)
+            if row["parent"] != data["base"]:
+                self.assertLessEqual(rows[row["parent"]]["bundle"], row["bundle"], name)
+
+    def test_shipped_bundle_8_is_the_bundle_7_parity_and_the_tooling(self) -> None:
+        # Decision 0226: bundle 8 holds only the bundle-7 features rebased on
+        # OrcaSlicer 2.5.2 plus the integration and build tooling.
+        names = {entry.name for entry in cli.load_branches(bundle=8)[1]}
+        self.assertEqual(names, {
+            "chore/cosmyx-foundation", "ci/cosmyx-upstream-sync", "feat/cht-nozzle", "feat/ironing-temperature",
+            "fix/toolchange-fan-order", "feat/cosmyx-models", "feat/cosmyx-version", "feat/cosmyx-stealth-mode",
+            "feat/cosmyx-translations", "feat/cosmyx-translations-fill", "feat/cosmyx-windows-signing",
+            "feat/cosmyx-update-check", "feat/cosmyx-profiles", "feat/cosmyx-machine-hook",
+            "ci/cosmyx-artifact-checks", "ci/cosmyx-macos-signing", "ci/cosmyx-exec-smoke", "ci/cosmyx-flatpak-off",
+            "ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build", "docs/cosmyx-changelogs",
+            "docs/cosmyx-rebase-skill"})
+        self.assertEqual(len(cli.load_branches(bundle=9)[1]), len(cli.load_branches()[1]))
+
+    def write_list(self, rows: list[dict]) -> Path:
+        temp = Path(tempfile.mkdtemp(prefix="cosmyx-integrate-list-"))
+        self.addCleanup(shutil.rmtree, temp, True)
+        path = temp / "branches.json"
+        path.write_text(json.dumps({"base": "DEV", "foundation": "f", "branches": rows}), encoding="utf-8")
+        return path
+
+    def test_a_row_without_a_valid_bundle_is_refused(self) -> None:
+        for bad in ({}, {"bundle": None}, {"bundle": "8"}, {"bundle": True}, {"bundle": 0}, {"bundle": 1.5}):
+            with self.subTest(bad=bad), self.assertRaisesRegex(cli.SetupError, "f: bundle must be a positive"):
+                cli.load_branches(self.write_list([{"name": "f", "parent": "DEV", **bad}]))
+
+    def test_bundle_selection_keeps_the_order_and_rechecks_the_subset(self) -> None:
+        path = self.write_list([{"name": "f", "parent": "DEV", "bundle": 1},
+                                {"name": "b", "parent": "f", "bundle": 2},
+                                {"name": "a", "parent": "DEV", "bundle": 1},
+                                {"name": "c", "parent": "a", "bundle": 3}])
+        self.assertEqual([entry.name for entry in cli.load_branches(path, 1)[1]], ["f", "a"])
+        self.assertEqual([entry.name for entry in cli.load_branches(path, 2)[1]], ["f", "b", "a"])
+        self.assertEqual([entry.name for entry in cli.load_branches(path)[1]], ["f", "b", "a", "c"])
+        with self.assertRaisesRegex(cli.SetupError, "--bundle must be a positive integer"):
+            cli.load_branches(path, 0)
+        # The subset is checked on its own: a subset that loses its parent is refused.
+        data = {"base": "DEV", "foundation": "f"}
+        with self.assertRaisesRegex(cli.SetupError, "c: parent a must be DEV or an earlier row"):
+            cli.select_bundle(data, [cli.Entry("f", "DEV"), cli.Entry("a", "DEV", bundle=2),
+                                     cli.Entry("c", "a", bundle=1)], 1)
+
+    def test_a_parent_in_a_later_bundle_is_refused(self) -> None:
+        data = {"base": "DEV", "foundation": "f"}
+        with self.assertRaisesRegex(cli.SetupError, r"c \(bundle 8\): parent p is in the later bundle 9"):
+            cli.check_branches(data, [cli.Entry("f", "DEV", bundle=8), cli.Entry("p", "DEV", bundle=9),
+                                      cli.Entry("c", "p", bundle=8)])
 
     def test_child_before_parent_is_refused(self) -> None:
         data = {"base": "DEV", "foundation": "f"}
