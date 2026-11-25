@@ -62,7 +62,7 @@ here; see the upstream release notes.
   wizard and unreferenced logos) and 6 rasters derived from the SVG master
   (macOS document, G-code and STL file-type icons, grayscale message logo,
   title logo, web header logo). The horizontal Troubleshoot logos and
-  `web/image/logo2.png` are still missing. Pull request: pending.
+  `web/image/logo2.png` are still missing. Pull request: #130.
   Decisions: 0124, 0125.
 
 <!-- cosmyx-slot: T11c -->
