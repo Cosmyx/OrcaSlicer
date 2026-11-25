@@ -1,7 +1,7 @@
 #ifndef slic3r_GUI_Cosmyx_CloudServerPrefs_hpp_
 #define slic3r_GUI_Cosmyx_CloudServerPrefs_hpp_
 
-// "Use your custom orca-cloud instance" rows of the Online tab of Preferences
+// "Custom Cloud Instance" rows of the Online tab of Preferences
 // (decision 0203). PreferencesDialog::create_items() adds the panel to the
 // Connection section through one hook line.
 

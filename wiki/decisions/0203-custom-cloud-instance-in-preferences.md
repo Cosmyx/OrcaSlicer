@@ -1,4 +1,4 @@
-# 0203. Custom orca-cloud instance in Preferences
+# 0203. Custom cloud instance in Preferences
 
 ## Status
 
@@ -13,8 +13,9 @@ the CosmoCloud defaults.
 
 ## Decision
 
-- The Online tab of Preferences, Connection section, gets a "Use your custom
-  orca-cloud instance" checkbox. Checked, it shows four fields (API address,
+- The Online tab of Preferences, Connection section, gets a "Custom Cloud
+  Instance" checkbox; its tooltip reads "Connect to your own cloud server
+  instead of Cosmyx Cloud", naming the product, not the server software. Checked, it shows four fields (API address,
   authentication address, web address, public key) and an Apply button.
 - The panel lives in `src/slic3r/GUI/Cosmyx/CloudServerPrefs.{hpp,cpp}`.
   `Preferences.cpp` gets one include line after its first include and one
@@ -49,9 +50,12 @@ the CosmoCloud defaults.
   (`GUI_App::restart_networking()`) was left out: it is the network plugin
   reload path, and switching servers under a signed-in session needs a
   sign-out first.
-- The strings are marked with `_L` and extracted into the Cosmyx catalogues by
-  `just i18n-extract`, which reads `src/**/Cosmyx/**`; upstream
-  `localization/i18n/list.txt` is not edited.
+- The strings are marked with `_L` and extracted into the Cosmyx catalogues
+  `localization/cosmyx/cloud-server/` by `just i18n-extract`, which reads
+  `src/**/Cosmyx/**` (decisions 0081, 0085); upstream
+  `localization/i18n/list.txt` is not edited. The build grafts them into the
+  OrcaSlicer catalogues (decision 0080). Strings OrcaSlicer already has, such
+  as "Apply" or "Restart Required", stay out of them (decision 0084).
 
 ## Consequences
 

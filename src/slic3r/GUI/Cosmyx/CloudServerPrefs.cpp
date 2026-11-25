@@ -57,14 +57,14 @@ public:
     {
         SetBackgroundColour(*wxWHITE); // palette colour, dark-mapped by UpdateDlgDarkUI
 
-        const wxString tip = _L("Connect to your own orca-cloud server instead of the default Cosmyx cloud. "
+        const wxString tip = _L("Connect to your own cloud server instead of Cosmyx Cloud. "
                                 "The cloud is only used when stealth mode is off.");
 
         auto* sizer = new wxBoxSizer(wxVERTICAL);
 
         auto* row = new wxBoxSizer(wxHORIZONTAL);
         row->AddSpacer(FromDIP(LEFT_MARGIN));
-        row->Add(make_label(this, _L("Use your custom orca-cloud instance"), tip), 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, FromDIP(3));
+        row->Add(make_label(this, _L("Custom Cloud Instance"), tip), 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, FromDIP(3));
         row->AddSpacer(FromDIP(5));
         m_checkbox = new ::CheckBox(this);
         m_checkbox->SetToolTip(tip);
