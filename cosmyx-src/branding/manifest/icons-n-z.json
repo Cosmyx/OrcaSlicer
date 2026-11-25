@@ -8,11 +8,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "64eb7abd3de298821284f121e9df76b1084f75f0de71f72b52b62a01c0c091f7",
-      "override_sha256": null
+      "override_sha256": "391dbecc9f12ab053377a0bf468e4569c0b3913d4989e63b9da8bda8a8a93dc2"
     },
     {
       "path": "resources/images/note.svg",
@@ -20,11 +20,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e2ac8097abaaaea704892095d67332d2c39bd2c38bd43f8c5c889c39ad8244aa",
-      "override_sha256": null
+      "override_sha256": "cfa4fcc12d1be8eb3a8a76f8fd1a99ebfcbde1a354bb87d35d7ee095d6dbe180"
     },
     {
       "path": "resources/images/notification_close_hover.svg",
@@ -32,11 +32,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a9e4154f98bfef6de37cbc338f50534a7ded09469fa5976f239c616b9680461d",
-      "override_sha256": null
+      "override_sha256": "6e8fa787f209887986605c662cb8478eb08e1576248fa7e03017e80207a5e722"
     },
     {
       "path": "resources/images/notification_close_hover_dark.svg",
@@ -44,11 +44,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7deb342aeda84ff66127e97805db063a0d9d094ea5e972d7d8f762d75fbe7d5c",
-      "override_sha256": null
+      "override_sha256": "fe9d7f921ff27f673e8ee66192ef1555c27f524dbaf8553f9186a5e75cca85b5"
     },
     {
       "path": "resources/images/notification_documentation_hover.svg",
@@ -56,11 +56,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c5107134fc6fbf2e18d13ee09205f99d0c7beb6c316acecac80e8516c7b865c1",
-      "override_sha256": null
+      "override_sha256": "1ad0bedbfc17092aa2a52113d6d84f0b1fe649b0935e73ee69f5e42585423b3f"
     },
     {
       "path": "resources/images/notification_documentation_hover_dark.svg",
@@ -68,11 +68,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "356b3addbc247a03a003d16004184cbcbf7a4703d9e347c4850ac4efde58592d",
-      "override_sha256": null
+      "override_sha256": "7ac08038a3491608579506a56769df4913b7fcd9ef4aff74acf4c9c5103b0dfd"
     },
     {
       "path": "resources/images/notification_eject_sd_hover.svg",
@@ -80,11 +80,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "085a05392f55838eeea8cbe76c3224b0c7a41719d9b4f8c3739403f4f194916d",
-      "override_sha256": null
+      "override_sha256": "f9b4b6f5062832c4b0e5cc6cd2237e1279571c0c922a54a30328dd4418e3abd8"
     },
     {
       "path": "resources/images/notification_minimalize_hover.svg",
@@ -92,11 +92,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0b614100036f2ff8d157ae26c269640bc65221973d031fbe05fa08de45cf9f57",
-      "override_sha256": null
+      "override_sha256": "b5e74bc8f2d358f01fffc8781a199133ffb4c11cabab9a730ea32de51773019c"
     },
     {
       "path": "resources/images/notification_minimalize_hover_dark.svg",
@@ -104,11 +104,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e9bc3e01f5c7702b27e35afc1dd07495071e885d13472cfda711f22f8aab21ec",
-      "override_sha256": null
+      "override_sha256": "8b37cb131dc70f27ed54365ad2fb0c4c390ccd5cc9fac3da0cf3157e4df00175"
     },
     {
       "path": "resources/images/notification_preferences_hover.svg",
@@ -116,11 +116,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "77d6947e8d7e2174dcb8024f2601650f25302a629e093b5d2a6c18482680e7e8",
-      "override_sha256": null
+      "override_sha256": "55439387a499d1caf3d40544bee2d86b1748e94807aae382216ce0e63b6c1ba1"
     },
     {
       "path": "resources/images/notification_preferences_hover_dark.svg",
@@ -128,11 +128,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "782e28563ae111b99efdc2e41ce72bd0fc8fe9b44d509a4096cc462f84204926",
-      "override_sha256": null
+      "override_sha256": "47b9ac78e125170fc1c5af379eec9ac36b8a4591879d7bcafe7127e04f34e730"
     },
     {
       "path": "resources/images/notification_right_hover.svg",
@@ -140,11 +140,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "5e9034bc058e5a40bc3cb563c895665289163b7f6090b550eebd009bac220280",
-      "override_sha256": null
+      "override_sha256": "aa6c147eb024a0ce8a56755cc09bb285b0fc5b27d17d49fd7040899f570459f4"
     },
     {
       "path": "resources/images/notification_right_hover_dark.svg",
@@ -152,11 +152,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0e2b7016bb623b930a4921379380a7691b31b4ac1440970368a46c0e01568ac1",
-      "override_sha256": null
+      "override_sha256": "9d9b5a5a5828b0ed82e2bc31e099d54e46c51bac302c3883a2d90d5d786ba196"
     },
     {
       "path": "resources/images/notification_slicing_complete.svg",
@@ -164,11 +164,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3ba3bc2862038eab915c6a1c254bb5593dcb2ec071f6be4b5a61820750e88361",
-      "override_sha256": null
+      "override_sha256": "b4897dc55f51795cbb2fa56eddcc8f805d3ad6332e87d5bbfa10da61ef9b1149"
     },
     {
       "path": "resources/images/obj_variable_layer_height.svg",
@@ -176,11 +176,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "1a8919f1060a7bac4e115ebf0356bfc97d748541704616b250a1db4ff2122b1c",
-      "override_sha256": null
+      "override_sha256": "9ddf24caff8a375498c3e4477cae03e185efcccf74ddf77e2cee1375ed4b4efe"
     },
     {
       "path": "resources/images/objlist_color_painting.svg",
@@ -188,11 +188,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c04befead20e0c13b57d873bde771a86adef516cadb41c9e2f1c82005f8bd9c5",
-      "override_sha256": null
+      "override_sha256": "cd13251ccb9415ab319fdc4f0d0a0cb5e94f11dabe2323bfb639a6b4535a7a14"
     },
     {
       "path": "resources/images/objlist_fuzzy_skin_paint.svg",
@@ -200,11 +200,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "74d5dd750e16cbf9c984d04df26ba13d0480744b23565bf706319689c42c6a87",
-      "override_sha256": null
+      "override_sha256": "78f55a4426222331b167861304deaace68c6956052d4d1509ff7a9e917cb621b"
     },
     {
       "path": "resources/images/objlist_seam_painting.svg",
@@ -212,11 +212,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "8420010de92a06f23cace58d04cc785ee0e0b33df2d9499c8353a3a7abb4bcb4",
-      "override_sha256": null
+      "override_sha256": "336d362252efb0f3c419b8b93b7629755154b45fafeea4a237076a2ee341e9fd"
     },
     {
       "path": "resources/images/objlist_support_painting.svg",
@@ -224,11 +224,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2fba09293ffa338321138dde61d59cca7a6f8927a9329c976f061615dbc89765",
-      "override_sha256": null
+      "override_sha256": "27de8c90aee2c61d6f893abaa502a0b262d84056f61be954af3d5ad9ed7d6dd8"
     },
     {
       "path": "resources/images/one_layer_off.svg",
@@ -236,11 +236,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b6be3e3cc710f274852db8bdb1583187a983d163d801b7a317e927bdc3234123",
-      "override_sha256": null
+      "override_sha256": "965259e36d7cedff3321f189cfa2e426caf16ba53f3f7b749aac6136233c37b8"
     },
     {
       "path": "resources/images/one_layer_off_dark.svg",
@@ -248,11 +248,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ca329d297e935484ea413a8c5e0245b4ea84ca7db1b18a0e15c30037e9784842",
-      "override_sha256": null
+      "override_sha256": "4898485be6c182d347eb331ff64277b63c9f63122ec0fdaf601dcb12ae356c3a"
     },
     {
       "path": "resources/images/one_layer_off_hover.svg",
@@ -260,11 +260,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "65c71714473baa113df3498256cdda87248e7fef71f8c78a7f1c0a85d7cfae1c",
-      "override_sha256": null
+      "override_sha256": "4c41b0681d39a616e9b0d9628afa909080011f77dc5547be50442a8df3a8d389"
     },
     {
       "path": "resources/images/one_layer_off_hover_dark.svg",
@@ -272,11 +272,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "60385e78cc45484207829b36c7b2c064ed1d6ce75bfb5bc2adec3f69384aa0cf",
-      "override_sha256": null
+      "override_sha256": "f3df8302224b2b6c37fe84c32f5e91ea89016757f60b825f438a838abbdbcc96"
     },
     {
       "path": "resources/images/one_layer_on.svg",
@@ -284,11 +284,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0ec8ed00ca6bfcb9522abc85b431a0acba3800a4bc6441299c0262f295cb4c69",
-      "override_sha256": null
+      "override_sha256": "512454aa4d3193c506bc32ae82d4a468b4caed9ed3f5c7a7e65066ab320aa2f7"
     },
     {
       "path": "resources/images/one_layer_on_dark.svg",
@@ -296,11 +296,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cf8f16de449466414fd1363734ba6d431bb8709009548d4dc9c44439f2a978a2",
-      "override_sha256": null
+      "override_sha256": "a8aa109fb798fbc22b4dae0cb2c50867aa624627aef4b2f5267fe71e90c9d87c"
     },
     {
       "path": "resources/images/one_layer_on_hover.svg",
@@ -308,11 +308,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3536ab5a0c8c73c88d70e6400b1c32cb9a0d84eb3e23762dfde0fb881035cc19",
-      "override_sha256": null
+      "override_sha256": "b071d03db77316e45f949ab4813c28b44470b5e95c98568b7a219d0fa288acca"
     },
     {
       "path": "resources/images/one_layer_on_hover_dark.svg",
@@ -320,11 +320,11 @@
       "size": "28x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d013caa51cac285c42619feb7691bfe04d70b04b92f96758feb4b2065fadc588",
-      "override_sha256": null
+      "override_sha256": "f1bc2fb0b75dc33ef133928034ca8722cc4f5ad8e0ba38a1b3eb32e858e9c91c"
     },
     {
       "path": "resources/images/open.svg",
@@ -332,11 +332,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "82b0876051359cfbf9ccdc1a586ab4f92a7145f35a9d22b0f8779c2d83a3415b",
-      "override_sha256": null
+      "override_sha256": "000a96b623b77646375d9b018245a4b778c66f67bfc82f3fc0a904594796dce0"
     },
     {
       "path": "resources/images/open_in_browser.svg",
@@ -344,11 +344,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0182bead43af658ab61a5aaf3e5d4ad2a6734fe6ff73a787223aada9b349507f",
-      "override_sha256": null
+      "override_sha256": "307f510014dd37d3efdea10290cf081027caf07c75ad9a484bc65a9ae8eb000f"
     },
     {
       "path": "resources/images/outlined_rect.svg",
@@ -356,11 +356,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3faf93b9e4d39ca5e59a25b1d3dfa3ea6d8ae06810a6f24bf6b4fee1284cdc81",
-      "override_sha256": null
+      "override_sha256": "6ead05ef63af878e0696e38bd98f3e68d9782445a53409a0071e98b8aab82d99"
     },
     {
       "path": "resources/images/param_3dhoneycomb.svg",
@@ -368,11 +368,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "acbfad28b015e4b2ae6ad2ec3f12cd8d26b9ca2ed033a0b28480114428e85c1f",
-      "override_sha256": null
+      "override_sha256": "69b7256170a1ab0ff4908a3e8acaa4470d3f29660fe180101188e07187368168"
     },
     {
       "path": "resources/images/param_acceleration.svg",
@@ -380,11 +380,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ea2426b3b365719cad4420a80e66fac60336f864d6350050623703e9740e68fa",
-      "override_sha256": null
+      "override_sha256": "25cfec1b422d6139a562b123d52516f2c9ca208716d56fc05bbb12836bd32f5f"
     },
     {
       "path": "resources/images/param_accessory.svg",
@@ -392,11 +392,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0eae4785550ad148bfb805092df4127f6fc2138ad2e9c54dde5cf290cedadc1b",
-      "override_sha256": null
+      "override_sha256": "030db9b8bcc80022c47472eae4c8d2c7c74655b70a59082101f3b26f0227a4a1"
     },
     {
       "path": "resources/images/param_adaptive_mesh.svg",
@@ -404,11 +404,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "627d20e9ae1e5a9b4b4b031543f37aaccf2f1e94eb660664efaa458b036377f8",
-      "override_sha256": null
+      "override_sha256": "ed8e168b798f91f57354d2ecb5b15e19c0c82d693d83a80a7eae5cf5974a554d"
     },
     {
       "path": "resources/images/param_adaptivecubic.svg",
@@ -416,11 +416,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3d703dc7194cbdca1b3654adcbed5d7267d95d746f42deadb97d75447e9a2836",
-      "override_sha256": null
+      "override_sha256": "a2d00cb4a16c2001ac098904553afe5bac3bb1bd3c03e0f2a7daa6373a0679cf"
     },
     {
       "path": "resources/images/param_adhension.svg",
@@ -428,11 +428,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f1e289721d21934e92b0c70658477c4be91a7206d653f4357fc8e0a84713b919",
-      "override_sha256": null
+      "override_sha256": "9d330f8422d78d06aedd5763c5be1920b5bc06952a977fb1a5c6df271d38af42"
     },
     {
       "path": "resources/images/param_advanced.svg",
@@ -440,11 +440,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b8fce49a6e1dbc351c4f4a1d530e4ea12a5c98397a84305fd011f28ab0bbf3d8",
-      "override_sha256": null
+      "override_sha256": "f6076b434a7c56b2899ea02e0d61d27a77be8840adb7c4b1e4865d1668019f15"
     },
     {
       "path": "resources/images/param_alignedrectilinear.svg",
@@ -452,11 +452,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e8c5cd8bb2e1e609fe4b1a7f5661a2636799b67475432a31e79c08dfdb8589cb",
-      "override_sha256": null
+      "override_sha256": "e8a03a979ddf99347ee1bca620080fb8e744aa3861f03cd0c3ed5893cf96c5a2"
     },
     {
       "path": "resources/images/param_archimedeanchords.svg",
@@ -464,11 +464,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e149032f84a391748ddc6411417be1f15dfd07654161921e448e1668f19d6a62",
-      "override_sha256": null
+      "override_sha256": "e18fa87a1586d6f11732e1ce374ee92ddee38ce02ebaed082e03475bf89f49d3"
     },
     {
       "path": "resources/images/param_bed_temp.svg",
@@ -476,11 +476,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9e980390ea2e3914e0ad6ea61ee709153cde95e435a6a022ff3ecf9239a99a51",
-      "override_sha256": null
+      "override_sha256": "2e26be5b024205ea4a639fa053a8c37fcc696bedf8fff2cde8b3843ed246b2ec"
     },
     {
       "path": "resources/images/param_bridge.svg",
@@ -488,11 +488,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0b6a6596fd3396e5a7b510983fcc97836ab32c0f3f87710abca18e25a36c13ad",
-      "override_sha256": null
+      "override_sha256": "e0a766e4b34e77ed9283505e06613a6b24cc84cecf3bbe9bbf945ac9a383f764"
     },
     {
       "path": "resources/images/param_chamber_temp.svg",
@@ -500,11 +500,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "4c613cf530325bec36f22232716b4a1fd485d0ab913288b2b41ec94c0ecbb023",
-      "override_sha256": null
+      "override_sha256": "ad97333b1dfd27e8f9f58ed888adaaf8c72347abaab679562d642873910a0525"
     },
     {
       "path": "resources/images/param_concentric.svg",
@@ -512,11 +512,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2bf7883a70a4164032f5137ebc4db511cc6adf9083f03d233e2ed5e990ed530c",
-      "override_sha256": null
+      "override_sha256": "195b4cc8ad854949f12c0aa562c598de34508757f3746e883f6afe05401bef57"
     },
     {
       "path": "resources/images/param_cooling.svg",
@@ -524,11 +524,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a3d3f2af53d33766c13e63ce63104f08be1614ffcb4e09ddd05ddb3afd0b37c0",
-      "override_sha256": null
+      "override_sha256": "e68e3028618d1ce669bc7640d270bbcb3b3be0862515cf7ee9fdd487813b8046"
     },
     {
       "path": "resources/images/param_cooling_aux_fan.svg",
@@ -536,11 +536,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f75292566948d40689621ed244f34650d4a0c53b8d5a928adab8d390c7468517",
-      "override_sha256": null
+      "override_sha256": "9dbf87256acdc15d6de01f28f50f3614c30b6910b0c30530924e3046f8714a4d"
     },
     {
       "path": "resources/images/param_cooling_exhaust.svg",
@@ -548,11 +548,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "958315fc9d563bdd73384af520c7cd8d383ea45d0ce3923dbc4a7cf4a57931a3",
-      "override_sha256": null
+      "override_sha256": "e71940f2944b7bdd3a99dcda5c6cdad50a88acbb87acfe6fe78628dd62d48874"
     },
     {
       "path": "resources/images/param_cooling_fan.svg",
@@ -560,11 +560,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "00ce74717bd172518dc023a748124c3a06e4b9a9467686d2b75866331f73bc2b",
-      "override_sha256": null
+      "override_sha256": "4c06bf7f4e5a5dfe9a01023fca6e17bcc611b532a2f4b71c1ce3ab356772cde8"
     },
     {
       "path": "resources/images/param_cooling_part_fan.svg",
@@ -572,11 +572,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9044664e5d5d65f15f1dd6abecb9ae37418a32ea87c277b78561d3d0c164102c",
-      "override_sha256": null
+      "override_sha256": "691fe9d2e711daa2eae0738a3ce866c0c9fea205f8e21668f1ab95f086266f03"
     },
     {
       "path": "resources/images/param_cooling_specific_layer.svg",
@@ -584,11 +584,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "12607beaca7ca5678c92b164f1f039929559db5b8d25634fda074d99c9a2a9bd",
-      "override_sha256": null
+      "override_sha256": "f39b73e9c07e6d1edadc9ad1c25853620173b89f0a931553e03a1ee2a4e8afa0"
     },
     {
       "path": "resources/images/param_crosshatch.svg",
@@ -596,11 +596,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "eb872c5784e0e05429ecf45cf27fa673be1afc5dcf7c4e5f3101b25b27e41c0e",
-      "override_sha256": null
+      "override_sha256": "c9a389cea90a9ac9ad9cd5688bf434f80132ee6a288c29730610cdae54bbde6f"
     },
     {
       "path": "resources/images/param_crosszag.svg",
@@ -608,11 +608,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a8ecaf1fd7d4c066bc2a64ea95f65022e52ed2356a2d0447a4d984371f5cbbf3",
-      "override_sha256": null
+      "override_sha256": "702757307b629dc67392e2f4438825233f32745370bb08075b313c3457f618a1"
     },
     {
       "path": "resources/images/param_cubic.svg",
@@ -620,11 +620,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "34a8a17d439861007232363ba51b338d70bc08bc52239bf7777de9a2f75fd7f4",
-      "override_sha256": null
+      "override_sha256": "78a13e40b7539de3b4a6a7be50c4c5896e48634f9ef735ef675f19d6a93c64e7"
     },
     {
       "path": "resources/images/param_dependencies_presets.svg",
@@ -632,11 +632,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9f0c18a5a7ab94cdae143d1407d0d3de23c6d3d56fa5f9a7496f7f403101b4bc",
-      "override_sha256": null
+      "override_sha256": "759bd0c1bb2bac50cff14429fe5aaf528b512857b9aca26ac1debbb9fb974b92"
     },
     {
       "path": "resources/images/param_dependencies_printers.svg",
@@ -644,11 +644,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3f0f293ebccd71022a4309b979821340f2e9e45705cf8c6c5d91701f58245804",
-      "override_sha256": null
+      "override_sha256": "2253b67abfc52b60f497e949309e4abe2bc5ff917ffd94584b5d9c13e5299fda"
     },
     {
       "path": "resources/images/param_extruder_clearance.svg",
@@ -656,11 +656,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c80f8a03c087c7331e95a45cf0efc6d51e964f111971bdb6e9466485fd312fc2",
-      "override_sha256": null
+      "override_sha256": "c38602526c72dab9f6a11a093ef2b57b930ff35e7d8abf16c789ae93f45f4f30"
     },
     {
       "path": "resources/images/param_extruder_lift_enforcement.svg",
@@ -668,11 +668,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "116132f9771f21344a7abe7683f8522d6056bc06ea5612a9424d9fd8b5891ac3",
-      "override_sha256": null
+      "override_sha256": "ef7285948b648677080967b59f4478f777e0cd04ba0d9729c8708a4949641ad5"
     },
     {
       "path": "resources/images/param_extruder_size.svg",
@@ -680,11 +680,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a38f5258de6b821f5a668e4ac53aa0ceb6019a192ecc79c3cb39af3a5eaefc5e",
-      "override_sha256": null
+      "override_sha256": "1e6a6155bfaefe46e30d00220c37c1f8a5e3c2a3f51c2cb076d95c1deb859595"
     },
     {
       "path": "resources/images/param_extruder_temp.svg",
@@ -692,11 +692,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "dbf9a5dc6a8f5d85702075ad1608ee41518cd025f12db48682f1c6cdaa0c5270",
-      "override_sha256": null
+      "override_sha256": "d0538aa429bb4a2bf49b52da087de65046ea44496407e95eb69552ffdb5827de"
     },
     {
       "path": "resources/images/param_filament_for_features.svg",
@@ -704,11 +704,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7be631217383b03a79371d7f37cdfa01823088414b4b3ad3a846538e93d453e9",
-      "override_sha256": null
+      "override_sha256": "f85c7df31f56ae7a20fc0e0cdf7bad7aa9626d965203497ca5cd70e39af9efb8"
     },
     {
       "path": "resources/images/param_flow_ratio_and_pressure_advance.svg",
@@ -716,11 +716,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "704ec6e7d42463597092de169be5d456cac164d00a543ae6b95c30f9af469bd6",
-      "override_sha256": null
+      "override_sha256": "a00c8c6172c763b6e464de82ad476929a8adaedaa61680cf794c55dcd1932e40"
     },
     {
       "path": "resources/images/param_flush.svg",
@@ -728,11 +728,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cab28f71946268a2dc59386a1f59c3f22467eb365f888ba5633f9db580edae47",
-      "override_sha256": null
+      "override_sha256": "5adbb5c6605150204d81d360fe92d030f1e2e2a486f324d75f57b01d45007b2a"
     },
     {
       "path": "resources/images/param_gcode.svg",
@@ -740,11 +740,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c4b29585c0464b607d8db8f1f4879ae5eda0a7e9df5af6c2166bf3064e2ca014",
-      "override_sha256": null
+      "override_sha256": "c49e29089224753f313fa85da469efd5954d8c54454b22b4fcd300faa545f64f"
     },
     {
       "path": "resources/images/param_grid.svg",
@@ -752,11 +752,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3911f738a06acc31f6fd4756eca7054fc5ec4060c017adff652f35449e176909",
-      "override_sha256": null
+      "override_sha256": "b9fed886a83925a118e10236b9c4e560c59a8d4463a0bf54cc94ed62ddd412df"
     },
     {
       "path": "resources/images/param_gyroid.svg",
@@ -764,11 +764,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6c63fda0126561ba87c8a3b299e375ffb2330046ad2c8d5a0466a0b5aaa4157e",
-      "override_sha256": null
+      "override_sha256": "83b7bfba88e3649344a78a0a0297cd99bb332ddb3a506d2961292577639a2c5c"
     },
     {
       "path": "resources/images/param_hilbertcurve.svg",
@@ -776,11 +776,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "08a86a6598271700ae49c4512cccbe7394f3d5b42bec56e20167d9e53d2c7566",
-      "override_sha256": null
+      "override_sha256": "b6c1331b5a953e3fca4fc555d6ba31659a611859e89128d77b05c293265a5e93"
     },
     {
       "path": "resources/images/param_honeycomb.svg",
@@ -788,11 +788,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ad230e2869705b33a576d5c4658cfad2e9f582c1dd84ba496c82bdf901b76fdd",
-      "override_sha256": null
+      "override_sha256": "c273068f44d2844e6d49ec3ee38c48fd2dcdc7b2f5aee324a97b692c0a34f92f"
     },
     {
       "path": "resources/images/param_infill.svg",
@@ -800,11 +800,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a0fe862c8e0c916001fe629487fcdfb147e6356b19cfd1df44cd2e5f4f7cc208",
-      "override_sha256": null
+      "override_sha256": "d7fdacef16e63f465563ac6bbdf574a964c126c195448d12d508e5c87208a5fd"
     },
     {
       "path": "resources/images/param_information.svg",
@@ -812,11 +812,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "722e0aad06b9bf993626057d10090dc2bd264eb1f10087b73a65574e8f7bbf8d",
-      "override_sha256": null
+      "override_sha256": "1fb2c032eb1abf170a189d4d8646237397cc7902aa510b00a3768edb3db46fdc"
     },
     {
       "path": "resources/images/param_ironing.svg",
@@ -824,11 +824,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2937c009e9448125c823a9d4a30424445188e610b304b9866beaafcf62ccf4b8",
-      "override_sha256": null
+      "override_sha256": "017753a4228f89de3d40cb7c0c551890604c9d4cb675799f3a65171d3886de08"
     },
     {
       "path": "resources/images/param_jerk.svg",
@@ -836,11 +836,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2bb8a8d17a8a1e42857e3f6e3165b35b2ea809479689f94234937ad7f905b0af",
-      "override_sha256": null
+      "override_sha256": "4ce8c90400ef494bdb13cecb3aca2e3a6446ec798cbf4c56a6395cc192f49c93"
     },
     {
       "path": "resources/images/param_junction_deviation.svg",
@@ -848,11 +848,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ccbd99804ef2eb7d42d3ab89e33b508c6c3d404e316d97b5a6bae0e6c8be1372",
-      "override_sha256": null
+      "override_sha256": "e9a547322f6088a1477aa9a75411530e129988677e2e6b02ea3c2b6eb704a45c"
     },
     {
       "path": "resources/images/param_lateral-honeycomb.svg",
@@ -860,11 +860,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "20a7d8bf9c23586f88a80ce1962716b5f3e58120a91b75eebaa4f39d69656445",
-      "override_sha256": null
+      "override_sha256": "b96e8f0e764908633ef8ca6a93c937c89d7c74fb78ecf8388c293c56e09fa105"
     },
     {
       "path": "resources/images/param_lateral-lattice.svg",
@@ -872,11 +872,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "109cdfbab9e851b640789a00267dab653a77c2dd8307188d1571b45cdb57c0c0",
-      "override_sha256": null
+      "override_sha256": "84e3095cfc3ccf9472fd01214322da475a9abfa5c566e159a59284fe922ee735"
     },
     {
       "path": "resources/images/param_layer_height.svg",
@@ -884,11 +884,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6c13e0f6047b4e4102ca3bcffa0bfd56e2eaeb6fddee99ba01ff9b367af152ca",
-      "override_sha256": null
+      "override_sha256": "cd227a63c539cd409eff256faca556876cbaead85715cd46ea9664d0f48c918f"
     },
     {
       "path": "resources/images/param_lightning.svg",
@@ -896,11 +896,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7c4234211b5e430f9d4f161a2bdff5377f86961cc82e9cd7078175a58bc8d756",
-      "override_sha256": null
+      "override_sha256": "a5674a2021b7fe4903535e3d4e1ad3619944cc3114d47c2c9c270940e362f1f0"
     },
     {
       "path": "resources/images/param_line.svg",
@@ -908,11 +908,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "374fa47ee3f199d865e4019efe1795923b03e7fb3f084810e4cc95638daec2e8",
-      "override_sha256": null
+      "override_sha256": "43f69a61f77bbfb6b9d887b2829bdb23ed68725485b55bafc77554120301df6f"
     },
     {
       "path": "resources/images/param_line_width.svg",
@@ -920,11 +920,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f57a9c9215cfccc0986c36e29d0ceaca99b137c2e51e4f82901239e1ab4cc375",
-      "override_sha256": null
+      "override_sha256": "5cc36f29d86afe4a80d4ff5f29093b959df640d3b8476b403542f8ef9dcf6dc1"
     },
     {
       "path": "resources/images/param_lockedzag.svg",
@@ -932,11 +932,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0f57014fe62d9306479e189056760756829d96b61e5e4fb50c80d606259211a5",
-      "override_sha256": null
+      "override_sha256": "28d5732d33fc75703e01d55e015eec1f3bfc6e75f2a7765d1b0549da66086357"
     },
     {
       "path": "resources/images/param_monotonic.svg",
@@ -944,11 +944,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "55535e8ea4aca44e17d667dc4b6bba3df472b987e37125332adc730f5fd13fe5",
-      "override_sha256": null
+      "override_sha256": "059085e264116546ae0076068c4018408ce6d80c9f0408ac76bc844e7c01a82e"
     },
     {
       "path": "resources/images/param_monotonicline.svg",
@@ -956,11 +956,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cfc80c0ecfd5957bfd65c5cc9b357547a2f7c042c1c69b8d0920ead8655f7c50",
-      "override_sha256": null
+      "override_sha256": "9a716c0698986df851d00d15cb9c0a3f5a59645fa144ba5a956b6ebfef998633"
     },
     {
       "path": "resources/images/param_multi_material.svg",
@@ -968,11 +968,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cdb09b9b60efd7481d6a795774593434c9babb74175858942bd665155834f2cc",
-      "override_sha256": null
+      "override_sha256": "e1abfe7b4353da2e2952394225e38b3c905d876f9d11170924810cc7bb9d4915"
     },
     {
       "path": "resources/images/param_octagramspiral.svg",
@@ -980,11 +980,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "aea6bdb48655bc8e2c821749a09c2dd53831590255f4ba5892858a808fa25e9b",
-      "override_sha256": null
+      "override_sha256": "67d93d45f55f67409dc92353ece1c071e4b5e9aeb5565a0b7167bc380f735f07"
     },
     {
       "path": "resources/images/param_ooze_prevention.svg",
@@ -992,11 +992,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "08d900ec6947cfe97e42a57232bec25e3c191e4ace921e1c353c2ca848911999",
-      "override_sha256": null
+      "override_sha256": "9be5818f3f3a2e79675c934fd8339ec1dc14634abe5ffd5506b6cb47ade170ae"
     },
     {
       "path": "resources/images/param_overhang.svg",
@@ -1004,11 +1004,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c656d5d0a6aebba274911117c47bcf3d4f64f6fbf555aa04f09d987ccb9b8b5c",
-      "override_sha256": null
+      "override_sha256": "074bd350633ca031e3b65681a39ececc5a2784dacfd3b6be79294f6726d17dc3"
     },
     {
       "path": "resources/images/param_overhang_speed.svg",
@@ -1016,11 +1016,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "00bf1421acf13bb94af0454a26d0bb8e1920604934255539dd2f06e71ffb5c99",
-      "override_sha256": null
+      "override_sha256": "f0abed89898726756bfc094bada5c946c9d5ed65492b374283ff13ea922d7284"
     },
     {
       "path": "resources/images/param_position.svg",
@@ -1028,11 +1028,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cc2f67bc40efd5af96740e4baf5a7ba21f3cdd5d38f03d2b9291c8706d7686cb",
-      "override_sha256": null
+      "override_sha256": "ea44feb2517ce0669b2d9b6cf4e50b94ae5625e209bdf8e55a6476915732a110"
     },
     {
       "path": "resources/images/param_precision.svg",
@@ -1040,11 +1040,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "534025bc2e2fded74cdf6d24fce3a21eae197f7ab986aaacedb1fbf5b94210d8",
-      "override_sha256": null
+      "override_sha256": "e404f6eff505e938ef3dcb31674649c628645651403f2788cbecb6ed4a56e8ee"
     },
     {
       "path": "resources/images/param_printable_space.svg",
@@ -1052,11 +1052,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "698518710fbf46989f32d24892fbeace31b553c05d84cf1f6d70aeb7eeb92b25",
-      "override_sha256": null
+      "override_sha256": "516b40325dee413414bb3039b425b3281c1d7a1a140d55c62cb6f628db473fd8"
     },
     {
       "path": "resources/images/param_quartercubic.svg",
@@ -1064,11 +1064,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e69554a8796b19da05a4aa6ac841631ab45a1a20518ad78c55328d6eda6c6151",
-      "override_sha256": null
+      "override_sha256": "757b8330045b85b4d50cf5cf3ffdadcc0ee50cc464dfe7fa6685967c9ad0d9e5"
     },
     {
       "path": "resources/images/param_raft.svg",
@@ -1076,11 +1076,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "633ff015da1acca3809da496a021c62e282029c562fa1aaaa9ba85c6bc6d5ecd",
-      "override_sha256": null
+      "override_sha256": "9985c1b71c852bb5e847b7e34011007d2fe04bc509c3cb68660803911cc97e3a"
     },
     {
       "path": "resources/images/param_rectilinear-grid.svg",
@@ -1088,11 +1088,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7fedd7b053d9c02a7e1426aa06db4b64ca5f30b00ea9e5ad4cd0f7763cb5c06f",
-      "override_sha256": null
+      "override_sha256": "15d41ac467e345cfd3293ca30e87e996e3bfcefd706365fc61bc7777f45343ce"
     },
     {
       "path": "resources/images/param_rectilinear.svg",
@@ -1100,11 +1100,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "253690c63c12dffecdd372f0bf3ab027cc94ed33f2a57b87c04875a588d11783",
-      "override_sha256": null
+      "override_sha256": "e42ebb17b0e5bab28ccc412304acbda8f621f2f82840e230b3e6dc98e3422caf"
     },
     {
       "path": "resources/images/param_rectilinear_interlaced.svg",
@@ -1112,11 +1112,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6a4199fb39c2fba0bdfbf9b27873b96998069786e2e4e559cd8d3b28468f585d",
-      "override_sha256": null
+      "override_sha256": "bb5d4e93c54e154a7306fb1aacb1edb2db49e4052580b7f233e5b43b0fedbfc0"
     },
     {
       "path": "resources/images/param_resonance_avoidance.svg",
@@ -1124,11 +1124,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "fc1d2c601dd77a4770afc03ec347a3575f5b8bee17a84d2a079f4d5efe78de57",
-      "override_sha256": null
+      "override_sha256": "b37bcfd3bce434266c7050b3bd4409fd3b327f4af92693ef7ad4ea323b896436"
     },
     {
       "path": "resources/images/param_retraction.svg",
@@ -1136,11 +1136,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "801ca338cc7492dd951fc15c26927c2ed8fc1a984de4b7a944ce8c16a64611fe",
-      "override_sha256": null
+      "override_sha256": "8d85c1799bab35f84e434cfb6c57f772aae9e7506e0e4c394f1a7962d04b3a85"
     },
     {
       "path": "resources/images/param_retraction_material_change.svg",
@@ -1148,11 +1148,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "087aa7a236bad49d14ab432617564ffb53db25113d58b588f0722e134cae3123",
-      "override_sha256": null
+      "override_sha256": "673f4d1c642b8fb21d1892d22eea0c3d72892dbb2a3a43a0dd1d3337fd009694"
     },
     {
       "path": "resources/images/param_seam.svg",
@@ -1160,11 +1160,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7dee6665e09fdab57f5fa1a3d13105458f795df50a3f69340b56d9c91d9407b9",
-      "override_sha256": null
+      "override_sha256": "e50b6106e906567a2c7740d593bc2bc18b08ab5a9ea165a1eefda66436149820"
     },
     {
       "path": "resources/images/param_settings.svg",
@@ -1172,11 +1172,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7495614bca67f6bf9d9ddba9ee434dbf4169a4f8d7f296f5be2fbe9fc4b186af",
-      "override_sha256": null
+      "override_sha256": "b39feb3ca4dc17c9e0426dabe83f5009a719dfa4135824d33ea29227d2fcb9f6"
     },
     {
       "path": "resources/images/param_shell.svg",
@@ -1184,11 +1184,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "768d70e380c0655d0ca8a396a369d14652e0a3e99a0011fd9e0f380bdee49040",
-      "override_sha256": null
+      "override_sha256": "f100b1568286c602dc8d50b05ea7201435533a758a02a0275d483d80794acde8"
     },
     {
       "path": "resources/images/param_skirt.svg",
@@ -1196,11 +1196,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "aed1d6ff700edd16ee5246bc24a5aece597df87acfb00d4b3810e598bf208b83",
-      "override_sha256": null
+      "override_sha256": "2c909f2ea253e7bdbd7c03d5353eb1bd16e7992a9aef2823fcfb9cda4c9cacec"
     },
     {
       "path": "resources/images/param_special.svg",
@@ -1208,11 +1208,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a65c00f7b8337e15617ad82a4735e6c2688bcfa8bdcab778ed3c310e7969ec43",
-      "override_sha256": null
+      "override_sha256": "17b981203a264a342954b6338b9adab9a40facd61f03535cac570f4193d30272"
     },
     {
       "path": "resources/images/param_speed.svg",
@@ -1220,11 +1220,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "33ae534da6099fd21a54c27404fcc90a2073804e0b9936bdf899df2964480ae3",
-      "override_sha256": null
+      "override_sha256": "682de61f33d9b727a10a5aaf001a309bcb3c345c772b8a1a89b59e42ac95fe1c"
     },
     {
       "path": "resources/images/param_speed_first.svg",
@@ -1232,11 +1232,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "616738cfc8cba2a5b5a63cb6618ba7496e8b63596dfc3c4d6a940e2e060a77fa",
-      "override_sha256": null
+      "override_sha256": "08552cd88f29ce3be5978fab53850308b1db5c913b378b06283739f064021704"
     },
     {
       "path": "resources/images/param_spiralinset.svg",
@@ -1244,11 +1244,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "85b039bd826bce205a67c1b54f86244357069c31ccf7baa20d481dc0193c3ba0",
-      "override_sha256": null
+      "override_sha256": "5b5878d38a9613536a767526a300d2ca95761277f11123cbf4a9a76887fb9025"
     },
     {
       "path": "resources/images/param_support.svg",
@@ -1256,11 +1256,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "208f3ad70810af0f975e8b23e6952b09b20143c9b9f6f1fcad0f5ab7d14a1782",
-      "override_sha256": null
+      "override_sha256": "e0f5113af7896062e06ededa68c5d38db012a5575d8f392333fa031ac4b8cd47"
     },
     {
       "path": "resources/images/param_support_filament.svg",
@@ -1268,11 +1268,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "400741f6af2a1d0ec788501988171129139d4dd20d99da0c3abaffdb143e2f47",
-      "override_sha256": null
+      "override_sha256": "bded117a249aa2c051511c7fd08dd66e77935532ad04cb7d8b8685981233e85e"
     },
     {
       "path": "resources/images/param_support_tree.svg",
@@ -1280,11 +1280,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ae265189420121c0cc64bf57d039d7b97751bd2a62a647b90965726b20fd355f",
-      "override_sha256": null
+      "override_sha256": "6628bf6e3adbcf2ee45351b1ec729da5967ec46d2346680a7267325cdbaa6ae0"
     },
     {
       "path": "resources/images/param_supportcubic.svg",
@@ -1292,11 +1292,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "775f3bef6d36a00a1ed430f4b736c947dcf1ac98efa9fc151e5917d716f5dd0a",
-      "override_sha256": null
+      "override_sha256": "ecc004a559140125663da2adb7cf6969b7cd79804436b7e84c1e1059686780f4"
     },
     {
       "path": "resources/images/param_temperature.svg",
@@ -1304,11 +1304,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d1dd08cee25175eea60d2877737916b179c644a38db88b2e3ad18e5ae4601247",
-      "override_sha256": null
+      "override_sha256": "cf5b0cab8d47c2b2973482b568b5b2b8a6b0648f0610a9b4149366c3864865a5"
     },
     {
       "path": "resources/images/param_toolchange.svg",
@@ -1316,11 +1316,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b27f5a339c8940561efdf8d6d859d88b30153a3230e2645f25b8272f612f800d",
-      "override_sha256": null
+      "override_sha256": "6614b70237b7877dbcea8f8ec3692d87501bf666f7fd14e9f4be85797d6c5755"
     },
     {
       "path": "resources/images/param_toolchange_multi_extruder.svg",
@@ -1328,11 +1328,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f345ee39a810fe9b6666eb9aae35448652b44c0e879ca077655a067c60e92fd3",
-      "override_sha256": null
+      "override_sha256": "bfb488ffe2fcfcb3adafa1acb41a1f17474cb54cb94a144cdee3a0a69e92fdf0"
     },
     {
       "path": "resources/images/param_tower.svg",
@@ -1340,11 +1340,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f16002d3f89974926bec8c251493e38af547a3306ae58c6c9538a9bf5fd89f69",
-      "override_sha256": null
+      "override_sha256": "7fdb7e05f8e5cb986680eb1e8ea2663eaf3424a55a824ff86cc4af8a0520fa64"
     },
     {
       "path": "resources/images/param_tpmsd.svg",
@@ -1352,11 +1352,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "924ed70aa40dadf320e2a8388ce72c973c10f1a3e2d2328a442b096c25518a5f",
-      "override_sha256": null
+      "override_sha256": "8fd53fa68fb9b30173351d948f316dac4d1624f638062ced24285b51ba6c7e4b"
     },
     {
       "path": "resources/images/param_tpmsfk.svg",
@@ -1364,11 +1364,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7912080fc0ceb3001dc44a91e2dada664dc2857bb3c4fd58d768c5e19403d719",
-      "override_sha256": null
+      "override_sha256": "c2ee4d8da285fdee03578d2a8d31d48210888c0ba94f59cdd26977b178c974be"
     },
     {
       "path": "resources/images/param_travel_speed.svg",
@@ -1376,11 +1376,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "db85903bc307675a1d24aa6621036373c8375e908b42a76a6580b245b6288bac",
-      "override_sha256": null
+      "override_sha256": "665c4c0523688e88a1fa737b75e5012456f45c44c3b90ab1f573cd797e6031a4"
     },
     {
       "path": "resources/images/param_tri-hexagon.svg",
@@ -1388,11 +1388,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d9d15bbe0f49ca4fbc5bf8869c09a6473568f7e46bcf0d9df87345c820670468",
-      "override_sha256": null
+      "override_sha256": "e6bf183c49b493aed4dda1c0f6b053dc78ae32506c6665ee910b6c4e20a4cdce"
     },
     {
       "path": "resources/images/param_triangles.svg",
@@ -1400,11 +1400,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f846e4fdabca133d0b49dc27005bab8bb085868ed49c7c3d9fac2c48a87e1a67",
-      "override_sha256": null
+      "override_sha256": "ad6111bfd7a9f7718518ab5838cf4bef6b8602169b1447c84cb92378c56e946b"
     },
     {
       "path": "resources/images/param_volumetric_speed.svg",
@@ -1412,11 +1412,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c81f1b90d32d99386eebbade59c88e1f33fe3af76539738ea1ef41379f9eda51",
-      "override_sha256": null
+      "override_sha256": "27722c4cd4f6a67ff0efe1d6b25b6eccc06e6d02adfdda85ec3b666eb721933d"
     },
     {
       "path": "resources/images/param_wall.svg",
@@ -1424,11 +1424,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0f554c33965b2830b59a1d93bfa6d9831eff11846b28d9bd2be97b62df3e9256",
-      "override_sha256": null
+      "override_sha256": "cd32188750ad848dd481bfc9860fba763eed208c5badf7a4482637c55e30fdc4"
     },
     {
       "path": "resources/images/param_wall_generator.svg",
@@ -1436,11 +1436,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "dee64146668384055d514af7ba26014b8d3d21d7ae5b427b82a91f8198306af1",
-      "override_sha256": null
+      "override_sha256": "3164beee6e70867db0bdcdbd594deb4e965a1ed4e6373c31e575a1e9227c68d8"
     },
     {
       "path": "resources/images/param_wall_surface.svg",
@@ -1448,11 +1448,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "5b85a46e40270cd7a7895c85fc6e0f3436b2ac2c645928f88a6b46e6bf0b0bcd",
-      "override_sha256": null
+      "override_sha256": "530851b48ece28ef5c786f844adba1470fd5b775d140fac7ac51f2caec5b9c0c"
     },
     {
       "path": "resources/images/param_z_contouring.svg",
@@ -1460,11 +1460,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e3f0291be8767bdb1845f715288300697b8b97cad9be61fbf32f5c4783572450",
-      "override_sha256": null
+      "override_sha256": "29ab92a5f42de0767c264c96b3ea85f39fc09800fbc34c391a2ee1dca6b2d40c"
     },
     {
       "path": "resources/images/param_zigzag.svg",
@@ -1472,11 +1472,11 @@
       "size": "24x24",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "1de3a9298b2ea767d1fac953c2ac04c55ba181f09e7a597659abb9c56db6fc65",
-      "override_sha256": null
+      "override_sha256": "91f9ba3ad28dc36274e4029522aa4969de2092c8cfd305db4b3f8246d90a4fe3"
     },
     {
       "path": "resources/images/pellets.svg",
@@ -1484,11 +1484,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c9061ddfe61775309da28001a6d013e92cc35bd369a113938611f2da95f638e1",
-      "override_sha256": null
+      "override_sha256": "649e11b4946df5af46bb60b9f55c828c74643a09f0c95b643c661936edbe3d13"
     },
     {
       "path": "resources/images/pipe_of_empty.svg",
@@ -1496,11 +1496,11 @@
       "size": "9x52",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "87dfbb28091ab79845d4430911699f37f77a14c597cd2c5ef67d9175fd1ce843",
-      "override_sha256": null
+      "override_sha256": "00d8008709c26207d9bb84ee968aa0d32eeb29b5286c50c9d1f9be35b9078742"
     },
     {
       "path": "resources/images/pipe_of_filled.svg",
@@ -1508,11 +1508,11 @@
       "size": "8x52",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "501c128350fb432c55b214808a1a8102da89db688b1d8dad66ca1c9195add906",
-      "override_sha256": null
+      "override_sha256": "7c21c0f43339f405a4525a955cecda5ac745a2d467367d8eaa3e4f31f5bacab9"
     },
     {
       "path": "resources/images/pipe_of_loading_selected.svg",
@@ -1520,11 +1520,11 @@
       "size": "9x52",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0ab2fa4a47182fdebdae0d6aa4d384a19b9af7206a0007b3e8ddb62a9a61f3ae",
-      "override_sha256": null
+      "override_sha256": "2677bdc7e51086ebbb09e18b0f6e69f298acbbfdb64a23cc7adb8d8497a44cbd"
     },
     {
       "path": "resources/images/pipe_of_unloading_selected.svg",
@@ -1532,11 +1532,11 @@
       "size": "8x52",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "1501ea389dea1f163cc37c90421bd007d4a1350ced7df175d3f18efa044514ed",
-      "override_sha256": null
+      "override_sha256": "aefbed428095b12f0660c253bad16078d02a752be301f725642cc8419c123035"
     },
     {
       "path": "resources/images/plate_arrange_hover.svg",
@@ -1544,11 +1544,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d3ebe36499e8c66ad44620e561d3f15969775516c3015b5b35e06e390e456e54",
-      "override_sha256": null
+      "override_sha256": "edbb1bd7349d38f303045ad56b59cd3404b2b07c4488a87bf915c3405cf082d1"
     },
     {
       "path": "resources/images/plate_arrange_hover_dark.svg",
@@ -1556,11 +1556,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "8ae7d945fe846e8f06ba3758f5905f9ea4841876f9a29868ffc7510c5aae66aa",
-      "override_sha256": null
+      "override_sha256": "bf237afa70fa3de4ed866db64558c729bdbb02c24e10db8d975c0bd7f16228f5"
     },
     {
       "path": "resources/images/plate_imex_copy_mode_hover.svg",
@@ -1568,11 +1568,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f8102c0a56085f98cc88df343f89794ae8c9119bd59f88edb4771256399c2169",
-      "override_sha256": null
+      "override_sha256": "70acc239f2494e504e600c5fee0c442958f56044e7b705212f602f744deea328"
     },
     {
       "path": "resources/images/plate_imex_copy_mode_hover_dark.svg",
@@ -1580,11 +1580,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "bd7df63d8ff1e989fc065c17f203556eb86c5f96778ee3a7e56648d79a64bd5c",
-      "override_sha256": null
+      "override_sha256": "69651a833b257a5f8a6d5d44fe1734281c6dfbfe61fd7d615f0427712da300a4"
     },
     {
       "path": "resources/images/plate_imex_custom_mode_hover.svg",
@@ -1592,11 +1592,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b93ae0946e87aa4b271137e636f8501bf86b32b435ca26570db539cf597858a8",
-      "override_sha256": null
+      "override_sha256": "eefcec299bf4692e9f732fa396e494e8b6be0c2448261a054f5348caf1cb0c69"
     },
     {
       "path": "resources/images/plate_imex_custom_mode_hover_dark.svg",
@@ -1604,11 +1604,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "906183d54312b24fa3d9b5629c1749827c68b04dca97a380b4dd60b6ba5f4a7b",
-      "override_sha256": null
+      "override_sha256": "402213b78ccdf0e567b2412c7ef4e9d709edeab7e784b12b74d033e36c1291c1"
     },
     {
       "path": "resources/images/plate_imex_mirror_mode_hover.svg",
@@ -1616,11 +1616,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7a407be8d8224d4527f05e8d9da27f4cf5eafb76939da6834f39da7c2c36ca1b",
-      "override_sha256": null
+      "override_sha256": "7070e80013a49fd4589671c7ddc070d21efcb3f7240ccde6ce2f8ac90000d87f"
     },
     {
       "path": "resources/images/plate_imex_mirror_mode_hover_dark.svg",
@@ -1628,11 +1628,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b3a3e3d406c0e5cd17e47b78cbea58b949a52f94ad02f608be7584c4ede5c9b3",
-      "override_sha256": null
+      "override_sha256": "4c596c51208a3390dce1a2d8af7166daaee432aa48824e365b23500c9bdf7426"
     },
     {
       "path": "resources/images/plate_imex_normal_mode_hover.svg",
@@ -1640,11 +1640,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "30aac78f2487eb1b93b59e822b402f4d1839db8e70d3b16294f0224f3fd34582",
-      "override_sha256": null
+      "override_sha256": "0d69386ae6188d797288abae473c3596f50b19a61f9937d2a465bb0e8b6dae83"
     },
     {
       "path": "resources/images/plate_imex_normal_mode_hover_dark.svg",
@@ -1652,11 +1652,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "056e0d610942c57f709ee123189205d840c12f971d156dae92b8b21ce720317c",
-      "override_sha256": null
+      "override_sha256": "172868e8ef0351883d5dec79c236eaa8c290af66fe4fefbd6c14041a99d112c8"
     },
     {
       "path": "resources/images/plate_locked.svg",
@@ -1664,11 +1664,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "63fd4d3fab39b1603eff981bec6cee2e85dc85c7e6f8cb5a8a8691bcd681da5f",
-      "override_sha256": null
+      "override_sha256": "4a139a235089aea0c46713941ad63c240834cb3160f358154ac9500f1ee808be"
     },
     {
       "path": "resources/images/plate_locked_dark.svg",
@@ -1676,11 +1676,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b10a3586d2e767781a32558cb3b7bf2909ba0e9c21f30da5974a1900d7f49217",
-      "override_sha256": null
+      "override_sha256": "561f03532cef78ffebcbe041306a1479c4acebc871a8064986128d347558456e"
     },
     {
       "path": "resources/images/plate_locked_hover.svg",
@@ -1688,11 +1688,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7d75856539588cae1a1ba37edf1713449cc0dd319fe883c2adf59ce21ba460ca",
-      "override_sha256": null
+      "override_sha256": "715e139a60dd4fb842d143a91f0b1920a519254739f4d84bbffddda2b7669441"
     },
     {
       "path": "resources/images/plate_locked_hover_dark.svg",
@@ -1700,11 +1700,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "bbc4c19585a31e4fe73fc26bef72875c5440e5da393da6f72c05e6dca17e591c",
-      "override_sha256": null
+      "override_sha256": "9255cec2dd9692140053bc518ee54ea81e28c8d460052c3d9d5ce017059e3290"
     },
     {
       "path": "resources/images/plate_move_front_hover.svg",
@@ -1712,11 +1712,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6019ba6b4931d5435852a333984f4e0cbdfa4933a7d54891f99a6c62f6e531f1",
-      "override_sha256": null
+      "override_sha256": "7e33bb0a841cdab047193b1654c975eaa14e59a3ca1ed3789a1581bf40139400"
     },
     {
       "path": "resources/images/plate_move_front_hover_dark.svg",
@@ -1724,11 +1724,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b76892e0ef414c7f24fe6b5d3e1cb221b35c24fac62c880f18d81458ce76d0a4",
-      "override_sha256": null
+      "override_sha256": "2d62e8da16eceae6c5d1e6824781a21a2490f5e15d0ff000ad5b42d2519ef568"
     },
     {
       "path": "resources/images/plate_name_edit_hover.svg",
@@ -1736,11 +1736,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b2432d6dbcb9f6b7ca61074fc88bf1515f235fc10315df014c9fc454870d6bb2",
-      "override_sha256": null
+      "override_sha256": "c55480e218610f0d5a0301e939e6e8f9234c6a0d0343c9d1ccef97f10aa677ff"
     },
     {
       "path": "resources/images/plate_name_edit_hover_dark.svg",
@@ -1748,11 +1748,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ce58b55285c8dd31427c4bc1741820982f1186230c1e6bb2121f6d70bda48202",
-      "override_sha256": null
+      "override_sha256": "ca72ed76d3a92f5477f4f680d9c9cd4667ff56cde3c56dd5a55330e7ec86aa0f"
     },
     {
       "path": "resources/images/plate_orient_hover.svg",
@@ -1760,11 +1760,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2ea397302776d0f3cf04f3871b0b65e9a1872288bc99ca74e5f19d35227f5fff",
-      "override_sha256": null
+      "override_sha256": "8838556c1efe6565730f99f567308116013b5fd7efe71eb699713d8021350ced"
     },
     {
       "path": "resources/images/plate_orient_hover_dark.svg",
@@ -1772,11 +1772,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e3c42eeca5f82e5e246a85e9d5c07a9016a55a7f747ec8e5d1fa67236422a665",
-      "override_sha256": null
+      "override_sha256": "201674c9194973a558f97b409c46faf7e68251f23db50cfdcf34f5ab29ce121a"
     },
     {
       "path": "resources/images/plate_set_filament_map_hover.svg",
@@ -1784,11 +1784,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ed478f769fd8c63eebcd5267bfd1cf3ce5129209c6ae323721275cac346e1af8",
-      "override_sha256": null
+      "override_sha256": "c248c788fdc899a5f9395fd3a51c7af639320003060e0ec914dd797606c3f4ae"
     },
     {
       "path": "resources/images/plate_set_filament_map_hover_dark.svg",
@@ -1796,11 +1796,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "153caa54b99db69ae9b33f77e3b262ad9bc29951e5364b723f907bd8207538b6",
-      "override_sha256": null
+      "override_sha256": "f7341fc5b2ac6e948ff0aa21fa7f958617f3057fe6bf7572ab0ec12cbf7b6da1"
     },
     {
       "path": "resources/images/plate_settings_hover.svg",
@@ -1808,11 +1808,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "eada8791561e9341f6b23bca1adc8db055516293f6f6ce1fb59a3dc08addf2d7",
-      "override_sha256": null
+      "override_sha256": "d24433e1df67d65a29a7e899ca4c5089a2efa0e8056dd891de244a9a79beffe5"
     },
     {
       "path": "resources/images/plate_settings_hover_dark.svg",
@@ -1820,11 +1820,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b1449c15e2fbe5caab52e6d87c1c590e32adfd40a8b0b5306027fc3f63e4d7f8",
-      "override_sha256": null
+      "override_sha256": "a539daa2eb427dab002d2fbe39a4b8d61d9c4f316742d41e21647dcdc51bb1ca"
     },
     {
       "path": "resources/images/plate_unlocked_hover.svg",
@@ -1832,11 +1832,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e71a3211676b4fb5d2a23bfa97e8c33bddd867624b75039716ef442191d28222",
-      "override_sha256": null
+      "override_sha256": "a7ec8fa09bddbd88b84c4ed26bf81e6433d0a1a9b07bde446682cdd06e6d02b4"
     },
     {
       "path": "resources/images/plate_unlocked_hover_dark.svg",
@@ -1844,11 +1844,11 @@
       "size": "43x43",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "467eba7c92a527e810f09e0a7dd12968535767f25dbf3852955581f14f2cf1e6",
-      "override_sha256": null
+      "override_sha256": "255dfc7aad678c168a0ad5f790bc31db596c1b7269ce02d0761a18f3d82e6795"
     },
     {
       "path": "resources/images/print-time.svg",
@@ -1856,11 +1856,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0ed1e15c115f3a703ab7cd3e8029c1bbc4f95de42d414d50d0552409d3152dad",
-      "override_sha256": null
+      "override_sha256": "8af5392561e826cf89779e75e281619b5bbcb5a68a9c9c60ce56cb19254e4e5a"
     },
     {
       "path": "resources/images/print-weight.svg",
@@ -1868,11 +1868,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b3018160f90642b7ac5ddfe25a50a656f15faeca7df88043a1ff10c4c7bb6dea",
-      "override_sha256": null
+      "override_sha256": "351fe7b644e455afb46758022700dce1590238f93d655ff871d54a1be1b4c1ee"
     },
     {
       "path": "resources/images/print_control_resume_hover.svg",
@@ -1880,11 +1880,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "94911579c9077ce90677d336b702f016b38a3c695738740696cbdbd28bf21cf4",
-      "override_sha256": null
+      "override_sha256": "ed32953f01e40d367c3d735e631eb8c3f3d43ce285801bc6220470027571a2be"
     },
     {
       "path": "resources/images/print_info_time.svg",
@@ -1892,11 +1892,11 @@
       "size": "15x15",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c60120f5ccdbc6d22a239db3aff804a2c7ffae1f05a6dad7f041d60f2629eab6",
-      "override_sha256": null
+      "override_sha256": "de41b6f313cc74f1d9cac27f78b56ff3d62a926ec21a2b7158be9c1e96307f6e"
     },
     {
       "path": "resources/images/print_info_weight.svg",
@@ -1904,11 +1904,11 @@
       "size": "15x15",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "4e6937a64c12e0359257b6f4c3095bd3d3b75b21b409a271baae083edb200976",
-      "override_sha256": null
+      "override_sha256": "78cb6e1345593211ab8462b881b55f225d3761f72037a69491f88a7a7331e125"
     },
     {
       "path": "resources/images/print_options_bg.svg",
@@ -1916,11 +1916,11 @@
       "size": "44x22",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7651cddeecca846ee81969497bc305c1b564d8ae8fac4d6eb74a23a312713a03",
-      "override_sha256": null
+      "override_sha256": "876aeae7c24e02e56f6d2fccc40c070530f61a060b9261cb067850bc17f86921"
     },
     {
       "path": "resources/images/print_options_bg_dark.svg",
@@ -1928,11 +1928,11 @@
       "size": "44x22",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "5f5f29d792b00fa4e6832a9aa5a880102e9d8428ca3fc18015f13e44bb11ec0d",
-      "override_sha256": null
+      "override_sha256": "d48e1628be3e2fa68355382b77b2216cbb9f2f61bbb00afdcc89e3311752ada0"
     },
     {
       "path": "resources/images/printer.svg",
@@ -1940,11 +1940,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ddd719c45c1317076f0e853543c7cccf0ce5a82d5e0a8ee9bfe5a8b43dc5f23a",
-      "override_sha256": null
+      "override_sha256": "2051f58cc59330459476ca7ff5e83cbd7cdd1cd61c3fe38a1426547d881b99ac"
     },
     {
       "path": "resources/images/printer_host_browser.svg",
@@ -1952,11 +1952,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2c9583315292802091d585dfea42ed2b37058bce34c4dbe6a5eb71575ec40d80",
-      "override_sha256": null
+      "override_sha256": "8646d6a357d508c0a8e582dd8ee753b93a1492d171e8aa18d706d5b140f17614"
     },
     {
       "path": "resources/images/printer_host_test.svg",
@@ -1964,11 +1964,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f1e522d92c0b537eabb869813da2b0f19f663d99fe2f0ab4290d4a6bc9598187",
-      "override_sha256": null
+      "override_sha256": "ebb07b75bcfe759048249995bdefe4172d659ec41dc366680ff6dad75b9988e5"
     },
     {
       "path": "resources/images/printer_in_lan.svg",
@@ -1976,11 +1976,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3ab1335d013e7ee7232f4ebd11731fc89a65cd9d031077a51f93c5b3afb18ff9",
-      "override_sha256": null
+      "override_sha256": "6a194b21418bf57a71839ee75860bfaec55a4e8ee1d00c0d9f4d42b805b93b7e"
     },
     {
       "path": "resources/images/printer_status_idle.svg",
@@ -1988,11 +1988,11 @@
       "size": "12x12",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "5441558805a0db55236871db41606d27b97a67d7b0ce092466540a1c46a5890b",
-      "override_sha256": null
+      "override_sha256": "bd1246b58a57af6a48b65a87cb594f8b17f92e49ad69de2515bfd2b1200492d0"
     },
     {
       "path": "resources/images/printer_sync.svg",
@@ -2000,11 +2000,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "138cbe258e561bef25a81fc6828b580b9900caf666b782884ab9c8aa8c0ea2a6",
-      "override_sha256": null
+      "override_sha256": "a431b9dc028f42115be801b29242a915280db7e85ea8c72126a1567fe7c11157"
     },
     {
       "path": "resources/images/printer_sync_ok.svg",
@@ -2012,11 +2012,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9655be453c8bdf203ee2a684042e0870492ce9c4541b298aa80b1b70e32d40c3",
-      "override_sha256": null
+      "override_sha256": "6f2ae8b02cd34119708fa0161d63c80c3d6f8808e5c3c02070800d900e3b52fa"
     },
     {
       "path": "resources/images/process.svg",
@@ -2024,11 +2024,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c6b1a7b777722eb1d671b911ebbaeaf4241314bd75ed5fe5c3ba6331a513d69c",
-      "override_sha256": null
+      "override_sha256": "245b754163ecd42afa0b43040c11f25aa68285b948e254a5da05614648b72101"
     },
     {
       "path": "resources/images/question.svg",
@@ -2036,11 +2036,11 @@
       "size": "32x32",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "939003ec33430b08778fb090bcc314e3358b7d7e63d82bcac362f921c2be20d8",
-      "override_sha256": null
+      "override_sha256": "68a2399320e24ec78511fd26b5a8ac242e323685aa9fea9358ec5f41a75920f3"
     },
     {
       "path": "resources/images/radio_off_hover.svg",
@@ -2048,11 +2048,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f1e16d63d02f3be2fe11b41140aadb398d4fcc0d2f4ccc4780eaac36a5339f02",
-      "override_sha256": null
+      "override_sha256": "4335c6a24cadad5e077a41fe4a9d3c57f43b4ee899fc463db0c2f2014be89a60"
     },
     {
       "path": "resources/images/radio_on.svg",
@@ -2060,11 +2060,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "068f6b3ddad0744566673e112a816cd1a0442d57e4c517dbe34478ff140a4ad9",
-      "override_sha256": null
+      "override_sha256": "d1733f19bdb024830d92ab6ced7b1c09d07a74978debd449ce13a2eee68ba23e"
     },
     {
       "path": "resources/images/radio_on_hover.svg",
@@ -2072,11 +2072,11 @@
       "size": "18x18",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b96d20472721f1141aaa2dd0ab2cba6e6007a2c929db9879eafeb206b66ef849",
-      "override_sha256": null
+      "override_sha256": "72ce2a39e5d3de5072c25973196ffb36cd61431df9df171a2a9af0325e61dc9a"
     },
     {
       "path": "resources/images/reflection_x.svg",
@@ -2084,11 +2084,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b5a22bfadaa993f0e1184d45cdb0705db7954df2a29e27d87d8579be8063019b",
-      "override_sha256": null
+      "override_sha256": "7a9c58b1324263d4f846d659fc2a4288efc7d360ffd8c4810a65aece45690d58"
     },
     {
       "path": "resources/images/reflection_y.svg",
@@ -2096,11 +2096,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f86e57f2e9b4c073af34857d5cd86f832e7c0c4ae1573c37792e71f3ea93b480",
-      "override_sha256": null
+      "override_sha256": "5209fd474b1c7c75c7879ba292c3ebeeffcdd56bafee2aee4880bfcb0739f54a"
     },
     {
       "path": "resources/images/refresh.svg",
@@ -2108,11 +2108,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f8e46f4d12da187a399641021d86e670212c409b2ba267a6b96c386329b8eb1b",
-      "override_sha256": null
+      "override_sha256": "622c6dce295c6721805bc01b172c18b5fd1fa4a048f61e985634fa2b3cbc0142"
     },
     {
       "path": "resources/images/refresh_nozzle.svg",
@@ -2120,11 +2120,11 @@
       "size": "6x10",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a089316b45bdd44d0d29f22629ae6d5d362b9ca80907f51a3404bd28b4aaa43e",
-      "override_sha256": null
+      "override_sha256": "d852f69bb97bfefe875adf3d8dcef337a47e8c0b22242c5012256b248f9d9c73"
     },
     {
       "path": "resources/images/refresh_nozzle_1.svg",
@@ -2132,11 +2132,11 @@
       "size": "6x10",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "81616b52916436ec1de61c53bac8a8d07c60db5a57f84d48464d46be269ba03e",
-      "override_sha256": null
+      "override_sha256": "25313b68170cd4f06775e05729c1f1bfa5fb2624f617167cf4ef3ea309cc804c"
     },
     {
       "path": "resources/images/refresh_nozzle_2.svg",
@@ -2144,11 +2144,11 @@
       "size": "6x10",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d1a86215d347b00815e0b623c0c96ed7938dd11153ff3667058ad89ce5a9fa19",
-      "override_sha256": null
+      "override_sha256": "4e399eb8b5b0ea4cf1426b9e527c6955d9601bc8cb7164fc5f444814987679e7"
     },
     {
       "path": "resources/images/refresh_nozzle_3.svg",
@@ -2156,11 +2156,11 @@
       "size": "6x10",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c5cf619fd3ff85c381c2fe7fd7d5a1c2c16b6b5cd8106351b030f765d36640b3",
-      "override_sha256": null
+      "override_sha256": "e1cfe9472a80d7bd2280562aeef9a8aba476b9f0ecdcf3db9c1707a1feb3e607"
     },
     {
       "path": "resources/images/refresh_nozzle_4.svg",
@@ -2168,11 +2168,11 @@
       "size": "6x10",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "43ce76e59ecc9c42df11a479350d5dc9bff2365b8ef5de7c8aa21d9c6313b86d",
-      "override_sha256": null
+      "override_sha256": "57ee809881de1c160dc36312c1b340d9b6295a40b6134613db23ede2a5e5013e"
     },
     {
       "path": "resources/images/refresh_printer.svg",
@@ -2180,11 +2180,11 @@
       "size": "15x15",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7d1a656ee148d8c47fbedac34b31f034f321aebc5921cc01ae3a8d7f6db5307e",
-      "override_sha256": null
+      "override_sha256": "203faf119deb1f8d99a91c82dc0622d012604852b63be2a397dc709ee098560c"
     },
     {
       "path": "resources/images/right_extruder_active_filled.svg",
@@ -2192,11 +2192,11 @@
       "size": "24x62",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3d5bfb84e95c9feded22aa3bf23b55a51ab7c47a5fa95a958440411c082f7d43",
-      "override_sha256": null
+      "override_sha256": "c9f699ba9001efc40461cdbf2d891dbcb8bca2b96111d86fbb533535986ca3d8"
     },
     {
       "path": "resources/images/right_nozzle.svg",
@@ -2204,11 +2204,11 @@
       "size": "15x38",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "fefd35ebf781cc1013a8c517fa165218a94ed0a97a4945759978c345d311e9fd",
-      "override_sha256": null
+      "override_sha256": "0a7a9b1ad228a98f2ee400add5b9874a8a2a4627378aff760ed9336593fb444f"
     },
     {
       "path": "resources/images/sdcard_state_normal.svg",
@@ -2216,11 +2216,11 @@
       "size": "38x22",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "14de74fa0a795145c6951e72bc512a88e24cdea0868e514b9a9032eb46d3252d",
-      "override_sha256": null
+      "override_sha256": "fa7ede118cc040d8ffc3677992f78cf7555717d8a61c10eda5385433269c8381"
     },
     {
       "path": "resources/images/sdcard_state_normal_dark.svg",
@@ -2228,11 +2228,11 @@
       "size": "38x22",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "14de74fa0a795145c6951e72bc512a88e24cdea0868e514b9a9032eb46d3252d",
-      "override_sha256": null
+      "override_sha256": "fa7ede118cc040d8ffc3677992f78cf7555717d8a61c10eda5385433269c8381"
     },
     {
       "path": "resources/images/shield.svg",
@@ -2240,11 +2240,11 @@
       "size": "20x20",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "05c2b6adf817fcaabe3899084ec247a1f1c5e61b6f35db6e35de1f5cee0e31c2",
-      "override_sha256": null
+      "override_sha256": "60a9e2a15b630f588560aa3f76ca0b85a1b6b2ff2b218e53cee194d35f6e4098"
     },
     {
       "path": "resources/images/single_nozzle_n.svg",
@@ -2252,11 +2252,11 @@
       "size": "19x37",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "16411b9e40f3c883c4242a6f1265f05ffd4dceef1f7cc50e503c02c907097252",
-      "override_sha256": null
+      "override_sha256": "b0ae643cbe725e31b35ce14a4550fc9074d8280b15098e1a2a6991ed1206e1c2"
     },
     {
       "path": "resources/images/split_objects.svg",
@@ -2264,11 +2264,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0f962d60520e436300f4391002cc1f41e0b58158310f915b11b0d2f2e6c615d1",
-      "override_sha256": null
+      "override_sha256": "a2182a431589876c18ee2d0f0770a31d618e355eb646311a41058fef3ccee60c"
     },
     {
       "path": "resources/images/split_objects_dark.svg",
@@ -2276,11 +2276,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "87d260101058ae255b7d4d22dcbd1bfa578b12abf41a19cbd3a1bb300e149429",
-      "override_sha256": null
+      "override_sha256": "9e89162661e984155c583b26be8cf9142a044455ee90b7518c1961a0e46b3c59"
     },
     {
       "path": "resources/images/split_parts.svg",
@@ -2288,11 +2288,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3bfc52c7c725f7a622d60e11614f278cca61cfa86c465e5d1af747f3e1452aa8",
-      "override_sha256": null
+      "override_sha256": "9aa05b2a0361340800c73819a2e68259613c545d50a8bfea99c43051517a2e21"
     },
     {
       "path": "resources/images/split_parts_dark.svg",
@@ -2300,11 +2300,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "42c2e4ec9c81f278c84464d86b3b083d41d1360bb869f3ebcf2f09f407fd25a3",
-      "override_sha256": null
+      "override_sha256": "775caf6186e23802dbd11a26c8e56561784bf20c883cef8e2f76266775b71ae7"
     },
     {
       "path": "resources/images/spool.svg",
@@ -2312,11 +2312,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a4f9224c3fe20af4c8e5efa65279d8d937493051a12343f0256da0fc79fd6e89",
-      "override_sha256": null
+      "override_sha256": "b08d4af14038768c58c92014b6ffe3bf6baa38ad743a4d9866e01e6f13dafe89"
     },
     {
       "path": "resources/images/step_1.svg",
@@ -2324,11 +2324,11 @@
       "size": "20x20",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "65b3b9edccbfcd61f0952572f1440e76e03de2d08f123bbb9215d7e7be034986",
-      "override_sha256": null
+      "override_sha256": "93344d610e5dd914333f7f6b747feaf47bb8c68a85fa93417468cbb1d606b26c"
     },
     {
       "path": "resources/images/step_2.svg",
@@ -2336,11 +2336,11 @@
       "size": "20x20",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b84cc0baf024994cc512637ed6c0a500d5dd50e795ff5d84ef916f416698bd0b",
-      "override_sha256": null
+      "override_sha256": "650eff100523ff88604484c36ffb2a8e38ee008a818a958d8813c1c9f94f5433"
     },
     {
       "path": "resources/images/step_is_ok.svg",
@@ -2348,11 +2348,11 @@
       "size": "20x20",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ff566a8999d136996a0c48389cd02f2efec3679f15a13344700aed37161ba9c8",
-      "override_sha256": null
+      "override_sha256": "6cb0416cb4b35817573c523e26287783d4e610a7acba70fd957e4bb46e0d593a"
     },
     {
       "path": "resources/images/support.svg",
@@ -2360,11 +2360,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "4cdd5c46e67649f1f4c968ffd9d47e3fdf5976deb11f69bfc65b1f1654081416",
-      "override_sha256": null
+      "override_sha256": "8b6a3e71049809a7377b8a46c95250fb7a6a2e4f2f1b5e32fe403ab42ee1a37c"
     },
     {
       "path": "resources/images/svg_modifier.svg",
@@ -2372,11 +2372,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ee77373c2b301ef1431021374d9c4bbaeb7452ea2182b6ca9e66ea5098b0c30e",
-      "override_sha256": null
+      "override_sha256": "b1d97588f8fe3b3b82e1f9b9a9463b5605e9a5ac4bf524dad379b7ab4e78a8db"
     },
     {
       "path": "resources/images/svg_negative.svg",
@@ -2384,11 +2384,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "4eedc79a01e94d7ccb97e6edc46eda8a39e64f1a82804ee6c895c0b0ba7e58a2",
-      "override_sha256": null
+      "override_sha256": "c5cdbfe9bd6007e6721f54b6eea26d39f803311dd6d2d3a275b9cd1d46b0ee0d"
     },
     {
       "path": "resources/images/svg_part.svg",
@@ -2396,11 +2396,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3b6589b251b9431ba166e31af18cd105894e8dacf26397336c6c47f08ccd44e2",
-      "override_sha256": null
+      "override_sha256": "952686b4fa2c42228740ffe4864c49596a42556bc67d677513750d8fde3aba04"
     },
     {
       "path": "resources/images/switch_filament_maps.svg",
@@ -2408,11 +2408,11 @@
       "size": "19x19",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0bbd3797cc8fa6196c743ab179894d7c26129f6627eaa7f4527c9841a0966004",
-      "override_sha256": null
+      "override_sha256": "51a41415d1126be5a1516cbfb84b4f769ffc6ac69ff1475dd7338649f6b1ed7b"
     },
     {
       "path": "resources/images/switch_send_mode_on.svg",
@@ -2420,11 +2420,11 @@
       "size": "185x28",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3bfc4e65e17d1431f2b4322e983e7e51a166611ecb055efe29f6cb3d0e03e97a",
-      "override_sha256": null
+      "override_sha256": "8eae06076c9ae040aa781b83bf81ad62520c411498a294419d5deedc646c6b7a"
     },
     {
       "path": "resources/images/switch_send_mode_tag_on.svg",
@@ -2432,11 +2432,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7da557f963703ff2905e81befea402d29d2f194fb07a6c7456a72321c8d1ad21",
-      "override_sha256": null
+      "override_sha256": "1e527d9f28d1bfeb561ecd262afe94e7c9d82d0ef8d253d356fd167d53a812a3"
     },
     {
       "path": "resources/images/table.svg",
@@ -2444,11 +2444,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e0b618839c3c19acf3c456276fd65ad753a567e8101b27ac23d81e4aca442d6f",
-      "override_sha256": null
+      "override_sha256": "b71bd9b02f8e98be85f6cc8585e2b693bfc1b30f4b94a74e4c26ca10c559048b"
     },
     {
       "path": "resources/images/test.svg",
@@ -2456,11 +2456,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "895219875c60c6e75f72f3826d9df15fe9977b908193fbd4282ff93cb32f41ee",
-      "override_sha256": null
+      "override_sha256": "a4b45f7b44a46ba4d9fc6795157bfa4ebbab10dab5eb0a1cdd91b89176f642ef"
     },
     {
       "path": "resources/images/texture_displacement_add.svg",
@@ -2468,11 +2468,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d1d42f5f24994e682be3622a8b925342203aee792438db28f956a92b2d8368ab",
-      "override_sha256": null
+      "override_sha256": "4ab933bac344f8b8820419a7185ddac216bed0170219e36382bf76c5a416613f"
     },
     {
       "path": "resources/images/texture_displacement_add_negative.svg",
@@ -2480,11 +2480,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "fc5f494b51ad9583ab032d8efb0e7a3fb43f32fd8b9f48da295b4115f150db2d",
-      "override_sha256": null
+      "override_sha256": "00a19d73b3c66cb6b065d1ffbc8c0c19eb2f7742f0496bba75867f8ee944b91a"
     },
     {
       "path": "resources/images/texture_displacement_adjust.svg",
@@ -2492,11 +2492,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "f1bf9cf42043c83728bd6c5f29c5622300d8560b1c8c6c88314f37bfb856366a",
-      "override_sha256": null
+      "override_sha256": "0beb23863ddf5ca94a95731d9727d494927ac3451699d113ecfb36262f7e7680"
     },
     {
       "path": "resources/images/texture_displacement_avg_scale.svg",
@@ -2504,11 +2504,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "5c442af1f46dbfb46ee169d584bfbb9388b1d7dc3d3c76a362f315f0cbcb3f41",
-      "override_sha256": null
+      "override_sha256": "8c598780efbb794de0d925ca18c49a56510e5206c6ccd9ac0eec46adaa5b75ed"
     },
     {
       "path": "resources/images/texture_displacement_brush.svg",
@@ -2516,11 +2516,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9d165b2d60059d8b8a20d99088ae2d377a15c3c542e6ec227c0ce237ba7ae058",
-      "override_sha256": null
+      "override_sha256": "86db4177a70a68b5f2f34c10f3c45e3b16271dc9e4adedd88ea908d0a834be6f"
     },
     {
       "path": "resources/images/texture_displacement_checker.svg",
@@ -2528,11 +2528,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "15446482cb357ddb90a830e5d481708b6adc3d32484e600c86ed665133fe0362",
-      "override_sha256": null
+      "override_sha256": "b0c272174e81e7c0dc8dca4b4a7553e28f26a6856eda22496162227bec454017"
     },
     {
       "path": "resources/images/texture_displacement_connected_area.svg",
@@ -2540,11 +2540,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "1179aa510bdca601d5c9ebc6657f3cf9100b51dc56373b830f897a744b36c5b3",
-      "override_sha256": null
+      "override_sha256": "3619a86189db73a798876fa1507a0e49b9a5c09e6c2794b643ab8000ec8a7071"
     },
     {
       "path": "resources/images/texture_displacement_cut.svg",
@@ -2552,11 +2552,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "a142c19aedc714d5e5520f9964326eb84c58e1a23f30d696ad2e58c7ae9e000f",
-      "override_sha256": null
+      "override_sha256": "3457353b487ee47f7439e7677d2178f6bd906c4c6461232691d5d1d3542e0f91"
     },
     {
       "path": "resources/images/texture_displacement_distortion.svg",
@@ -2564,11 +2564,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ff442eedf184487cc3f7c6e6b650331a726922a445ac1f503f0ecda83e6dbf58",
-      "override_sha256": null
+      "override_sha256": "e2da5bdc6acedad427a2979df3f6841a80e4e560cd4519cf54d40ad024edc139"
     },
     {
       "path": "resources/images/texture_displacement_erase_all.svg",
@@ -2576,11 +2576,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6de247b2aa6b06642ea125d1ecd5df6354a9c429a8d552065d341680648ce7ba",
-      "override_sha256": null
+      "override_sha256": "6496e3814d1f73b4db5c5ec245f88ed389e5a969701aca2a2e2c2f96a4687bea"
     },
     {
       "path": "resources/images/texture_displacement_face.svg",
@@ -2588,11 +2588,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c0778fb9adc6fd529098e3b9d180105099331de06ee6cb483e5e4534ba345a1f",
-      "override_sha256": null
+      "override_sha256": "f80312658fe6a1ecdf9c8fd6f50f50c8a34e9b9992db34cca7c104888a212b46"
     },
     {
       "path": "resources/images/texture_displacement_fast_preview.svg",
@@ -2600,11 +2600,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ae408367ff225b2aa3860fb481cfa7679b8c0a3c8a819ee3f1ebf19602067131",
-      "override_sha256": null
+      "override_sha256": "c7d248bca332a704f94091d8be71c936bcb60017a2da00f689b869657d9d6069"
     },
     {
       "path": "resources/images/texture_displacement_frame.svg",
@@ -2612,11 +2612,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "87571b74956489fe12b6f8c4be1c0b5f9a0cbcbe88235859d999ea13e05de322",
-      "override_sha256": null
+      "override_sha256": "5691537c8cf6a4dca932372cca4c18456ec050302d9a77dcd4aab93db05bebb0"
     },
     {
       "path": "resources/images/texture_displacement_join.svg",
@@ -2624,11 +2624,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c8698949bfc0a0802c7c6c44fb9e926f086f89e28387132825456c030e50b205",
-      "override_sha256": null
+      "override_sha256": "a5b16e0fee2122cfbecab4e151c055c0662e8fc9038303d995c185943319a6bf"
     },
     {
       "path": "resources/images/texture_displacement_map_model_uv.svg",
@@ -2636,11 +2636,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "b6d36208abe7070f1d3c1ada91762f1777f6698816b68e26a97cee2b1f250a8b",
-      "override_sha256": null
+      "override_sha256": "73f797aebd6ea0b4e16523fe904cd809d681b417fe84282bddf825fa123e53e6"
     },
     {
       "path": "resources/images/texture_displacement_map_unwrap.svg",
@@ -2648,11 +2648,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9a121081da144a4f7db80907a240026764d88cb938db8228bda5750c7c8a2643",
-      "override_sha256": null
+      "override_sha256": "da8250f7587a42bf46634bc90a0d3344c44b1d1b86ac161333381d3d9e0c3a87"
     },
     {
       "path": "resources/images/texture_displacement_map_view.svg",
@@ -2660,11 +2660,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9b19980c3135a70a493f59202b19e66cb88ab5678b50ab4f742ec4f57b349bbe",
-      "override_sha256": null
+      "override_sha256": "3597c33d86746f3ca7cbc97105ef303c1db23c0ae3d8d37a68fc55da094062b0"
     },
     {
       "path": "resources/images/texture_displacement_move_down.svg",
@@ -2672,11 +2672,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d5015083121265d929999d9b46c79031b20d701f51db9a32a5c22fa4fd94e353",
-      "override_sha256": null
+      "override_sha256": "784207572c446ba9423e3ddfb728e42ee3f105af2295536e4755cd836e164de0"
     },
     {
       "path": "resources/images/texture_displacement_move_up.svg",
@@ -2684,11 +2684,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "86e15d359f74264aa9f518c10893f5e44fc25251b1152b664823377010c553bf",
-      "override_sha256": null
+      "override_sha256": "080f04ff631b09adf3f51bbbf8a44079581612e139d0ecb61f6e43e765b06b0c"
     },
     {
       "path": "resources/images/texture_displacement_real_preview.svg",
@@ -2696,11 +2696,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "01f2cffc193ba7c329dcf900c35038331d3f418d4b0ee2be3efeb177dc0147a3",
-      "override_sha256": null
+      "override_sha256": "0d00e1253ad3f853d5c6c1f4785cbd0b7ea43775c204912ab8168a4b8a6b42fa"
     },
     {
       "path": "resources/images/texture_displacement_select_all.svg",
@@ -2708,11 +2708,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "abbdeed19ff358113f16cfe5f04556370462e1b239e5796091c93160434333b6",
-      "override_sha256": null
+      "override_sha256": "5497eb80b9541f7955b1976664dbbb4b9a6eb253a73633e799634d3fb5ecda05"
     },
     {
       "path": "resources/images/texture_displacement_snap.svg",
@@ -2720,11 +2720,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "dbc5146ae49698f4b04f89ee64b3c7f4658801d8729c1e6f886460415ef9a944",
-      "override_sha256": null
+      "override_sha256": "c78286edce575c99c98c2c5ba991b6ac48c75aacd4898076f49322cd46ee2da2"
     },
     {
       "path": "resources/images/texture_displacement_tile_repeat.svg",
@@ -2732,11 +2732,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "56e6c880a99e83ce79e91dbd2fd761d901f081e117a216c3ac128527fcb30449",
-      "override_sha256": null
+      "override_sha256": "2d709e858e8ae8ea98bf397161df08f2db394c48600db877caab16bd36b06f41"
     },
     {
       "path": "resources/images/texture_displacement_unjoin.svg",
@@ -2744,11 +2744,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "58475abec396e38963811277b45af90e9607676a0ab720b1f196669902c2e35a",
-      "override_sha256": null
+      "override_sha256": "0497093c48419daae2d39cee2c56728b0a1261b97ef35be7c0df5d47136091d0"
     },
     {
       "path": "resources/images/texture_displacement_uv_avg_scale.svg",
@@ -2756,11 +2756,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "670e0a45a78864fbc76924ef63012937ba7ff73407b350119723c306c73b085c",
-      "override_sha256": null
+      "override_sha256": "e2182220ce72a90a8b4a92a711b6a2a6b6f39b1b9a13de06e5fe1d33460019ad"
     },
     {
       "path": "resources/images/texture_displacement_uv_bg_height.svg",
@@ -2768,11 +2768,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9b4144ced24b1b9706da0f400e618bd395c782f6de8ffe17ef3f745de3eec038",
-      "override_sha256": null
+      "override_sha256": "e8aa488311da9ca436b37af416d6dd349b5b90afdd52b1781d2f7aee73daa3c5"
     },
     {
       "path": "resources/images/texture_displacement_uv_clear_edits.svg",
@@ -2780,11 +2780,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "21b64a5b64e7fdcfca4f9d743a764a0264f499fd3f3bc96a81c50239ce81be6d",
-      "override_sha256": null
+      "override_sha256": "68ad60e275697b8f288a6da52d69fea1805fc5874ed5a1168a8f73894cc84e27"
     },
     {
       "path": "resources/images/texture_displacement_uv_cut.svg",
@@ -2792,11 +2792,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6bd1c6af8cea88d96f820706ed6a084c1832a1f7e2a0c5e1d03727c8a56a3f99",
-      "override_sha256": null
+      "override_sha256": "2fa3d4bb4796fe52ac23519a886d4f14ddf1e15689bf2e50606a2c861d6945da"
     },
     {
       "path": "resources/images/texture_displacement_uv_frame.svg",
@@ -2804,11 +2804,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "87374d427b628b69a7b4e19cad0de17de222c82a1eb11e8c8d86ad77f4e8b119",
-      "override_sha256": null
+      "override_sha256": "0cbb214f9edb59f9bc40e92f5311485f580b773f2a05a002349f94e4fd1aabb0"
     },
     {
       "path": "resources/images/texture_displacement_uv_join.svg",
@@ -2816,11 +2816,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d0b9f446957f22796808a336340343fa7c7d6176bfc07ad683e5a0f1e05a0a7f",
-      "override_sha256": null
+      "override_sha256": "a7a60a26d8678a715c09495904d1c02e7b80212805bb2223ae5dbf7a1c27c00d"
     },
     {
       "path": "resources/images/texture_displacement_uv_path.svg",
@@ -2828,11 +2828,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2da970973aa5963ce5b7904e787b6ed043882b62b9b5f8fa08a29e8855dd3f5c",
-      "override_sha256": null
+      "override_sha256": "e78a39681a0f4af519570c2b7a7233634c38092dfbf669a30ded3a091724da89"
     },
     {
       "path": "resources/images/texture_displacement_uv_seam.svg",
@@ -2840,11 +2840,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "345a88a0ecb3361d057c67c91bb0bbf45ecc851a3a46e6b0fa30902b61f011f7",
-      "override_sha256": null
+      "override_sha256": "eabca80a75b4d3f6cb69fadb344969d68af8aeba9ec637b37cbca7e9811d3cf9"
     },
     {
       "path": "resources/images/texture_displacement_uv_select_edge.svg",
@@ -2852,11 +2852,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "953f7acdbad38670201b85a8d56804c222e786d9035b3d4639b2e83a15a1608c",
-      "override_sha256": null
+      "override_sha256": "90a8df9fc93a37b296f1d96adc3f8c3f03457d7da9160bd56deac761aefcdc2c"
     },
     {
       "path": "resources/images/texture_displacement_uv_select_island.svg",
@@ -2864,11 +2864,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3d7d8a5f11a1fafe519104db6e2c11a749978c8e8b10573866acb7bb0dc9ab63",
-      "override_sha256": null
+      "override_sha256": "500a3ae8201c58d276d8ebc3a4f934a20eaf81a186ecd1914d28d63d8b52f554"
     },
     {
       "path": "resources/images/texture_displacement_uv_select_vertex.svg",
@@ -2876,11 +2876,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "804486a83b3a33446580efa9c38d0594da56a6dc078a7f527455ae29c7d53827",
-      "override_sha256": null
+      "override_sha256": "e3ab12d50eb280c19d29a0f00cae2e341dd65f2e238c210e81ca6b649dd6f694"
     },
     {
       "path": "resources/images/texture_displacement_uv_snap.svg",
@@ -2888,11 +2888,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9f75ac347de77251098451d0215d2f63433b683bfcaf75949d158249c3348fb0",
-      "override_sha256": null
+      "override_sha256": "4396ccaccd0480bf1e0856fa7345e5c2c818cf5fbf8727254d5ba1901280f6ed"
     },
     {
       "path": "resources/images/texture_displacement_uv_unjoin.svg",
@@ -2900,11 +2900,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "51d24906c433ef8c11a848fbe08e3dd288288573bfe42c40c80c5e9c6e1f63a4",
-      "override_sha256": null
+      "override_sha256": "2f5fd9e2948b7391278c503e7b73af50f20d483cf55ae91e2220d49ba96c74dc"
     },
     {
       "path": "resources/images/texture_displacement_wireframe.svg",
@@ -2912,11 +2912,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0f465a8663449df9aa2e37d506a942959a20c6c970f8bc985fc0c9a2b5125443",
-      "override_sha256": null
+      "override_sha256": "b054ce22d1f8467d9e6ea3a4e9e34ce8439099c8b341ee5ebaab036cbea7ad78"
     },
     {
       "path": "resources/images/toggle_on.svg",
@@ -2924,11 +2924,11 @@
       "size": "24x14",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "092c56b843b6f0f7521b135e708e52b9b2b761b856da699b593683b2f730a6f4",
-      "override_sha256": null
+      "override_sha256": "ac85dc1e42ece6d194322176e7524c344a22643f2f0a22162ed5421f6f4b6c12"
     },
     {
       "path": "resources/images/toolbar_add_plate.svg",
@@ -2936,11 +2936,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2c4454c827f23a03ea3d96139b5baa73273b084518557032796193ac9c9ea655",
-      "override_sha256": null
+      "override_sha256": "42bb123fbb54d2c6c5aa2e8f70a1603ddae4816d772ab8889e7ed7029ac24af5"
     },
     {
       "path": "resources/images/toolbar_add_plate_bodies.svg",
@@ -2948,11 +2948,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "acc5364b2990d76ed6699992ca26e0b4139a2e2f8b0a930fc023155da8d67314",
-      "override_sha256": null
+      "override_sha256": "71dbfc8bf16eea5de7c056a650ca4187b22916ba2b7f4fb1ad3cf28a159ce51e"
     },
     {
       "path": "resources/images/toolbar_add_plate_bodies_dark.svg",
@@ -2960,11 +2960,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9f3647cf55e7c4a117e2fa0e804697cddf98928bcbde3fa573ded76ac6fbc414",
-      "override_sha256": null
+      "override_sha256": "7acefcdbd3cf090245bbe5d2edb1156a6337c1b38739121d3163425cea8a9425"
     },
     {
       "path": "resources/images/toolbar_add_plate_dark.svg",
@@ -2972,11 +2972,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e5ab408c6871df12a18b9154d806e320647107a827ddb0bee3109dacd1ada751",
-      "override_sha256": null
+      "override_sha256": "d59a3056fc2960c3ffeb4694bf19947d23edccb7fb6df6ae6c9b56035310b412"
     },
     {
       "path": "resources/images/toolbar_arrange.svg",
@@ -2984,11 +2984,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "70429ef69d043b7499348edb50379d5efddf32c6f912c5d696a0d6e9c93cbecb",
-      "override_sha256": null
+      "override_sha256": "6510e3a0bc0968dc57c2ba68e2b47d14e1979147558a3c1b72731a6c4205b634"
     },
     {
       "path": "resources/images/toolbar_arrange_dark.svg",
@@ -2996,11 +2996,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3a7da311315f39bacddad3ec9da73a32a37aec573c1079bc531962a616236410",
-      "override_sha256": null
+      "override_sha256": "a4d23f7914b6b410696e2d59a7208cd0f8caaab119696cb44526a0295d728620"
     },
     {
       "path": "resources/images/toolbar_assemble.svg",
@@ -3008,11 +3008,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "08b5faacb2fda0aec20bf75fccf8b1239c71223338d08aaae5ea38c4bc5edbd4",
-      "override_sha256": null
+      "override_sha256": "c9e20d5ae2c6bf4527955407aa864db9c4aa46c0a8945545a716213daee54338"
     },
     {
       "path": "resources/images/toolbar_assemble_dark.svg",
@@ -3020,11 +3020,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7066143a1ab959051b6474a06dcf327c489dd11135db59e68058a22c9ad3fcad",
-      "override_sha256": null
+      "override_sha256": "7a90fe32b3125e5af467531c02333be0b7ba83033bbdcce7a84e34b8793501ee"
     },
     {
       "path": "resources/images/toolbar_assembly.svg",
@@ -3032,11 +3032,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "34211ac2441fbf9bbb274710cbece753a45d8e96edbcaf416f8dd7a542c07d8e",
-      "override_sha256": null
+      "override_sha256": "1420a365fbcb487955dccee2ee00fae4a55794efed84338cfd31c29c02aad868"
     },
     {
       "path": "resources/images/toolbar_assembly_dark.svg",
@@ -3044,11 +3044,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "815e16cc4fe5b0f78a0874862773661f95a453dee2227af3de422a61cc0d69cf",
-      "override_sha256": null
+      "override_sha256": "2ea1220f201f1f10ea17287f6d7cab55e128b6c8774a01338152e29e74196996"
     },
     {
       "path": "resources/images/toolbar_big_brush.svg",
@@ -3056,11 +3056,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "80436abb53e8ffde867e155054575b098d102f0dd1dfbcf7616c56d84b56c705",
-      "override_sha256": null
+      "override_sha256": "22e5c6f41d310e03960889cb0ab9d99ea0ab935714405840778182eb424765d5"
     },
     {
       "path": "resources/images/toolbar_brimears.svg",
@@ -3068,11 +3068,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d4c66ee64a137e0e83f87e3a20d909564acd88d5bc57a0ab14b73a81c01d23d5",
-      "override_sha256": null
+      "override_sha256": "d00a1e75f7b60f9cc59a0f72757236093d84f7f90c0f4fd59163650ae61f2360"
     },
     {
       "path": "resources/images/toolbar_brimears_dark.svg",
@@ -3080,11 +3080,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c1fbc23023f200660ed7e5c817e09aafd0b0f140c0b871c3ce29567155190910",
-      "override_sha256": null
+      "override_sha256": "75640d54dd357b15dd44cb16b2420896c2fa86e9baf4dc6e0643ee78120cfca0"
     },
     {
       "path": "resources/images/toolbar_cut.svg",
@@ -3092,11 +3092,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "83ea3d631fb2623709e8c6c49b70b135c27351789ea1f43148db6e25634fc037",
-      "override_sha256": null
+      "override_sha256": "b706a6ac5d0ade3e960c385cbc47a6a05199a3931b649ec1c6607ba940a5a473"
     },
     {
       "path": "resources/images/toolbar_cut_dark.svg",
@@ -3104,11 +3104,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0a18a793ee074353ecb800aff67dd4b893e48445f479158d1e26d8d8417ae480",
-      "override_sha256": null
+      "override_sha256": "ba1ec8b49493d97c93bc3b80b0dac403fce770eaf0bb34cc071ec61c71cd19c7"
     },
     {
       "path": "resources/images/toolbar_face.svg",
@@ -3116,11 +3116,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "bd8cb8a843593b29838bf420132d07896c877466cd798518bb157be75ea0f93f",
-      "override_sha256": null
+      "override_sha256": "fc4741d35d7cd627d8c87fc8ab69e6b6527ac3b567c23e3a00d178e47fb5cbaa"
     },
     {
       "path": "resources/images/toolbar_flatten.svg",
@@ -3128,11 +3128,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "fc7b06ee08ff7b947b5c2c27f35b5f87c9fed55002adb080aafcf82156b80569",
-      "override_sha256": null
+      "override_sha256": "a913ffe7f0edea7e47e50e50983f9a9ed0e14e94aee2393fcf12b5d7b717e0cb"
     },
     {
       "path": "resources/images/toolbar_flatten_dark.svg",
@@ -3140,11 +3140,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "4336d2c0848f0f46445e16381a9029daf45dcfa1e5fb06dad9ae4746d5093dcf",
-      "override_sha256": null
+      "override_sha256": "117a3baa9dbcf37878e2c4f7c882a42caf1317c8a433cf13a818a6eb4723c661"
     },
     {
       "path": "resources/images/toolbar_fuzzy_skin_paint.svg",
@@ -3152,11 +3152,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cf1deeb3d6875f6c8c9996452a93d598fb86505156822cb0a387c233ba861313",
-      "override_sha256": null
+      "override_sha256": "37df6a4bf7af9b28514464d39886459cb338398250d5d29999c0b8d331d7ff95"
     },
     {
       "path": "resources/images/toolbar_fuzzy_skin_paint_dark.svg",
@@ -3164,11 +3164,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "2c91cc81344a7bb191f65c6fc257b20655041bc824626599d54ea088f0481492",
-      "override_sha256": null
+      "override_sha256": "64230d20c7ac0597f4acd89c4d5c1b575764a1b2922917a37f5db7adb5aa9227"
     },
     {
       "path": "resources/images/toolbar_measure.svg",
@@ -3176,11 +3176,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "28e7340958dcfe6927119db9706fe9e52c87806975bf8514aafd7ad9bcb89020",
-      "override_sha256": null
+      "override_sha256": "3b290341c01785840c809ce7fdca0d48e4f42dcc47573753f387c644e2d2c5aa"
     },
     {
       "path": "resources/images/toolbar_measure_dark.svg",
@@ -3188,11 +3188,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "cec74505fc48201f7169fa5772779b97ff2c281c3376ef976a0e5348b093dd07",
-      "override_sha256": null
+      "override_sha256": "51443d5bede0b9558ecc487e7468adfbbbea18a9e49bd2eee738f4a043f48e40"
     },
     {
       "path": "resources/images/toolbar_meshboolean.svg",
@@ -3200,11 +3200,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "ef469d7beb708f1c1848ec8a8b0d8fc654c6ca2ebec572bcee4475ded2ad8327",
-      "override_sha256": null
+      "override_sha256": "3b3f138da6c9648774c97510f9046be21a0b5a5229fc20ce0e1e62fcc520249e"
     },
     {
       "path": "resources/images/toolbar_meshboolean_dark.svg",
@@ -3212,11 +3212,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "90bad3248691ce4e426e3faab09704a51e637b40c40f9d8008d0905a9438befa",
-      "override_sha256": null
+      "override_sha256": "656842680ae02f9e542a83a02f405e1c2d4d86d64ffa05f12270db55ba5d8c53"
     },
     {
       "path": "resources/images/toolbar_move.svg",
@@ -3224,11 +3224,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "fff496465fb018195a4f17aed1e3d08d11d2829cfc52ce6b76bb781d93025b0f",
-      "override_sha256": null
+      "override_sha256": "f03546277cf9fd9da049171e502fa30476eb961e4bc3d193c4fdac85bff86a65"
     },
     {
       "path": "resources/images/toolbar_move_dark.svg",
@@ -3236,11 +3236,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9b9632dfef630594faac187a2db2244ca734c4fdaca2e79e98b8537f356a6c35",
-      "override_sha256": null
+      "override_sha256": "ad6c758eaf3f816d25588a20cffbcb940945efe370d133d076799847de2d60ab"
     },
     {
       "path": "resources/images/toolbar_open.svg",
@@ -3248,11 +3248,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "20315a17bee60e75d7d900723481e94c8283fe0a9d28bec9301255be9c36fe35",
-      "override_sha256": null
+      "override_sha256": "10fc7a9ef8134545f9e4a060dfcb0298c3806571b6f8ef4bf1e2c70c4c7a3836"
     },
     {
       "path": "resources/images/toolbar_open_dark.svg",
@@ -3260,11 +3260,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "39f999502c897a7fb617f10a91a2720a53f98f33141773abb0964f2705eb4ef0",
-      "override_sha256": null
+      "override_sha256": "dc21b21471eda0248a08e7008db349e3b3abee883188f86230a40e6c95a5f761"
     },
     {
       "path": "resources/images/toolbar_orient.svg",
@@ -3272,11 +3272,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "bc97fcb324503127549e63f49341b2bd24f6176c8eeebc5f3787c0e0b9537432",
-      "override_sha256": null
+      "override_sha256": "c856a34d273caddbd848e1c83eb7fe04d99207f0445e912ecb95e538497b0198"
     },
     {
       "path": "resources/images/toolbar_orient_dark.svg",
@@ -3284,11 +3284,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c5ba4602fadba21697a46f24bd8a11678458f1f66f6238fa7a27e9c7714836ec",
-      "override_sha256": null
+      "override_sha256": "b1272a2c2d11a59119eb64e65718acdc58c8eac227810b85bec001634f7022a1"
     },
     {
       "path": "resources/images/toolbar_painted_modifier.svg",
@@ -3296,11 +3296,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "16bc774b3bff08846711d95ca6eb7f32b1f96a88db636e9e11b3cd98261ed998",
-      "override_sha256": null
+      "override_sha256": "96c7822ddbc969f9918a84db304207536a438a6b94c202acfcadae113336d78a"
     },
     {
       "path": "resources/images/toolbar_painted_modifier_dark.svg",
@@ -3308,11 +3308,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "7d79fc5f6fdc4467b692e0a2fcb59f669c7408bb4de6e4e0e9d29acffc3e4ad7",
-      "override_sha256": null
+      "override_sha256": "682035ce7dc2dc02a4a25b71f4878fb98129de9fc0d7ccb98797f6d382de043f"
     },
     {
       "path": "resources/images/toolbar_rotate.svg",
@@ -3320,11 +3320,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "adf053d68fb56de11d4acd3e9b9f4a25145559356fdbd806b272e22bedfa98e2",
-      "override_sha256": null
+      "override_sha256": "a14963d76fc39b13f80cadd89c0754585590d295aef52f21f600a181362d8509"
     },
     {
       "path": "resources/images/toolbar_rotate_dark.svg",
@@ -3332,11 +3332,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d4a0365fb72782d9cfa3c69d9bd414447ff6e643dcf8a85268cf86838c739831",
-      "override_sha256": null
+      "override_sha256": "7c6a59c6cfa7ab48c7049508b0ab10aed20fc3650abeb996979230a374b0365b"
     },
     {
       "path": "resources/images/toolbar_scale.svg",
@@ -3344,11 +3344,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9d0abbe7f8550d62fcb55ad04a91da1161ca8b030abed297121847632969b27d",
-      "override_sha256": null
+      "override_sha256": "6261e7e5a1f4641b9d1db970206b40b30312673302213e125d88b89fe6194ef7"
     },
     {
       "path": "resources/images/toolbar_scale_dark.svg",
@@ -3356,11 +3356,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d16c5353bbae13b8f71bcc46097627654129829febf2b2e5fe456acad64f2c51",
-      "override_sha256": null
+      "override_sha256": "d9ea817b732679b23e78c28b888750b765db941e29feeeb5a2ea338145037aed"
     },
     {
       "path": "resources/images/toolbar_seam.svg",
@@ -3368,11 +3368,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "35444b34e06283eecae87ecc3e5c3b7569fe4d04cb53f70480f266533376c425",
-      "override_sha256": null
+      "override_sha256": "d67ed9e184c80a8089704d69813ca76b979e048ee90ef67e0e9c77f3b4c1b2d4"
     },
     {
       "path": "resources/images/toolbar_seam_dark.svg",
@@ -3380,11 +3380,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "74ac894920c47b098ec9329d30c2b6d0beba348e4aad6e36392b0ad5ad83cdbf",
-      "override_sha256": null
+      "override_sha256": "a1895dd5fdade2d009758269b994aef6b7bb88f0653b119f63109158f3a10793"
     },
     {
       "path": "resources/images/toolbar_support.svg",
@@ -3392,11 +3392,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "50b4600d6d04a2d61329ce800a204cedf71c7e9a4d25ea3f1a608bb6bbaf0080",
-      "override_sha256": null
+      "override_sha256": "fdb86861bd4871f061839fc9c01cd6e83512ee1026101dd6b7141444ca1cbee0"
     },
     {
       "path": "resources/images/toolbar_support_dark.svg",
@@ -3404,11 +3404,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "6082a48ec0998add2c1d7463dbab53e8d98c481a9d41fdacb013b9152e158889",
-      "override_sha256": null
+      "override_sha256": "9f2abe87ebce2e1626d9f72a600abe8761b0e2a76ed7ad6fa2d93faca7990729"
     },
     {
       "path": "resources/images/toolbar_text.svg",
@@ -3416,11 +3416,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "9206890a2cb0b74240ec646c1ffeeee2ed1f77157c997809c6813a80f20676d2",
-      "override_sha256": null
+      "override_sha256": "7364db816e419e3570a1500d4eb4495741544eb5d00602dcb781dcec93551934"
     },
     {
       "path": "resources/images/toolbar_text_dark.svg",
@@ -3428,11 +3428,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "0df7dd219f4a0fdcb337af5a90ffca88b78a462ede2bf8c2cb109303c377d690",
-      "override_sha256": null
+      "override_sha256": "57c78fb823faa35b54cedf2868cceac1750a2badd38a51f61332e6bb95a0c6be"
     },
     {
       "path": "resources/images/toolbar_texture_displacement.svg",
@@ -3440,11 +3440,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "d5aa8518a64755796662b66c4420b09452edfe7d2ede987a8907c424002b1428",
-      "override_sha256": null
+      "override_sha256": "0ff013ce5aa907493eb63f1f456e2686621fbb77fc1b31026911b093ea7c98cf"
     },
     {
       "path": "resources/images/toolbar_variable_layer_height.svg",
@@ -3452,11 +3452,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "85f12019b39d4799fb3924faf17a411d1d9f646565e252730b3a31a26cbca341",
-      "override_sha256": null
+      "override_sha256": "b1f88ff8d6834868a1d4bae061983da059c0ab4d1fde6e86523e99c37df4c5e3"
     },
     {
       "path": "resources/images/toolbar_variable_layer_height_dark.svg",
@@ -3464,11 +3464,11 @@
       "size": "40x40",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "325be6156b56289ca5a17e8f59a2ba4591ff78701e63274f5792121c159af95a",
-      "override_sha256": null
+      "override_sha256": "587a9e1a25b82b77bba87adf22f15bd89c3792790c9fb47809c344ce4ba5b55e"
     },
     {
       "path": "resources/images/triangle_paint.svg",
@@ -3476,11 +3476,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "5d42e21c2cedbe0defd7a82f01d78830e6fbacd1383053f25866a7508fefe059",
-      "override_sha256": null
+      "override_sha256": "4d92fea8ac7926a6396a68bb34003b9b82631267d1043e27bf72e1c554c6bba3"
     },
     {
       "path": "resources/images/triangle_paint_dark.svg",
@@ -3488,11 +3488,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "06e66918efbe808c3cbf96e6f337c27dd27841a25feaf0f648d84e2519a45a14",
-      "override_sha256": null
+      "override_sha256": "39d5dd0e06ef86b194d8ecfd2c221256f548d6292985fbc43dd0e625def65065"
     },
     {
       "path": "resources/images/undefined.svg",
@@ -3500,11 +3500,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "e9e0ab0aaa46e2d98e484da8f23b898fe9378f743436b33a383eea240b2f0d7b",
-      "override_sha256": null
+      "override_sha256": "f6c2a3c845732b670dfd3e097d15ddb05b334995b662359259cb26b8441e1432"
     },
     {
       "path": "resources/images/unlock_hover.svg",
@@ -3512,11 +3512,11 @@
       "size": "16x16",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "895219875c60c6e75f72f3826d9df15fe9977b908193fbd4282ff93cb32f41ee",
-      "override_sha256": null
+      "override_sha256": "a4b45f7b44a46ba4d9fc6795157bfa4ebbab10dab5eb0a1cdd91b89176f642ef"
     },
     {
       "path": "resources/images/video_state_on.svg",
@@ -3524,11 +3524,11 @@
       "size": "20x14",
       "usage": "icon",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c10487115d9847d7bd28df60824004fb83fe96f0bf0dd78bbb1bf0111bc54f6a",
-      "override_sha256": null
+      "override_sha256": "dfb4de75007702a97dc12f48c4f34a7a555dfcc706d9773fe1c4ea3c3507803f"
     }
   ]
 }
