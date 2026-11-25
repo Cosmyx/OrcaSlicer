@@ -16,21 +16,31 @@ branch of `scripts/cosmyx/integrate/branches.json`.
 
 ## Decision
 
-- Bundle 8 holds only the bundle-7 features rebased on OrcaSlicer 2.5.2 plus
-  the new integration and build tooling: `chore/cosmyx-foundation`,
+- Bundle 8 holds the bundle-7 features rebased on OrcaSlicer 2.5.2, the new
+  integration and build tooling, and the branding the bundle-7 build already
+  showed (the branding engine, the app icon and About banner, the product
+  name, the install paths): `chore/cosmyx-foundation`,
   `ci/cosmyx-upstream-sync`, `feat/cht-nozzle`, `feat/ironing-temperature`,
-  `fix/toolchange-fan-order`, `feat/cosmyx-models`, `feat/cosmyx-version`,
+  `fix/toolchange-fan-order`, `feat/cosmyx-machine-hook`,
+  `feat/cosmyx-models-cosmyx-only`, `feat/cosmyx-version`,
   `feat/cosmyx-stealth-mode`, `feat/cosmyx-translations`,
   `feat/cosmyx-translations-fill`, `feat/cosmyx-windows-signing`,
   `feat/cosmyx-update-check`, `feat/cosmyx-profiles`,
-  `feat/cosmyx-machine-hook`, `ci/cosmyx-artifact-checks`,
-  `ci/cosmyx-macos-signing`, `ci/cosmyx-exec-smoke`, `ci/cosmyx-flatpak-off`,
-  `ci/cosmyx-integrate`, `ci/cosmyx-mac-retry`, `ci/cosmyx-dev-build`,
-  `docs/cosmyx-changelogs`, `docs/cosmyx-rebase-skill`.
+  `ci/cosmyx-branding-engine`, `feat/cosmyx-logos`,
+  `feat/cosmyx-product-name`, `feat/cosmyx-install-paths`,
+  `ci/cosmyx-artifact-checks`, `ci/cosmyx-macos-signing`,
+  `ci/cosmyx-exec-smoke`, `ci/cosmyx-flatpak-off`, `ci/cosmyx-integrate`,
+  `ci/cosmyx-mac-retry`, `ci/cosmyx-dev-build`, `docs/cosmyx-changelogs`,
+  `docs/cosmyx-rebase-skill`.
 - Every other branch, and every new feature from now on, goes to bundle 9.
 - Every row of `branches.json` carries an integer `bundle`, the bundle that
   first ships the branch. A row without one is refused, and so is a branch
   whose parent is in a later bundle (a branch cannot ship before its parent).
+- A row names its parent with `parent`, or several with `parents` (a branch
+  that merges two stacks); every parent comes earlier in the list, and the
+  bundle rule holds for each of them. On a base other than DEV, such a branch
+  replays only the commits none of its parents has, onto its first replayed
+  parent with the other replayed parents merged in.
 - `just cosmo-integrate [BASE] --bundle N` (and `cosmo-rebase-check`) keeps
   only the rows of bundle N or an earlier one, then runs the parent checks
   again on that subset. Without `--bundle`, every row is kept, as before.

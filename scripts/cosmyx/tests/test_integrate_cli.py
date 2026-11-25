@@ -570,6 +570,41 @@ class ReplayIntegrateTests(Sandbox):
     def file_at(self, ref: str, path: str) -> str:
         return self.git(["show", f"{ref}:{path}"])
 
+    def two_parent_branch(self) -> None:
+        """feat/b merges feat/a and feat/m, then adds its own commit using both."""
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.branch("feat/m", "DEV", {"src/m.txt": "m\n"}, from_ref=self.base)
+        self.git(["checkout", "-q", "-B", "feat/b", "origin/feat/a"])
+        self.git(["merge", "-q", "--no-ff", "--no-edit", "origin/feat/m"])
+        self.commit({"src/a.txt": "a\nb\n", "src/m.txt": "m\nb\n"}, "feat/b change")
+        self.push("feat/b")
+        self.rows.append({"name": "feat/b", "parents": ["feat/a", "feat/m"]})
+        self.git(["checkout", "-q", "DEV"])
+
+    def test_a_branch_with_two_parents_is_replayed_onto_both_without_their_commits(self) -> None:
+        self.two_parent_branch()
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        # Only its own commit is replayed: neither parent's commit comes again.
+        self.assertIn("replayed 1", out.split("| feat/b")[1].splitlines()[0])
+        own = self.git(["log", "--no-merges", "--format=%s", "rebase/v1/feat/b", "--not", "rebase/v1/feat/a",
+                        "rebase/v1/feat/m"]).splitlines()
+        self.assertEqual(own, ["feat/b change"])
+        # Its base merges both replayed parents.
+        base_parents = self.git(["rev-list", "--parents", "-n", "1", "rebase/v1/feat/b~1"]).split()[1:]
+        self.assertEqual(base_parents, [self.git(["rev-parse", "rebase/v1/feat/a"]),
+                                        self.git(["rev-parse", "rebase/v1/feat/m"])])
+        self.assertEqual(self.file_at("integration/v1", "src/a.txt"), "a\nb")
+        self.assertEqual(self.file_at("integration/v1", "src/m.txt"), "m\nb")
+
+    def test_a_branch_whose_second_parent_is_missing_is_skipped(self) -> None:
+        self.two_parent_branch()
+        self.git(["push", "-q", str(self.origin), "--delete", "feat/m"])
+        self.git(["fetch", "-q", "--prune", "origin"])
+        code, out = self.run_v1()
+        self.assertEqual(code, 0, out)
+        self.assertIn("SKIPPED (parent feat/a, feat/m not replayed)", out)
+
     def test_branches_are_replayed_onto_the_base_then_merged(self) -> None:
         self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
         self.branch("feat/a-child", "feat/a", {"src/child.txt": "c\n"}, from_ref=self.git(["rev-parse", "origin/feat/a"]))
@@ -872,6 +907,21 @@ class RebaseCheckTests(Sandbox):
         code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data", self.data()])
         self.assertIn("feat/later", out)
 
+    def test_a_branch_with_two_parents_replays_only_its_own_commits(self) -> None:
+        self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
+        self.branch("feat/m", "DEV", {"src/m.txt": "m\n"}, from_ref=self.base)
+        self.git(["checkout", "-q", "-B", "feat/b", "origin/feat/a"])
+        self.git(["merge", "-q", "--no-ff", "--no-edit", "origin/feat/m"])
+        self.commit({"src/a.txt": "a\nb\n", "src/m.txt": "m\nb\n"}, "feat/b change")
+        self.push("feat/b")
+        self.rows.append({"name": "feat/b", "parents": ["feat/a", "feat/m"]})
+        self.git(["checkout", "-q", "DEV"])
+        code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data", self.data()])
+        self.assertEqual(code, 0, out)
+        lines = {line.split("|")[1].strip(): line for line in out.splitlines() if line.startswith("| ")}
+        self.assertIn("1 commits", lines["feat/b"])
+        self.assertIn("clean", lines["feat/b"])
+
     def test_branch_not_on_the_remote_is_a_warning(self) -> None:
         self.branch("feat/a", "DEV", {"src/a.txt": "a\n"}, from_ref=self.base)
         code, out = self.run_cli(["rebase-check", "v1", "--no-fetch", "--data",
@@ -963,8 +1013,8 @@ class BranchListTests(unittest.TestCase):
     def test_shipped_list_has_the_gui_feature_branches_after_their_parents(self) -> None:
         entries = {entry.name: entry for entry in cli.load_branches()[1]}
         names = list(entries)
-        self.assertEqual(entries["feat/cosmyx-external-machines"].parent, "chore/cosmyx-foundation")
-        self.assertEqual(entries["feat/cosmyx-update-check"].parent, "feat/cosmyx-version")
+        self.assertEqual(entries["feat/cosmyx-external-machines"].parents, ["chore/cosmyx-foundation"])
+        self.assertEqual(entries["feat/cosmyx-update-check"].parents, ["feat/cosmyx-version"])
         self.assertLess(names.index("feat/cosmyx-version"), names.index("feat/cosmyx-update-check"))
         self.assertLess(names.index("chore/cosmyx-foundation"), names.index("feat/cosmyx-external-machines"))
 
@@ -974,21 +1024,29 @@ class BranchListTests(unittest.TestCase):
         # replay the whole fill a second time.
         entries = {entry.name: entry for entry in cli.load_branches()[1]}
         names = list(entries)
-        self.assertEqual(entries["feat/cosmyx-languages"].parent, "feat/cosmyx-translations-fill")
+        self.assertEqual(entries["feat/cosmyx-languages"].parents, ["feat/cosmyx-translations-fill"])
         self.assertLess(names.index("feat/cosmyx-translations-fill"), names.index("feat/cosmyx-languages"))
-        self.assertEqual(entries["docs/cosmyx-changelogs"].parent, "chore/cosmyx-foundation")
+        self.assertEqual(entries["docs/cosmyx-changelogs"].parents, ["chore/cosmyx-foundation"])
 
     def test_shipped_list_stacks_the_machine_hook_chain_and_the_profiles(self) -> None:
-        # The printer connection builds on the machine hook, which builds on the
-        # models submenu; the profiles merge feat/cht-nozzle, so their own commits
-        # are only those after the nozzle tip and the nozzle commits replay once.
+        # The machine hook sits on the foundation; the models submenu and the
+        # printer connection build on it. The profiles merge feat/cht-nozzle,
+        # so their own commits are only those after the nozzle tip and the
+        # nozzle commits replay once.
         entries = {entry.name: entry for entry in cli.load_branches()[1]}
         names = list(entries)
-        for child, parent in (("feat/cosmyx-machine-hook", "feat/cosmyx-models"),
-                              ("feat/cosmyx-printer-connection", "feat/cosmyx-machine-hook"),
-                              ("feat/cosmyx-profiles", "feat/cht-nozzle")):
-            self.assertEqual(entries[child].parent, parent)
-            self.assertLess(names.index(parent), names.index(child))
+        for child, parents in (("feat/cosmyx-machine-hook", ["chore/cosmyx-foundation"]),
+                               ("feat/cosmyx-models-cosmyx-only", ["feat/cosmyx-machine-hook"]),
+                               ("feat/cosmyx-printer-connection", ["feat/cosmyx-machine-hook"]),
+                               ("feat/cosmyx-logos-extra", ["feat/cosmyx-logos"]),
+                               ("feat/cosmyx-profiles", ["feat/cht-nozzle"])):
+            self.assertEqual(entries[child].parents, parents)
+            for parent in parents:
+                self.assertLess(names.index(parent), names.index(child))
+        self.assertEqual(names.index("feat/cosmyx-models-cosmyx-only"), names.index("feat/cosmyx-machine-hook") + 1)
+        # The models submenu is one branch (#129): the old feat/cosmyx-models is folded into it.
+        self.assertNotIn("feat/cosmyx-models", names)
+        self.assertEqual(names.index("feat/cosmyx-logos-extra"), names.index("feat/cosmyx-logos") + 1)
 
     def test_ci_base_branch_names(self) -> None:
         git = cli.Git(Path.cwd())
@@ -1015,18 +1073,22 @@ class BranchListTests(unittest.TestCase):
         rows = {row["name"]: row for row in data["branches"]}
         for name, row in rows.items():
             self.assertIn(row.get("bundle"), (8, 9), name)
-            if row["parent"] != data["base"]:
-                self.assertLessEqual(rows[row["parent"]]["bundle"], row["bundle"], name)
+            for parent in row.get("parents", [row.get("parent")]):
+                if parent != data["base"]:
+                    self.assertLessEqual(rows[parent]["bundle"], row["bundle"], name)
 
     def test_shipped_bundle_8_is_the_bundle_7_parity_and_the_tooling(self) -> None:
-        # Decision 0226: bundle 8 holds only the bundle-7 features rebased on
-        # OrcaSlicer 2.5.2 plus the integration and build tooling.
+        # Decision 0226: bundle 8 holds the bundle-7 features rebased on
+        # OrcaSlicer 2.5.2, the integration and build tooling, and the branding
+        # engine with the logos, product name and install paths.
         names = {entry.name for entry in cli.load_branches(bundle=8)[1]}
         self.assertEqual(names, {
             "chore/cosmyx-foundation", "ci/cosmyx-upstream-sync", "feat/cht-nozzle", "feat/ironing-temperature",
-            "fix/toolchange-fan-order", "feat/cosmyx-models", "feat/cosmyx-version", "feat/cosmyx-stealth-mode",
+            "fix/toolchange-fan-order", "feat/cosmyx-version", "feat/cosmyx-stealth-mode",
             "feat/cosmyx-translations", "feat/cosmyx-translations-fill", "feat/cosmyx-windows-signing",
             "feat/cosmyx-update-check", "feat/cosmyx-profiles", "feat/cosmyx-machine-hook",
+            "feat/cosmyx-models-cosmyx-only", "ci/cosmyx-branding-engine", "feat/cosmyx-logos",
+            "feat/cosmyx-product-name", "feat/cosmyx-install-paths",
             "ci/cosmyx-artifact-checks", "ci/cosmyx-macos-signing", "ci/cosmyx-exec-smoke", "ci/cosmyx-flatpak-off",
             "ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build", "docs/cosmyx-changelogs",
             "docs/cosmyx-rebase-skill"})
@@ -1065,6 +1127,35 @@ class BranchListTests(unittest.TestCase):
         with self.assertRaisesRegex(cli.SetupError, r"c \(bundle 8\): parent p is in the later bundle 9"):
             cli.check_branches(data, [cli.Entry("f", "DEV", bundle=8), cli.Entry("p", "DEV", bundle=9),
                                       cli.Entry("c", "p", bundle=8)])
+        # Every parent counts, not only the first.
+        with self.assertRaisesRegex(cli.SetupError, r"c \(bundle 8\): parent q is in the later bundle 9"):
+            cli.check_branches(data, [cli.Entry("f", "DEV", bundle=8), cli.Entry("p", "DEV", bundle=8),
+                                      cli.Entry("q", "DEV", bundle=9), cli.Entry("c", ["p", "q"], bundle=8)])
+
+    def test_several_parents_are_read_and_must_all_come_first(self) -> None:
+        path = self.write_list([{"name": "f", "parent": "DEV", "bundle": 1},
+                                {"name": "a", "parent": "f", "bundle": 1},
+                                {"name": "m", "parents": ["DEV"], "bundle": 1},
+                                {"name": "b", "parents": ["a", "m"], "bundle": 1}])
+        self.assertEqual([entry.parents for entry in cli.load_branches(path)[1]], [["DEV"], ["f"], ["DEV"], ["a", "m"]])
+        data = {"base": "DEV", "foundation": "f"}
+        # Topological order: a child listed before any of its parents is refused.
+        with self.assertRaisesRegex(cli.SetupError, "b: parent m must be DEV or an earlier row"):
+            cli.check_branches(data, [cli.Entry("f", "DEV"), cli.Entry("a", "f"), cli.Entry("b", ["a", "m"]),
+                                      cli.Entry("m", "DEV")])
+        with self.assertRaisesRegex(cli.SetupError, "b: a parent is listed twice"):
+            cli.check_branches(data, [cli.Entry("f", "DEV"), cli.Entry("a", "f"), cli.Entry("b", ["a", "a"])])
+        with self.assertRaisesRegex(cli.SetupError, "b: parent DEV cannot be combined"):
+            cli.check_branches(data, [cli.Entry("f", "DEV"), cli.Entry("a", "f"), cli.Entry("b", ["a", "DEV"])])
+
+    def test_a_row_with_bad_parents_is_refused(self) -> None:
+        for row, message in (({"parent": "DEV", "parents": ["DEV"]}, "exactly one of parent or parents"),
+                             ({}, "exactly one of parent or parents"),
+                             ({"parents": []}, "non-empty list"),
+                             ({"parents": "DEV"}, "non-empty list"),
+                             ({"parents": ["DEV", 3]}, "non-empty list")):
+            with self.subTest(row=row), self.assertRaisesRegex(cli.SetupError, message):
+                cli.load_branches(self.write_list([{"name": "f", "bundle": 1, **row}]))
 
     def test_child_before_parent_is_refused(self) -> None:
         data = {"base": "DEV", "foundation": "f"}

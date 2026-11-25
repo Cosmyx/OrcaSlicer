@@ -1,5 +1,5 @@
 {
-  "description": "Cosmyx PR branches in rebase and integration merge order (parents before children). Parent DEV means the branch sits on the foundation. Keep in sync with the rebase skill's branches.md table; add a new PR branch as a new row (its pr number once opened). A row not yet on the remote is skipped with a warning. Every row has a bundle: the Cosmyx bundle (release) that first ships it (decision 0226); a parent is never in a later bundle than its child. `--bundle N` keeps the rows of bundle N or earlier.",
+  "description": "Cosmyx PR branches in rebase and integration merge order (parents before children). Parent DEV means the branch sits on the foundation; a branch that merges several stacks lists them in `parents` instead of `parent`. Keep in sync with the rebase skill's branches.md table; add a new PR branch as a new row (its pr number once opened). A row not yet on the remote is skipped with a warning. Every row has a bundle: the Cosmyx bundle (release) that first ships it (decision 0226); a parent is never in a later bundle than its child. `--bundle N` keeps the rows of bundle N or earlier.",
   "remote": "origin",
   "base": "DEV",
   "foundation": "chore/cosmyx-foundation",
@@ -41,9 +41,15 @@
       "bundle": 8
     },
     {
-      "name": "feat/cosmyx-models",
-      "pr": 92,
-      "parent": "DEV",
+      "name": "feat/cosmyx-machine-hook",
+      "pr": 125,
+      "parent": "chore/cosmyx-foundation",
+      "bundle": 8
+    },
+    {
+      "name": "feat/cosmyx-models-cosmyx-only",
+      "pr": 129,
+      "parent": "feat/cosmyx-machine-hook",
       "bundle": 8
     },
     {
@@ -92,12 +98,18 @@
       "name": "ci/cosmyx-branding-engine",
       "pr": 99,
       "parent": "feat/cosmyx-translations",
-      "bundle": 9
+      "bundle": 8
     },
     {
       "name": "feat/cosmyx-logos",
       "pr": 101,
       "parent": "ci/cosmyx-branding-engine",
+      "bundle": 8
+    },
+    {
+      "name": "feat/cosmyx-logos-extra",
+      "pr": 130,
+      "parent": "feat/cosmyx-logos",
       "bundle": 9
     },
     {
@@ -110,7 +122,7 @@
       "name": "feat/cosmyx-product-name",
       "pr": 103,
       "parent": "ci/cosmyx-branding-engine",
-      "bundle": 9
+      "bundle": 8
     },
     {
       "name": "feat/cosmyx-svg-candidates",
@@ -146,7 +158,7 @@
       "name": "feat/cosmyx-install-paths",
       "pr": 106,
       "parent": "DEV",
-      "bundle": 9
+      "bundle": 8
     },
     {
       "name": "test/cosmyx-gui-goldens",
@@ -212,12 +224,6 @@
       "name": "docs/cosmyx-changelogs",
       "pr": 124,
       "parent": "chore/cosmyx-foundation",
-      "bundle": 8
-    },
-    {
-      "name": "feat/cosmyx-machine-hook",
-      "pr": 125,
-      "parent": "feat/cosmyx-models",
       "bundle": 8
     },
     {
