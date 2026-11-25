@@ -219,5 +219,48 @@ class CliTests(unittest.TestCase):
             self.assertTrue((root / "localization" / "cosmyx" / "demo" / "fr.po").is_file())
 
 
+
+REPO_ROOT = COSMYX_DIR.parents[1]
+
+
+def tree(folder: Path) -> dict[str, str]:
+    """Relative path -> content; a template's header (xgettext's, version
+    dependent) is left out, its messages are compared."""
+    files = {}
+    for path in sorted(folder.rglob("*")):
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if path.name == "messages.pot":
+            text = "".join(e.render() for e in g.parse_po(text).messages())
+        files[path.relative_to(folder).as_posix()] = text
+    return files
+
+
+class TemplatesInSyncTests(unittest.TestCase):
+    """`just i18n-extract` must leave localization/cosmyx as committed: a
+    source string added, changed or removed without refreshing the catalogues
+    fails here. Needs GNU xgettext; the Linux CI leg installs it and sets
+    COSMYX_REQUIRE_GETTEXT=1, so the check never silently skips there."""
+
+    def test_extraction_leaves_the_catalogues_unchanged(self) -> None:
+        xgettext = shutil.which("xgettext")
+        if not xgettext:
+            if os.environ.get("COSMYX_REQUIRE_GETTEXT") == "1":
+                self.fail("COSMYX_REQUIRE_GETTEXT=1 but GNU gettext (xgettext) is not installed")
+            self.skipTest("GNU gettext (xgettext) is not installed")
+        committed = REPO_ROOT / "localization" / "cosmyx"
+        with tempfile.TemporaryDirectory() as tmp:
+            copy = Path(tmp) / "cosmyx"
+            if committed.is_dir():
+                shutil.copytree(committed, copy)
+            with redirect_stderr(io.StringIO()):
+                x.extract(REPO_ROOT, REPO_ROOT / "src", xgettext, cosmyx_dir=copy)
+            before = tree(committed) if committed.is_dir() else {}
+            after = tree(copy) if copy.is_dir() else {}
+        self.assertEqual(sorted(before), sorted(after), "files added or removed: run just i18n-extract")
+        stale = [name for name in before if before[name] != after[name]]
+        self.assertEqual([], stale, "catalogues out of date: run just i18n-extract")
+
 if __name__ == "__main__":
     unittest.main()
