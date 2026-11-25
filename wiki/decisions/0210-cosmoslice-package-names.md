@@ -58,10 +58,22 @@ what the build or the CI reads by name keeps working.
   `with: stage:`, call it:
   - `mac-app` in build_orca.yml after "Create DMG without notary", before the
     Cosmyx macOS signing: renames the universal app, drops the validator app
-    and DMG and the unsigned `OrcaSlicer_` DMG, builds the CosmoSlice DMG with
-    upstream's `scripts/create_dmg.sh`. The signing signs every app of the
-    folder and rebuilds the DMG under the app's name, so the rename must come
-    first. A pull-request leg builds no universal app: upstream's "Create
+    and DMG and the unsigned `OrcaSlicer_` DMG, seals the app, builds the
+    CosmoSlice DMG with upstream's `scripts/create_dmg.sh`. The signing signs
+    every app of the folder and rebuilds the DMG under the app's name, so the
+    rename must come first: rename, seal, (sign,) verify, DMG.
+    Sealing: upstream's unsigned build never seals the bundle; each Mach-O
+    only carries the linker's ad-hoc signature and there is no
+    `_CodeSignature`, so `codesign --verify --deep --strict` fails ("code has
+    no resources but signature indicates they must be present") and
+    Gatekeeper calls the downloaded app damaged. Before the DMG the stage
+    keeps a signature that already verifies (a Developer ID one), fails on
+    an identity signature that no longer verifies (never silently replaced),
+    seals anything else ad hoc (`codesign --force --deep --sign -`; the
+    Python runtime lives under `Contents/Resources`, so `--deep` copes), and
+    verifies strictly, failing the step if the bundle still does not
+    verify. An ad-hoc app still needs the user's approval on first launch
+    (no Developer ID), but it is no longer reported damaged. A pull-request leg builds no universal app: upstream's "Create
     DMG <arch> without notary" and "Upload DMG <arch>" ship each arch as
     `OrcaSlicer_Mac_<arch>_<ver>`, before this hook. The stage recognises
     that leg by the per-arch bundle next to that DMG, and does the same

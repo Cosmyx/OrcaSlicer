@@ -78,6 +78,9 @@ here; see the upstream release notes.
   AppImage follow their CosmoSlice names. A guard fails the build if the
   AppImage launcher name and the file made from it disagree, or if the
   rename changes a packaging name the build scripts rely on.
+  The renamed CosmoSlice.app is sealed (ad hoc when the build is unsigned)
+  and verified before it goes into the DMG, so macOS no longer reports it
+  as damaged; a bundle that does not verify fails the build.
   Exception texts that upstream tests assert (the plugin host's "OrcaSlicer
   application is not initialized") are kept, and a test fails if the rename
   ever rewrites a text an upstream test asserts.
