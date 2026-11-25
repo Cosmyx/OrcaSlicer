@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: vi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "Mô hình hiệu chỉnh này hoạt động tốt nhất khi hướng infill được đặt là 0 độ. Để có kết quả hiệu chỉnh tối ưu, nên đặt cả 'Hướng infill' và 'Hướng infill đặc' về 0.\n"
+"Có - Tự động thay đổi các cài đặt này\n"
+"Không - Không thay đổi các cài đặt này cho tôi"
+
+msgid "Calibration Suggestion"
+msgstr "Gợi ý hiệu chỉnh"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "Mô hình hiệu chỉnh này hoạt động tốt nhất với các cài đặt infill cụ thể.\n"
+"Để có kết quả hiệu chỉnh tối ưu, nên đặt:\n"
+"- Hướng infill: %.0f°\n"
+"- Hướng infill đặc: %.0f°\n"
+"- Chỉ một thành trên lớp đầu tiên: %s\n"
+"\n"
+"Có - Tự động thay đổi các cài đặt này\n"
+"Không - Không thay đổi các cài đặt này cho tôi"
+
+msgid "Cosmyx 3D Models"
+msgstr "Mô hình 3D Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "Mô hình hiệu chỉnh đầu đôi"
+
+msgid "Calibration Models Single Head"
+msgstr "Mô hình hiệu chỉnh đầu đơn"
+
+msgid "Cosmyx Handy Models"
+msgstr "Mô hình tiện dụng Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "Căn chỉnh 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Căn chỉnh 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Căn chỉnh 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Khối lập phương hai màu"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Căn chỉnh 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Khối lập phương Cosmyx"
+
+msgid "Control Tension Belt"
+msgstr "Kiểm tra độ căng dây đai"
+
+msgid "Support Bobine"
+msgstr "Giá đỡ cuộn"

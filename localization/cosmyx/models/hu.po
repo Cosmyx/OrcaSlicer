@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: hu\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Ez a kalibrációs modell akkor működik a legjobban, ha a kitöltés iránya 0 "
+"fokra van állítva. Az optimális kalibrációs eredményhez érdemes mind a "
+"\"Kitöltés iránya\", mind a \"Tömör kitöltés iránya\" értékét 0-ra állítani.\n"
+"Igen - A beállítások automatikus módosítása\n"
+"Nem  - Ne módosítsa a beállításokat"
+
+msgid "Calibration Suggestion"
+msgstr "Kalibrációs javaslat"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Ez a kalibrációs modell meghatározott kitöltési beállításokkal működik a "
+"legjobban.\n"
+"Az optimális kalibrációs eredményhez érdemes beállítani:\n"
+"- Kitöltés iránya: %.0f°\n"
+"- Tömör kitöltés iránya: %.0f°\n"
+"- Csak egy fal az első rétegen: %s\n"
+"\n"
+"Igen - A beállítások automatikus módosítása\n"
+"Nem  - Ne módosítsa a beállításokat"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D modellek"
+
+msgid "Calibration Models Dual Head"
+msgstr "Kalibrációs modellek – dupla fej"
+
+msgid "Calibration Models Single Head"
+msgstr "Kalibrációs modellek – egy fej"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx hasznos modellek"
+
+msgid "Calage 1 SNDT"
+msgstr "Illesztés 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Illesztés 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Illesztés 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Kéttónusú kocka"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Illesztés 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx kocka"
+
+msgid "Control Tension Belt"
+msgstr "Szíjfeszesség-ellenőrzés"
+
+msgid "Support Bobine"
+msgstr "Tekercstartó"

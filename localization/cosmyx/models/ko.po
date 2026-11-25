@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"이 교정 모델은 채우기 방향이 0도로 설정되었을 때 가장 잘 작동합니다. 최적의 교정 결과를 위해 '드문 채우기 방향'과 '꽉찬 채우기 방향'을 모두 0으로 설정하는 것이 좋습니다.\n"
+"예 - 이 설정을 자동으로 변경\n"
+"아니오 - 이 설정을 변경하지 않음"
+
+msgid "Calibration Suggestion"
+msgstr "교정 제안"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"이 교정 모델은 특정 채우기 설정에서 가장 잘 작동합니다.\n"
+"최적의 교정 결과를 위해 다음과 같이 설정하는 것이 좋습니다.\n"
+"- 드문 채우기 방향: %.0f°\n"
+"- 꽉찬 채우기 방향: %.0f°\n"
+"- 첫 레이어에 벽 하나만 생성: %s\n"
+"\n"
+"예 - 이 설정을 자동으로 변경\n"
+"아니오 - 이 설정을 변경하지 않음"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D 모델"
+
+msgid "Calibration Models Dual Head"
+msgstr "교정 모델 듀얼 헤드"
+
+msgid "Calibration Models Single Head"
+msgstr "교정 모델 싱글 헤드"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx 편의 모델"
+
+msgid "Calage 1 SNDT"
+msgstr "교정용 쐐기 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx 교정용 쐐기 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx 교정용 쐐기 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "투톤 큐브"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx 교정용 쐐기 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx 큐브"
+
+msgid "Control Tension Belt"
+msgstr "벨트 장력 점검"
+
+msgid "Support Bobine"
+msgstr "스풀 홀더"

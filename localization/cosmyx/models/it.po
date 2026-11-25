@@ -1,0 +1,67 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "Questo modello di calibrazione funziona meglio con le direzioni del riempimento impostate a 0 gradi. Per risultati di calibrazione ottimali, è consigliabile impostare sia 'Direzione riempimento' sia 'Direzione riempimento solido' a 0.\nSì - Cambia automaticamente queste impostazioni\nNo  - Non modificare queste impostazioni per me"
+
+msgid "Calibration Suggestion"
+msgstr "Suggerimento di calibrazione"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "Questo modello di calibrazione funziona meglio con impostazioni di riempimento specifiche.\nPer risultati di calibrazione ottimali, è consigliabile impostare:\n- Direzione riempimento: %.0f°\n- Direzione riempimento solido: %.0f°\n- Solo una parete sul primo strato: %s\n\nSì - Cambia automaticamente queste impostazioni\nNo  - Non modificare queste impostazioni per me"
+
+msgid "Cosmyx 3D Models"
+msgstr "Modelli 3D Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "Modelli di calibrazione doppia testina"
+
+msgid "Calibration Models Single Head"
+msgstr "Modelli di calibrazione testina singola"
+
+msgid "Cosmyx Handy Models"
+msgstr "Modelli utili Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "Calibrazione 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Calibrazione 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Calibrazione 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Cubo bicolore"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Calibrazione 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cubo Cosmyx"
+
+msgid "Control Tension Belt"
+msgstr "Controllo tensione cinghia"
+
+msgid "Support Bobine"
+msgstr "Supporto bobina"

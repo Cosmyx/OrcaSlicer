@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "โมเดลสอบเทียบนี้ให้ผลดีที่สุดเมื่อตั้งทิศทางไส้ในเป็น 0 องศา เพื่อให้ได้ผลการสอบเทียบที่เหมาะสม ควรตั้งทั้ง 'ทิศทางไส้ใน' และ 'ทิศทางไส้ในแบบทึบ' เป็น 0\n"
+"ใช่ - เปลี่ยนการตั้งค่าเหล่านี้โดยอัตโนมัติ\n"
+"ไม่ - อย่าเปลี่ยนการตั้งค่าเหล่านี้ให้ฉัน"
+
+msgid "Calibration Suggestion"
+msgstr "ข้อแนะนำการปรับเทียบ"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "โมเดลสอบเทียบนี้ให้ผลดีที่สุดเมื่อใช้การตั้งค่าไส้ในเฉพาะ\n"
+"เพื่อให้ได้ผลการปรับเทียบที่เหมาะสม ควรตั้งค่าดังนี้\n"
+"- ทิศทางไส้ใน: %.0f°\n"
+"- ทิศทางไส้ในแบบทึบ: %.0f°\n"
+"- ผนังเดียวในเลเยอร์แรก: %s\n"
+"\n"
+"ใช่ - เปลี่ยนการตั้งค่าเหล่านี้โดยอัตโนมัติ\n"
+"ไม่ - อย่าเปลี่ยนการตั้งค่าเหล่านี้ให้ฉัน"
+
+msgid "Cosmyx 3D Models"
+msgstr "โมเดล 3D ของ Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "โมเดลปรับเทียบแบบสองหัว"
+
+msgid "Calibration Models Single Head"
+msgstr "โมเดลปรับเทียบแบบหัวเดียว"
+
+msgid "Cosmyx Handy Models"
+msgstr "โมเดลสำเร็จรูปของ Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "แผ่นรอง 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx แผ่นรอง 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx แผ่นรอง 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "คิวบ์สองสี"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx แผ่นรอง 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx คิวบ์"
+
+msgid "Control Tension Belt"
+msgstr "ตัวควบคุมความตึงสายพาน"
+
+msgid "Support Bobine"
+msgstr "ที่ใส่ม้วนฟิลาเมนต์"

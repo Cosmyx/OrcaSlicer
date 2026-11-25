@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: tr\n"
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "Bu kalibrasyon modeli, dolgu yönleri 0 derece olarak ayarlandığında en iyi sonucu verir. En iyi kalibrasyon sonuçları için hem 'Dolgu yönü' hem de 'Katı dolgu yönü' ayarlarını 0 yapmanız önerilir.\n"
+"Evet - Bu ayarları otomatik olarak değiştir\n"
+"Hayır - Bu ayarları benim için değiştirme"
+
+msgid "Calibration Suggestion"
+msgstr "Kalibrasyon önerisi"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr "Bu kalibrasyon modeli belirli dolgu ayarlarıyla en iyi sonucu verir.\n"
+"En iyi kalibrasyon sonuçları için şunları ayarlamanız önerilir:\n"
+"- Dolgu yönü: %.0f°\n"
+"- Katı dolgu yönü: %.0f°\n"
+"- İlk katmanda yalnızca bir duvar: %s\n"
+"\n"
+"Evet - Bu ayarları otomatik olarak değiştir\n"
+"Hayır - Bu ayarları benim için değiştirme"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D Modelleri"
+
+msgid "Calibration Models Dual Head"
+msgstr "Kalibrasyon Modelleri Çift Kafa"
+
+msgid "Calibration Models Single Head"
+msgstr "Kalibrasyon Modelleri Tek Kafa"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx Pratik Modeller"
+
+msgid "Calage 1 SNDT"
+msgstr "Kalibrasyon 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Kalibrasyon 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Kalibrasyon 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "İki Renkli Küp"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Kalibrasyon 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx Küp"
+
+msgid "Control Tension Belt"
+msgstr "Kayış Gerginliği Kontrolü"
+
+msgid "Support Bobine"
+msgstr "Makara Desteği"
