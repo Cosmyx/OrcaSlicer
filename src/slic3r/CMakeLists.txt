@@ -944,6 +944,7 @@ if (WIN32)
 endif()
 
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SLIC3R_GUI_SOURCES})
+include(GUI/Cosmyx/Cosmyx.cmake) # Cosmyx
 
 encoding_check(libslic3r_gui)
 
