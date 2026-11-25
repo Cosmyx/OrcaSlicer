@@ -171,9 +171,12 @@ def merge_language(template: Catalogue, existing: Catalogue | None, header: Entr
     return Catalogue(entries=entries)
 
 
-def extract(root: Path, src_root: Path, xgettext: str) -> dict[str, int]:
-    """Refresh every feature's template and language files. Returns msgid counts."""
-    cosmyx_dir = root / "localization" / "cosmyx"
+def extract(root: Path, src_root: Path, xgettext: str, cosmyx_dir: Path | None = None) -> dict[str, int]:
+    """Refresh every feature's template and language files. Returns msgid counts.
+
+    cosmyx_dir defaults to <root>/localization/cosmyx; the sync test points it
+    at a copy, so it can extract without touching the checkout."""
+    cosmyx_dir = cosmyx_dir or root / "localization" / "cosmyx"
     i18n_dir = root / "localization" / "i18n"
     known = {p.name for p in cosmyx_dir.iterdir() if p.is_dir() and p.name != LANGUAGES_DIR_NAME} if cosmyx_dir.is_dir() else set()
     sources = cosmyx_sources(src_root)

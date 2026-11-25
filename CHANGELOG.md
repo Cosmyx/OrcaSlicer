@@ -94,7 +94,9 @@ here; see the upstream release notes.
   Recipes `just i18n-extract`, `i18n-seed`, `i18n-graft`, `i18n-ungraft`,
   `worktree-hidden`. The graft accepts UTF-8 catalogues only, reads strings
   holding Unicode line separators, and never glues an entry to a catalogue
-  without a final newline. Pull request: pending. Decisions: 0080, 0081, 0082
+  without a final newline. A script test fails when the catalogues are out of
+  date with the sources, and `just i18n-coverage` lists the missing
+  translations (a gate with `COSMYX_I18N_STRICT=1`). Pull request: pending. Decisions: 0080, 0081, 0082
   (superseded), 0083, 0084, 0085, 0086, 0087, 0088.
 
 ### CI-release

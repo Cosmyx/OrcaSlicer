@@ -28,6 +28,25 @@ installed on every development machine. The previous Cosmyx branch
   `cosmyx-2.3.1-7`; strings whose English changed since were left empty.
 - Seeded values are kept as they were, including `CHT` translated as `CHT`, an
   acronym that stays in English.
+- **Catalogues stay in sync with the sources.** A script test runs the
+  extraction on a copy of `localization/cosmyx` and fails when any file would
+  change, so a string added, reworded or removed without `just i18n-extract`
+  is caught. A template's header is left out of the comparison, since it is
+  xgettext's and changes with its version. The test needs GNU xgettext: the
+  Linux leg of `cosmyx-checks` installs it and sets
+  `COSMYX_REQUIRE_GETTEXT=1`, which turns a missing xgettext into a failure;
+  elsewhere the test skips and says why.
+- **Coverage is reported, and enforced on request.** `just i18n-coverage`
+  lists, per feature and language, every entry a user would see in English:
+  empty (or a plural with an empty form), fuzzy, or equal to its msgid.
+  English catalogues are skipped. `scripts/cosmyx/i18n_coverage_allow.json`
+  lists the msgids that may stay as their source (acronyms such as `CHT`,
+  proper names), for every language or per language. The repository test of
+  that report only fails with `COSMYX_I18N_STRICT=1`: feature branches
+  translate French only and a per-language pass fills the other languages
+  later, so an always-on check would fail every feature branch until that
+  pass lands. Once it has, setting the variable in `cosmyx-checks` makes
+  coverage a gate.
 
 ## Consequences
 
