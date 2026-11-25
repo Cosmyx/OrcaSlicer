@@ -1,0 +1,84 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: eu\n"
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Kalibrazio-modelo honek hobeto funtzionatzen du betegarriaren norabideak 0 "
+"graduan ezarrita daudenean. Kalibrazio-emaitza onenak lortzeko, komeni da "
+"\"Betegarriaren norabidea\" eta \"Betegarri solidoaren norabidea\" biak 0an "
+"ezartzea.\n"
+"Bai - Aldatu ezarpen hauek automatikoki\n"
+"Ez  - Ez aldatu ezarpen hauek niretzat"
+
+msgid "Calibration Suggestion"
+msgstr "Kalibrazio-iradokizuna"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Kalibrazio-modelo honek hobeto funtzionatzen du betegarri-ezarpen jakin "
+"batzuekin.\n"
+"Kalibrazio-emaitza onenak lortzeko, komeni da hauek ezartzea:\n"
+"- Betegarriaren norabidea: %.0f°\n"
+"- Betegarri solidoaren norabidea: %.0f°\n"
+"- Horma bakarra lehen geruzan: %s\n"
+"\n"
+"Bai - Aldatu ezarpen hauek automatikoki\n"
+"Ez  - Ez aldatu ezarpen hauek niretzat"
+
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx 3D modeloak"
+
+msgid "Calibration Models Dual Head"
+msgstr "Kalibrazio-modeloak: buru bikoitza"
+
+msgid "Calibration Models Single Head"
+msgstr "Kalibrazio-modeloak: buru bakarra"
+
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx modelo praktikoak"
+
+msgid "Calage 1 SNDT"
+msgstr "1. doikuntza SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx 2. doikuntza SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx 3. doikuntza SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Kubo bikolorea"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx 1. doikuntza Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Cosmyx kuboa"
+
+msgid "Control Tension Belt"
+msgstr "Zinta-tentsioaren kontrola"
+
+msgid "Support Bobine"
+msgstr "Harilaren euskarria"
