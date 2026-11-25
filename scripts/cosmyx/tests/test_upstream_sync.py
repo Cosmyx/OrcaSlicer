@@ -449,7 +449,7 @@ class WorkflowFileTests(unittest.TestCase):
 
     def test_is_scheduled_and_dispatchable(self) -> None:
         self.assertTrue(sync.is_scheduled(self.text))
-        self.assertIn("cron: '23 */6 * * *'", self.text)
+        self.assertIn("cron: '23 */2 * * *'", self.text)
         self.assertIn("workflow_dispatch:", self.text)
         self.assertIn("dry_run:", self.text)
 
