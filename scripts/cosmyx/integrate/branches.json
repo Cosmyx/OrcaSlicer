@@ -180,6 +180,21 @@
       "parent": "chore/cosmyx-foundation"
     },
     {
+      "name": "feat/cosmyx-machine-hook",
+      "pr": 125,
+      "parent": "feat/cosmyx-models"
+    },
+    {
+      "name": "feat/cosmyx-printer-connection",
+      "pr": 127,
+      "parent": "feat/cosmyx-machine-hook"
+    },
+    {
+      "name": "feat/cosmyx-profiles",
+      "pr": 126,
+      "parent": "feat/cht-nozzle"
+    },
+    {
       "name": "docs/cosmyx-rebase-skill",
       "pr": 111,
       "parent": "DEV",

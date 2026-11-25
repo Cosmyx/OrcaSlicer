@@ -939,6 +939,18 @@ class BranchListTests(unittest.TestCase):
         self.assertLess(names.index("feat/cosmyx-translations-fill"), names.index("feat/cosmyx-languages"))
         self.assertEqual(entries["docs/cosmyx-changelogs"].parent, "chore/cosmyx-foundation")
 
+    def test_shipped_list_stacks_the_machine_hook_chain_and_the_profiles(self) -> None:
+        # The printer connection builds on the machine hook, which builds on the
+        # models submenu; the profiles merge feat/cht-nozzle, so their own commits
+        # are only those after the nozzle tip and the nozzle commits replay once.
+        entries = {entry.name: entry for entry in cli.load_branches()[1]}
+        names = list(entries)
+        for child, parent in (("feat/cosmyx-machine-hook", "feat/cosmyx-models"),
+                              ("feat/cosmyx-printer-connection", "feat/cosmyx-machine-hook"),
+                              ("feat/cosmyx-profiles", "feat/cht-nozzle")):
+            self.assertEqual(entries[child].parent, parent)
+            self.assertLess(names.index(parent), names.index(child))
+
     def test_ci_base_branch_names(self) -> None:
         git = cli.Git(Path.cwd())
         self.assertEqual(cli.ci_base_branch(git, "origin/DEV", "origin"), "cosmyx-ci/DEV")
