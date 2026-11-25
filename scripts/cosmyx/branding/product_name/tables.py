@@ -5,6 +5,8 @@ rename row: `{"kind": "msgid" | "literal", "old", "new", "source"}`
 - `msgid`: a translatable text. Its C++ literal(s) (or its hint) and its
   msgid in every catalogue are renamed together.
 - `literal`: a visible text that is not translated (no msgid).
+- `old` names the upstream product or its cloud, `new` CosmoSlice or Cosmyx
+  Cloud.
 - `source`: where the row comes from (`cosmoslice` for the frozen CosmoSlice
   mapping, `cosmyx` for rows added here).
 
@@ -23,7 +25,10 @@ of one catalogue language, the exact text `old`, as whole words, becomes
 around the name, inflected, plain or hyphenated, when the words next to it
 must change too (hu "az OrcaSlicer" -> "a CosmoSlice", eu "Orca-ren" ->
 "CosmoSlice-en"); never the bare plain name, which the plain rule renames.
-Rows are applied longest first, before the plain rule. They are written by a
+A row whose `old` names the upstream cloud (hu "az Orca Cloud" -> "a Cosmyx
+Cloud", ca "d'OrcaCloud" -> "de Cosmyx Cloud") renames the word before the
+cloud name, and keeps a suffix glued to it; its `new` names Cosmyx Cloud.
+Rows are applied longest first, before the plain rule (cloud rows first). They are written by a
 speaker of that language, never guessed: an inflected name without its row
 is reported by G8 as "needs inflection row".
 """
@@ -33,7 +38,7 @@ from __future__ import annotations
 from .. import BrandingError, check_relative
 import re
 
-from .tokens import NEW_NAME, TOKEN, has_token
+from .tokens import CLOUD_NAME, CLOUD_TOKEN, NEW_NAME, TOKEN, has_cloud_token, has_token
 
 RENAME_KINDS = ("msgid", "literal")
 ALLOW_KINDS = {"msgid": ("msgid",), "literal": ("file", "literal", "count"), "text": ("file", "text", "count")}
@@ -57,10 +62,10 @@ def rename_rows(rows: list) -> list[dict]:
             raise BrandingError(f"rename row needs string old and new: {row!r}")
         if old == new:
             raise BrandingError(f"rename row with identical old and new: {old!r}")
-        if not has_token(old):
-            raise BrandingError(f"rename row old does not name the upstream product: {old!r}")
-        if NEW_NAME not in new:
-            raise BrandingError(f"rename row new does not name {NEW_NAME}: {new!r}")
+        if not has_token(old) and not has_cloud_token(old):
+            raise BrandingError(f"rename row old does not name the upstream product or its cloud: {old!r}")
+        if NEW_NAME not in new and CLOUD_NAME not in new:
+            raise BrandingError(f"rename row new does not name {NEW_NAME} or {CLOUD_NAME}: {new!r}")
         checked.append(row)
     olds = [row["old"] for row in checked]
     news = [row["new"] for row in checked]
@@ -90,12 +95,19 @@ def inflection_rows(rows: list) -> list[dict]:
             raise BrandingError(f"inflection row language must be a catalogue language such as cs or pt_BR: {row!r}")
         if old != old.strip():
             raise BrandingError(f"inflection row old has leading or trailing space: {old!r}")
-        if not TOKEN.search(old):
-            raise BrandingError(f"inflection row old does not name the upstream product: {old!r}")
-        if TOKEN.fullmatch(old) and not TOKEN.fullmatch(old).group("suffix"):
-            raise BrandingError(f"inflection row old is the plain name, which needs no row: {old!r}")
-        if TOKEN.search(new) or NEW_STEM not in new:
-            raise BrandingError(f"inflection row new must name {NEW_NAME} (stem {NEW_STEM!r}) and not the upstream product: {new!r}")
+        if CLOUD_TOKEN.search(old):
+            # A cloud row: the words around the cloud name change with it.
+            if CLOUD_TOKEN.fullmatch(old):
+                raise BrandingError(f"inflection row old is the plain cloud name, which needs no row: {old!r}")
+            if TOKEN.search(new) or CLOUD_TOKEN.search(new) or CLOUD_NAME not in new:
+                raise BrandingError(f"inflection row new must name {CLOUD_NAME} and not the upstream product or cloud: {new!r}")
+        else:
+            if not TOKEN.search(old):
+                raise BrandingError(f"inflection row old does not name the upstream product: {old!r}")
+            if TOKEN.fullmatch(old) and not TOKEN.fullmatch(old).group("suffix"):
+                raise BrandingError(f"inflection row old is the plain name, which needs no row: {old!r}")
+            if TOKEN.search(new) or NEW_STEM not in new:
+                raise BrandingError(f"inflection row new must name {NEW_NAME} (stem {NEW_STEM!r}) and not the upstream product: {new!r}")
         if (language, old) in seen:
             raise BrandingError(f"duplicate inflection row: {language} {old!r}")
         seen.add((language, old))

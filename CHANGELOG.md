@@ -61,8 +61,11 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11e -->
 - Name the application CosmoSlice in every build: window titles, About,
   installers, Start menu and desktop shortcuts, menus, the Flatpak software
-  centre name and description, hints, the setup guide, and 121 interface
+  centre name and description, hints, the setup guide, and 144 interface
   texts with their translations in every language (never marked fuzzy).
+  The cloud service reads Cosmyx Cloud wherever the interface names it
+  (menus, dialogs, tooltips, notifications, the homepage, the setup guide
+  and the plugin and preset-export pages), translations included.
   Every package is named CosmoSlice too: the Windows executable
   (CosmoSlice.exe, command alias cosmoslice.exe in the MSIX), the installer,
   portable, MSIX, DMG (volume CosmoSlice), CosmoSlice.app, AppImage and

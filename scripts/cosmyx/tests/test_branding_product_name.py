@@ -73,7 +73,6 @@ class TokenTest(unittest.TestCase):
             "com.orcaslicer.OrcaSlicer",
             " Orca.Slicer.1",
             "  // ORCA: Apply bias",
-            "Sync with Orca Cloud",
             "Orca Cube",
             "Orca YOLO Flow Calibration",
             "OrcaSliced Combo",
@@ -90,7 +89,7 @@ class TokenTest(unittest.TestCase):
             "\\nOrca will cap": "\\nCosmoSlice will cap",
             "Restart Orca.": "Restart CosmoSlice.",
             "using OrcaSlicer.\\n": "using CosmoSlice.\\n",
-            "Orca Cloud and OrcaSlicer": "Orca Cloud and CosmoSlice",
+            "Orca Cloud and OrcaSlicer": "Cosmyx Cloud and CosmoSlice",
             "Unlike OrcaSlicer, see https://orcaslicer.com/OrcaSlicer": "Unlike CosmoSlice, see https://orcaslicer.com/OrcaSlicer",
         }
         for text, expected in cases.items():
@@ -103,6 +102,92 @@ class TokenTest(unittest.TestCase):
         self.assertEqual(tokens.replace_tokens("오르카 슬라이서 시작", "ko"), "CosmoSlice 시작")
         self.assertEqual(tokens.replace_tokens("欢迎使用逆戟鲸", "zh_CN"), "欢迎使用CosmoSlice")
         self.assertEqual(tokens.replace_tokens("欢迎使用逆戟鲸", "fr"), "欢迎使用逆戟鲸")
+
+
+CLOUD_ROWS = tokens.inflection_map(
+    [
+        {"language": "hu", "old": "az Orca Cloud", "new": "a Cosmyx Cloud"},
+        {"language": "hu", "old": "az OrcaCloud", "new": "a Cosmyx Cloud"},
+        {"language": "hu", "old": "az Orca", "new": "a CosmoSlice"},
+        {"language": "ca", "old": "d'OrcaCloud", "new": "de Cosmyx Cloud"},
+        {"language": "fr", "old": "d\u2019Orca Cloud", "new": "de Cosmyx Cloud"},
+    ]
+)
+
+
+class CloudTokenTest(unittest.TestCase):
+    """The upstream cloud service is renamed Cosmyx Cloud."""
+
+    def test_renames_every_spelling(self) -> None:
+        cases = {
+            "Sync with Orca Cloud": "Sync with Cosmyx Cloud",
+            "Export to OrcaCloud": "Export to Cosmyx Cloud",
+            "Find on OrcaCloud.": "Find on Cosmyx Cloud.",
+            "Sign in to Orca cloud": "Sign in to Cosmyx Cloud",
+            "View on OrcaCloud <a>here</a>": "View on Cosmyx Cloud <a>here</a>",
+            "Orca Cloud and OrcaSlicer": "Cosmyx Cloud and CosmoSlice",
+            "Tip\\nOrcaCloud": "Tip\\nCosmyx Cloud",
+        }
+        for text, expected in cases.items():
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text), expected)
+                self.assertTrue(tokens.visible_name(text))
+
+    def test_identifiers_urls_and_files_stay(self) -> None:
+        for text in ("OrcaCloudServiceAgent", "orca_cloud", "orcacloud", "https://example.org/OrcaCloud",
+                     "OrcaCloud.json", "OrcaCloudAPIError", "Cosmyx Cloud"):  # fmt: skip
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text, "hu", inflections={}), text)
+                self.assertFalse(tokens.visible_name(text, "hu", {}))
+
+    def test_glued_suffix_is_kept(self) -> None:
+        # The new name ends with the same word, so a case suffix still fits.
+        cases = {
+            ("Orca Cloudba", "hu"): "Cosmyx Cloudba",
+            ("OrcaCloudban.", "hu"): "Cosmyx Cloudban.",
+            ("OrcaClouden", "eu"): "Cosmyx Clouden",
+            ("Orca Cloud-ekin", "eu"): "Cosmyx Cloud-ekin",
+            ("Orca Cloud'a", "tr"): "Cosmyx Cloud'a",
+            ("OrcaCloud\uc5d0", "ko"): "Cosmyx Cloud\uc5d0",
+            ("OrcaCloud-Plugins", "de"): "Cosmyx Cloud-Plugins",
+        }
+        for (text, lang), expected in cases.items():
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text, lang, inflections={}), expected)
+                self.assertEqual(tokens.unresolved(text, lang, {}), [])
+
+    def test_misspellings_in_translations(self) -> None:
+        self.assertEqual(tokens.replace_tokens("OrcaSloud?", "ru", inflections={}), "Cosmyx Cloud?")
+        self.assertEqual(tokens.replace_tokens("orca Cloud profilini", "tr", inflections={}), "Cosmyx Cloud profilini")
+
+    def test_elided_or_article_lead_needs_a_row(self) -> None:
+        for text, lang, form in (
+            ("d'Orca Cloud", "ca", "d'Orca Cloud"),
+            ("perfils d'OrcaCloud?", "ca", "d'OrcaCloud"),
+            ("d\u2019Orca Cloud.", "fr", "d\u2019Orca Cloud"),
+            ("az Orca Cloudba", "hu", "az Orca Cloud"),
+            ("Az OrcaCloud nem", "hu", "Az OrcaCloud"),
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(tokens.unresolved(text, lang, {}), [form])
+                self.assertEqual(tokens.replace_tokens(text, lang, inflections={}), text)
+                self.assertTrue(tokens.visible_name(text, lang, {}))
+        # "az" is a Hungarian article only.
+        self.assertEqual(tokens.replace_tokens("az Orca Cloud", "de", inflections={}), "az Cosmyx Cloud")
+
+    def test_cloud_rows_rename_before_product_rows(self) -> None:
+        cases = {
+            ("az Orca Cloudba, az Orca minden", "hu"): "a Cosmyx Cloudba, a CosmoSlice minden",
+            ("az OrcaCloudot", "hu"): "a Cosmyx Cloudot",
+            ("perfils d'OrcaCloud?", "ca"): "perfils de Cosmyx Cloud?",
+            ("d\u2019Orca Cloud.", "fr"): "de Cosmyx Cloud.",
+        }
+        for (text, lang), expected in cases.items():
+            with self.subTest(text=text):
+                self.assertEqual(tokens.replace_tokens(text, lang, inflections=CLOUD_ROWS), expected)
+                self.assertEqual(tokens.unresolved(text, lang, CLOUD_ROWS), [])
+        text, fired = tokens.apply_inflections("az OrcaCloudot", "hu", CLOUD_ROWS)
+        self.assertEqual((text, fired), ("a Cosmyx Cloudot", {"az OrcaCloud"}))
 
 
 # ---------------------------------------------------------------- lexer
@@ -310,6 +395,20 @@ class CatalogueTest(unittest.TestCase):
         with self.assertRaises(branding.BrandingError):
             self.rename(text)
 
+    def test_cloud_name_in_translations(self) -> None:
+        po = (
+            'msgid ""\nmsgstr ""\n"Language: hu\\n"\n\n'
+            'msgid "Find on OrcaCloud"\nmsgstr "Keresés az OrcaCloudban"\n\n'
+            'msgid "Sign in to OrcaCloud"\nmsgstr "Jelentkezz be az Orca Cloudba"\n'
+        )
+        mapping = {"Find on OrcaCloud": "Find on Cosmyx Cloud", "Sign in to OrcaCloud": "Sign in to Cosmyx Cloud"}
+        catalogue = graft.parse_po(po)
+        rows = tokens.inflection_map([{"language": "hu", "old": "az OrcaCloud", "new": "a Cosmyx Cloud"}])
+        self.assertEqual(catalogues.rename_catalogue(catalogue, mapping, "hu", rows), 2)
+        self.assertEqual(self.entry(catalogue, "Find on Cosmyx Cloud").msgstr, "Keresés a Cosmyx Cloudban")
+        # No row for the spaced spelling: left for a speaker, reported by G8.
+        self.assertEqual(self.entry(catalogue, "Sign in to Cosmyx Cloud").msgstr, "Jelentkezz be az Orca Cloudba")
+
     def test_language_of_a_catalogue(self) -> None:
         self.assertEqual(catalogues.language("localization/i18n/fr/OrcaSlicer_fr.po"), "fr")
         self.assertIsNone(catalogues.language("localization/i18n/OrcaSlicer.pot"))
@@ -337,6 +436,13 @@ class TablesTest(unittest.TestCase):
         for rows in bad:
             with self.subTest(rows=rows), self.assertRaises(branding.BrandingError):
                 tables.rename_rows(rows)
+
+    def test_cloud_rows(self) -> None:
+        row = {"kind": "msgid", "old": "Export to OrcaCloud", "new": "Export to Cosmyx Cloud", "source": "cosmyx"}
+        self.assertEqual(tables.rename_rows([row]), [row])
+        for bad in (dict(row, new="Export to the cloud"), dict(row, old="Export to the cloud")):
+            with self.subTest(row=bad), self.assertRaises(branding.BrandingError):
+                tables.rename_rows([bad])
 
     def test_chain_rejected(self) -> None:
         first = {"kind": "msgid", "old": "OrcaSlicer CosmoSlice", "new": "About CosmoSlice X"}
@@ -772,7 +878,7 @@ class InflectionTokenTest(unittest.TestCase):
         self.assertEqual(tokens.replace_tokens("OrcaSlicer\ub294", "ko", inflections={}), "CosmoSlice\ub294")
 
     def test_identifiers_and_kept_names_stay(self) -> None:
-        for text in ("OrcaSlicerVersion", "OrcaCloudban", "OrcaSliced"):
+        for text in ("OrcaSlicerVersion", "OrcaCloudServiceAgent", "OrcaSliced"):
             with self.subTest(text=text):
                 self.assertFalse(tokens.visible_name(text, "hu", {}))
 
@@ -820,6 +926,8 @@ class PhraseRowTest(unittest.TestCase):
 
     def test_phrase_never_cuts_a_name_or_a_kept_name(self) -> None:
         self.assertEqual(self.rename("az Orca Slicer", "hu"), "az CosmoSlice")  # "Orca Slicer" is one name
+        # The cloud name is never cut by a product row; without its own row
+        # the article is left for a speaker to fix.
         self.assertEqual(self.rename("az Orca Cloud", "hu"), "az Orca Cloud")
         self.assertEqual(self.rename("az Orca minden", "hu"), "a CosmoSlice minden")
 
@@ -860,6 +968,22 @@ class InflectionTablesTest(unittest.TestCase):
 
     def test_valid_row(self) -> None:
         self.assertEqual(tables.inflection_rows([CS_ROW]), [CS_ROW])
+
+    def test_cloud_rows(self) -> None:
+        rows = [
+            {"language": "hu", "old": "az Orca Cloud", "new": "a Cosmyx Cloud"},
+            {"language": "ca", "old": "d'OrcaCloud", "new": "de Cosmyx Cloud"},
+        ]
+        self.assertEqual(tables.inflection_rows(rows), rows)
+        bad = [
+            {"language": "ca", "old": "OrcaCloud", "new": "Cosmyx Cloud"},  # bare plain name
+            {"language": "ca", "old": "d'OrcaCloud", "new": "de CosmoSlice"},  # new lacks the cloud name
+            {"language": "ca", "old": "d'OrcaCloud", "new": "de Cosmyx Cloud Orca"},  # new names upstream
+            {"language": "ca", "old": "d'OrcaCloud", "new": "de Orca Cloud"},  # new names the upstream cloud
+        ]
+        for row in bad:
+            with self.subTest(row=row), self.assertRaises(branding.BrandingError):
+                tables.inflection_rows([row])
 
     def test_rejected_rows(self) -> None:
         bad = [

@@ -123,9 +123,14 @@ Four tables in `cosmyx-src/branding/product-name/`:
 | `patches.json` | `{file, old, new, count, reason}` | Exact text patches, applied first: `SLIC3R_APP_NAME`, the display-name macros, packaging names, window titles, and the machine-read sites rewired to `SLIC3R_APP_KEY` (decision 0133). |
 | `rename.json` | `{kind, old, new, source}` | Whole texts: a `msgid` row renames the C++ literal (or hint) and the msgid in the template and every catalogue together, translations included, never fuzzy; a `literal` row renames a visible text without a msgid (decision 0134). |
 | `allowlist.json` | `msgid`, `literal` or `text` rows with a `reason` | Texts that keep the upstream name on purpose: credits, upstream releases, CLI output, compared or persisted tags, ids sent to other services, icon names (decision 0135). |
-| `inflections.json` | `{language, old, new, source}` | Per catalogue language, an inflected name (cs "OrcaSliceru", hu "OrcaSlicerrel", eu "OrcaSlicerren") or a phrase around the inflected, plain or hyphenated name (hu "az OrcaSlicer" -> "a CosmoSlice", eu "Orca-ren" -> "CosmoSlice-en"), and its CosmoSlice form, written by a speaker of that language, never guessed; sorted by language, then `old` (decision 0134). |
+| `inflections.json` | `{language, old, new, source}` | Per catalogue language, an inflected name (cs "OrcaSliceru", hu "OrcaSlicerrel", eu "OrcaSlicerren") or a phrase around the inflected, plain or hyphenated name (hu "az OrcaSlicer" -> "a CosmoSlice", eu "Orca-ren" -> "CosmoSlice-en"), and its CosmoSlice form, written by a speaker of that language, never guessed; a row whose `old` names the cloud (hu "az OrcaCloud" -> "a Cosmyx Cloud") renames the words around Cosmyx Cloud; sorted by language, then `old` (decision 0134). |
 
-Names that name an upstream thing are never rewritten: Orca Cloud, Orca Cube,
+The upstream cloud service becomes Cosmyx Cloud (Orca Cloud, OrcaCloud), a
+brand name kept in English in every language; a suffix glued to it in a
+translation stays, and a word before it that changes with it (ca/fr "d'",
+hu "az") needs an inflection row (decision 0134).
+
+Names that name an upstream thing are never rewritten: Orca Cube,
 Orca String Hell, Orca Tolerance Test, Orca YOLO, Orca Arena, Orca Palette,
 Orca Badge, OrcaSliced Combo, Orca Preset Bundle, Orca Filament Library, and
 any name inside a URL, file or path name, or dotted id. Names tied to the app
