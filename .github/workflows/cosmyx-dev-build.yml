@@ -185,6 +185,8 @@ jobs:
           cp -R "$apps" "$stage/$PRODUCT.app"
           ln -sfn /Applications "$stage/Applications"
           [ "$ACTION" = dmg ] && hdiutil detach "$src/mnt"
+          # Upstream's unsigned bundle is not sealed: seal and verify it, or fail.
+          python3 scripts/cosmyx/ci/dev_build.py seal-app --app "$stage/$PRODUCT.app"
           source scripts/retry.sh
           source scripts/create_dmg.sh
           create_dmg "$PRODUCT" "$stage" "$ARTIFACT.dmg"

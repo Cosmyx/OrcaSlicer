@@ -82,5 +82,6 @@ here; see the upstream release notes.
   `build:macos-arm64` and `build:macos-x86_64` pull request labels (Linux,
   Windows and macOS arm64 when none is set) or by the manual run's
   checkboxes, run their unit tests, and ship a CosmoSlice DMG per built macOS
-  arch. `build_all.yml` stays the release validation build. Pull request:
+  arch, sealed and verified so macOS does not report the app as damaged.
+  `build_all.yml` stays the release validation build. Pull request:
   https://github.com/Cosmyx/OrcaSlicer/pull/119. Decisions: 0218.
