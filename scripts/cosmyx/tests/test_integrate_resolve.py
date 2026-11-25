@@ -117,6 +117,33 @@ class SlotListTests(unittest.TestCase):
             resolve.resolve_slot_list(text, self.ORDER, "py")
 
 
+class SiblingGuiSlotTests(unittest.TestCase):
+    """Two sibling branches on the machine hook (T29, T31) both extend the GUI slots after T28."""
+
+    GUI = "T5, T6, T7, T11b, T11c, T11d, T11e, T11f, T28"
+
+    def changelog(self) -> str:
+        earlier = "".join(f"<!-- cosmyx-slot: {slot} -->\n" for slot in self.GUI.split(", ")[:-1])
+        base = f"### GUI\n\n{earlier}<!-- cosmyx-slot: T28 -->\n- Machine hook.\n"
+        return base + conflict("\n<!-- cosmyx-slot: T29 -->\n- Models submenu.\n", "",
+                               "\n<!-- cosmyx-slot: T31 -->\n- Printer connection.\n") + "\n### i18n\n"
+
+    def test_changelog_keeps_both_slots(self) -> None:
+        merged = resolve.resolve_changelog(self.changelog())
+        self.assertIn("<!-- cosmyx-slot: T28 -->\n- Machine hook.\n\n<!-- cosmyx-slot: T29 -->\n- Models submenu.\n\n"
+                      "<!-- cosmyx-slot: T31 -->\n- Printer connection.\n", merged)
+        self.assertEqual(list(resolve.marker_order(merged))[-3:], ["T28", "T29", "T31"])
+
+    def test_slot_lists_union_both_slots_in_changelog_order(self) -> None:
+        order = resolve.marker_order(resolve.resolve_changelog(self.changelog()))
+        quoted = ", ".join(f'"{slot}"' for slot in self.GUI.split(", "))
+        py = conflict(f'    "GUI": [{quoted}, "T31"],\n', f'    "GUI": [{quoted}],\n',
+                      f'    "GUI": [{quoted}, "T29"],\n')
+        self.assertEqual(resolve.resolve_slot_list(py, order, "py"), f'    "GUI": [{quoted}, "T29", "T31"],\n')
+        md = conflict(f"  - `GUI`: {self.GUI}, T31.\n", f"  - `GUI`: {self.GUI}.\n", f"  - `GUI`: {self.GUI}, T29.\n")
+        self.assertEqual(resolve.resolve_slot_list(md, order, "md"), f"  - `GUI`: {self.GUI}, T29, T31.\n")
+
+
 class MiscTests(unittest.TestCase):
     def test_validated_paths(self) -> None:
         manifest = {"rows": [{"path": "a.svg", "status": "validated"}, {"path": "b.svg", "status": "to-validate"}]}

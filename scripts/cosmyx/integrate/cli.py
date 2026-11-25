@@ -48,7 +48,10 @@ left as they are (a new pull request has none: the workflow's default set).
 `--bundle N` (both commands) keeps only the rows of `branches.json` whose
 `bundle` is N or lower, so that one Cosmyx bundle is built on its own; the
 parent checks run again on that subset. Every row has a `bundle`, and a
-branch's parent is never in a later bundle than the branch.
+branch's parent is never in a later bundle than the branch. A row names its
+parent with `parent`, or several with `parents`: on a non-DEV base such a
+branch replays only the commits none of its parents has, onto its first
+replayed parent with the others merged in.
 
 `rebase-check` is a dry run: in a temporary worktree, it replays each branch's
 own commits onto `refs/tags/upstream/TAG` (stacked children onto their
@@ -145,11 +148,30 @@ class Git:
 @dataclass
 class Entry:
     name: str
-    parent: str
+    # The branches this one is stacked on, in merge order: one name (or a
+    # one-item list) for most rows, several for a branch that merges two
+    # stacks. The list's base (DEV) means the foundation and stands alone.
+    parents: list[str] | str
     pr: int | None = None
     integration_only: bool = False
     # Cosmyx bundle (release) that first ships the branch (decision 0226).
     bundle: int = 1
+
+    def __post_init__(self) -> None:
+        if isinstance(self.parents, str):
+            self.parents = [self.parents]
+        self.parents = list(self.parents)
+
+
+def row_parents(row: dict) -> list[str]:
+    """The parents of a branches.json row: `parent` (one name) or `parents` (a non-empty list), not both."""
+    name = row.get("name")
+    if ("parent" in row) == ("parents" in row):
+        raise SetupError(f"{name}: give exactly one of parent or parents")
+    value = [row["parent"]] if "parent" in row else row["parents"]
+    if not isinstance(value, list) or not value or not all(isinstance(item, str) and item for item in value):
+        raise SetupError(f"{name}: parents must be a non-empty list of branch names, got {value!r}")
+    return value
 
 
 def load_branches(path: Path = DATA_FILE, bundle: int | None = None) -> tuple[dict, list[Entry]]:
@@ -161,7 +183,7 @@ def load_branches(path: Path = DATA_FILE, bundle: int | None = None) -> tuple[di
         # bool is an int in Python: refuse true/false explicitly.
         if not isinstance(value, int) or isinstance(value, bool) or value < 1:
             raise SetupError(f"{row.get('name')}: bundle must be a positive integer, got {value!r}")
-        entries.append(Entry(row["name"], row["parent"], row.get("pr"), bool(row.get("integration_only")), value))
+        entries.append(Entry(row["name"], row_parents(row), row.get("pr"), bool(row.get("integration_only")), value))
     check_branches(data, entries)
     if bundle is not None:
         entries = select_bundle(data, entries, bundle)
@@ -182,12 +204,19 @@ def check_branches(data: dict, entries: list[Entry]) -> None:
     for entry in entries:
         if entry.name in seen:
             raise SetupError(f"{entry.name} is listed twice")
-        if entry.parent != data["base"]:
-            parent = seen.get(entry.parent)
+        if len(set(entry.parents)) != len(entry.parents):
+            raise SetupError(f"{entry.name}: a parent is listed twice")
+        if data["base"] in entry.parents and len(entry.parents) > 1:
+            raise SetupError(f"{entry.name}: parent {data['base']} cannot be combined with other parents")
+        for name in entry.parents:
+            if name == data["base"]:
+                continue
+            # Parents before children: the list order is a topological order.
+            parent = seen.get(name)
             if parent is None:
-                raise SetupError(f"{entry.name}: parent {entry.parent} must be {data['base']} or an earlier row")
+                raise SetupError(f"{entry.name}: parent {name} must be {data['base']} or an earlier row")
             if parent.bundle > entry.bundle:
-                raise SetupError(f"{entry.name} (bundle {entry.bundle}): parent {entry.parent} is in the later "
+                raise SetupError(f"{entry.name} (bundle {entry.bundle}): parent {name} is in the later "
                                  f"bundle {parent.bundle}; a branch cannot ship before its parent")
         seen[entry.name] = entry
     if entries and entries[0].name != data["foundation"]:
@@ -755,14 +784,20 @@ def replay_branches(git: Git, wt: Git, data: dict, entries: list[Entry], base_sh
     replayed: dict[str, str] = {}
     for entry in entries:
         tip = git.sha(f"refs/remotes/{remote}/{entry.name}")
-        parent, commits = own_commits(git, data, entry, tip, dev)
-        new_base = base_sha if parent is None else replayed.get(parent)
-        if commits is None or not new_base:
-            notes[entry.name] = f"SKIPPED (parent {parent} not replayed)"
+        parents, commits = own_commits(git, data, entry, tip, dev)
+        if commits is None:
+            notes[entry.name] = f"SKIPPED (parent {', '.join(parents)} not replayed)"
             continue
         # On the integration branch, not detached: a stopped run leaves the
         # branch in this worktree, so that the next run finds it there.
-        wt.run("checkout", "-q", "-f", "-B", branch, new_base)
+        missing, clash = replay_base(wt, parents, base_sha, replayed, brand_hook, ["-B", branch])
+        if missing:
+            notes[entry.name] = missing
+            continue
+        if clash:
+            report_unknown(f"the replayed parents of {entry.name} ({', '.join(parents)})", clash, out)
+            print(f"Stopped: the replayed parents of {entry.name} do not merge; nothing pushed.", file=out)
+            return sources, notes, True
         try:
             kinds, _ = replay(wt, commits, brand_hook, strict=True, resolved=resolved, allowed_copies=allowed_copies)
         except ReplayStopped as stop:
@@ -851,24 +886,52 @@ class ReplayStopped(Exception):
         self.outcome = outcome
 
 
-def own_commits(git: Git, data: dict, entry: Entry, tip: str, dev: str) -> tuple[str | None, list[str] | None]:
-    """(parent the branch is replayed onto, its own commits oldest first).
+def own_commits(git: Git, data: dict, entry: Entry, tip: str,
+                dev: str) -> tuple[list[str] | None, list[str] | None]:
+    """(parents the branch is replayed onto, its own commits oldest first).
 
     The foundation's own commits are those after its merge base with DEV and
-    it has no parent (None); any other branch's are those after its merge base
-    with its parent, the foundation for a DEV-parented branch. The commits are
-    None when the parent is not on the remote.
+    it has no parent (None); any other branch's are those not reachable from
+    any of its parents, the foundation for a DEV-parented branch. The commits
+    are None when a parent is not on the remote.
     """
     remote, foundation = data["remote"], data["foundation"]
     if entry.name == foundation:
-        old_base, parent = git.out("merge-base", tip, dev), None
-    else:
-        parent = foundation if entry.parent == data["base"] else entry.parent
-        parent_tip = git.sha(f"refs/remotes/{remote}/{parent}")
-        if not parent_tip:
-            return parent, None
-        old_base = git.out("merge-base", tip, parent_tip)
-    return parent, git.out("rev-list", "--reverse", "--no-merges", f"{old_base}..{tip}").split()
+        old_base = git.out("merge-base", tip, dev)
+        return None, git.out("rev-list", "--reverse", "--no-merges", f"{old_base}..{tip}").split()
+    parents = [foundation if name == data["base"] else name for name in entry.parents]
+    parent_tips = [git.sha(f"refs/remotes/{remote}/{name}") for name in parents]
+    if not all(parent_tips):
+        return parents, None
+    return parents, git.out("rev-list", "--reverse", "--no-merges", tip, "--not", *parent_tips).split()
+
+
+def replay_base(wt: Git, parents: list[str] | None, onto: str, replayed: dict[str, str], brand_hook: BrandHook,
+                checkout: list[str]) -> tuple[str | None, Outcome | None]:
+    """Check out the base a branch is replayed onto; return (missing parents note, unknown merge outcome).
+
+    No parent: `onto`. One parent: its replayed tip. Several: the first
+    one's replayed tip with the others' merged in (`--no-ff`, known conflicts
+    resolved), so the branch's commits find every parent's code. A merge with
+    an unknown conflict is aborted and its outcome returned.
+    """
+    if parents is None:
+        wt.run("checkout", "-q", "-f", *checkout, onto)
+        return None, None
+    missing = [name for name in parents if not replayed.get(name)]
+    if missing:
+        return f"SKIPPED (parent {', '.join(missing)} not replayed)", None
+    wt.run("checkout", "-q", "-f", *checkout, replayed[parents[0]])
+    for name in parents[1:]:
+        wt.run("merge", "--no-ff", "--no-commit", replayed[name], check=False)
+        if not wt.sha("MERGE_HEAD"):
+            continue
+        outcome = resolve_conflicts(wt, "MERGE_HEAD", brand_hook)
+        if outcome.unknown:
+            wt.run("merge", "--abort")
+            return None, outcome
+        wt.run("commit", "-q", "--no-verify", "-m", f"Merge replayed parent {name}")
+    return None, None
 
 
 def pick(wt: Git, commit: str, brand_hook: BrandHook, record: bool,
@@ -984,12 +1047,15 @@ def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engi
                 # Not pushed yet: a warning, not a failure; its children show as SKIPPED.
                 rows.append((entry.name, "-", "missing on the remote, skipped", ""))
                 continue
-            parent, commits = own_commits(git, data, entry, tip, dev)
-            new_base = onto if parent is None else replayed.get(parent)
-            if commits is None or not new_base:
-                rows.append((entry.name, tip[:10], f"SKIPPED (parent {parent} not replayed)", ""))
+            parents, commits = own_commits(git, data, entry, tip, dev)
+            if commits is None:
+                rows.append((entry.name, tip[:10], f"SKIPPED (parent {', '.join(parents)} not replayed)", ""))
                 continue
-            wt.run("checkout", "-q", "-f", "--detach", new_base)
+            missing, clash = replay_base(wt, parents, onto, replayed, brand_hook, ["--detach"])
+            if missing or clash:
+                files = "; ".join(path for path, _ in clash.unknown) if clash else ""
+                rows.append((entry.name, tip[:10], missing or "SKIPPED (replayed parents do not merge)", files))
+                continue
             kinds, conflicts = replay(wt, commits, brand_hook)
             replayed[entry.name] = wt.out("rev-parse", "HEAD")
             if conflicts:
@@ -999,7 +1065,7 @@ def rebase_check(args, out=sys.stdout, brand_hook: BrandHook = run_branding_engi
                 result = "auto-resolved: " + ", ".join(kinds)
             else:
                 result = "clean"
-            if parent in approximated:
+            if approximated.intersection(parents or []):
                 approximated.add(entry.name)
                 result += " (on an approximated parent)"
             rows.append((entry.name, f"{len(commits)} commits", result, "; ".join(conflicts)))
