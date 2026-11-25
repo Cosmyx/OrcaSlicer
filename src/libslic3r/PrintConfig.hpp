@@ -538,6 +538,7 @@ enum FanDirection {
 
 static std::unordered_map<NozzleType, std::string>NozzleTypeEumnToStr = {
     {NozzleType::ntUndefine,        "undefine"},
+    {NozzleType::ntCHT, "cht"}, // Cosmyx
     {NozzleType::ntHardenedSteel,   "hardened_steel"},
     {NozzleType::ntStainlessSteel,  "stainless_steel"},
     {NozzleType::ntTungstenCarbide, "tungsten_carbide"},
@@ -547,6 +548,7 @@ static std::unordered_map<NozzleType, std::string>NozzleTypeEumnToStr = {
 
 static std::unordered_map<std::string, NozzleType>NozzleTypeStrToEumn = {
     {"undefine", NozzleType::ntUndefine},
+    {"cht", NozzleType::ntCHT}, // Cosmyx
     {"hardened_steel", NozzleType::ntHardenedSteel},
     {"stainless_steel", NozzleType::ntStainlessSteel},
     {"tungsten_carbide", NozzleType::ntTungstenCarbide},
