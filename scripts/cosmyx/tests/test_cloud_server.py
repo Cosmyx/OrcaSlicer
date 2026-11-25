@@ -82,7 +82,9 @@ class PreferencesHookTests(unittest.TestCase):
         self.assertEqual(self.lines[calls[0] - 1].strip(), "g_sizer->Add(item_network_test);")
 
     def test_only_two_hook_lines(self) -> None:
-        self.assertEqual(len(cosmyx_lines(self.lines)), 2)
+        # Other Cosmyx features hook this file too, so count the cloud-server ones only.
+        cloud = [line for line in cosmyx_lines(self.lines) if "CloudServer" in line or "cloud_server" in line]
+        self.assertEqual(len(cloud), 2)
 
 
 class PubKeyTests(unittest.TestCase):
