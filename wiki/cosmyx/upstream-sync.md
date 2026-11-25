@@ -12,7 +12,7 @@ Never commit on `Orca-Upstream` or `MIXED`: both are rewritten on every run.
 
 ## What runs
 
-`.github/workflows/cosmyx-upstream-sync.yml` runs every six hours (`23 */6 * * *`)
+`.github/workflows/cosmyx-upstream-sync.yml` runs every two hours (`23 */2 * * *`)
 and on demand, one run at a time (a new run waits, it never cancels one).
 Every step is a subcommand of `scripts/cosmyx/upstream_sync.py`.
 

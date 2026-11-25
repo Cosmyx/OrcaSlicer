@@ -1,4 +1,4 @@
-# Cosmyx upstream sync. Every six hours, and on demand:
+# Cosmyx upstream sync. Every two hours, and on demand:
 #
 # 1. mirror: Orca-Upstream becomes an exact copy of OrcaSlicer/OrcaSlicer main.
 # 2. mixed: MIXED is rebuilt as DEV merged with Orca-Upstream and force-pushed.
@@ -22,7 +22,7 @@ name: Cosmyx upstream sync
 
 on:
   schedule:
-    - cron: '23 */6 * * *'
+    - cron: '23 */2 * * *'
   workflow_dispatch:
     inputs:
       dry_run:

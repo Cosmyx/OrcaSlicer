@@ -71,7 +71,7 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T9 -->
 
 <!-- cosmyx-slot: T10 -->
-- Add the scheduled upstream sync: every six hours `Orca-Upstream` mirrors
+- Add the scheduled upstream sync: every two hours `Orca-Upstream` mirrors
   upstream `main`, `MIXED` is rebuilt as `DEV` merged with it (a conflict fails
   the run and lists the files), `build_all` runs on `MIXED` when it moved, and
   the upstream bots are kept disabled by a scheduled workflow policy. Needs the
