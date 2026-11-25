@@ -1,4 +1,5 @@
 #include "CloudProvider.hpp"
+#include "Cosmyx/logic/CosmyxVersion.hpp" // Cosmyx
 #include "ExportPresetBundleDialog.hpp"
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
@@ -23,6 +24,7 @@
 #include "GUI_ObjectList.hpp"
 #include "slic3r/GUI/UserManager.hpp"
 #include "slic3r/GUI/TaskManager.hpp"
+#include "Cosmyx/UpdateCheckRequest.hpp" // Cosmyx
 #include "format.hpp"
 #include "libslic3r_version.h"
 #include "BuildCommit.hpp"
@@ -6615,6 +6617,7 @@ void maybe_attach_updater_signature(Http& http, const std::string& canonical_que
 
 void GUI_App::check_new_version_sf(bool show_tips, int by_user)
 {
+    Cosmyx::check_for_update(*app_config, by_user, version_info); return; // Cosmyx: Cosmyx releases only (decision 0221)
     AppConfig* app_config = wxGetApp().app_config;
     bool       check_stable_only = app_config->get_bool("check_stable_update_only");
     auto version_check_url = app_config->version_check_url();
@@ -7025,7 +7028,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = SoftFever_VERSION;
+    version_display = Cosmyx::display_version(); // Cosmyx
     return version_display;
 }
 
