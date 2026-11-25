@@ -47,7 +47,11 @@ here; see the upstream release notes.
   integration through a never-merged draft pull request into
   `cosmyx-ci/<BASE>`, a branch pushed at the base commit, which the Cosmyx
   dev build workflow builds; `--os LIST` picks its OSes through the pull
-  request's `build:*` labels. The branch list and
+  request's `build:*` labels. On a base other than DEV, a resolution that
+  copies a replayed commit's whole file is refused (`--allow-whole-copy PATH`
+  accepts one), and upstream files changed by more than `--drift-threshold`
+  lines are listed in a drift warning (`--strict-drift` stops the run). The
+  branch list and
   order live in `scripts/cosmyx/integrate/branches.json`. Pull request:
   https://github.com/Cosmyx/OrcaSlicer/pull/115.
   Decisions: 0215.
