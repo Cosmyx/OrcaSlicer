@@ -1,4 +1,5 @@
 #include "Plater.hpp"
+#include "Cosmyx/CosmyxPrinterConnectionDialog.hpp" // Cosmyx
 #include "LazyPage.hpp"
 #include "../Utils/NetworkAgent.hpp"
 #include "IPrinterAgent.hpp"
@@ -2852,6 +2853,7 @@ Sidebar::Sidebar(Plater *parent)
         p->m_printer_connect = new ScalableButton(p->m_panel_printer_title, wxID_ANY, "monitor_signal_strong");
         p->m_printer_connect->SetToolTip(_L("Connection"));
         p->m_printer_connect->Bind(wxEVT_BUTTON, [this](wxCommandEvent &e) {
+            if (Cosmyx::show_cosmyx_printer_dialog(this->GetParent())) return; // Cosmyx
             PhysicalPrinterDialog dlg(this->GetParent());
             dlg.ShowModal();
         });
