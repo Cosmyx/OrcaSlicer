@@ -1,0 +1,215 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"Maskinen avviste API-nøkkelen (HTTP 401). Kontroller API-nøkkelen i fanen "
+"Oppsett."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr ""
+"API-nøkkelen har ikke tilgang til å lese denne informasjonen (HTTP 403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "Maskinen gir ikke denne informasjonen (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"Maskinen svarte ikke i tide. Kontroller at den er slått på og koblet til "
+"nettverket."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "Kunne ikke nå maskinen. Kontroller adressen og nettverket."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "Maskinen svarte med en feil (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "Maskinen sendte et svar som ikke kunne leses."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Skriv inn IP-adressen eller vertsnavnet til maskinen."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Adressen kan ikke inneholde mellomrom."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Skriv bare inn adressen, uten http:// eller https://."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Skriv bare inn adressen, uten en bane etter den."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Adressen kan ikke inneholde et brukernavn."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "Porten må være et tall fra 1 til 65535."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Denne IPv4-adressen er ikke gyldig."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Dette vertsnavnet er ikke gyldig."
+
+# AI Translated
+msgid "Setup"
+msgstr "Oppsett"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Maskininformasjon"
+
+# AI Translated
+# Needs human review: field label for IP address or host name; check length in the form
+msgid "Machine IP"
+msgstr "Maskinens IP-adresse"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Test tilkobling"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Lagre innstillingene og kjør en vellykket tilkoblingstest for å se "
+"maskininformasjonen."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "API-nøkkelen kan ikke inneholde mellomrom."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Kontrollerer tilkoblingen til den lagrede maskinen..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Tester tilkoblingen..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Leser maskininformasjonen..."
+
+# AI Translated
+msgid "Identity"
+msgstr "Identitet"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Serienummer"
+
+# AI Translated
+msgid "Software version"
+msgstr "Programvareversjon"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Maskinvareversjon"
+
+# AI Translated
+# Needs human review: hardware options/add-ons fitted on the machine; check 'tilleggsutstyr' fits the UI list
+msgid "Installed options"
+msgstr "Installert tilleggsutstyr"
+
+# AI Translated
+msgid "Speed mode"
+msgstr "Hastighetsmodus"
+
+# AI Translated
+# Needs human review: installed option (high-temperature kit/mode), not a reading; check wording
+msgid "High temperature"
+msgstr "Høy temperatur"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "Oppvarmet kabinett"
+
+# AI Translated
+# Needs human review: fume/air extraction option; check 'avtrekkssystem' matches the hardware
+msgid "Extraction system"
+msgstr "Avtrekkssystem"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "Maksimal kabinettemperatur"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Varmeseng"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Maksimal sengetemperatur"
+
+# AI Translated
+msgid "Uninterrupted power supply"
+msgstr "Avbruddsfri strømforsyning"
+
+# AI Translated
+msgid "Build volume"
+msgstr "Byggevolum"
+
+# AI Translated
+# Needs human review: Z/bed levelling probe; confirm 'sengesonde'
+msgid "Bed probe"
+msgstr "Sengesonde"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "Hotender"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "Maskinen rapporterer ingen hotend."
+
+# AI Translated
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Hode %1%"
+
+# AI Translated
+msgid "Hardened"
+msgstr "Herdet"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Maksimal temperatur"
+
+# AI Translated
+# Needs human review: extruder type kept in English as common in Norwegian 3D printing; confirm vs 'direktedrevet ekstruder'
+msgid "Direct drive"
+msgstr "Direct drive"
+
+# AI Translated
+msgid "No camera"
+msgstr "Ingen kamera"

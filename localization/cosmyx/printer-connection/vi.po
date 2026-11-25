@@ -7,150 +7,207 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
 msgstr ""
+"Máy đã từ chối khóa API (HTTP 401). Hãy kiểm tra khóa API trong thẻ Thiết "
+"lập."
 
+# AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
-msgstr ""
+msgstr "Khóa API không được phép đọc thông tin này (HTTP 403)."
 
+# AI Translated
 msgid "The machine does not provide this information (HTTP 404)."
-msgstr ""
+msgstr "Máy không cung cấp thông tin này (HTTP 404)."
 
+# AI Translated
 msgid ""
 "The machine did not answer in time. Check that it is switched on and "
 "connected to the network."
 msgstr ""
+"Máy không phản hồi kịp thời. Hãy kiểm tra xem máy đã bật nguồn và kết nối "
+"mạng chưa."
 
+# AI Translated
 msgid "Could not reach the machine. Check the address and the network."
-msgstr ""
+msgstr "Không thể kết nối tới máy. Hãy kiểm tra địa chỉ và mạng."
 
+# AI Translated
 #. TRN %1% is an HTTP status code, for example 500.
 #, possible-boost-format
 msgid "The machine answered with an error (HTTP %1%)."
-msgstr ""
+msgstr "Máy đã phản hồi với lỗi (HTTP %1%)."
 
+# AI Translated
 msgid "The machine sent an answer that could not be read."
-msgstr ""
+msgstr "Máy đã gửi một phản hồi không thể đọc được."
 
+# AI Translated
 msgid "Enter the IP address or the host name of the machine."
-msgstr ""
+msgstr "Nhập địa chỉ IP hoặc tên máy chủ của máy."
 
+# AI Translated
 msgid "The address must not contain spaces."
-msgstr ""
+msgstr "Địa chỉ không được chứa dấu cách."
 
+# AI Translated
 msgid "Enter the address only, without http:// or https://."
-msgstr ""
+msgstr "Chỉ nhập địa chỉ, không kèm http:// hoặc https://."
 
+# AI Translated
 msgid "Enter the address only, without a path after it."
-msgstr ""
+msgstr "Chỉ nhập địa chỉ, không kèm đường dẫn phía sau."
 
+# AI Translated
 msgid "The address must not contain a user name."
-msgstr ""
+msgstr "Địa chỉ không được chứa tên người dùng."
 
+# AI Translated
 msgid "The port must be a number from 1 to 65535."
-msgstr ""
+msgstr "Cổng phải là một số từ 1 đến 65535."
 
+# AI Translated
 msgid "This IPv4 address is not valid."
-msgstr ""
+msgstr "Địa chỉ IPv4 này không hợp lệ."
 
+# AI Translated
 msgid "This host name is not valid."
-msgstr ""
+msgstr "Tên máy chủ này không hợp lệ."
 
+# AI Translated
 msgid "Setup"
-msgstr ""
+msgstr "Thiết lập"
 
+# AI Translated
 msgid "Machine information"
-msgstr ""
+msgstr "Thông tin máy"
 
+# AI Translated
 msgid "Machine IP"
-msgstr ""
+msgstr "IP của máy"
 
+# AI Translated
 msgid "Test connection"
-msgstr ""
+msgstr "Kiểm tra kết nối"
 
+# AI Translated
 msgid ""
 "Save the settings and run a successful connection test to see the machine "
 "information."
-msgstr ""
+msgstr "Hãy lưu cài đặt và kiểm tra kết nối thành công để xem thông tin máy."
 
+# AI Translated
 msgid "The API key must not contain spaces."
-msgstr ""
+msgstr "Khóa API không được chứa dấu cách."
 
+# AI Translated
 msgid "Checking the connection to the saved machine..."
-msgstr ""
+msgstr "Đang kiểm tra kết nối tới máy đã lưu..."
 
+# AI Translated
 msgid "Testing the connection..."
-msgstr ""
+msgstr "Đang kiểm tra kết nối..."
 
+# AI Translated
 msgid "Reading the machine information..."
-msgstr ""
+msgstr "Đang đọc thông tin máy..."
 
+# AI Translated
+# Needs human review: Section title for model/serial; check 'Nhận dạng' fits vs 'Định danh'.
 msgid "Identity"
-msgstr ""
+msgstr "Nhận dạng"
 
+# AI Translated
 msgid "Serial number"
-msgstr ""
+msgstr "Số sê-ri"
 
+# AI Translated
 msgid "Software version"
-msgstr ""
+msgstr "Phiên bản phần mềm"
 
+# AI Translated
 msgid "Hardware version"
-msgstr ""
+msgstr "Phiên bản phần cứng"
 
+# AI Translated
 msgid "Installed options"
-msgstr ""
+msgstr "Tùy chọn đã lắp đặt"
 
+# AI Translated
+# Needs human review: Check whether this is an installed hardware option name; 'Chế độ tốc độ' may need a product term.
 msgid "Speed mode"
-msgstr ""
+msgstr "Chế độ tốc độ"
 
+# AI Translated
+# Needs human review: Installed option (high-temperature kit); check 'Nhiệt độ cao' reads well as an option name.
 msgid "High temperature"
-msgstr ""
+msgstr "Nhiệt độ cao"
 
+# AI Translated
 msgid "Heated enclosure"
-msgstr ""
+msgstr "Buồng gia nhiệt"
 
+# AI Translated
+# Needs human review: Assumed fume/air extraction; check the actual option meaning.
 msgid "Extraction system"
-msgstr ""
+msgstr "Hệ thống hút khí"
 
+# AI Translated
 msgid "Enclosure maximum temperature"
-msgstr ""
+msgstr "Nhiệt độ buồng tối đa"
 
+# AI Translated
 msgid "Heated bed"
-msgstr ""
+msgstr "Bàn in nóng"
 
+# AI Translated
 msgid "Bed maximum temperature"
-msgstr ""
+msgstr "Nhiệt độ bàn in tối đa"
 
+# AI Translated
+# Needs human review: Added '(UPS)' abbreviation; check it is acceptable.
 msgid "Uninterrupted power supply"
-msgstr ""
+msgstr "Bộ lưu điện (UPS)"
 
+# AI Translated
 msgid "Build volume"
-msgstr ""
+msgstr "Thể tích in"
 
+# AI Translated
 msgid "Bed probe"
-msgstr ""
+msgstr "Cảm biến dò bàn in"
 
+# AI Translated
 msgid "Hot ends"
-msgstr ""
+msgstr "Hotend"
 
+# AI Translated
 msgid "The machine reports no hot end."
-msgstr ""
+msgstr "Máy không báo cáo hotend nào."
 
+# AI Translated
+# Needs human review: Print head number; check 'Đầu' is clear in context.
 #. TRN %1% is the head number reported by the machine (0, 1, ...).
 #, possible-boost-format
 msgid "Head %1%"
-msgstr ""
+msgstr "Đầu %1%"
 
+# AI Translated
+# Needs human review: Hot end property (hardened nozzle); check 'Đã tôi cứng' vs 'Thép cứng'/'Cứng'.
 msgid "Hardened"
-msgstr ""
+msgstr "Đã tôi cứng"
 
+# AI Translated
 msgid "Maximum temperature"
-msgstr ""
+msgstr "Nhiệt độ tối đa"
 
+# AI Translated
 msgid "Direct drive"
-msgstr ""
+msgstr "Direct Drive"
 
+# AI Translated
 msgid "No camera"
-msgstr ""
+msgstr "Không có camera"

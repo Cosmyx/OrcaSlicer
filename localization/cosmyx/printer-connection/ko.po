@@ -7,150 +7,201 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
-msgstr ""
+msgstr "장치가 API 키를 거부했습니다 (HTTP 401). 설정 탭에서 API 키를 확인하세요."
 
+# AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
-msgstr ""
+msgstr "이 API 키에는 이 정보를 읽을 권한이 없습니다 (HTTP 403)."
 
+# AI Translated
 msgid "The machine does not provide this information (HTTP 404)."
-msgstr ""
+msgstr "장치가 이 정보를 제공하지 않습니다 (HTTP 404)."
 
+# AI Translated
 msgid ""
 "The machine did not answer in time. Check that it is switched on and "
 "connected to the network."
-msgstr ""
+msgstr "장치가 제때 응답하지 않았습니다. 장치가 켜져 있고 네트워크에 연결되어 있는지 확인하세요."
 
+# AI Translated
 msgid "Could not reach the machine. Check the address and the network."
-msgstr ""
+msgstr "장치에 연결할 수 없습니다. 주소와 네트워크를 확인하세요."
 
+# AI Translated
 #. TRN %1% is an HTTP status code, for example 500.
 #, possible-boost-format
 msgid "The machine answered with an error (HTTP %1%)."
-msgstr ""
+msgstr "장치가 오류로 응답했습니다 (HTTP %1%)."
 
+# AI Translated
 msgid "The machine sent an answer that could not be read."
-msgstr ""
+msgstr "장치가 읽을 수 없는 응답을 보냈습니다."
 
+# AI Translated
 msgid "Enter the IP address or the host name of the machine."
-msgstr ""
+msgstr "장치의 IP 주소 또는 호스트 이름을 입력하세요."
 
+# AI Translated
 msgid "The address must not contain spaces."
-msgstr ""
+msgstr "주소에 공백을 포함할 수 없습니다."
 
+# AI Translated
 msgid "Enter the address only, without http:// or https://."
-msgstr ""
+msgstr "http:// 또는 https:// 없이 주소만 입력하세요."
 
+# AI Translated
 msgid "Enter the address only, without a path after it."
-msgstr ""
+msgstr "뒤에 경로를 붙이지 말고 주소만 입력하세요."
 
+# AI Translated
 msgid "The address must not contain a user name."
-msgstr ""
+msgstr "주소에 사용자 이름을 포함할 수 없습니다."
 
+# AI Translated
 msgid "The port must be a number from 1 to 65535."
-msgstr ""
+msgstr "포트는 1에서 65535 사이의 숫자여야 합니다."
 
+# AI Translated
 msgid "This IPv4 address is not valid."
-msgstr ""
+msgstr "유효하지 않은 IPv4 주소입니다."
 
+# AI Translated
 msgid "This host name is not valid."
-msgstr ""
+msgstr "유효하지 않은 호스트 이름입니다."
 
+# AI Translated
 msgid "Setup"
-msgstr ""
+msgstr "설정"
 
+# AI Translated
 msgid "Machine information"
-msgstr ""
+msgstr "장치 정보"
 
+# AI Translated
 msgid "Machine IP"
-msgstr ""
+msgstr "장치 IP"
 
+# AI Translated
 msgid "Test connection"
-msgstr ""
+msgstr "연결 테스트"
 
+# AI Translated
 msgid ""
 "Save the settings and run a successful connection test to see the machine "
 "information."
-msgstr ""
+msgstr "장치 정보를 보려면 설정을 저장하고 연결 테스트를 성공적으로 실행하세요."
 
+# AI Translated
 msgid "The API key must not contain spaces."
-msgstr ""
+msgstr "API 키에 공백을 포함할 수 없습니다."
 
+# AI Translated
 msgid "Checking the connection to the saved machine..."
-msgstr ""
+msgstr "저장된 장치와의 연결을 확인하는 중..."
 
+# AI Translated
 msgid "Testing the connection..."
-msgstr ""
+msgstr "연결을 테스트하는 중..."
 
+# AI Translated
 msgid "Reading the machine information..."
-msgstr ""
+msgstr "장치 정보를 읽는 중..."
 
+# AI Translated
+# Needs human review: section title for model/serial; check 식별 정보 wording
 msgid "Identity"
-msgstr ""
+msgstr "식별 정보"
 
+# AI Translated
 msgid "Serial number"
-msgstr ""
+msgstr "일련번호"
 
+# AI Translated
 msgid "Software version"
-msgstr ""
+msgstr "소프트웨어 버전"
 
+# AI Translated
 msgid "Hardware version"
-msgstr ""
+msgstr "하드웨어 버전"
 
+# AI Translated
 msgid "Installed options"
-msgstr ""
+msgstr "설치된 옵션"
 
+# AI Translated
+# Needs human review: installed machine option; check whether 고속 모드 (high-speed mode) fits what the option actually is
 msgid "Speed mode"
-msgstr ""
+msgstr "고속 모드"
 
+# AI Translated
+# Needs human review: installed option name (high-temperature kit?); 고온 alone may be too terse
 msgid "High temperature"
-msgstr ""
+msgstr "고온"
 
+# AI Translated
 msgid "Heated enclosure"
-msgstr ""
+msgstr "가열 인클로저"
 
+# AI Translated
+# Needs human review: assumed fume/air extraction; check 배기 시스템 matches the hardware option
 msgid "Extraction system"
-msgstr ""
+msgstr "배기 시스템"
 
+# AI Translated
 msgid "Enclosure maximum temperature"
-msgstr ""
+msgstr "인클로저 최대 온도"
 
+# AI Translated
 msgid "Heated bed"
-msgstr ""
+msgstr "히팅베드"
 
+# AI Translated
 msgid "Bed maximum temperature"
-msgstr ""
+msgstr "베드 최대 온도"
 
+# AI Translated
 msgid "Uninterrupted power supply"
-msgstr ""
+msgstr "무정전 전원 장치(UPS)"
 
+# AI Translated
 msgid "Build volume"
-msgstr ""
+msgstr "빌드 볼륨"
 
+# AI Translated
 msgid "Bed probe"
-msgstr ""
+msgstr "베드 프로브"
 
+# AI Translated
 msgid "Hot ends"
-msgstr ""
+msgstr "핫엔드"
 
+# AI Translated
 msgid "The machine reports no hot end."
-msgstr ""
+msgstr "장치에서 보고된 핫엔드가 없습니다."
 
+# AI Translated
 #. TRN %1% is the head number reported by the machine (0, 1, ...).
 #, possible-boost-format
 msgid "Head %1%"
-msgstr ""
+msgstr "헤드 %1%"
 
+# AI Translated
+# Needs human review: hot end attribute (hardened nozzle); check 경화 reads well as a yes/no label
 msgid "Hardened"
-msgstr ""
+msgstr "경화"
 
+# AI Translated
 msgid "Maximum temperature"
-msgstr ""
+msgstr "최대 온도"
 
+# AI Translated
 msgid "Direct drive"
-msgstr ""
+msgstr "직접 드라이브"
 
+# AI Translated
 msgid "No camera"
-msgstr ""
+msgstr "카메라 없음"

@@ -7,150 +7,204 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
-msgstr ""
+msgstr "機器拒絕了此 API 金鑰（HTTP 401）。請在「設定」分頁中檢查 API 金鑰。"
 
+# AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
-msgstr ""
+msgstr "此 API 金鑰無權讀取這項資訊（HTTP 403）。"
 
+# AI Translated
 msgid "The machine does not provide this information (HTTP 404)."
-msgstr ""
+msgstr "機器未提供這項資訊（HTTP 404）。"
 
+# AI Translated
 msgid ""
 "The machine did not answer in time. Check that it is switched on and "
 "connected to the network."
-msgstr ""
+msgstr "機器未及時回應。請確認機器已開機並已連上網路。"
 
+# AI Translated
 msgid "Could not reach the machine. Check the address and the network."
-msgstr ""
+msgstr "無法連線至機器。請檢查位址與網路。"
 
+# AI Translated
 #. TRN %1% is an HTTP status code, for example 500.
 #, possible-boost-format
 msgid "The machine answered with an error (HTTP %1%)."
-msgstr ""
+msgstr "機器回應了錯誤（HTTP %1%）。"
 
+# AI Translated
 msgid "The machine sent an answer that could not be read."
-msgstr ""
+msgstr "機器傳回的回應無法讀取。"
 
+# AI Translated
 msgid "Enter the IP address or the host name of the machine."
-msgstr ""
+msgstr "請輸入機器的 IP 位址或主機名稱。"
 
+# AI Translated
 msgid "The address must not contain spaces."
-msgstr ""
+msgstr "位址不得包含空格。"
 
+# AI Translated
 msgid "Enter the address only, without http:// or https://."
-msgstr ""
+msgstr "請只輸入位址，不要加上 http:// 或 https://。"
 
+# AI Translated
 msgid "Enter the address only, without a path after it."
-msgstr ""
+msgstr "請只輸入位址，後面不要加上路徑。"
 
+# AI Translated
 msgid "The address must not contain a user name."
-msgstr ""
+msgstr "位址不得包含使用者名稱。"
 
+# AI Translated
 msgid "The port must be a number from 1 to 65535."
-msgstr ""
+msgstr "連接埠必須是 1 到 65535 之間的數字。"
 
+# AI Translated
 msgid "This IPv4 address is not valid."
-msgstr ""
+msgstr "此 IPv4 位址無效。"
 
+# AI Translated
 msgid "This host name is not valid."
-msgstr ""
+msgstr "此主機名稱無效。"
 
+# AI Translated
+# Needs human review: tab title; check 設定 vs 設置 against the other tab names
 msgid "Setup"
-msgstr ""
+msgstr "設定"
 
+# AI Translated
 msgid "Machine information"
-msgstr ""
+msgstr "機器資訊"
 
+# AI Translated
 msgid "Machine IP"
-msgstr ""
+msgstr "機器 IP"
 
+# AI Translated
 msgid "Test connection"
-msgstr ""
+msgstr "測試連線"
 
+# AI Translated
 msgid ""
 "Save the settings and run a successful connection test to see the machine "
 "information."
-msgstr ""
+msgstr "請儲存設定並成功完成連線測試，即可查看機器資訊。"
 
+# AI Translated
 msgid "The API key must not contain spaces."
-msgstr ""
+msgstr "API 金鑰不得包含空格。"
 
+# AI Translated
 msgid "Checking the connection to the saved machine..."
-msgstr ""
+msgstr "正在檢查與已儲存機器的連線..."
 
+# AI Translated
 msgid "Testing the connection..."
-msgstr ""
+msgstr "正在測試連線..."
 
+# AI Translated
 msgid "Reading the machine information..."
-msgstr ""
+msgstr "正在讀取機器資訊..."
 
+# AI Translated
+# Needs human review: section heading for model/serial; check that 識別資訊 reads naturally
 msgid "Identity"
-msgstr ""
+msgstr "識別資訊"
 
+# AI Translated
 msgid "Serial number"
-msgstr ""
+msgstr "序號"
 
+# AI Translated
 msgid "Software version"
-msgstr ""
+msgstr "軟體版本"
 
+# AI Translated
 msgid "Hardware version"
-msgstr ""
+msgstr "硬體版本"
 
+# AI Translated
 msgid "Installed options"
-msgstr ""
+msgstr "已安裝選配"
 
+# AI Translated
+# Needs human review: installed option name; confirm whether it is a high-speed kit (高速模式) or a generic speed mode setting (速度模式)
 msgid "Speed mode"
-msgstr ""
+msgstr "高速模式"
 
+# AI Translated
+# Needs human review: installed option name (high-temperature kit); check wording
 msgid "High temperature"
-msgstr ""
+msgstr "高溫"
 
+# AI Translated
 msgid "Heated enclosure"
-msgstr ""
+msgstr "加熱腔體"
 
+# AI Translated
+# Needs human review: fume extraction option; confirm 排氣系統 vs 抽風系統
 msgid "Extraction system"
-msgstr ""
+msgstr "排氣系統"
 
+# AI Translated
 msgid "Enclosure maximum temperature"
-msgstr ""
+msgstr "腔體最高溫度"
 
+# AI Translated
 msgid "Heated bed"
-msgstr ""
+msgstr "熱床"
 
+# AI Translated
 msgid "Bed maximum temperature"
-msgstr ""
+msgstr "熱床最高溫度"
 
+# AI Translated
 msgid "Uninterrupted power supply"
-msgstr ""
+msgstr "不斷電系統"
 
+# AI Translated
 msgid "Build volume"
-msgstr ""
+msgstr "列印空間"
 
+# AI Translated
+# Needs human review: bed leveling probe; confirm 熱床探針 vs 調平探針
 msgid "Bed probe"
-msgstr ""
+msgstr "熱床探針"
 
+# AI Translated
 msgid "Hot ends"
-msgstr ""
+msgstr "熱端"
 
+# AI Translated
 msgid "The machine reports no hot end."
-msgstr ""
+msgstr "機器未回報任何熱端。"
 
+# AI Translated
+# Needs human review: print head number; confirm 噴頭 vs 工具頭
 #. TRN %1% is the head number reported by the machine (0, 1, ...).
 #, possible-boost-format
 msgid "Head %1%"
-msgstr ""
+msgstr "噴頭 %1%"
 
+# AI Translated
+# Needs human review: hot end property (hardened nozzle); check wording
 msgid "Hardened"
-msgstr ""
+msgstr "硬化"
 
+# AI Translated
 msgid "Maximum temperature"
-msgstr ""
+msgstr "最高溫度"
 
+# AI Translated
 msgid "Direct drive"
-msgstr ""
+msgstr "近程擠出"
 
+# AI Translated
 msgid "No camera"
-msgstr ""
+msgstr "無攝影機"

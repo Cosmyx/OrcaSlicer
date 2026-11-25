@@ -80,7 +80,9 @@ here; see the upstream release notes.
   connection test succeeded (one runs by itself when the dialog opens on a
   configured machine), reads the model, serial number, versions, installed
   options, hot ends and camera from the machine. Other printers keep the
-  generic dialog. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/127.
+  generic dialog. The dialog is translated into French and machine-translated
+  for review into the 20 other offered UI languages. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/127.
   Decision: 0225.
 
 ### i18n

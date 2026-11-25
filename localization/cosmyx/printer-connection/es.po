@@ -7,150 +7,208 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# AI Translated
 msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
 msgstr ""
+"La máquina ha rechazado la clave API (HTTP 401). Compruebe la clave API en "
+"la pestaña Configuración."
 
+# AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
-msgstr ""
+msgstr "La clave API no tiene permiso para leer esta información (HTTP 403)."
 
+# AI Translated
 msgid "The machine does not provide this information (HTTP 404)."
-msgstr ""
+msgstr "La máquina no proporciona esta información (HTTP 404)."
 
+# AI Translated
 msgid ""
 "The machine did not answer in time. Check that it is switched on and "
 "connected to the network."
 msgstr ""
+"La máquina no ha respondido a tiempo. Compruebe que está encendida y "
+"conectada a la red."
 
+# AI Translated
 msgid "Could not reach the machine. Check the address and the network."
 msgstr ""
+"No se ha podido contactar con la máquina. Compruebe la dirección y la red."
 
+# AI Translated
 #. TRN %1% is an HTTP status code, for example 500.
 #, possible-boost-format
 msgid "The machine answered with an error (HTTP %1%)."
-msgstr ""
+msgstr "La máquina ha respondido con un error (HTTP %1%)."
 
+# AI Translated
 msgid "The machine sent an answer that could not be read."
-msgstr ""
+msgstr "La máquina ha enviado una respuesta que no se ha podido leer."
 
+# AI Translated
 msgid "Enter the IP address or the host name of the machine."
-msgstr ""
+msgstr "Introduzca la dirección IP o el nombre de host de la máquina."
 
+# AI Translated
 msgid "The address must not contain spaces."
-msgstr ""
+msgstr "La dirección no debe contener espacios."
 
+# AI Translated
 msgid "Enter the address only, without http:// or https://."
-msgstr ""
+msgstr "Introduzca solo la dirección, sin http:// ni https://."
 
+# AI Translated
 msgid "Enter the address only, without a path after it."
-msgstr ""
+msgstr "Introduzca solo la dirección, sin ninguna ruta detrás."
 
+# AI Translated
 msgid "The address must not contain a user name."
-msgstr ""
+msgstr "La dirección no debe contener un nombre de usuario."
 
+# AI Translated
 msgid "The port must be a number from 1 to 65535."
-msgstr ""
+msgstr "El puerto debe ser un número entre 1 y 65535."
 
+# AI Translated
 msgid "This IPv4 address is not valid."
-msgstr ""
+msgstr "Esta dirección IPv4 no es válida."
 
+# AI Translated
 msgid "This host name is not valid."
-msgstr ""
+msgstr "Este nombre de host no es válido."
 
+# AI Translated
 msgid "Setup"
-msgstr ""
+msgstr "Configuración"
 
+# AI Translated
 msgid "Machine information"
-msgstr ""
+msgstr "Información de la máquina"
 
+# AI Translated
 msgid "Machine IP"
-msgstr ""
+msgstr "IP de la máquina"
 
+# AI Translated
 msgid "Test connection"
-msgstr ""
+msgstr "Probar conexión"
 
+# AI Translated
 msgid ""
 "Save the settings and run a successful connection test to see the machine "
 "information."
 msgstr ""
+"Guarde los ajustes y realice una prueba de conexión correcta para ver la "
+"información de la máquina."
 
+# AI Translated
 msgid "The API key must not contain spaces."
-msgstr ""
+msgstr "La clave API no debe contener espacios."
 
+# AI Translated
 msgid "Checking the connection to the saved machine..."
-msgstr ""
+msgstr "Comprobando la conexión con la máquina guardada..."
 
+# AI Translated
 msgid "Testing the connection..."
-msgstr ""
+msgstr "Probando la conexión..."
 
+# AI Translated
 msgid "Reading the machine information..."
-msgstr ""
+msgstr "Leyendo la información de la máquina..."
 
+# AI Translated
+# Needs human review: section heading for model/serial/versions; check 'Identificación' fits
 msgid "Identity"
-msgstr ""
+msgstr "Identificación"
 
+# AI Translated
 msgid "Serial number"
-msgstr ""
+msgstr "Número de serie"
 
+# AI Translated
 msgid "Software version"
-msgstr ""
+msgstr "Versión de software"
 
+# AI Translated
 msgid "Hardware version"
-msgstr ""
+msgstr "Versión de hardware"
 
+# AI Translated
 msgid "Installed options"
-msgstr ""
+msgstr "Opciones instaladas"
 
+# AI Translated
+# Needs human review: installed option name; check meaning (high-speed kit?)
 msgid "Speed mode"
-msgstr ""
+msgstr "Modo de velocidad"
 
+# AI Translated
+# Needs human review: installed option name (high-temperature kit); check wording
 msgid "High temperature"
-msgstr ""
+msgstr "Alta temperatura"
 
+# AI Translated
+# Needs human review: enclosure rendered as 'recámara' per reference chamber term; check
 msgid "Heated enclosure"
-msgstr ""
+msgstr "Recámara calefactada"
 
+# AI Translated
 msgid "Extraction system"
-msgstr ""
+msgstr "Sistema de extracción"
 
+# AI Translated
 msgid "Enclosure maximum temperature"
-msgstr ""
+msgstr "Temperatura máxima de la recámara"
 
+# AI Translated
 msgid "Heated bed"
-msgstr ""
+msgstr "Cama caliente"
 
+# AI Translated
 msgid "Bed maximum temperature"
-msgstr ""
+msgstr "Temperatura máxima de la cama"
 
+# AI Translated
 msgid "Uninterrupted power supply"
-msgstr ""
+msgstr "Sistema de alimentación ininterrumpida"
 
+# AI Translated
 msgid "Build volume"
-msgstr ""
+msgstr "Volumen de impresión"
 
+# AI Translated
 msgid "Bed probe"
-msgstr ""
+msgstr "Sonda de cama"
 
+# AI Translated
 msgid "Hot ends"
-msgstr ""
+msgstr "Hotends"
 
+# AI Translated
 msgid "The machine reports no hot end."
-msgstr ""
+msgstr "La máquina no indica ningún hotend."
 
+# AI Translated
 #. TRN %1% is the head number reported by the machine (0, 1, ...).
 #, possible-boost-format
 msgid "Head %1%"
-msgstr ""
+msgstr "Cabezal %1%"
 
+# AI Translated
+# Needs human review: hot end property (hardened nozzle); check gender/wording 'Endurecido'
 msgid "Hardened"
-msgstr ""
+msgstr "Endurecido"
 
+# AI Translated
 msgid "Maximum temperature"
-msgstr ""
+msgstr "Temperatura máxima"
 
+# AI Translated
 msgid "Direct drive"
-msgstr ""
+msgstr "Extrusor directo"
 
+# AI Translated
 msgid "No camera"
-msgstr ""
+msgstr "Sin cámara"

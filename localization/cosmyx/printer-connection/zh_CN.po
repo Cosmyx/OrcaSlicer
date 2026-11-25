@@ -7,150 +7,202 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
-msgstr ""
+msgstr "打印机拒绝了 API 密钥（HTTP 401）。请在“设置”选项卡中检查 API 密钥。"
 
+# AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
-msgstr ""
+msgstr "该 API 密钥无权读取此信息（HTTP 403）。"
 
+# AI Translated
 msgid "The machine does not provide this information (HTTP 404)."
-msgstr ""
+msgstr "打印机未提供此信息（HTTP 404）。"
 
+# AI Translated
 msgid ""
 "The machine did not answer in time. Check that it is switched on and "
 "connected to the network."
-msgstr ""
+msgstr "打印机未及时响应。请检查打印机是否已开机并已连接到网络。"
 
+# AI Translated
 msgid "Could not reach the machine. Check the address and the network."
-msgstr ""
+msgstr "无法连接到打印机。请检查地址和网络。"
 
+# AI Translated
 #. TRN %1% is an HTTP status code, for example 500.
 #, possible-boost-format
 msgid "The machine answered with an error (HTTP %1%)."
-msgstr ""
+msgstr "打印机返回了错误（HTTP %1%）。"
 
+# AI Translated
 msgid "The machine sent an answer that could not be read."
-msgstr ""
+msgstr "打印机返回的响应无法读取。"
 
+# AI Translated
 msgid "Enter the IP address or the host name of the machine."
-msgstr ""
+msgstr "请输入打印机的 IP 地址或主机名。"
 
+# AI Translated
 msgid "The address must not contain spaces."
-msgstr ""
+msgstr "地址不能包含空格。"
 
+# AI Translated
 msgid "Enter the address only, without http:// or https://."
-msgstr ""
+msgstr "请仅输入地址，不要包含 http:// 或 https://。"
 
+# AI Translated
 msgid "Enter the address only, without a path after it."
-msgstr ""
+msgstr "请仅输入地址，后面不要附带路径。"
 
+# AI Translated
 msgid "The address must not contain a user name."
-msgstr ""
+msgstr "地址不能包含用户名。"
 
+# AI Translated
 msgid "The port must be a number from 1 to 65535."
-msgstr ""
+msgstr "端口必须是 1 到 65535 之间的数字。"
 
+# AI Translated
 msgid "This IPv4 address is not valid."
-msgstr ""
+msgstr "此 IPv4 地址无效。"
 
+# AI Translated
 msgid "This host name is not valid."
-msgstr ""
+msgstr "此主机名无效。"
 
+# AI Translated
 msgid "Setup"
-msgstr ""
+msgstr "设置"
 
+# AI Translated
 msgid "Machine information"
-msgstr ""
+msgstr "打印机信息"
 
+# AI Translated
 msgid "Machine IP"
-msgstr ""
+msgstr "打印机 IP"
 
+# AI Translated
 msgid "Test connection"
-msgstr ""
+msgstr "测试连接"
 
+# AI Translated
 msgid ""
 "Save the settings and run a successful connection test to see the machine "
 "information."
-msgstr ""
+msgstr "请保存设置并成功完成连接测试，即可查看打印机信息。"
 
+# AI Translated
 msgid "The API key must not contain spaces."
-msgstr ""
+msgstr "API 密钥不能包含空格。"
 
+# AI Translated
 msgid "Checking the connection to the saved machine..."
-msgstr ""
+msgstr "正在检查与已保存打印机的连接..."
 
+# AI Translated
 msgid "Testing the connection..."
-msgstr ""
+msgstr "正在测试连接..."
 
+# AI Translated
 msgid "Reading the machine information..."
-msgstr ""
+msgstr "正在读取打印机信息..."
 
+# AI Translated
+# Needs human review: identity section heading of the machine info tab; check wording
 msgid "Identity"
-msgstr ""
+msgstr "标识信息"
 
+# AI Translated
 msgid "Serial number"
-msgstr ""
+msgstr "序列号"
 
+# AI Translated
 msgid "Software version"
-msgstr ""
+msgstr "软件版本"
 
+# AI Translated
 msgid "Hardware version"
-msgstr ""
+msgstr "硬件版本"
 
+# AI Translated
 msgid "Installed options"
-msgstr ""
+msgstr "已安装选件"
 
+# AI Translated
+# Needs human review: installed option name; check if it is a mode or a hardware kit
 msgid "Speed mode"
-msgstr ""
+msgstr "速度模式"
 
+# AI Translated
+# Needs human review: installed option (high-temperature kit?); check wording
 msgid "High temperature"
-msgstr ""
+msgstr "高温"
 
+# AI Translated
 msgid "Heated enclosure"
-msgstr ""
+msgstr "加热机箱"
 
+# AI Translated
+# Needs human review: fume extraction / exhaust option; check wording
 msgid "Extraction system"
-msgstr ""
+msgstr "排风系统"
 
+# AI Translated
 msgid "Enclosure maximum temperature"
-msgstr ""
+msgstr "机箱最高温度"
 
+# AI Translated
 msgid "Heated bed"
-msgstr ""
+msgstr "热床"
 
+# AI Translated
 msgid "Bed maximum temperature"
-msgstr ""
+msgstr "热床最高温度"
 
+# AI Translated
 msgid "Uninterrupted power supply"
-msgstr ""
+msgstr "不间断电源"
 
+# AI Translated
 msgid "Build volume"
-msgstr ""
+msgstr "构建体积"
 
+# AI Translated
 msgid "Bed probe"
-msgstr ""
+msgstr "热床探针"
 
+# AI Translated
 msgid "Hot ends"
-msgstr ""
+msgstr "热端"
 
+# AI Translated
 msgid "The machine reports no hot end."
-msgstr ""
+msgstr "打印机未报告任何热端。"
 
+# AI Translated
+# Needs human review: print head or hot end index; check wording
 #. TRN %1% is the head number reported by the machine (0, 1, ...).
 #, possible-boost-format
 msgid "Head %1%"
-msgstr ""
+msgstr "打印头 %1%"
 
+# AI Translated
+# Needs human review: hot end attribute (hardened nozzle); check wording
 msgid "Hardened"
-msgstr ""
+msgstr "硬化"
 
+# AI Translated
 msgid "Maximum temperature"
-msgstr ""
+msgstr "最高温度"
 
+# AI Translated
 msgid "Direct drive"
-msgstr ""
+msgstr "近程挤出机"
 
+# AI Translated
 msgid "No camera"
-msgstr ""
+msgstr "无摄像头"

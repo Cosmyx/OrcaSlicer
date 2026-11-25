@@ -7,150 +7,212 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
+# AI Translated
 msgid ""
 "The machine refused the API key (HTTP 401). Check the API key in the Setup "
 "tab."
 msgstr ""
+"Maskinen nekade API-nyckeln (HTTP 401). Kontrollera API-nyckeln på fliken "
+"Inställningar."
 
+# AI Translated
 msgid "The API key is not allowed to read this information (HTTP 403)."
 msgstr ""
+"API-nyckeln har inte behörighet att läsa den här informationen (HTTP 403)."
 
+# AI Translated
 msgid "The machine does not provide this information (HTTP 404)."
-msgstr ""
+msgstr "Maskinen tillhandahåller inte den här informationen (HTTP 404)."
 
+# AI Translated
 msgid ""
 "The machine did not answer in time. Check that it is switched on and "
 "connected to the network."
 msgstr ""
+"Maskinen svarade inte i tid. Kontrollera att den är påslagen och ansluten "
+"till nätverket."
 
+# AI Translated
 msgid "Could not reach the machine. Check the address and the network."
-msgstr ""
+msgstr "Det gick inte att nå maskinen. Kontrollera adressen och nätverket."
 
+# AI Translated
 #. TRN %1% is an HTTP status code, for example 500.
 #, possible-boost-format
 msgid "The machine answered with an error (HTTP %1%)."
-msgstr ""
+msgstr "Maskinen svarade med ett fel (HTTP %1%)."
 
+# AI Translated
 msgid "The machine sent an answer that could not be read."
-msgstr ""
+msgstr "Maskinen skickade ett svar som inte kunde läsas."
 
+# AI Translated
 msgid "Enter the IP address or the host name of the machine."
-msgstr ""
+msgstr "Ange maskinens IP-adress eller värdnamn."
 
+# AI Translated
 msgid "The address must not contain spaces."
-msgstr ""
+msgstr "Adressen får inte innehålla mellanslag."
 
+# AI Translated
 msgid "Enter the address only, without http:// or https://."
-msgstr ""
+msgstr "Ange endast adressen, utan http:// eller https://."
 
+# AI Translated
 msgid "Enter the address only, without a path after it."
-msgstr ""
+msgstr "Ange endast adressen, utan någon sökväg efter den."
 
+# AI Translated
 msgid "The address must not contain a user name."
-msgstr ""
+msgstr "Adressen får inte innehålla något användarnamn."
 
+# AI Translated
 msgid "The port must be a number from 1 to 65535."
-msgstr ""
+msgstr "Porten måste vara ett tal från 1 till 65535."
 
+# AI Translated
 msgid "This IPv4 address is not valid."
-msgstr ""
+msgstr "IPv4-adressen är inte giltig."
 
+# AI Translated
 msgid "This host name is not valid."
-msgstr ""
+msgstr "Värdnamnet är inte giltigt."
 
+# AI Translated
+# Needs human review: tab name 'Setup' rendered as 'Inställningar' (alt. 'Konfiguration'); must match the tab named in the HTTP 401 message
 msgid "Setup"
-msgstr ""
+msgstr "Inställningar"
 
+# AI Translated
 msgid "Machine information"
-msgstr ""
+msgstr "Maskininformation"
 
+# AI Translated
 msgid "Machine IP"
-msgstr ""
+msgstr "Maskinens IP"
 
+# AI Translated
 msgid "Test connection"
-msgstr ""
+msgstr "Testa anslutning"
 
+# AI Translated
 msgid ""
 "Save the settings and run a successful connection test to see the machine "
 "information."
 msgstr ""
+"Spara inställningarna och genomför ett lyckat anslutningstest för att se "
+"maskininformationen."
 
+# AI Translated
 msgid "The API key must not contain spaces."
-msgstr ""
+msgstr "API-nyckeln får inte innehålla mellanslag."
 
+# AI Translated
 msgid "Checking the connection to the saved machine..."
-msgstr ""
+msgstr "Kontrollerar anslutningen till den sparade maskinen..."
 
+# AI Translated
 msgid "Testing the connection..."
-msgstr ""
+msgstr "Testar anslutningen..."
 
+# AI Translated
 msgid "Reading the machine information..."
-msgstr ""
+msgstr "Läser maskininformationen..."
 
+# AI Translated
 msgid "Identity"
-msgstr ""
+msgstr "Identitet"
 
+# AI Translated
 msgid "Serial number"
-msgstr ""
+msgstr "Serienummer"
 
+# AI Translated
 msgid "Software version"
-msgstr ""
+msgstr "Programvaruversion"
 
+# AI Translated
 msgid "Hardware version"
-msgstr ""
+msgstr "Maskinvaruversion"
 
+# AI Translated
 msgid "Installed options"
-msgstr ""
+msgstr "Installerade tillval"
 
+# AI Translated
+# Needs human review: machine option name shown with a raw value; check it reads as an installed option
 msgid "Speed mode"
-msgstr ""
+msgstr "Hastighetsläge"
 
+# AI Translated
+# Needs human review: installed option name (high-temperature kit); check the short label fits
 msgid "High temperature"
-msgstr ""
+msgstr "Hög temperatur"
 
+# AI Translated
+# Needs human review: enclosure rendered as 'kammare' (Orca uses 'Kammare' for chamber); alt. 'Uppvärmt hölje'
 msgid "Heated enclosure"
-msgstr ""
+msgstr "Uppvärmd kammare"
 
+# AI Translated
+# Needs human review: fume extraction system as an installed option; confirm 'Utsugssystem' vs 'Utsug'
 msgid "Extraction system"
-msgstr ""
+msgstr "Utsugssystem"
 
+# AI Translated
 msgid "Enclosure maximum temperature"
-msgstr ""
+msgstr "Kammarens maxtemperatur"
 
+# AI Translated
 msgid "Heated bed"
-msgstr ""
+msgstr "Uppvärmd byggplatta"
 
+# AI Translated
 msgid "Bed maximum temperature"
-msgstr ""
+msgstr "Byggplattans maxtemperatur"
 
+# AI Translated
+# Needs human review: UPS as an installed option: 'UPS (avbrottsfri kraftförsörjning)' vs plain 'UPS'
 msgid "Uninterrupted power supply"
-msgstr ""
+msgstr "UPS (avbrottsfri kraftförsörjning)"
 
+# AI Translated
 msgid "Build volume"
-msgstr ""
+msgstr "Byggvolym"
 
+# AI Translated
+# Needs human review: bed levelling probe; 'Byggplattesond' vs 'Nivelleringssensor'
 msgid "Bed probe"
-msgstr ""
+msgstr "Byggplattesond"
 
+# AI Translated
 msgid "Hot ends"
-msgstr ""
+msgstr "Hotends"
 
+# AI Translated
 msgid "The machine reports no hot end."
-msgstr ""
+msgstr "Maskinen rapporterar ingen hotend."
 
+# AI Translated
+# Needs human review: print head label; 'Huvud' vs 'Skrivhuvud'
 #. TRN %1% is the head number reported by the machine (0, 1, ...).
 #, possible-boost-format
 msgid "Head %1%"
-msgstr ""
+msgstr "Huvud %1%"
 
+# AI Translated
+# Needs human review: hot end/nozzle attribute (hardened steel); check gender agreement in context
 msgid "Hardened"
-msgstr ""
+msgstr "Härdad"
 
+# AI Translated
 msgid "Maximum temperature"
-msgstr ""
+msgstr "Maxtemperatur"
 
+# AI Translated
 msgid "Direct drive"
-msgstr ""
+msgstr "Direct drive"
 
+# AI Translated
 msgid "No camera"
-msgstr ""
+msgstr "Ingen kamera"

@@ -1,0 +1,213 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: fi_FI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"Laite hylkäsi API-avaimen (HTTP 401). Tarkista API-avain "
+"Määritys-välilehdellä."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr "API-avaimella ei ole oikeutta lukea näitä tietoja (HTTP 403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "Laite ei tarjoa näitä tietoja (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"Laite ei vastannut ajoissa. Tarkista, että se on päällä ja yhdistetty "
+"verkkoon."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "Laitteeseen ei saatu yhteyttä. Tarkista osoite ja verkko."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "Laite vastasi virheellä (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "Laite lähetti vastauksen, jota ei voitu lukea."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Anna laitteen IP-osoite tai isäntänimi."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Osoite ei saa sisältää välilyöntejä."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Anna pelkkä osoite ilman http://- tai https://-alkua."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Anna pelkkä osoite ilman sen perässä olevaa polkua."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Osoite ei saa sisältää käyttäjänimeä."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "Portin on oltava luku väliltä 1–65535."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Tämä IPv4-osoite ei ole kelvollinen."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Tämä isäntänimi ei ole kelvollinen."
+
+# AI Translated
+# Needs human review: tab name; must match the Setup tab reference in the HTTP 401 message
+msgid "Setup"
+msgstr "Määritys"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Laitteen tiedot"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "Laitteen IP"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Testaa yhteys"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Tallenna asetukset ja suorita onnistunut yhteystesti, niin näet laitteen "
+"tiedot."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "API-avain ei saa sisältää välilyöntejä."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Tarkistetaan yhteyttä tallennettuun laitteeseen..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Testataan yhteyttä..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Luetaan laitteen tietoja..."
+
+# AI Translated
+msgid "Identity"
+msgstr "Tunnistetiedot"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Sarjanumero"
+
+# AI Translated
+msgid "Software version"
+msgstr "Ohjelmistoversio"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Laitteistoversio"
+
+# AI Translated
+msgid "Installed options"
+msgstr "Asennetut lisävarusteet"
+
+# AI Translated
+# Needs human review: check what this machine option actually does
+msgid "Speed mode"
+msgstr "Nopeustila"
+
+# AI Translated
+# Needs human review: installed option name; check whether a high-temperature kit is meant
+msgid "High temperature"
+msgstr "Korkea lämpötila"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "Lämmitetty kotelo"
+
+# AI Translated
+# Needs human review: check whether fume extraction/filtration is meant
+msgid "Extraction system"
+msgstr "Poistoilmajärjestelmä"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "Kotelon enimmäislämpötila"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Lämpöalusta"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Alustan enimmäislämpötila"
+
+# AI Translated
+msgid "Uninterrupted power supply"
+msgstr "Keskeytymätön virransyöttö (UPS)"
+
+# AI Translated
+msgid "Build volume"
+msgstr "Tulostustilavuus"
+
+# AI Translated
+msgid "Bed probe"
+msgstr "Alustan anturi"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "Hotendit"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "Laite ei ilmoita yhtään hotendia."
+
+# AI Translated
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Pää %1%"
+
+# AI Translated
+# Needs human review: standalone adjective (hardened nozzle); check UI context
+msgid "Hardened"
+msgstr "Karkaistu"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Enimmäislämpötila"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Suoraveto"
+
+# AI Translated
+msgid "No camera"
+msgstr "Ei kameraa"
