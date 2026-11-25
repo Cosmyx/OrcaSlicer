@@ -90,4 +90,5 @@ here; see the upstream release notes.
   as bundle version 02.00.00.00. **Removed:** the Cosmyx bed type; every
   printer now defaults to the Textured PEI Plate. Preset names are kept,
   so user presets made from the old Cosmyx pack still find their parents;
-  setting and filament ids are new. Pull request: pending. Decision: 0224.
+  setting and filament ids are new. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/126. Decision: 0224.
