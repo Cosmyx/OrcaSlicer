@@ -61,6 +61,14 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T11f -->
 
+<!-- cosmyx-slot: T24 -->
+- Preferences gathers the "Enable Bambu Cloud" and "Enable Bambu network
+  plug-in" toggles in a new "External machines" section of the Online tab
+  (French "Machines externes"). Turning either on now asks for confirmation
+  first, warning that Cosmyx has not verified the module and does not support
+  the machines it relies on; Cancel leaves it off. Turning one off never asks.
+  Pull request: pending. Decision: 0219.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->

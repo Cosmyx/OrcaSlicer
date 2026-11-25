@@ -1,0 +1,19 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx external-machines\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. TRN Warning shown in Preferences before "Enable Bambu Cloud" or "Enable Bambu network plug-in" is turned on.
+msgid ""
+"This module has not been verified by Cosmyx and relies on machines the "
+"Cosmyx team does not support. Use it at your own risk."
+msgstr ""
+
+#. TRN Caption of the warning, named after the Preferences section holding the two toggles.
+#. TRN Title of the Preferences section holding the Bambu Cloud and Bambu network plug-in toggles.
+msgid "External machines"
+msgstr ""
