@@ -7,48 +7,74 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+# AI Translated
 msgid ""
 "The plugin server address is not a plain https address, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"La dirección del servidor de plugins no es una dirección https simple, por "
+"lo que sus plugins no se pueden verificar. No se ha instalado el plugin."
 
+# AI Translated
 #. TRN %1% is the version offered by the server, %2% the installed version.
 #, possible-boost-format
 msgid ""
 "Plugin version %1% is older than the installed version %2%, so it was not "
 "installed."
 msgstr ""
+"La versión %1% del plugin es anterior a la versión instalada %2%, por lo que "
+"no se ha instalado."
 
+# AI Translated
 msgid ""
 "This build has no signing key for the Cosmyx plugin server, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"Esta compilación no tiene clave de firma para el servidor de plugins de "
+"Cosmyx, por lo que sus plugins no se pueden verificar. No se ha instalado el "
+"plugin."
 
+# AI Translated
 msgid ""
 "No signing key is pinned for this plugin server. Pin its key in Preferences, "
 "or allow unverified plugins from it. The plugin was not installed."
 msgstr ""
+"No hay ninguna clave de firma fijada para este servidor de plugins. Fije su "
+"clave en Preferencias o permita plugins no verificados de este servidor. No "
+"se ha instalado el plugin."
 
+# AI Translated
 msgid ""
 "Plugin packages cannot be verified on this platform. The plugin was not "
 "installed."
 msgstr ""
+"Los paquetes de plugins no se pueden verificar en esta plataforma. No se ha "
+"instalado el plugin."
 
+# AI Translated
 #. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
 #, possible-boost-format
 msgid ""
 "The plugin package failed its signature check (%1%). The plugin was not "
 "installed."
 msgstr ""
+"El paquete del plugin no ha superado la comprobación de firma (%1%). No se "
+"ha instalado el plugin."
 
+# AI Translated
 #. TRN %1% is the plugin name.
 #, possible-boost-format
 msgid ""
 "Plugin %1% was installed unverified: this server may serve unverified "
 "plugins."
 msgstr ""
+"El plugin %1% se ha instalado sin verificar: este servidor puede ofrecer "
+"plugins no verificados."
 
+# AI Translated
 msgid ""
 "The installed plugin package could not be recorded as the one whose "
 "signature was checked, so it was removed. The plugin was not installed."
 msgstr ""
+"No se ha podido registrar el paquete de plugin instalado como aquel cuya "
+"firma se comprobó, por lo que se ha eliminado. No se ha instalado el plugin."

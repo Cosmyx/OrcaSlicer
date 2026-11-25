@@ -7,48 +7,70 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid ""
 "The plugin server address is not a plain https address, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"Địa chỉ máy chủ plugin không phải là địa chỉ https thông thường, nên không "
+"thể xác minh các plugin của nó. Plugin chưa được cài đặt."
 
+# AI Translated
 #. TRN %1% is the version offered by the server, %2% the installed version.
 #, possible-boost-format
 msgid ""
 "Plugin version %1% is older than the installed version %2%, so it was not "
 "installed."
 msgstr ""
+"Phiên bản plugin %1% cũ hơn phiên bản đã cài đặt %2%, nên chưa được cài đặt."
 
+# AI Translated
 msgid ""
 "This build has no signing key for the Cosmyx plugin server, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"Bản dựng này không có khóa ký cho máy chủ plugin Cosmyx, nên không thể xác "
+"minh các plugin của nó. Plugin chưa được cài đặt."
 
+# AI Translated
 msgid ""
 "No signing key is pinned for this plugin server. Pin its key in Preferences, "
 "or allow unverified plugins from it. The plugin was not installed."
 msgstr ""
+"Chưa ghim khóa ký nào cho máy chủ plugin này. Hãy ghim khóa của nó trong Tùy "
+"chọn, hoặc cho phép plugin chưa xác minh từ máy chủ này. Plugin chưa được "
+"cài đặt."
 
+# AI Translated
 msgid ""
 "Plugin packages cannot be verified on this platform. The plugin was not "
 "installed."
 msgstr ""
+"Không thể xác minh gói plugin trên nền tảng này. Plugin chưa được cài đặt."
 
+# AI Translated
 #. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
 #, possible-boost-format
 msgid ""
 "The plugin package failed its signature check (%1%). The plugin was not "
 "installed."
 msgstr ""
+"Gói plugin không vượt qua kiểm tra chữ ký (%1%). Plugin chưa được cài đặt."
 
+# AI Translated
 #. TRN %1% is the plugin name.
 #, possible-boost-format
 msgid ""
 "Plugin %1% was installed unverified: this server may serve unverified "
 "plugins."
 msgstr ""
+"Plugin %1% đã được cài đặt mà chưa xác minh: máy chủ này được phép cung cấp "
+"plugin chưa xác minh."
 
+# AI Translated
 msgid ""
 "The installed plugin package could not be recorded as the one whose "
 "signature was checked, so it was removed. The plugin was not installed."
 msgstr ""
+"Không thể ghi nhận gói plugin đã cài đặt là gói đã được kiểm tra chữ ký, nên "
+"gói đã bị gỡ bỏ. Plugin chưa được cài đặt."

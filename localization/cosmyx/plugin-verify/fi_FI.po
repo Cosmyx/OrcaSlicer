@@ -1,0 +1,79 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: fi_FI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Laajennuspalvelimen osoite ei ole tavallinen https-osoite, joten sen "
+"laajennuksia ei voi varmentaa. Laajennusta ei asennettu."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Laajennuksen versio %1% on vanhempi kuin asennettu versio %2%, joten sitä ei "
+"asennettu."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Tässä versiossa ei ole allekirjoitusavainta Cosmyx-laajennuspalvelimelle, "
+"joten sen laajennuksia ei voi varmentaa. Laajennusta ei asennettu."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Tälle laajennuspalvelimelle ei ole kiinnitetty allekirjoitusavainta. "
+"Kiinnitä sen avain asetuksissa tai salli varmentamattomat laajennukset "
+"siltä. Laajennusta ei asennettu."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Laajennuspaketteja ei voi varmentaa tällä alustalla. Laajennusta ei "
+"asennettu."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Laajennuspaketti ei läpäissyt allekirjoituksen tarkistusta (%1%). "
+"Laajennusta ei asennettu."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Laajennus %1% asennettiin varmentamattomana: tämä palvelin voi tarjota "
+"varmentamattomia laajennuksia."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Asennettua laajennuspakettia ei voitu kirjata siksi paketiksi, jonka "
+"allekirjoitus tarkistettiin, joten se poistettiin. Laajennusta ei asennettu."

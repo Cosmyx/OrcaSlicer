@@ -8,48 +8,75 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
 "|| n%100>14) ? 1 : 2);\n"
 
+# AI Translated
 msgid ""
 "The plugin server address is not a plain https address, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"Adres serwera wtyczek nie jest zwykłym adresem https, więc nie można "
+"zweryfikować jego wtyczek. Wtyczka nie została zainstalowana."
 
+# AI Translated
 #. TRN %1% is the version offered by the server, %2% the installed version.
 #, possible-boost-format
 msgid ""
 "Plugin version %1% is older than the installed version %2%, so it was not "
 "installed."
 msgstr ""
+"Wersja wtyczki %1% jest starsza niż zainstalowana wersja %2%, więc nie "
+"została zainstalowana."
 
+# AI Translated
 msgid ""
 "This build has no signing key for the Cosmyx plugin server, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"Ta kompilacja nie ma klucza podpisywania dla serwera wtyczek Cosmyx, więc "
+"nie można zweryfikować jego wtyczek. Wtyczka nie została zainstalowana."
 
+# AI Translated
 msgid ""
 "No signing key is pinned for this plugin server. Pin its key in Preferences, "
 "or allow unverified plugins from it. The plugin was not installed."
 msgstr ""
+"Dla tego serwera wtyczek nie przypięto klucza podpisywania. Przypnij jego "
+"klucz w Preferencjach lub zezwól na niezweryfikowane wtyczki z tego serwera. "
+"Wtyczka nie została zainstalowana."
 
+# AI Translated
 msgid ""
 "Plugin packages cannot be verified on this platform. The plugin was not "
 "installed."
 msgstr ""
+"Na tej platformie nie można weryfikować pakietów wtyczek. Wtyczka nie "
+"została zainstalowana."
 
+# AI Translated
 #. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
 #, possible-boost-format
 msgid ""
 "The plugin package failed its signature check (%1%). The plugin was not "
 "installed."
 msgstr ""
+"Pakiet wtyczki nie przeszedł weryfikacji podpisu (%1%). Wtyczka nie została "
+"zainstalowana."
 
+# AI Translated
 #. TRN %1% is the plugin name.
 #, possible-boost-format
 msgid ""
 "Plugin %1% was installed unverified: this server may serve unverified "
 "plugins."
 msgstr ""
+"Wtyczka %1% została zainstalowana bez weryfikacji: ten serwer może "
+"udostępniać niezweryfikowane wtyczki."
 
+# AI Translated
+# Needs human review: check the wording of 'recorded'
 msgid ""
 "The installed plugin package could not be recorded as the one whose "
 "signature was checked, so it was removed. The plugin was not installed."
 msgstr ""
+"Nie udało się zarejestrować zainstalowanego pakietu wtyczki jako tego, "
+"którego podpis został sprawdzony, więc został on usunięty. Wtyczka nie "
+"została zainstalowana."

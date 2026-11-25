@@ -7,48 +7,61 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+# AI Translated
 msgid ""
 "The plugin server address is not a plain https address, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"プラグインサーバーのアドレスが通常の https アドレスではないため、そのプラグインを検証できません。プラグインはインストールされませんでした。"
 
+# AI Translated
 #. TRN %1% is the version offered by the server, %2% the installed version.
 #, possible-boost-format
 msgid ""
 "Plugin version %1% is older than the installed version %2%, so it was not "
 "installed."
-msgstr ""
+msgstr "プラグインのバージョン %1% はインストール済みのバージョン %2% より古いため、インストールされませんでした。"
 
+# AI Translated
 msgid ""
 "This build has no signing key for the Cosmyx plugin server, so its plugins "
 "cannot be verified. The plugin was not installed."
 msgstr ""
+"このビルドには Cosmyx プラグインサーバーの署名鍵がないため、そのプラグインを検証できません。プラグインはインストールされませんでした。"
 
+# AI Translated
 msgid ""
 "No signing key is pinned for this plugin server. Pin its key in Preferences, "
 "or allow unverified plugins from it. The plugin was not installed."
 msgstr ""
+"このプラグインサーバーには署名鍵が固定されていません。設定でその鍵を固定するか、このサーバーからの未検証プラグインを許可してください。プラグインはインストールされませんでした。"
 
+# AI Translated
 msgid ""
 "Plugin packages cannot be verified on this platform. The plugin was not "
 "installed."
-msgstr ""
+msgstr "このプラットフォームではプラグインパッケージを検証できません。プラグインはインストールされませんでした。"
 
+# AI Translated
 #. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
 #, possible-boost-format
 msgid ""
 "The plugin package failed its signature check (%1%). The plugin was not "
 "installed."
-msgstr ""
+msgstr "プラグインパッケージの署名チェックに失敗しました (%1%)。プラグインはインストールされませんでした。"
 
+# AI Translated
 #. TRN %1% is the plugin name.
 #, possible-boost-format
 msgid ""
 "Plugin %1% was installed unverified: this server may serve unverified "
 "plugins."
-msgstr ""
+msgstr "プラグイン %1% は未検証のままインストールされました: このサーバーは未検証のプラグインを配信する場合があります。"
 
+# AI Translated
+# Needs human review: check meaning of 'recorded as the one whose signature was checked'
 msgid ""
 "The installed plugin package could not be recorded as the one whose "
 "signature was checked, so it was removed. The plugin was not installed."
 msgstr ""
+"インストールされたプラグインパッケージを署名チェック済みのものとして記録できなかったため、削除されました。プラグインはインストールされませんでした。"
