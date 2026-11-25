@@ -72,8 +72,8 @@ here; see the upstream release notes.
   untranslated), packaged like the upstream ones; the unused upstream
   catalogues (ca, cs, eu, hu, lt, pt_BR, ru, th, tr) are no longer packaged.
   **Migration:** a user whose language was one of those now gets British
-  English and can pick another in Preferences. Pull request: pending.
-  Decision: 0220.
+  English and can pick another in Preferences. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/123. Decision: 0220.
 
 ### i18n
 
