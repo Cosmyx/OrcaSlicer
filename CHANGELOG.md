@@ -38,8 +38,9 @@ here; see the upstream release notes.
   lists the OrcaSlicer changes from 2.0.0 to 2.5.2, the base Cosmyx
   bundle 8 is rebased on, and `COSMYX.md` lists the content of each Cosmyx
   bundle: commits for bundles 1 to 7, then features for bundle 8 (the bundle 7
-  content on OrcaSlicer 2.5.2, plus the integration and build tooling) and
-  bundle 9 (the new features). Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/124. Decision: 0226.
+  content on OrcaSlicer 2.5.2, plus the CosmoSlice name, application logos and
+  install paths, and the integration and build tooling) and bundle 9 (the new
+  features). Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/124. Decision: 0226.
 
 ### libslic3r
 
