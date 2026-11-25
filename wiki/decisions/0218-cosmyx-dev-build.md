@@ -68,6 +68,17 @@ upload for macOS:
   the build already uploaded, repacks upstream's per-arch DMG when only that
   one exists, and otherwise builds the DMG from the app bundle with upstream's
   `scripts/create_dmg.sh`.
+- Before a repacked or packed app goes into its DMG, `dev_build.py seal-app`
+  makes its signature verify. Upstream's unsigned build never seals the
+  bundle: each Mach-O only carries the linker's ad-hoc signature and there
+  is no `_CodeSignature`, so `codesign --verify --deep --strict` fails ("code
+  has no resources but signature indicates they must be present") and
+  Gatekeeper calls the downloaded app damaged. The step keeps a signature
+  that already verifies, fails on an identity signature that no longer
+  verifies, seals anything else ad hoc (`codesign --force --deep --sign -`),
+  then verifies strictly and fails the job if the bundle still does not
+  verify. A DMG the build already uploaded is kept as is: its producer (the
+  product-name stage, decision 0210) seals it the same way.
 - Left out: the Windows build script tests, the Linux slice check (its
   profile validator is not exported by Cosmyx builds, decision 0211), the
   universal macOS app and the Flatpak. Release validation covers them.

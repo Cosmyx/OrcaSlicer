@@ -7,6 +7,9 @@ import io
 import json
 import os
 import re
+import shlex
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -221,6 +224,89 @@ class DmgPlanTests(unittest.TestCase):
             self.assertIn("action=bundle", output.read_text(encoding="utf-8").splitlines())
 
 
+class SealTests(unittest.TestCase):
+    """The repacked app is sealed and verified before create_dmg: keep a
+    signature that verifies, refuse a broken identity signature, re-seal
+    anything else ad hoc, then always verify strictly."""
+
+    def test_command_order_and_quoting(self) -> None:
+        app = Path("stage dir") / "CosmoSlice.app"
+        command = dev_build.seal_command(app)
+        self.assertTrue(command.startswith(f"set -e; app={shlex.quote(str(app))}; "))
+        steps = [command.index('codesign --verify --deep --strict "$app"'),
+                 command.index("grep -q '^Authority='"),
+                 command.index('codesign --force --deep --sign - "$app"'),
+                 command.rindex('codesign --verify --deep --strict --verbose=2 "$app"')]
+        self.assertEqual(steps, sorted(steps))
+        self.assertTrue(command.endswith('codesign --verify --deep --strict --verbose=2 "$app"'))
+
+    def test_cli_runs_the_command(self) -> None:
+        commands: list[str] = []
+        self.assertEqual(dev_build.main(["seal-app", "--app", "x y.app"], runner=commands.append), 0)
+        self.assertEqual(commands, [dev_build.seal_command(Path("x y.app"))])
+
+    def test_cli_failure_is_an_error(self) -> None:
+        def fail(command: str) -> None:
+            raise subprocess.CalledProcessError(1, command)
+        with redirect_stderr(io.StringIO()) as err:
+            self.assertEqual(dev_build.main(["seal-app", "--app", "a.app"], runner=fail), 1)
+        self.assertIn("::error::", err.getvalue())
+
+
+@unittest.skipUnless(shutil.which("codesign"), "codesign exists on macOS only")
+class SealOnMacTests(unittest.TestCase):
+    """A real bundle as upstream's unsigned build leaves it: the executable
+    carries only its own ad-hoc (linker) signature and the bundle is not
+    sealed, which `codesign --verify` rejects and Gatekeeper calls damaged."""
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def unsealed_app(self) -> Path:
+        app = self.root / "OrcaSlicer.app"
+        (app / "Contents" / "MacOS").mkdir(parents=True)
+        (app / "Contents" / "Resources").mkdir()
+        (app / "Contents" / "Resources" / "data.txt").write_text("x", encoding="utf-8")
+        (app / "Contents" / "Info.plist").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n<plist version="1.0"><dict>'
+            "<key>CFBundleExecutable</key><string>OrcaSlicer</string>"
+            "<key>CFBundleIdentifier</key><string>com.example.dummy</string>"
+            "<key>CFBundlePackageType</key><string>APPL</string></dict></plist>\n",
+            encoding="utf-8",
+        )
+        exe = self.root / "OrcaSlicer"
+        shutil.copyfile("/usr/bin/true", exe)
+        subprocess.run(["codesign", "--remove-signature", str(exe)], check=True)
+        subprocess.run(["codesign", "--force", "--sign", "-", "--identifier", "OrcaSlicer", str(exe)], check=True)
+        exe.rename(app / "Contents" / "MacOS" / "OrcaSlicer")
+        return app
+
+    def verifies(self, app: Path) -> bool:
+        return subprocess.run(["codesign", "--verify", "--deep", "--strict", str(app)], capture_output=True).returncode == 0
+
+    def test_repacked_app_is_sealed_and_verifies(self) -> None:
+        # The job copies the app under the product name, then seals it.
+        stage = self.root / "stage"
+        stage.mkdir()
+        app = stage / "CosmoSlice.app"
+        subprocess.run(["cp", "-R", str(self.unsealed_app()), str(app)], check=True)
+        self.assertFalse(self.verifies(app))  # the reported bug
+        dev_build.run_bash(dev_build.seal_command(app))
+        self.assertTrue(self.verifies(app))
+
+    def test_valid_signature_is_kept(self) -> None:
+        app = self.unsealed_app()
+        subprocess.run(["codesign", "--force", "--deep", "--sign", "-", str(app)], check=True)
+        seal = app / "Contents" / "_CodeSignature" / "CodeResources"
+        before = seal.read_bytes()
+        dev_build.run_bash(dev_build.seal_command(app))
+        self.assertEqual(seal.read_bytes(), before)
+
+
 def jobs(text: str) -> dict[str, str]:
     """Split the jobs: section into {job id: job body} on two-space keys."""
     section = text.split("\njobs:\n", 1)[1]
@@ -322,6 +408,10 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("dev_build.py version", body)
         self.assertIn("dev_build.py dmg-plan", body)
         self.assertIn("create_dmg \"$PRODUCT\"", body)
+        # The copied app is sealed and verified before it goes into the DMG.
+        seal = body.index('dev_build.py seal-app --app "$stage/$PRODUCT.app"')
+        self.assertLess(body.index('cp -R "$apps" "$stage/$PRODUCT.app"'), seal)
+        self.assertLess(seal, body.index("create_dmg \"$PRODUCT\""))
         self.assertIn("name: ${{ steps.plan.outputs.artifact }}", body)
 
     def test_build_all_is_not_referenced(self) -> None:
