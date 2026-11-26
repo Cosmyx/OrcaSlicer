@@ -127,6 +127,14 @@ here; see the upstream release notes.
   0129, 0130.
 
 <!-- cosmyx-slot: T11d -->
+- Propose violet versions of the teal SVG icons for review: `just
+  brand-candidates` recolours them with the validated colour mappings into
+  `build/cosmyx/`, `just brand-review` shows them before and after on the
+  light and dark backgrounds, and `just brand-accept` moves the approved ones
+  into the overlay as rows to validate. All 524 teal SVG icons are now
+  violet in the overlay, validated. On an older upstream base (tolerant
+  mode, decision 0122) the icons that tree lacks are left out. Pull request:
+  pending. Decision: 0131.
 
 <!-- cosmyx-slot: T11e -->
 - Name the application CosmoSlice in every build: window titles, About,

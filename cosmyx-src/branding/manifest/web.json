@@ -8,11 +8,11 @@
       "size": "24x24",
       "usage": "web UI image",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "1c485c0407313e7a777a1660818abb671b78cd8a9d3864d7debb9cb17fe3d32e",
-      "override_sha256": null
+      "override_sha256": "3662d4e8b52e518c211a4274cef77012193cd10cb156f24f1e3594dc297c20de"
     },
     {
       "path": "resources/web/guide/img/greencheck.svg",
@@ -20,11 +20,11 @@
       "size": "18x18",
       "usage": "web UI image",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "c5f2abfc807328cecc50a865c4c05ff85a9b8c200a391320bd0d7bc4e3c95ea2",
-      "override_sha256": null
+      "override_sha256": "d8f12284d4761415f2af84469ce16067f0ff3cdb4cfa7f78d1a7e7d2f26e22cd"
     },
     {
       "path": "resources/web/model/img/file_g.svg",
@@ -32,11 +32,11 @@
       "size": "20x20",
       "usage": "web UI image",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "3b2f37c7d52d89708b65223f07a89f253e4f3f089c2352f365e4e76b9d43d9d4",
-      "override_sha256": null
+      "override_sha256": "2d39e0f32d36ac74c6be4f54ee67b4ea624428b563e21b4dc5047a27d3271129"
     },
     {
       "path": "resources/web/model/img/info_g.svg",
@@ -44,11 +44,11 @@
       "size": "20x20",
       "usage": "web UI image",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "bb393f98e83a2934eed9cd9e02b98e363670596cefa9310f99ca1bf44dc9de3f",
-      "override_sha256": null
+      "override_sha256": "ad99da10f8e7755eba5ef25523bc55e9f360d76cf478dc5cda798007c198e3f3"
     },
     {
       "path": "resources/web/model/img/profile_g.svg",
@@ -56,11 +56,11 @@
       "size": "20x20",
       "usage": "web UI image",
       "kind": "recolour",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "candidate",
+      "source_ref": "just brand-candidates, colours.json sha256 af87cc13ff48",
+      "status": "validated",
       "upstream_sha256": "673d51343e274e63a8d8ccdd1eb3b8f0d612ebce9bbfeb331f159409c34578c5",
-      "override_sha256": null
+      "override_sha256": "635efbb508e08423123572711f55760d10c8a6a118cdb61da6c6987d21580c0a"
     }
   ]
 }

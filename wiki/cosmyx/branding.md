@@ -328,7 +328,28 @@ Points to look at when you review:
   panel background `#2D2D31` is `#393445`.
 - Icons drawn by OpenGL or ImGui (`GLTexture`, the toolbar and gizmo icons)
   keep the colour of their file on disk: they turn violet only when their SVG
-  is replaced (the SVG candidates task).
+  is replaced (see SVG candidates below).
+
+### SVG candidates
+
+The SVG icons are not rewritten at build time: each one turns violet through
+an overlay file, proposed by a tool and approved by you (decision 0131).
+
+1. `just brand-candidates` writes one recoloured copy of every icon whose row
+   is still `missing` to `build/cosmyx/candidates/`, using only the
+   `validated` mappings. It lists the icons that still hold teal without a
+   mapping, and the teal icons that have no row yet (run `just brand-sync`).
+2. `just brand-review` writes the review sheets to `build/cosmyx/review/`
+   (open `index.html`): each icon before and after, on white with the light
+   colour map and on `#1C1C1F` with the dark map the app applies.
+3. `just brand-accept <group or glob>` copies the candidates you approve
+   into the overlay as `to-validate` rows, for example
+   `just brand-accept icons-a-m` or
+   `just brand-accept 'resources/images/toggle_*'`. Commit the overlay, the
+   manifest and the review tables per group, then validate them with
+   `just brand-validate`.
+
+Nothing under `build/` is committed.
 
 ### After an upstream merge
 
