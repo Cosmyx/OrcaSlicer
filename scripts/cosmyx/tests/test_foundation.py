@@ -27,6 +27,7 @@ def load_module(name: str):
 
 decisions = load_module("decisions")
 run_script_tests = load_module("run_script_tests")
+workflow_jobs = load_module("workflow_jobs")
 
 
 class JustfileTests(unittest.TestCase):
@@ -165,9 +166,13 @@ class FlatpakTestTargetTests(unittest.TestCase):
 class FlatpakTestAssetTests(unittest.TestCase):
     def test_asset_keeps_the_resources_cosmyx_tests_reads(self) -> None:
         # The flatpak leg deletes every resources/ folder its filter does not
-        # name; cosmyx_tests reads resources/cosmyx and resources/info.
-        text = (REPO_ROOT / ".github" / "workflows" / "build_flatpak.yml").read_text(encoding="utf-8")
-        filters = [line for line in text.splitlines() if 'find "$d/resources" ' in line and "rm -rf" in line]
+        # name; cosmyx_tests reads resources/cosmyx and resources/info. The
+        # job lives in build_flatpak.yml or, on older bases, in build_all.yml.
+        found = workflow_jobs.find_job(REPO_ROOT, "flatpak")
+        if found is None:
+            self.skipTest("this upstream base has no flatpak build job")
+        body = found[2]["flatpak"]
+        filters = [line for line in body.splitlines() if 'find "$d/resources" ' in line and "rm -rf" in line]
         self.assertEqual(len(filters), 1, "expected one resources/ filter in the test asset step")
         kept = set(re.findall(r"! -name (\S+)", filters[0]))
         for folder in ("cosmyx", "info", "profiles", "printers", "images"):
