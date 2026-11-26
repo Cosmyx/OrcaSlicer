@@ -1,5 +1,7 @@
 msgid ""
 msgstr ""
+"Last-Translator: Cosmyx\n"
+"PO-Revision-Date: 2026-11-19 00:00+0000\n"
 "Project-Id-Version: OrcaSlicer Cosmyx models\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -14,9 +16,14 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Mô hình hiệu chỉnh này hoạt động tốt nhất khi hướng infill được đặt là 0 độ. "
+"Để có kết quả hiệu chỉnh tối ưu, nên đặt cả 'Hướng infill' và 'Hướng infill "
+"đặc' về 0.\n"
+"Có - Tự động thay đổi các cài đặt này\n"
+"Không - Không thay đổi các cài đặt này cho tôi"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Gợi ý hiệu chỉnh"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +36,47 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Mô hình hiệu chỉnh này hoạt động tốt nhất với các cài đặt infill cụ thể.\n"
+"Để có kết quả hiệu chỉnh tối ưu, nên đặt:\n"
+"- Hướng infill: %.0f°\n"
+"- Hướng infill đặc: %.0f°\n"
+"- Chỉ một thành trên lớp đầu tiên: %s\n"
+"\n"
+"Có - Tự động thay đổi các cài đặt này\n"
+"Không - Không thay đổi các cài đặt này cho tôi"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Mô hình 3D Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Mô hình hiệu chỉnh đầu đôi"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Mô hình hiệu chỉnh đầu đơn"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Mô hình tiện dụng Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Căn chỉnh 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Căn chỉnh 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Căn chỉnh 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Khối lập phương hai màu"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Căn chỉnh 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Khối lập phương Cosmyx"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Kiểm tra độ căng dây đai"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Giá đỡ cuộn"

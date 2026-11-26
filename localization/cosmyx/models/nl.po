@@ -14,9 +14,14 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Dit kalibratiemodel werkt het best met vulrichtingen ingesteld op 0 graden. "
+"Voor optimale kalibratieresultaten is het raadzaam om zowel 'Richting van de "
+"vulling' als 'Richting van de solide vulling' op 0 te zetten.\n"
+"Ja - Deze instellingen automatisch wijzigen\n"
+"Nee - Deze instellingen niet voor mij wijzigen"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Kalibratiesuggestie"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +34,47 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Dit kalibratiemodel werkt het best met specifieke vulinstellingen.\n"
+"Voor optimale kalibratieresultaten is het raadzaam om in te stellen:\n"
+"- Richting van de vulling: %.0f°\n"
+"- Richting van de solide vulling: %.0f°\n"
+"- Slechts één wand op de eerste laag: %s\n"
+"\n"
+"Ja - Deze instellingen automatisch wijzigen\n"
+"Nee - Deze instellingen niet voor mij wijzigen"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Cosmyx 3D-modellen"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Kalibratiemodellen dubbele printkop"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Kalibratiemodellen enkele printkop"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Cosmyx handige modellen"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Kalibratie 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibratie 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibratie 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Tweekleurige kubus"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Kalibratie 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx kubus"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Riemspanning controleren"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Spoelhouder"

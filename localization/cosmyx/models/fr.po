@@ -14,9 +14,15 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ce modèle de calibration fonctionne mieux avec des directions de remplissage "
+"réglées à 0 degré. Pour des résultats de calibration optimaux, il est "
+"conseillé de régler à la fois « Direction du remplissage » et « Direction du "
+"remplissage plein » sur 0.\n"
+"Oui - Modifier ces réglages automatiquement\n"
+"Non - Ne pas modifier ces réglages pour moi"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Suggestion de calibration"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +35,48 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ce modèle de calibration fonctionne mieux avec des réglages de remplissage "
+"spécifiques.\n"
+"Pour des résultats de calibration optimaux, il est conseillé de régler :\n"
+"- Direction du remplissage : %.0f°\n"
+"- Direction du remplissage plein : %.0f°\n"
+"- Une seule paroi sur la première couche : %s\n"
+"\n"
+"Oui - Modifier ces réglages automatiquement\n"
+"Non - Ne pas modifier ces réglages pour moi"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Modèles 3D Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Modèles de calibration double tête"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Modèles de calibration tête simple"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Modèles pratiques Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Calage 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Calage 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Calage 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Cube Bicolore"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Calage 1 Nova"
 
 msgid "Cosmyx Cube"
 msgstr "Cube Cosmyx"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Contrôle de la tension de courroie"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Support Bobine"

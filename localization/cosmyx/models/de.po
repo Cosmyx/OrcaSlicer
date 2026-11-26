@@ -14,9 +14,15 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Dieses Kalibrierungsmodell funktioniert am besten, wenn die Füllrichtungen "
+"auf 0 Grad eingestellt sind. Für optimale Kalibrierungsergebnisse empfiehlt "
+"es sich, sowohl „Füllrichtung“ als auch „Richtung des massiven Füllmusters“ "
+"auf 0 zu setzen.\n"
+"Ja – Diese Einstellungen automatisch ändern\n"
+"Nein – Diese Einstellungen nicht für mich ändern"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Kalibrierungsvorschlag"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +35,49 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Dieses Kalibrierungsmodell funktioniert am besten mit bestimmten "
+"Fülleinstellungen.\n"
+"Für optimale Kalibrierungsergebnisse empfiehlt es sich, Folgendes "
+"einzustellen:\n"
+"- Füllrichtung: %.0f°\n"
+"- Richtung des massiven Füllmusters: %.0f°\n"
+"- Nur eine Wand in der ersten Schicht: %s\n"
+"\n"
+"Ja – Diese Einstellungen automatisch ändern\n"
+"Nein – Diese Einstellungen nicht für mich ändern"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Cosmyx 3D-Modelle"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Kalibrierungsmodelle Dual-Kopf"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Kalibrierungsmodelle Einzelkopf"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Cosmyx Praktische Modelle"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Kalibrierung 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibrierung 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibrierung 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Zweifarbiger Würfel"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Kalibrierung 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx Würfel"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Riemenspannungsprüfung"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Spulenhalter"
