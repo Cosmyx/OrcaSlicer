@@ -108,6 +108,7 @@ std::string AppConfig::get_hms_host()
 
 bool AppConfig::get_stealth_mode()
 {
+    return true; // Cosmyx: stealth mode forced on (decision 0070)
     // always return true when user did not finish setup wizard yet
     if (!get_bool("firstguide","finish")) {
         return true;
