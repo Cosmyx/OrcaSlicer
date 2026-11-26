@@ -10923,7 +10923,7 @@ std::map<std::string, std::string> DynamicPrintConfig::validate(bool under_cli)
         FullPrintConfig fpc;
         fpc.apply(*this, true);
         // Verify this print options through the FullPrintConfig.
-        return Slic3r::validate(fpc, under_cli);
+        return Cosmyx::validate_option_ranges(*this, Slic3r::validate(fpc, under_cli)); // Cosmyx
     }
     default:
         //FIXME no validation on SLA data?

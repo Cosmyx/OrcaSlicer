@@ -4904,6 +4904,7 @@ void TabFilament::build()
         line.append_option(optgroup->get_option("nozzle_temperature_initial_layer", 0));
         line.append_option(optgroup->get_option("nozzle_temperature", 0));
         optgroup->append_line(line);
+        optgroup->append_single_option_line("filament_ironing_temperature", "", 0); // Cosmyx
 
         optgroup = page->new_optgroup(L("Bed temperature"), L"param_bed_temp");
         line = { L("Cool Plate (SuperTack)"),
