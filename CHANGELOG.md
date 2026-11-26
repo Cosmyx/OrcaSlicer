@@ -57,6 +57,10 @@ here; see the upstream release notes.
   0035, 0036.
 
 <!-- cosmyx-slot: T4 -->
+- Fix the order of a tool change and its fan commands: the new tool's part
+  cooling fan speed, and the fan resume that follows a change G-code, are now
+  written after its `Tn`, so printers with one fan per tool drive the right
+  fan. Pull request: #91. Decisions: 0040.
 
 ### GUI
 
