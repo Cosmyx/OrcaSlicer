@@ -1,0 +1,869 @@
+{
+  "schema": 1,
+  "rows": [
+    {
+      "kind": "literal",
+      "old": "\n\nOrcaSlicer is known to not run correctly with these DLLs injected. We suggest stopping or uninstalling these services if you experience crashes or unexpected behaviour while using OrcaSlicer.\nFor example, ASUS Sonic Studio injects a Nahimic driver, which makes OrcaSlicer to crash on a secondary monitor",
+      "new": "\n\nCosmoSlice is known to not run correctly with these DLLs injected. We suggest stopping or uninstalling these services if you experience crashes or unexpected behaviour while using CosmoSlice.\nFor example, ASUS Sonic Studio injects a Nahimic driver, which makes CosmoSlice to crash on a secondary monitor",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": " - OrcaSlicer",
+      "new": " - CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "Following DLLs have been injected into the OrcaSlicer process:\n\n",
+      "new": "Following DLLs have been injected into the CosmoSlice process:\n\n",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "OrcaSlicer is closing",
+      "new": "CosmoSlice is closing",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "OrcaSlicer main window is not available",
+      "new": "CosmoSlice main window is not available",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "OrcaSlicer plugin API",
+      "new": "CosmoSlice plugin API",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "OrcaSlicer was unable to create a directory at ",
+      "new": "CosmoSlice was unable to create a directory at ",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "Register a PluginCapability subclass while OrcaSlicer loads your module.",
+      "new": "Register a PluginCapability subclass while CosmoSlice loads your module.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "Request permissions while OrcaSlicer loads your module.\n\nEach bucket takes the target strings the plugin expects the corresponding audit event to\nreport: filesystem paths for fs_read and fs_readwrite, URLs for network_http, socket addresses\nfor network_socket, and commands for process. threading=True requests permission to start\nthreads. Targets already granted to the plugin are not asked for again.\n\nfs_create and fs_delete take folders rather than files. A literal folder entry grants creating\nor deleting entries directly inside that folder, not inside its subfolders. An entry ending in\n\"/*\" is a tree grant: it grants the same for that folder and for every folder below it, at any\ndepth, for example \"/path/to/folder/*\". A tree rooted at a filesystem, drive, or network share\nroot, such as \"/*\", \"C:\\\\*\", or a UNC share root, covers that entire filesystem, drive, or\nnetwork share. A relative folder or tree root is\nresolved against the working directory when the request is made. Pass \"*\" on its own for\nunrestricted create or delete access; a \"*\" mixed with other entries is rejected, and a \"*\"\nanywhere other than the final /* of a folder tree is rejected. At runtime, approving a create or\ndelete prompt stores the parent folder of the approved target as a direct grant, and the prompt\nlists that canonical folder; a parent folder whose own name contains \"*\" is refused rather than\nstored. On the main thread the operation then proceeds; a request raised on a worker thread\ndenies the current operation, so the plugin has to retry it after approval.\n\nA recursive delete (shutil.rmtree) is a subtree operation. A literal folder grant is not\nenough, even when it names the target folder or its parent. A saved fs_delete tree grant covers\nthe entries inside its root; deleting the root folder itself is covered only when the folder\ncontaining that root is also granted. Otherwise the user is asked for one-time consent for the\ncanonical target subtree before the walk starts. That consent is never saved, covers only that\noperation, and a prompt that has to be posted to a worker thread applies to one matching retry\nwithin its short lifetime. Nested deletes inside the approved subtree proceed without another\nprompt; denied paths stay blocked. A permission edit, revocation, or reinstall discards any\npending recursive-delete consent, so an old prompt cannot grant access to the reinstalled code.\n\nA filesystem target may end in \"/*\" to grant a whole directory tree, for example\n\"/path/to/folder/*\". That covers the folder itself and every path beneath it, at any depth.\n\"*\" is the only wildcard and is recognized only as the final path component; a \"*\" anywhere\nelse in a target is an ordinary character. Tree grants apply to fs_read, fs_readwrite,\nfs_create and fs_delete, and a grant in one bucket never authorizes another direction. For\nfs_delete, the tree covers deleting entries inside the folder and below, not deleting the\nfolder root itself; that removal needs the parent folder granted. Tree\ngrants are matched on canonical paths, so a symlink below the granted folder does not extend\nthe grant outside it. Paths the host denies by name or keyword stay denied even when a\nwildcard covers them.\n\n`network` also lists http(s) URLs, but each is reduced to its scheme and host, so one grant covers\nevery path, query and port on that host and also authorizes raw socket events for it. The host\npresents one request to the user after register_capabilities() returns and before any capability\ninstance is created. Denying the request aborts the plugin load.",
+      "new": "Request permissions while CosmoSlice loads your module.\n\nEach bucket takes the target strings the plugin expects the corresponding audit event to\nreport: filesystem paths for fs_read and fs_readwrite, URLs for network_http, socket addresses\nfor network_socket, and commands for process. threading=True requests permission to start\nthreads. Targets already granted to the plugin are not asked for again.\n\nfs_create and fs_delete take folders rather than files. A literal folder entry grants creating\nor deleting entries directly inside that folder, not inside its subfolders. An entry ending in\n\"/*\" is a tree grant: it grants the same for that folder and for every folder below it, at any\ndepth, for example \"/path/to/folder/*\". A tree rooted at a filesystem, drive, or network share\nroot, such as \"/*\", \"C:\\\\*\", or a UNC share root, covers that entire filesystem, drive, or\nnetwork share. A relative folder or tree root is\nresolved against the working directory when the request is made. Pass \"*\" on its own for\nunrestricted create or delete access; a \"*\" mixed with other entries is rejected, and a \"*\"\nanywhere other than the final /* of a folder tree is rejected. At runtime, approving a create or\ndelete prompt stores the parent folder of the approved target as a direct grant, and the prompt\nlists that canonical folder; a parent folder whose own name contains \"*\" is refused rather than\nstored. On the main thread the operation then proceeds; a request raised on a worker thread\ndenies the current operation, so the plugin has to retry it after approval.\n\nA recursive delete (shutil.rmtree) is a subtree operation. A literal folder grant is not\nenough, even when it names the target folder or its parent. A saved fs_delete tree grant covers\nthe entries inside its root; deleting the root folder itself is covered only when the folder\ncontaining that root is also granted. Otherwise the user is asked for one-time consent for the\ncanonical target subtree before the walk starts. That consent is never saved, covers only that\noperation, and a prompt that has to be posted to a worker thread applies to one matching retry\nwithin its short lifetime. Nested deletes inside the approved subtree proceed without another\nprompt; denied paths stay blocked. A permission edit, revocation, or reinstall discards any\npending recursive-delete consent, so an old prompt cannot grant access to the reinstalled code.\n\nA filesystem target may end in \"/*\" to grant a whole directory tree, for example\n\"/path/to/folder/*\". That covers the folder itself and every path beneath it, at any depth.\n\"*\" is the only wildcard and is recognized only as the final path component; a \"*\" anywhere\nelse in a target is an ordinary character. Tree grants apply to fs_read, fs_readwrite,\nfs_create and fs_delete, and a grant in one bucket never authorizes another direction. For\nfs_delete, the tree covers deleting entries inside the folder and below, not deleting the\nfolder root itself; that removal needs the parent folder granted. Tree\ngrants are matched on canonical paths, so a symlink below the granted folder does not extend\nthe grant outside it. Paths the host denies by name or keyword stay denied even when a\nwildcard covers them.\n\n`network` also lists http(s) URLs, but each is reduced to its scheme and host, so one grant covers\nevery path, query and port on that host and also authorizes raw socket events for it. The host\npresents one request to the user after register_capabilities() returns and before any capability\ninstance is created. Denying the request aborts the plugin load.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "Sign in to OrcaCloud to update this plugin.",
+      "new": "Sign in to Cosmyx Cloud to update this plugin.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "literal",
+      "old": "The running app: version, build, mode, language, app_config_version (the version that wrote the app config before this run, empty when there was none), stealth_mode, is_signed_in (Orca Cloud), is_bambu_signed_in (Bambu Cloud), network_plugin_version (empty when the Bambu network plugin is not loaded) and network_plugin_error (empty unless it failed to load).",
+      "new": "The running app: version, build, mode, language, app_config_version (the version that wrote the app config before this run, empty when there was none), stealth_mode, is_signed_in (Cosmyx Cloud), is_bambu_signed_in (Bambu Cloud), network_plugin_version (empty when the Bambu network plugin is not loaded) and network_plugin_error (empty unless it failed to load).",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "\n\nOrca has detected that your user presets synchronization function is not enabled, which may result in unsuccessful Filament settings on the Device page.\nClick \"Sync user presets\" to enable the synchronization function.",
+      "new": "\n\nCosmoSlice has detected that your user presets synchronization function is not enabled, which may result in unsuccessful Filament settings on the Device page.\nClick \"Sync user presets\" to enable the synchronization function.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "1. Please confirm Orca Slicer and your printer are in the same LAN.",
+      "new": "1. Please confirm CosmoSlice and your printer are in the same LAN.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "A preset with this name already exists in OrcaCloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
+      "new": "A preset with this name already exists in Cosmyx Cloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "About OrcaSlicer",
+      "new": "About CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "After a tool change, the exact position of the newly loaded filament inside the nozzle may not be known, and the filament pressure is likely not yet stable. Before purging the print head into an infill or a sacrificial object, Orca Slicer will always prime this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably.",
+      "new": "After a tool change, the exact position of the newly loaded filament inside the nozzle may not be known, and the filament pressure is likely not yet stable. Before purging the print head into an infill or a sacrificial object, CosmoSlice will always prime this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Air filtration/Exhaust Fan\nDid you know that OrcaSlicer can support Air filtration/Exhaust Fan?",
+      "new": "Air filtration/Exhaust Fan\nDid you know that CosmoSlice can support Air filtration/Exhaust Fan?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage.",
+      "new": "Allow logging into Bambu Cloud alongside Cosmyx Cloud. When enabled, a Bambu login section appears on the homepage.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Allow only one OrcaSlicer instance",
+      "new": "Allow only one CosmoSlice instance",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Another virtual camera is running.\nOrca Slicer supports only a single virtual camera.\nDo you want to stop this virtual camera?",
+      "new": "Another virtual camera is running.\nCosmoSlice supports only a single virtual camera.\nDo you want to stop this virtual camera?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate %s:// with OrcaSlicer so that Orca can open models from %s",
+      "new": "Associate %s:// with CosmoSlice so that CosmoSlice can open models from %s",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate 3MF files to OrcaSlicer",
+      "new": "Associate 3MF files to CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate DRC files to OrcaSlicer",
+      "new": "Associate DRC files to CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate STEP files to OrcaSlicer",
+      "new": "Associate STEP files to CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate STL files to OrcaSlicer",
+      "new": "Associate STL files to CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate files to OrcaSlicer",
+      "new": "Associate files to CosmoSlice",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Associate web links to OrcaSlicer",
+      "new": "Associate web links to CosmoSlice",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Auxiliary fan\nDid you know that OrcaSlicer supports Auxiliary part cooling fan?",
+      "new": "Auxiliary fan\nDid you know that CosmoSlice supports Auxiliary part cooling fan?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Calibration\nDid you know that calibrating your printer can do wonders? Check out our beloved calibration solution in OrcaSlicer.",
+      "new": "Calibration\nDid you know that calibrating your printer can do wonders? Check out our beloved calibration solution in CosmoSlice.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Chamber temperature\nDid you know that OrcaSlicer supports chamber temperature?",
+      "new": "Chamber temperature\nDid you know that CosmoSlice supports chamber temperature?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Click OK to update the Network plug-in now. If a file is in use, the update will be applied the next time Orca Slicer launches.",
+      "new": "Click OK to update the Network plug-in now. If a file is in use, the update will be applied the next time CosmoSlice launches.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Cloud agent is not available. Please restart OrcaSlicer and try again.",
+      "new": "Cloud agent is not available. Please restart CosmoSlice and try again.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Connect an infill line to an internal perimeter with a short segment of an additional perimeter. If expressed as percentage (example: 15%) it is calculated over infill extrusion width. Orca Slicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment shorter than infill_anchor_max is found, the infill line is connected to a perimeter segment at just one side and the length of the perimeter segment taken is limited to this parameter, but no longer than anchor_length_max.\nSet this parameter to zero to disable anchoring perimeters connected to a single infill line.",
+      "new": "Connect an infill line to an internal perimeter with a short segment of an additional perimeter. If expressed as percentage (example: 15%) it is calculated over infill extrusion width. CosmoSlice tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment shorter than infill_anchor_max is found, the infill line is connected to a perimeter segment at just one side and the length of the perimeter segment taken is limited to this parameter, but no longer than anchor_length_max.\nSet this parameter to zero to disable anchoring perimeters connected to a single infill line.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Connect an infill line to an internal perimeter with a short segment of an additional perimeter. If expressed as percentage (example: 15%) it is calculated over infill extrusion width. Orca Slicer tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment shorter than this parameter is found, the infill line is connected to a perimeter segment at just one side and the length of the perimeter segment taken is limited to infill_anchor, but no longer than this parameter.\nIf set to 0, the old algorithm for infill connection will be used, it should create the same result as with 1000 & 0.",
+      "new": "Connect an infill line to an internal perimeter with a short segment of an additional perimeter. If expressed as percentage (example: 15%) it is calculated over infill extrusion width. CosmoSlice tries to connect two close infill lines to a short perimeter segment. If no such perimeter segment shorter than this parameter is found, the infill line is connected to a perimeter segment at just one side and the length of the perimeter segment taken is limited to infill_anchor, but no longer than this parameter.\nIf set to 0, the old algorithm for infill connection will be used, it should create the same result as with 1000 & 0.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic go-klipper).\n\nNote: the G-code file will no longer contain slicer settings, so importing it back into OrcaSlicer will not restore the configuration.",
+      "new": "Do not write the CONFIG_BLOCK (slicer configuration key/value pairs) into the G-code file. This can help with printers whose firmware crashes when parsing these comment lines (e.g. Anycubic go-klipper).\n\nNote: the G-code file will no longer contain slicer settings, so importing it back into CosmoSlice will not restore the configuration.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Do you want to synchronize your personal data from Orca Cloud?\nIt contains the following information:\n1. The Process presets\n2. The Filament presets\n3. The Printer presets",
+      "new": "Do you want to synchronize your personal data from Cosmyx Cloud?\nIt contains the following information:\n1. The Process presets\n2. The Filament presets\n3. The Printer presets",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Each object in the file is loaded on its own, as OrcaSlicer always loaded AMF files.",
+      "new": "Each object in the file is loaded on its own, as CosmoSlice always loaded AMF files.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Enable full access for \"%s\"?\n\nFull access turns off permission auditing for this plugin: its file system, network, process, thread and event permissions are no longer checked. The plugin can read and write most files your user account can access, including startup scripts, SSH keys and a writable OrcaSlicer installation. Modifying startup or application files can let code run outside these checks. Direct Python access to OrcaSlicer's configuration, secret, certificate and install-state paths stays blocked, but subprocesses are not restricted. Full access is not a sandbox.\n\nOnly enable this for a plugin you trust.",
+      "new": "Enable full access for \"%s\"?\n\nFull access turns off permission auditing for this plugin: its file system, network, process, thread and event permissions are no longer checked. The plugin can read and write most files your user account can access, including startup scripts, SSH keys and a writable CosmoSlice installation. Modifying startup or application files can let code run outside these checks. Direct Python access to CosmoSlice's configuration, secret, certificate and install-state paths stays blocked, but subprocesses are not restricted. Full access is not a sandbox.\n\nOnly enable this for a plugin you trust.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Enable this if the printer accepts a 3MF file as the print job. When enabled, Orca Slicer sends the sliced file as a .gcode.3mf, instead of a plain .gcode file.",
+      "new": "Enable this if the printer accepts a 3MF file as the print job. When enabled, CosmoSlice sends the sliced file as a .gcode.3mf, instead of a plain .gcode file.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Existing user presets were found in %s.\nDo you want to migrate them to your OrcaCloud profile?\nThis will copy your presets so they are available under your new account.",
+      "new": "Existing user presets were found in %s.\nDo you want to migrate them to your Cosmyx Cloud profile?\nThis will copy your presets so they are available under your new account.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Export to OrcaCloud",
+      "new": "Export to Cosmyx Cloud",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Failed to install the plug-in. The plug-in file may be in use. Please restart OrcaSlicer and try again. Also check whether it is blocked or has been deleted by anti-virus software.",
+      "new": "Failed to install the plug-in. The plug-in file may be in use. Please restart CosmoSlice and try again. Also check whether it is blocked or has been deleted by anti-virus software.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Find on OrcaCloud",
+      "new": "Find on Cosmyx Cloud",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx).\n\nOnly relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. By default Orca skips the travel on multi-toolhead machines because the firmware handles the head swap, which can result in the Tx command being issued above the printed part. Enable this option if you want the tool change to always be issued above the wipe tower instead.",
+      "new": "Force the toolhead to travel to the wipe tower before issuing the tool change command (Tx).\n\nOnly relevant for multi-extruder (multi-toolhead) printers using a Type 2 wipe tower. By default CosmoSlice skips the travel on multi-toolhead machines because the firmware handles the head swap, which can result in the Tx command being issued above the printed part. Enable this option if you want the tool change to always be issued above the wipe tower instead.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Full access bypasses permission checks. The plugin can read and write most files you can access; modifying startup or application files can let code run outside these checks. Direct Python access to OrcaSlicer's configuration, secret, certificate and install-state paths stays blocked, but subprocesses are not restricted.",
+      "new": "Full access bypasses permission checks. The plugin can read and write most files you can access; modifying startup or application files can let code run outside these checks. Direct Python access to CosmoSlice's configuration, secret, certificate and install-state paths stays blocked, but subprocesses are not restricted.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "How to use keyboard shortcuts\nDid you know that Orca Slicer offers a wide range of keyboard shortcuts and 3D scene operations?",
+      "new": "How to use keyboard shortcuts\nDid you know that CosmoSlice offers a wide range of keyboard shortcuts and 3D scene operations?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, Orca will remember and switch filament/process configuration for each printer automatically.",
+      "new": "If enabled, CosmoSlice will remember and switch filament/process configuration for each printer automatically.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, OrcaSlicer will re-slice automatically whenever slicing-related settings change.",
+      "new": "If enabled, CosmoSlice will re-slice automatically whenever slicing-related settings change.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, OrcaSlicer will remember the last selected option in the print button's dropdown (e.g. Print, Export plate sliced file, Export G-code file) and use it as the default on next startup.",
+      "new": "If enabled, CosmoSlice will remember the last selected option in the print button's dropdown (e.g. Print, Export plate sliced file, Export G-code file) and use it as the default on next startup.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, sets OrcaSlicer as default application to open DRC files.",
+      "new": "If enabled, sets CosmoSlice as default application to open DRC files.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, this sets OrcaSlicer as the default application to open 3MF files.",
+      "new": "If enabled, this sets CosmoSlice as the default application to open 3MF files.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, this sets OrcaSlicer as the default application to open STEP files.",
+      "new": "If enabled, this sets CosmoSlice as the default application to open STEP files.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "If enabled, this sets OrcaSlicer as the default application to open STL files.",
+      "new": "If enabled, this sets CosmoSlice as the default application to open STL files.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "If this is enabled, when starting OrcaSlicer and another instance of the same OrcaSlicer is already running, that instance will be reactivated instead.",
+      "new": "If this is enabled, when starting CosmoSlice and another instance of the same CosmoSlice is already running, that instance will be reactivated instead.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "If you want to process the output G-code through custom scripts, just list their absolute paths here. Separate multiple scripts with a semicolon. Scripts will be passed the absolute path to the G-code file as the first argument, and they can access the Orca Slicer config settings by reading environment variables.",
+      "new": "If you want to process the output G-code through custom scripts, just list their absolute paths here. Separate multiple scripts with a semicolon. Scripts will be passed the absolute path to the G-code file as the first argument, and they can access the CosmoSlice config settings by reading environment variables.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Import your own image as a height map. It is converted to the format the slicer bakes from and saved to your personal texture folder, kept separate from the textures shipped with OrcaSlicer.",
+      "new": "Import your own image as a height map. It is converted to the format the slicer bakes from and saved to your personal texture folder, kept separate from the textures shipped with CosmoSlice.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Importing to Orca Slicer failed. Please download the file and manually import it.",
+      "new": "Importing to CosmoSlice failed. Please download the file and manually import it.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Internal error. Please try upgrading the firmware and OrcaSlicer version. If the issue persists, contact support.",
+      "new": "Internal error. Please try upgrading the firmware and CosmoSlice version. If the issue persists, contact support.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\nOrca will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits.",
+      "new": "Junction deviation setting exceeds the printer's maximum value (machine_max_junction_deviation).\nCosmoSlice will automatically cap the junction deviation to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_junction_deviation value in your printer's configuration to get higher limits.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "New version available: %s. Please update OrcaSlicer from the Microsoft Store.",
+      "new": "New version available: %s. Please update CosmoSlice from the Microsoft Store.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "New version of Orca Slicer",
+      "new": "New version of CosmoSlice",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud.",
+      "new": "Note: When Stealth Mode is enabled, your user profiles will not be backed up to Cosmyx Cloud.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Object (%1%) has duplicated connectors. Some connectors may be missing in slicing result.\nPlease report to the OrcaSlicer team in which scenario this issue happened.\nThank you.",
+      "new": "Object (%1%) has duplicated connectors. Some connectors may be missing in slicing result.\nPlease report to the CosmoSlice team in which scenario this issue happened.\nThank you.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Objects (%1%) have duplicated connectors. Some connectors may be missing in slicing result.\nPlease report to the OrcaSlicer team in which scenario this issue happened.\nThank you.",
+      "new": "Objects (%1%) have duplicated connectors. Some connectors may be missing in slicing result.\nPlease report to the CosmoSlice team in which scenario this issue happened.\nThank you.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "On a computer with two GPUs, run OrcaSlicer on the discrete GPU instead of the one that drives the display. Some Wayland systems cannot show frames rendered on the other GPU, or fail to open the window at all. Turn this off if the 3D view stays empty; if OrcaSlicer no longer starts, start it once with DRI_PRIME=0 in the environment to get back here.",
+      "new": "On a computer with two GPUs, run CosmoSlice on the discrete GPU instead of the one that drives the display. Some Wayland systems cannot show frames rendered on the other GPU, or fail to open the window at all. Turn this off if the 3D view stays empty; if CosmoSlice no longer starts, start it once with DRI_PRIME=0 in the environment to get back here.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Opens OrcaCloud in the Home page to browse for plugins.",
+      "new": "Opens Cosmyx Cloud in the Home page to browse for plugins.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer - Switching language failed",
+      "new": "CosmoSlice - Switching language failed",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer GUI initialization failed",
+      "new": "CosmoSlice GUI initialization failed",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer can upload G-code files to a printer host. This field must contain the kind of the host.",
+      "new": "CosmoSlice can upload G-code files to a printer host. This field must contain the kind of the host.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer can upload G-code files to a printer host. This field should contain the API Key or the password required for authentication.",
+      "new": "CosmoSlice can upload G-code files to a printer host. This field should contain the API Key or the password required for authentication.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer can upload G-code files to a printer host. This field should contain the hostname, IP address or URL of the printer host instance. Print host behind HAProxy with basic auth enabled can be accessed by putting the user name and password into the URL in the following format: https://username:password@your-octopi-address/",
+      "new": "CosmoSlice can upload G-code files to a printer host. This field should contain the hostname, IP address or URL of the printer host instance. Print host behind HAProxy with basic auth enabled can be accessed by putting the user name and password into the URL in the following format: https://username:password@your-octopi-address/",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer is based on PrusaSlicer and BambuStudio",
+      "new": "CosmoSlice is based on OrcaSlicer, PrusaSlicer and BambuStudio",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer is licensed under ",
+      "new": "CosmoSlice is licensed under ",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer requires the Microsoft WebView2 Runtime to operate certain features.\nClick Yes to install it now.",
+      "new": "CosmoSlice requires the Microsoft WebView2 Runtime to operate certain features.\nClick Yes to install it now.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca Slicer will be set up in several steps. Let's start!",
+      "new": "CosmoSlice will be set up in several steps. Let's start!",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orca would re-calculate your flushing volumes everytime the filaments color changed or filaments changed. You could disable the auto-calculate in Orca Slicer > Preferences",
+      "new": "CosmoSlice would re-calculate your flushing volumes everytime the filaments color changed or filaments changed. You could disable the auto-calculate in CosmoSlice > Preferences",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaCloud plugins required by the current preset are not installed:",
+      "new": "Cosmyx Cloud plugins required by the current preset are not installed:",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer Version:",
+      "new": "CosmoSlice Version:",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer can't connect to %s. Please check if the printer is powered on and connected to the network.",
+      "new": "CosmoSlice can't connect to %s. Please check if the printer is powered on and connected to the network.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer error",
+      "new": "CosmoSlice error",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer got an unhandled exception: %1%",
+      "new": "CosmoSlice got an unhandled exception: %1%",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer has encountered an error while taking a configuration snapshot.",
+      "new": "CosmoSlice has encountered an error while taking a configuration snapshot.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer needs an update",
+      "new": "CosmoSlice needs an update",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer will terminate because of a localization error. It will be appreciated if you report the specific scenario this issue happened.",
+      "new": "CosmoSlice will terminate because of a localization error. It will be appreciated if you report the specific scenario this issue happened.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "OrcaSlicer will terminate because of running out of memory. It may be a bug. It will be appreciated if you report the issue to our team.",
+      "new": "CosmoSlice will terminate because of running out of memory. It may be a bug. It will be appreciated if you report the issue to our team.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Orphaned: This plugin is no longer subscribed or available in OrcaCloud. The local copy remains installed and can still be used.",
+      "new": "Orphaned: This plugin is no longer subscribed or available in Cosmyx Cloud. The local copy remains installed and can still be used.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Performing desktop integration failed - could not create Gcodeviewer desktop file. OrcaSlicer desktop file was probably created successfully.",
+      "new": "Performing desktop integration failed - could not create Gcodeviewer desktop file. CosmoSlice desktop file was probably created successfully.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Please be aware that these plugins are not developed or maintained by OrcaSlicer. They should be used at your own discretion and risk.",
+      "new": "Please be aware that these plugins are not developed or maintained by CosmoSlice. They should be used at your own discretion and risk.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Please check the network connection of the printer and Orca.",
+      "new": "Please check the network connection of the printer and CosmoSlice.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Please make sure any instances of OrcaSlicer are not running",
+      "new": "Please make sure any instances of CosmoSlice are not running",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Please try updating OrcaSlicer and then try again.",
+      "new": "Please try updating CosmoSlice and then try again.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Position of the extruder at the beginning of the custom G-code block. If the custom G-code travels somewhere else, it should write to this variable so OrcaSlicer knows where it travels from when it gets control back.",
+      "new": "Position of the extruder at the beginning of the custom G-code block. If the custom G-code travels somewhere else, it should write to this variable so CosmoSlice knows where it travels from when it gets control back.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Pull and apply the latest presets from OrcaCloud",
+      "new": "Pull and apply the latest presets from Cosmyx Cloud",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "RepRap detected: Jerk in mm/s.\nOrcaSlicer will convert the values to mm/min when necessary.",
+      "new": "RepRap detected: Jerk in mm/s.\nCosmoSlice will convert the values to mm/min when necessary.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Retraction state at the beginning of the custom G-code block. If the custom G-code moves the extruder axis, it should write to this variable so OrcaSlicer de-retracts correctly when it gets control back.",
+      "new": "Retraction state at the beginning of the custom G-code block. If the custom G-code moves the extruder axis, it should write to this variable so CosmoSlice de-retracts correctly when it gets control back.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\nWhen disabled, OrcaSlicer uses the legacy print-host behavior.",
+      "new": "Route print jobs for non-Bambu printers through printer plug-in agents instead of the classic print-host upload flow.\nWhen disabled, CosmoSlice uses the legacy print-host behavior.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "STEP\nDid you know that you can improve your print quality by slicing a STEP file instead of an STL?\nOrca Slicer supports slicing STEP files, providing smoother results than a lower resolution STL. Give it a try!",
+      "new": "STEP\nDid you know that you can improve your print quality by slicing a STEP file instead of an STL?\nCosmoSlice supports slicing STEP files, providing smoother results than a lower resolution STL. Give it a try!",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Search Functionality\nDid you know that you use the Search tool to quickly find a specific Orca Slicer setting?",
+      "new": "Search Functionality\nDid you know that you use the Search tool to quickly find a specific CosmoSlice setting?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Sign in to OrcaCloud to install this plugin.",
+      "new": "Sign in to Cosmyx Cloud to install this plugin.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Sign in to OrcaCloud to view the camera.",
+      "new": "Sign in to Cosmyx Cloud to view the camera.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Since version 2.4.0, OrcaSlicer syncs user profiles through Orca Cloud instead of Bambu Cloud.\n\nTo migrate your existing profiles, log in to Orca Cloud and they will be transferred automatically. To learn more about how OrcaSlicer stores and syncs your profiles, or to migrate your presets manually, check out our wiki.\n\nIf you did not use Bambu Cloud to sync profiles, this change does not affect you and you can safely ignore this message.",
+      "new": "Since version 2.4.0, CosmoSlice syncs user profiles through Cosmyx Cloud instead of Bambu Cloud.\n\nTo migrate your existing profiles, log in to Cosmyx Cloud and they will be transferred automatically. To learn more about how CosmoSlice stores and syncs your profiles, or to migrate your presets manually, check out our wiki.\n\nIf you did not use Bambu Cloud to sync profiles, this change does not affect you and you can safely ignore this message.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Some original names contain characters that OrcaSlicer cannot use. Choose how to change them before importing.",
+      "new": "Some original names contain characters that CosmoSlice cannot use. Choose how to change them before importing.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Something went wrong. Please return to OrcaSlicer and try again.",
+      "new": "Something went wrong. Please return to CosmoSlice and try again.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Subscribed cloud plugin was not returned by OrcaCloud.",
+      "new": "Subscribed cloud plugin was not returned by Cosmyx Cloud.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Subtract a Part\nDid you know that you can subtract one mesh from another using the Negative part modifier? That way you can, for example, create easily resizable holes directly in Orca Slicer.",
+      "new": "Subtract a Part\nDid you know that you can subtract one mesh from another using the Negative part modifier? That way you can, for example, create easily resizable holes directly in CosmoSlice.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "Switching Orca Slicer to language %s failed.",
+      "new": "Switching CosmoSlice to language %s failed.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The .gcode.3mf file contains no G-code data. Please slice it with Orca Slicer and export a new .gcode.3mf file.",
+      "new": "The .gcode.3mf file contains no G-code data. Please slice it with CosmoSlice and export a new .gcode.3mf file.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "The 3MF file has no project settings that OrcaSlicer can import.",
+      "new": "The 3MF file has no project settings that CosmoSlice can import.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The 3MF file version is in Beta and it is newer than the current OrcaSlicer version.",
+      "new": "The 3MF file version is in Beta and it is newer than the current CosmoSlice version.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The 3MF file version is newer than the current OrcaSlicer version.",
+      "new": "The 3MF file version is newer than the current CosmoSlice version.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The 3MF is not supported by OrcaSlicer, loading geometry data only.",
+      "new": "The 3MF is not supported by CosmoSlice, loading geometry data only.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The Microsoft WebView2 Runtime could not be installed.\nSome features, including the setup wizard, may appear blank until it is installed.\nPlease install it manually from %1% and restart Orca Slicer.",
+      "new": "The Microsoft WebView2 Runtime could not be installed.\nSome features, including the setup wizard, may appear blank until it is installed.\nPlease install it manually from %1% and restart CosmoSlice.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The OrcaSlicer configuration file may be corrupted and cannot be parsed.\nOrcaSlicer has attempted to recreate the configuration file.\nPlease note, application settings will be lost, but printer profiles will not be affected.",
+      "new": "The CosmoSlice configuration file may be corrupted and cannot be parsed.\nCosmoSlice has attempted to recreate the configuration file.\nPlease note, application settings will be lost, but printer profiles will not be affected.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\nOrca will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds.",
+      "new": "The acceleration setting exceeds the printer's maximum acceleration (machine_max_acceleration_extruding).\nCosmoSlice will automatically cap the acceleration speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_acceleration_extruding value in your printer's configuration to get higher speeds.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "The certificate has expired. Please check the time settings or update OrcaSlicer and try again.",
+      "new": "The certificate has expired. Please check the time settings or update CosmoSlice and try again.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The configuration may be generated by a newer version of OrcaSlicer.",
+      "new": "The configuration may be generated by a newer version of CosmoSlice.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on the printer or update next time you start Orca Slicer.",
+      "new": "The firmware version is abnormal. Repairing and updating are required before printing. Do you want to update now? You can also update later on the printer or update next time you start CosmoSlice.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The following installed plugins were not found on disk:\n%s\n\nRemove them from OrcaSlicer?",
+      "new": "The following installed plugins were not found on disk:\n%s\n\nRemove them from CosmoSlice?",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The following settings refer to plugins Orca Slicer can't identify on this computer:\n\n%1%\n\nIf you save anyway, the preset won't keep the plugin references for these settings. On another computer, Orca Slicer won't know which plugins to offer, and the settings may not work there.",
+      "new": "The following settings refer to plugins CosmoSlice can't identify on this computer:\n\n%1%\n\nIf you save anyway, the preset won't keep the plugin references for these settings. On another computer, CosmoSlice won't know which plugins to offer, and the settings may not work there.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The following settings refer to plugins Orca Slicer can't identify on this computer:\n\n%1%\n\nIf you save anyway, the project won't keep the plugin references for these settings. On another computer, Orca Slicer won't know which plugins to offer, and the settings may not work there.",
+      "new": "The following settings refer to plugins CosmoSlice can't identify on this computer:\n\n%1%\n\nIf you save anyway, the project won't keep the plugin references for these settings. On another computer, CosmoSlice won't know which plugins to offer, and the settings may not work there.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The intersecting move is at G-code line %1%. Its Z position is unknown after homing, so Orca checked it against every height.",
+      "new": "The intersecting move is at G-code line %1%. Its Z position is unknown after homing, so CosmoSlice checked it against every height.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\nOrca will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the maximum jerk setting in your printer's configuration to get higher speeds.",
+      "new": "The jerk setting exceeds the printer's maximum jerk (machine_max_jerk_x/machine_max_jerk_y).\nCosmoSlice will automatically cap the jerk speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the maximum jerk setting in your printer's configuration to get higher speeds.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "The presets being saved refer to plugins Orca Slicer can't identify on this computer:\n\n%1%\n\nIf you save anyway, the presets won't keep the plugin references for these settings. On another computer, Orca Slicer won't know which plugins to offer, and the settings may not work there.",
+      "new": "The presets being saved refer to plugins CosmoSlice can't identify on this computer:\n\n%1%\n\nIf you save anyway, the presets won't keep the plugin references for these settings. On another computer, CosmoSlice won't know which plugins to offer, and the settings may not work there.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The printer is required to be on the same LAN as Orca Slicer.",
+      "new": "The printer is required to be on the same LAN as CosmoSlice.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\nOrca will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds.",
+      "new": "The travel acceleration setting exceeds the printer's maximum travel acceleration (machine_max_acceleration_travel).\nCosmoSlice will automatically cap the travel acceleration speed to ensure it doesn't surpass the printer's capabilities.\nYou can adjust the machine_max_acceleration_travel value in your printer's configuration to get higher speeds.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "The user presets folder could not be locked, so nothing was migrated. Another OrcaSlicer instance may be saving presets; try again later from Help > Migrate Filament Presets.",
+      "new": "The user presets folder could not be locked, so nothing was migrated. Another CosmoSlice instance may be saving presets; try again later from Help > Migrate Filament Presets.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "The version of Orca Slicer is too low and needs to be updated to the latest version before it can be used normally.",
+      "new": "The version of CosmoSlice is too low and needs to be updated to the latest version before it can be used normally.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "There are some unknown or incompatible filaments mapped to generic preset.\nPlease update Orca Slicer or restart Orca Slicer to check if there is an update to system presets.",
+      "new": "There are some unknown or incompatible filaments mapped to generic preset.\nPlease update CosmoSlice or restart CosmoSlice to check if there is an update to system presets.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.",
+      "new": "This disables all cloud features, including Cosmyx Cloud profile syncing. Users who prefer to work entirely offline can enable this option.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This disables all cloud features, including Orca Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Orca Cloud.",
+      "new": "This disables all cloud features, including Cosmyx Cloud profile syncing. Users who prefer to work entirely offline can enable this option.\n\nNote: When Stealth Mode is enabled, your user profiles will not be backed up to Cosmyx Cloud.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. OrcaSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (99999, 99999), which means there are no limits, thus allowing probing across the entire bed.",
+      "new": "This option sets the max point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. CosmoSlice ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (99999, 99999), which means there are no limits, thus allowing probing across the entire bed.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. OrcaSlicer ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (-99999, -99999), which means there are no limits, thus allowing probing across the entire bed.",
+      "new": "This option sets the min point for the allowed bed mesh area. Due to the probe's XY offset, most printers are unable to probe the entire bed. To ensure the probe point does not go outside the bed area, the minimum and maximum points of the bed mesh should be set appropriately. CosmoSlice ensures that adaptive_bed_mesh_min/adaptive_bed_mesh_max values do not exceed these min/max points. This information can usually be obtained from your printer manufacturer.\n\nThe default setting is (-99999, -99999), which means there are no limits, thus allowing probing across the entire bed.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "This preset has a newer version in OrcaCloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
+      "new": "This preset has a newer version in Cosmyx Cloud.\nPull downloads the cloud copy. Force push overwrites it with your local preset.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "To reduce the waiting time after tool change, Orca can preheat the next tool while the current tool is still in use. This setting specifies the time in seconds to preheat the next tool. Orca will insert a M104 command to preheat the tool in advance.",
+      "new": "To reduce the waiting time after tool change, CosmoSlice can preheat the next tool while the current tool is still in use. This setting specifies the time in seconds to preheat the next tool. CosmoSlice will insert a M104 command to preheat the tool in advance.",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "To use OrcaSlicer with Bambu Lab printers, you need to enable LAN mode and Developer mode on your printer.\n\nPlease go to your printer's settings and:\n1. Turn on LAN mode\n2. Enable Developer mode\n\nDeveloper mode allows the printer to work exclusively through local network access, enabling full functionality with OrcaSlicer.",
+      "new": "To use CosmoSlice with Bambu Lab printers, you need to enable LAN mode and Developer mode on your printer.\n\nPlease go to your printer's settings and:\n1. Turn on LAN mode\n2. Enable Developer mode\n\nDeveloper mode allows the printer to work exclusively through local network access, enabling full functionality with CosmoSlice.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Updates are available for your OrcaCloud plugins.",
+      "new": "Updates are available for your Cosmyx Cloud plugins.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Updating your OrcaSlicer could enable all functionality in the 3MF file.",
+      "new": "Updating your CosmoSlice could enable all functionality in the 3MF file.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Use the body names stored in the file, when there are any. When disabled, the usual OrcaSlicer names are used; existing project names are kept.",
+      "new": "Use the body names stored in the file, when there are any. When disabled, the usual CosmoSlice names are used; existing project names are kept.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "View on OrcaCloud <a>here</a>",
+      "new": "View on Cosmyx Cloud <a>here</a>",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Welcome to Orca Slicer",
+      "new": "Welcome to CosmoSlice",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "Would you like OrcaSlicer to automatically fix this by clearing the rotation template settings?",
+      "new": "Would you like CosmoSlice to automatically fix this by clearing the rotation template settings?",
+      "source": "cosmoslice"
+    },
+    {
+      "kind": "msgid",
+      "old": "You can return to OrcaSlicer. If your browser does not redirect automatically, use the button below.",
+      "new": "You can return to CosmoSlice. If your browser does not redirect automatically, use the button below.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "You can return to OrcaSlicer. This window will close automatically.",
+      "new": "You can return to CosmoSlice. This window will close automatically.",
+      "source": "cosmyx"
+    },
+    {
+      "kind": "msgid",
+      "old": "your Orca Cloud profile (user ID: \"%s\")",
+      "new": "your Cosmyx Cloud profile (user ID: \"%s\")",
+      "source": "cosmyx"
+    }
+  ]
+}

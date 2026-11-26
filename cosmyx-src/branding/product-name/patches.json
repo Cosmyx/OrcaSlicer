@@ -1,0 +1,376 @@
+{
+  "schema": 1,
+  "rows": [
+    {
+      "file": "version.inc",
+      "old": "set(SLIC3R_APP_NAME \"OrcaSlicer\")",
+      "new": "set(SLIC3R_APP_NAME \"CosmoSlice\")",
+      "count": 1,
+      "reason": "display name of the application; SLIC3R_APP_KEY (data folder, executables) stays OrcaSlicer"
+    },
+    {
+      "file": "src/libslic3r/libslic3r.h",
+      "old": "#define SLIC3R_APP_FULL_NAME \"Orca Slicer\"",
+      "new": "#define SLIC3R_APP_FULL_NAME SLIC3R_APP_NAME",
+      "count": 1,
+      "reason": "the full display name follows SLIC3R_APP_NAME (CosmoSlice D-003)"
+    },
+    {
+      "file": "src/libslic3r/libslic3r.h",
+      "old": "#define GCODEVIEWER_APP_NAME \"OrcaSlicer G-code Viewer\"",
+      "new": "#define GCODEVIEWER_APP_NAME SLIC3R_APP_NAME \" G-code Viewer\"",
+      "count": 1,
+      "reason": "display name of the G-code viewer; GCODEVIEWER_APP_KEY stays"
+    },
+    {
+      "file": "src/CMakeLists.txt",
+      "old": "set(MACOSX_BUNDLE_BUNDLE_NAME \"OrcaSlicer\")",
+      "new": "set(MACOSX_BUNDLE_BUNDLE_NAME \"CosmoSlice\")",
+      "count": 1,
+      "reason": "macOS menu bar name (CFBundleName); the .app folder and bundle id stay"
+    },
+    {
+      "file": "src/CMakeLists.txt",
+      "old": "        OUTPUT_NAME \"orca-slicer\"\n        WIN32_EXECUTABLE",
+      "new": "        OUTPUT_NAME \"CosmoSlice\"\n        WIN32_EXECUTABLE",
+      "count": 1,
+      "reason": "Windows executable CosmoSlice.exe (decision 0210); OrcaSlicer.dll and the Linux binary orca-slicer stay"
+    },
+    {
+      "file": "src/dev-utils/platform/msw/OrcaSlicer.rc.in",
+      "old": "VALUE \"OriginalFilename\", \"orca-slicer.exe\"",
+      "new": "VALUE \"OriginalFilename\", \"CosmoSlice.exe\"",
+      "count": 1,
+      "reason": "file name recorded in the Windows executable's version resource (decision 0210)"
+    },
+    {
+      "file": "src/slic3r/Utils/Process.cpp",
+      "old": "path += (instance_type == NewSlicerInstanceType::Slicer) ? \"orca-slicer.exe\" : \"bambu-gcodeviewer.exe\";",
+      "new": "path += (instance_type == NewSlicerInstanceType::Slicer) ? wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetFullName() : \"bambu-gcodeviewer.exe\";",
+      "count": 1,
+      "reason": "a new instance starts the running executable by its own file name, so it follows the Windows executable name (decision 0210)"
+    },
+    {
+      "file": "src/slic3r/Utils/BBLNetworkPlugin.cpp",
+      "old": "    std::size_t found = file_name_string.find(\"orca-slicer.exe\");\n    if (found == (file_name_string.size() - 16)) {\n        lib_path = library_name + \".dll\";\n        lib_path = file_name_string.replace(found, 16, lib_path);",
+      "new": "    std::size_t found = file_name_string.find(\"CosmoSlice.exe\");\n    if (found == (file_name_string.size() - 15)) {\n        lib_path = library_name + \".dll\";\n        lib_path = file_name_string.replace(found, 15, lib_path);",
+      "count": 1,
+      "reason": "network library next to the Windows executable: its name and length (one more than the name, as upstream) follow CosmoSlice.exe (decision 0210)"
+    },
+    {
+      "file": "src/dev-utils/platform/unix/build_appimage.sh.in",
+      "old": "\nName=@SLIC3R_APP_KEY@\n",
+      "new": "\nName=CosmoSlice\n",
+      "count": 1,
+      "reason": "AppImage launcher name; appimagetool names its output after it, so it always goes with the mv row below (decision 0210)"
+    },
+    {
+      "file": "src/dev-utils/platform/unix/build_appimage.sh.in",
+      "old": "mv @SLIC3R_APP_KEY@-$(uname -m).AppImage ${APP_IMAGE}",
+      "new": "mv CosmoSlice-$(uname -m).AppImage ${APP_IMAGE}",
+      "count": 1,
+      "reason": "the file appimagetool writes after the Name= row above; APP_IMAGE stays, the CI hook renames the package (decision 0210)"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set (CPACK_PACKAGE_DESCRIPTION_SUMMARY \"Orca Slicer is an open source slicer for FDM printers\")",
+      "new": "set (CPACK_PACKAGE_DESCRIPTION_SUMMARY \"CosmoSlice is an open source slicer for FDM printers\")",
+      "count": 1,
+      "reason": "installer package summary"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY \"OrcaSlicer\")\n",
+      "new": "set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY \"OrcaSlicer\")\nset (CPACK_NSIS_DISPLAY_NAME \"CosmoSlice\")\n",
+      "count": 1,
+      "reason": "Windows Apps & features name; the installer identity (cmake/cosmyx/Packaging.cmake, decision 0182) owns the install folder, registry key and installer window title and keeps this value"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set (CPACK_PACKAGE_FILE_NAME \"OrcaSlicer_Windows_Installer_V${SoftFever_VERSION}\")",
+      "new": "set (CPACK_PACKAGE_FILE_NAME \"CosmoSlice_Windows_Installer_V${SoftFever_VERSION}\")",
+      "count": 1,
+      "reason": "Windows installer file name (decision 0210); CPACK_PACKAGE_NAME stays"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set (CPACK_NSIS_INSTALLED_ICON_NAME \"orca-slicer.exe\")",
+      "new": "set (CPACK_NSIS_INSTALLED_ICON_NAME \"CosmoSlice.exe\")",
+      "count": 1,
+      "reason": "Apps & features icon: the renamed Windows executable (decision 0210)"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set(CPACK_PACKAGE_EXECUTABLES \"orca-slicer;OrcaSlicer\")",
+      "new": "set(CPACK_PACKAGE_EXECUTABLES \"CosmoSlice;CosmoSlice\")",
+      "count": 1,
+      "reason": "Start menu and desktop shortcuts: the Windows executable CosmoSlice.exe and its label (decision 0210)"
+    },
+    {
+      "file": "CMakeLists.txt",
+      "old": "set(CPACK_CREATE_DESKTOP_LINKS \"orca-slicer\")",
+      "new": "set(CPACK_CREATE_DESKTOP_LINKS \"CosmoSlice\")",
+      "count": 1,
+      "reason": "desktop shortcut of the renamed Windows executable (decision 0210)"
+    },
+    {
+      "file": "src/slic3r/GUI/GUI_App.cpp",
+      "old": "//\tSetAppDisplayName(SLIC3R_APP_NAME);",
+      "new": "\tSetAppDisplayName(SLIC3R_APP_NAME);",
+      "count": 1,
+      "reason": "wx display name (window and menu titles); SetAppName(SLIC3R_APP_KEY) keeps the data folder"
+    },
+    {
+      "file": "src/slic3r/GUI/GUI_App.cpp",
+      "old": "\"OrcaSlicer\", wxICON_QUESTION | wxYES_NO);",
+      "new": "\"CosmoSlice\", wxICON_QUESTION | wxYES_NO);",
+      "count": 1,
+      "reason": "title of the TLS certificate store question"
+    },
+    {
+      "file": "src/slic3r/GUI/MainFrame.cpp",
+      "old": "wxBITMAP_TYPE_ICO), \"OrcaSlicer\");",
+      "new": "wxBITMAP_TYPE_ICO), \"CosmoSlice\");",
+      "count": 1,
+      "reason": "macOS dock icon tooltip"
+    },
+    {
+      "file": "src/slic3r/GUI/WebGuideDialog.cpp",
+      "old": "wxID_ANY, \"OrcaSlicer\", wxDefaultPosition",
+      "new": "wxID_ANY, \"CosmoSlice\", wxDefaultPosition",
+      "count": 1,
+      "reason": "setup wizard window title"
+    },
+    {
+      "file": "src/slic3r/GUI/WebUserLoginDialog.cpp",
+      "old": "wxID_ANY, \"OrcaSlicer\"), m_cloud_agent",
+      "new": "wxID_ANY, \"CosmoSlice\"), m_cloud_agent",
+      "count": 1,
+      "reason": "login window title"
+    },
+    {
+      "file": "src/slic3r/GUI/ActionRegistry.hpp",
+      "old": "kOrcaSourceName = \"OrcaSlicer\";",
+      "new": "kOrcaSourceName = \"CosmoSlice\";",
+      "count": 1,
+      "reason": "display name of the built-in action source; kOrcaSourceKey stays"
+    },
+    {
+      "file": "src/slic3r/GUI/DesktopIntegrationDialog.cpp",
+      "old": "\"Name=OrcaSlicer%1%\\n\"",
+      "new": "\"Name=CosmoSlice%1%\\n\"",
+      "count": 1,
+      "reason": "name of the desktop entry the Linux desktop integration writes; file and icon names stay"
+    },
+    {
+      "file": "src/slic3r/GUI/DesktopIntegrationDialog.cpp",
+      "old": "\"Name=OrcaSlicer URL Protocol %1% %2%\\n\"",
+      "new": "\"Name=CosmoSlice URL Protocol %1% %2%\\n\"",
+      "count": 1,
+      "reason": "name of the URL protocol desktop entry; its file name stays"
+    },
+    {
+      "file": "src/slic3r/plugin/host/PluginHostUi.cpp",
+      "old": "py::arg(\"title\") = \"OrcaSlicer\"",
+      "new": "py::arg(\"title\") = \"CosmoSlice\"",
+      "count": 3,
+      "reason": "default title of plugin message boxes and windows"
+    },
+    {
+      "file": "scripts/msix/AppxManifest.xml",
+      "old": "<DisplayName>OrcaSlicer</DisplayName>",
+      "new": "<DisplayName>CosmoSlice</DisplayName>",
+      "count": 1,
+      "reason": "MSIX package display name; the identity, ProgID and AppData folder stay"
+    },
+    {
+      "file": "scripts/msix/AppxManifest.xml",
+      "old": "        DisplayName=\"OrcaSlicer\"\n",
+      "new": "        DisplayName=\"CosmoSlice\"\n",
+      "count": 1,
+      "reason": "Start menu name of the MSIX application; Application Id stays"
+    },
+    {
+      "file": "scripts/msix/AppxManifest.xml",
+      "old": "Executable=\"orca-slicer.exe\"",
+      "new": "Executable=\"CosmoSlice.exe\"",
+      "count": 1,
+      "reason": "MSIX application executable: the renamed Windows executable (decision 0210)"
+    },
+    {
+      "file": "scripts/msix/AppxManifest.xml",
+      "old": "<desktop:ExecutionAlias Alias=\"orca-slicer.exe\" />",
+      "new": "<desktop:ExecutionAlias Alias=\"cosmoslice.exe\" />",
+      "count": 1,
+      "reason": "command line alias of the MSIX package (decision 0210)"
+    },
+    {
+      "file": "scripts/msix/build_msix.ps1",
+      "old": "if (-not (Test-Path (Join-Path $InstallDir 'orca-slicer.exe'))) {\n    throw \"orca-slicer.exe not found in '$InstallDir' - build the install tree first\"",
+      "new": "if (-not (Test-Path (Join-Path $InstallDir 'CosmoSlice.exe'))) {\n    throw \"CosmoSlice.exe not found in '$InstallDir' - build the install tree first\"",
+      "count": 1,
+      "reason": "the MSIX build checks for the renamed Windows executable (decision 0210)"
+    },
+    {
+      "file": "src/dev-utils/platform/unix/com.orcaslicer.OrcaSlicer.desktop",
+      "old": "\nName=OrcaSlicer\n",
+      "new": "\nName=CosmoSlice\n",
+      "count": 1,
+      "reason": "Linux menu name; the desktop file id, icon and MIME scheme stay"
+    },
+    {
+      "file": "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml",
+      "old": "<name>OrcaSlicer</name>",
+      "new": "<name>CosmoSlice</name>",
+      "count": 1,
+      "reason": "software centre name; the Flatpak id stays"
+    },
+    {
+      "file": "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml",
+      "old": "<p>OrcaSlicer is a powerful",
+      "new": "<p>CosmoSlice is a powerful",
+      "count": 1,
+      "reason": "software centre description; the Flatpak id and upstream URLs stay"
+    },
+    {
+      "file": "scripts/flatpak/com.orcaslicer.OrcaSlicer.metainfo.xml",
+      "old": "            OrcaSlicer also provides",
+      "new": "            CosmoSlice also provides",
+      "count": 1,
+      "reason": "software centre description; the Flatpak id and upstream URLs stay"
+    },
+    {
+      "file": "resources/web/guide/1/index.html",
+      "old": "data-i18n=\"welcome\">Welcome to Orca Slicer<",
+      "new": "data-i18n=\"welcome\">Welcome to CosmoSlice<",
+      "count": 1,
+      "reason": "fallback text of the setup guide, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/guide/1/index.html",
+      "old": "data-i18n=\"setup_intro\">Orca Slicer will be set up",
+      "new": "data-i18n=\"setup_intro\">CosmoSlice will be set up",
+      "count": 1,
+      "reason": "fallback text of the setup guide, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/guide/5/index.html",
+      "old": "not developed or maintained by OrcaSlicer.",
+      "new": "not developed or maintained by CosmoSlice.",
+      "count": 1,
+      "reason": "fallback text of the setup guide, shown until the page gets its strings"
+    },
+    {
+      "file": "src/libslic3r/utils.cpp",
+      "old": "return std::string(SLIC3R_APP_NAME \" \" SoftFever_VERSION);",
+      "new": "return std::string(SLIC3R_APP_KEY \" \" SoftFever_VERSION);",
+      "count": 1,
+      "reason": "machine-read: the G-code header must keep saying OrcaSlicer so OrcaSlicer, printers and tools detect the producer"
+    },
+    {
+      "file": "src/libslic3r/Config.cpp",
+      "old": "orcaslicer_gcode_header += SLIC3R_APP_NAME;",
+      "new": "orcaslicer_gcode_header += SLIC3R_APP_KEY;",
+      "count": 1,
+      "reason": "machine-read: G-code files written by OrcaSlicer and by this build are both recognised"
+    },
+    {
+      "file": "src/slic3r/Utils/Http.cpp",
+      "old": "CURLOPT_USERAGENT, SLIC3R_APP_NAME \"/\" SoftFever_VERSION",
+      "new": "CURLOPT_USERAGENT, SLIC3R_APP_KEY \"/\" SoftFever_VERSION",
+      "count": 1,
+      "reason": "machine-read: servers and printer hosts identify the client by its User-Agent"
+    },
+    {
+      "file": "src/libslic3r/GCode/GCodeStatistics.cpp",
+      "old": "{ \"generator\", std::string(SLIC3R_APP_NAME) + \" \" + SoftFever_VERSION }",
+      "new": "{ \"generator\", std::string(SLIC3R_APP_KEY) + \" \" + SoftFever_VERSION }",
+      "count": 1,
+      "reason": "machine-read: generator field of the G-code statistics JSON"
+    },
+    {
+      "file": "src/libslic3r/GCode/GCodeProcessor.cpp",
+      "old": "{ EProducer::OrcaSlicer, SLIC3R_APP_NAME },",
+      "new": "{ EProducer::OrcaSlicer, SLIC3R_APP_KEY },",
+      "count": 1,
+      "reason": "machine-read: producer detection of the G-code header"
+    },
+    {
+      "file": "src/slic3r/GUI/WebViewDialog.cpp",
+      "old": "static const char *const kCloudUrl = \"https://cloud.orcaslicer.com\";",
+      "new": "static const char *const kCloudUrl = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 1,
+      "reason": "cloud web pane fallback page and reset_browser target; it ignores the app config, so it points at CosmoCloud (decision 0201)"
+    },
+    {
+      "file": "src/slic3r/GUI/Plater.cpp",
+      "old": "cloud_url = \"https://cloud.orcaslicer.com\";",
+      "new": "cloud_url = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 1,
+      "reason": "cloud web URL fallback used only when the agent has none; CosmoCloud like the agent defaults (decision 0201)"
+    },
+    {
+      "file": "src/slic3r/GUI/PluginsDialog.cpp",
+      "old": "cloud_base_url = \"https://cloud.orcaslicer.com\";",
+      "new": "cloud_base_url = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 2,
+      "reason": "plugin hub web URL fallbacks used only when the agent has none; CosmoCloud like the agent defaults (decision 0201)"
+    },
+    {
+      "file": "src/slic3r/plugin/PluginResolver.cpp",
+      "old": "std::string cloud_base_url = \"https://cloud.orcaslicer.com\";",
+      "new": "std::string cloud_base_url = \"https://orca-cloud.cosmyx3d.fr\";",
+      "count": 1,
+      "reason": "plugin resolver web URL fallback used only when the agent has none; CosmoCloud like the agent defaults (decision 0201)"
+    },
+    {
+      "file": "resources/web/guide/4orca/index.html",
+      "old": "including Orca Cloud profile syncing.",
+      "new": "including Cosmyx Cloud profile syncing.",
+      "count": 1,
+      "reason": "fallback text of the setup guide, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/guide/4orca/index.html",
+      "old": "will not be backed up to Orca Cloud.<",
+      "new": "will not be backed up to Cosmyx Cloud.<",
+      "count": 1,
+      "reason": "fallback text of the setup guide, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/dialog/ExportPresetDialog/index.html",
+      "old": "data-i18n=\"export_cloud\">Export to OrcaCloud<",
+      "new": "data-i18n=\"export_cloud\">Export to Cosmyx Cloud<",
+      "count": 1,
+      "reason": "fallback text of the dialog, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/dialog/PluginsDialog/index.js",
+      "old": "T(\"view_on_cloud\", \"View on OrcaCloud <a>here</a>\")",
+      "new": "T(\"view_on_cloud\", \"View on Cosmyx Cloud <a>here</a>\")",
+      "count": 1,
+      "reason": "fallback text of the dialog, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/dialog/PluginsDialog/index.js",
+      "old": "no longer subscribed or available in OrcaCloud. The local copy",
+      "new": "no longer subscribed or available in Cosmyx Cloud. The local copy",
+      "count": 1,
+      "reason": "fallback text of the dialog, shown until the page gets its strings"
+    },
+    {
+      "file": "resources/web/homepage/index.html",
+      "old": "<span class=\"AccountSecondary\">Orca Cloud</span>",
+      "new": "<span class=\"AccountSecondary\">Cosmyx Cloud</span>",
+      "count": 1,
+      "reason": "homepage account row: the cloud service name (not translated)"
+    },
+    {
+      "file": "resources/web/homepage/index.html",
+      "old": "<div>OrcaCloud</div>",
+      "new": "<div>Cosmyx Cloud</div>",
+      "count": 1,
+      "reason": "homepage navigation entry of the cloud pane (not translated)"
+    }
+  ]
+}

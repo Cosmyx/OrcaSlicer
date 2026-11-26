@@ -14,9 +14,13 @@
   wiki/cosmyx/branding-assets are up to date, the other tables parse.
 - G7 upstream stays Orca: no palette colour and no "CosmoSlice" in tracked
   files outside the Cosmyx paths (pre), except allow-listed palette rows.
-- G8 product name: every patch row matches its exact count (pre), and the
-  lines naming SLIC3R_APP_KEY in the patched files are unchanged (post).
-  Inactive until product-name/patches.json exists.
+- G8 product name: every patch row matches its exact count (pre), and no
+  line naming SLIC3R_APP_KEY in the patched files is lost (post), except a
+  line a patch row names the key in on purpose; the key's definition never.
+  Every packaging pin (PACKAGING_PINS) is still there after apply (post); a
+  pinned file that lost its pinned text upstream is drift (pre). The AppImage
+  desktop name and the file its script moves agree (pre and post). Inactive until
+  product-name/patches.json exists.
 - Status policy: `missing` and `to-validate` rows warn on development builds
   (pull requests, DEV, MIXED, local) and fail release builds (release/*
   branches and tags).
@@ -37,7 +41,9 @@ Optional stage plugins (`colours`, `product_name`) may expose
 from __future__ import annotations
 
 import fnmatch
+import re
 import subprocess
+from collections import Counter
 from pathlib import Path
 
 from . import (
@@ -335,6 +341,111 @@ def app_key_lines(root: Path, files) -> dict:
     return lines
 
 
+# The definition of the app key itself, which no row may ever touch.
+APP_KEY_DEFINITION = re.compile(r"(?:set\(\s*|#\s*define\s+)SLIC3R_APP_KEY\b")
+
+
+def app_key_removals(before: dict, after: dict, patches: list) -> list[Finding]:
+    """Lines naming SLIC3R_APP_KEY that apply removed without a row asking for it.
+
+    A line may go only when a patch row on that file names SLIC3R_APP_KEY in
+    its `old` text (the row rewires that line on purpose, such as the AppImage
+    desktop entry name); the definition of the key never goes. New lines
+    naming the key (machine-read sites rewired to it) are always fine.
+    """
+    findings = []
+    for relative, lines in sorted(before.items()):
+        removed = Counter(lines) - Counter(after.get(relative, []))
+        for line in sorted(removed):
+            targeted = any(
+                patch.file == relative and APP_KEY in patch.old and patch.old.strip("\n") in line for patch in patches
+            )
+            if APP_KEY_DEFINITION.search(line) or not targeted:
+                findings.append(Finding("G8", "error", relative, f"a line naming {APP_KEY} changed; the app key must stay: {line.strip()!r}"))
+    return findings
+
+
+# Packaging identifiers the product-name rename must never change (decisions
+# 0134 and 0210): the build scripts and the CI steps find the packages by these
+# names. The CosmoSlice package names are given by the patch rows (executable,
+# installer, AppImage launcher) and by the cosmyx-package-names CI stage, never
+# by an accidental rename of these. Each pin is (file, exact text, why it is pinned).
+PACKAGING_PINS = (
+    ("src/dev-utils/platform/unix/build_appimage.sh.in", 'APP_IMAGE="@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"',
+     "the AppImage name build_linux.sh and build_orca.yml move before the Cosmyx stage renames it"),
+    ("src/dev-utils/platform/unix/build_linux_image.sh.in",
+     'mv package_appimage/"@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage" "@SLIC3R_APP_KEY@_Linux_V@SoftFever_VERSION@.AppImage"',
+     "the AppImage name build_orca.yml moves before the Cosmyx stage renames it"),
+    ("src/CMakeLists.txt", 'set_target_properties(OrcaSlicer PROPERTIES OUTPUT_NAME "orca-slicer")',
+     "the Linux binary inside the AppImage and the Flatpak, which their launchers run"),
+    ("CMakeLists.txt", 'set (CPACK_PACKAGE_NAME "OrcaSlicer")', "the CPack package name"),
+    ("scripts/flatpak/com.orcaslicer.OrcaSlicer.yml", "app-id: com.orcaslicer.OrcaSlicer\n",
+     "the Flatpak id, bundle name and desktop file id"),
+)
+
+# appimagetool names its output after the Name= of the AppImage desktop entry,
+# and build_appimage.sh.in then moves "<that name>-<arch>.AppImage": the two
+# must always name the same thing, or the Linux packaging fails (decision 0210).
+APPIMAGE_SCRIPT = "src/dev-utils/platform/unix/build_appimage.sh.in"
+APPIMAGE_NAME = re.compile(r"^Name=(.+)$", re.MULTILINE)
+APPIMAGE_MOVE = re.compile(r"^mv (\S+)-\$\(uname -m\)\.AppImage ", re.MULTILINE)
+
+
+def appimage_pair(root: Path) -> tuple | None:
+    """(desktop entry name, moved file prefix) of the AppImage script, or None
+    when the script is absent or no longer has those two lines."""
+    path = repo_path(root, APPIMAGE_SCRIPT)
+    if not path.is_file():
+        return None
+    text = path.read_bytes().decode("utf-8", "replace").replace("\r\n", "\n")
+    name, move = APPIMAGE_NAME.search(text), APPIMAGE_MOVE.search(text)
+    return (name.group(1).strip(), move.group(1)) if name and move else None
+
+
+def appimage_pair_findings(ctx, phase: str) -> list[Finding]:
+    if not repo_path(ctx.root, APPIMAGE_SCRIPT).is_file():
+        return []
+    pair = appimage_pair(ctx.root)
+    if pair is None:
+        level = drift_level(ctx) if phase == "pre" else "error"
+        return [Finding("G8", level, APPIMAGE_SCRIPT, "the AppImage Name= or its mv line is gone, review APPIMAGE_NAME/APPIMAGE_MOVE")]
+    if pair[0] != pair[1]:
+        return [Finding("G8", "error", APPIMAGE_SCRIPT,
+                        f"the AppImage desktop name {pair[0]!r} and the file it moves {pair[1]!r}-<arch>.AppImage differ: "
+                        "the Name= and mv rows go together")]
+    return []
+
+
+def packaging_pins_present(root: Path) -> list:
+    """The pins found in `root`, as indexes into PACKAGING_PINS."""
+    present = []
+    for index, (relative, text, _) in enumerate(PACKAGING_PINS):
+        path = repo_path(root, relative)
+        if path.is_file() and text in path.read_bytes().decode("utf-8", "replace").replace("\r\n", "\n"):
+            present.append(index)
+    return present
+
+
+def packaging_pin_findings(ctx, phase: str) -> list[Finding]:
+    present = set(packaging_pins_present(ctx.root))
+    findings = []
+    if phase == "pre":
+        ctx.snapshot["packaging_pins"] = sorted(present)
+        for index, (relative, text, why) in enumerate(PACKAGING_PINS):
+            # A tree without the file has nothing to pin (the fake trees of the
+            # tests); the real-tree test checks every pinned file exists.
+            if index not in present and repo_path(ctx.root, relative).is_file():
+                findings.append(Finding("G8", drift_level(ctx), relative,
+                                        f"packaging pin not found upstream, review PACKAGING_PINS ({why}): {text.strip()!r}"))
+        return findings
+    for index in ctx.snapshot.get("packaging_pins", []):
+        if index not in present:
+            relative, text, why = PACKAGING_PINS[index]
+            findings.append(Finding("G8", "error", relative,
+                                    f"the product-name rename changed a packaging identifier ({why}): {text.strip()!r}"))
+    return findings
+
+
 def g8_product_name(ctx, phase: str) -> list[Finding]:
     if ctx.product_name is None:
         return []
@@ -349,8 +460,10 @@ def g8_product_name(ctx, phase: str) -> list[Finding]:
         ctx.snapshot["app_key_lines"] = app_key_lines(ctx.root, files)
     else:
         before = ctx.snapshot.get("app_key_lines")
-        if before is not None and app_key_lines(ctx.root, files) != before:
-            findings.append(Finding("G8", "error", "", f"a line naming {APP_KEY} changed; the app key must stay"))
+        if before is not None:
+            findings += app_key_removals(before, app_key_lines(ctx.root, files), patches)
+    findings += packaging_pin_findings(ctx, phase)
+    findings += appimage_pair_findings(ctx, phase)
     for plugin in ctx.plugins.get("product_name", []):
         findings += list(plugin.guards(ctx, phase))
     return findings
