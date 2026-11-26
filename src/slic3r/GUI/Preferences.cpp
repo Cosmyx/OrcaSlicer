@@ -83,6 +83,7 @@
 #include "slic3r/Utils/NetworkAgent.hpp"
 #include "NetworkPluginDialog.hpp"
 #include "DownloadProgressDialog.hpp"
+#include "Cosmyx/ExternalMachinesPrefs.hpp" // Cosmyx
 
 #ifdef __WINDOWS__
 #ifdef _MSW_DARK_MODE
@@ -2507,6 +2508,7 @@ void PreferencesDialog::create_items()
 
     auto item_plugin_version = create_item_network_plugin_version(_L("Network plug-in version"), _L("Select the network plug-in version to use"));
     g_sizer->Add(item_plugin_version);
+    Cosmyx::setup_external_machines(g_sizer, item_bambu_cloud, item_enable_plugin); // Cosmyx: External machines section (decision 0219)
 
     g_sizer->AddSpacer(FromDIP(10));
     sizer_page->Add(g_sizer, 0, wxEXPAND);

@@ -263,6 +263,15 @@ here; see the upstream release notes.
   machine-translated for review into the 20 other offered UI languages.
   Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/112. Decision: 0204.
 
+<!-- cosmyx-slot: T24 -->
+- Preferences gathers the "Enable Bambu Cloud" and "Enable Bambu network
+  plug-in" toggles in a new "External machines" section of the Online tab
+  (French "Machines externes"). Turning either on now asks for confirmation
+  first, warning that Cosmyx has not verified the module and does not support
+  the machines it relies on; Cancel leaves it off. Turning one off never asks.
+  The section is machine-translated for review into the 20 other offered UI
+  languages. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/121. Decision: 0219.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->
