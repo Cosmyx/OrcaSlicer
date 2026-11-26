@@ -77,7 +77,7 @@ SLOTS_BY_AREA = {
     "libslic3r": ["T1", "T2", "T3", "T4"],
     "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f", "T28", "T26"],
     "i18n": ["T8"],
-    "CI-release": ["T9", "T10", "T11a", "T13", "T15", "T16a"],
+    "CI-release": ["T9", "T10", "T11a", "T13", "T15", "T16a", "T19"],
 }
 
 

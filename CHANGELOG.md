@@ -276,3 +276,10 @@ here; see the upstream release notes.
   fails naming both when neither is there. See
   `wiki/cosmyx/artifact-checks.md`. Pull request: pending. Decisions: 0160,
   0161.
+
+<!-- cosmyx-slot: T19 -->
+- **Removed:** the Flatpak build and its unit tests no longer run, on every
+  build: the fork does not ship a Flatpak and the leg was often red. Setting
+  the repository variable `COSMYX_FLATPAK` to `true` turns them back on.
+  The switch sits on the Flatpak job in whichever workflow file the upstream
+  base keeps it. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/113. Decisions: 0213.
