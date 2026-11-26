@@ -6,7 +6,8 @@ The pre-build branding (cosmyx-prepare) renames what the build itself names:
 the Windows executable and installer, the AppImage launcher. What only the
 workflow names (its upload steps, read before checkout, so the branding cannot
 patch them) is renamed here, by the `cosmyx-package-names` action that the
-`# Cosmyx` hook steps of build_orca.yml and build_flatpak.yml call:
+`# Cosmyx` hook steps of build_orca.yml and build_flatpak.yml (the flatpak job
+of build_all.yml on older upstream bases) call:
 
 - `mac-app` (after "Create DMG without notary", before the Cosmyx signing):
   renames the universal `OrcaSlicer.app` to `CosmoSlice.app`, drops the
