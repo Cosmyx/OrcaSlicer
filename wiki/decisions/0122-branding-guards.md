@@ -29,14 +29,18 @@ merged with upstream) must keep building to show merge problems.
   text that tag does not have yet. `brand_mode` is `strict` by default and on
   DEV, where a missing target means upstream removed something and must
   fail. It is `tolerant` for a pull request into `cosmyx-ci/<BASE>` with BASE
-  other than DEV and for an `integration/*` ref, never for a release build;
+  other than DEV and for an `integration/*` ref (pushed, or checked out
+  locally at the root of the tree), never for a release build;
   `COSMYX_BRAND_MODE` or `--mode` overrides it. In tolerant mode a G5 or G8
   text row whose file, or whose text, the tree lacks entirely is skipped with
   a warning (a text found with another count stays an error), and an
   override of an upstream file that is gone is not written, with a G3
   warning, instead of creating a file the older tree never had. The
   cosmyx-prepare action runs `cli.py mode` once and exports
-  `COSMYX_BRAND_MODE`, so its real-tree tests and apply agree. Detection
+  `COSMYX_BRAND_MODE`, so its real-tree tests and apply agree. The real-tree
+  tests resolve the mode once against the checkout with the same
+  `brand_mode`, so `just test-scripts` in an integration worktree agrees with
+  `just brand-check` there. Detection
   lives in the engine (tested, no workflow expression) rather than in each
   workflow, because the integration base is already encoded in the ref
   names. Strict mode output and behaviour are unchanged.

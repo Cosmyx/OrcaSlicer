@@ -27,6 +27,7 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from collections.abc import Iterable
@@ -310,7 +311,31 @@ DEV_CI_BASE = f"{CI_BASE_PREFIX}DEV"
 INTEGRATION_REF_PREFIX = "refs/heads/integration/"
 
 
-def brand_mode(env: dict | None = None) -> str:
+def local_ref(root: Path) -> str:
+    """The full ref (`refs/heads/<branch>`) checked out at `root` when `root` is
+    the top of a git worktree, else "" (a detached HEAD, a copy outside git, a
+    directory nested in another repository, or no git at all)."""
+    try:
+        process = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--show-toplevel", "--symbolic-full-name", "HEAD"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+    except OSError:
+        return ""
+    lines = process.stdout.decode("utf-8", "replace").splitlines()
+    if process.returncode != 0 or len(lines) != 2:
+        return ""
+    try:
+        if Path(lines[0]).resolve() != Path(root).resolve():
+            return ""
+    except OSError:
+        return ""
+    return lines[1].strip()
+
+
+def brand_mode(env: dict | None = None, root: Path | None = None) -> str:
     """`strict` (the default) or `tolerant`.
 
     The tables are written for DEV. On a tree whose upstream base is not DEV
@@ -323,7 +348,10 @@ def brand_mode(env: dict | None = None) -> str:
     runs and for the cosmyx-prepare action, which exports the detected mode.
     Otherwise tolerant is detected for a pull request into `cosmyx-ci/<BASE>`
     with BASE other than DEV, and for a push or dispatch on `integration/*`.
-    A release build is always strict.
+    With `root`, a local checkout of an `integration/*` branch is detected the
+    same way, so `just brand-check` and the real-tree tests run in an
+    integration worktree brand it as its build will. A release build is always
+    strict.
     """
     env = os.environ if env is None else env
     explicit = env.get(MODE_ENV, "").strip()
@@ -333,8 +361,10 @@ def brand_mode(env: dict | None = None) -> str:
         mode = explicit
     else:
         base = env.get("GITHUB_BASE_REF", "")
-        off_dev = (base.startswith(CI_BASE_PREFIX) and base != DEV_CI_BASE) or env.get("GITHUB_REF", "").startswith(
-            INTEGRATION_REF_PREFIX
+        off_dev = (
+            (base.startswith(CI_BASE_PREFIX) and base != DEV_CI_BASE)
+            or env.get("GITHUB_REF", "").startswith(INTEGRATION_REF_PREFIX)
+            or (root is not None and local_ref(root).startswith(INTEGRATION_REF_PREFIX))
         )
         mode = "tolerant" if off_dev else "strict"
     return "strict" if ref_kind(env) == "release" else mode
