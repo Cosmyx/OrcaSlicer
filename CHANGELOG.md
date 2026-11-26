@@ -163,5 +163,19 @@ here; see the upstream release notes.
   0100, 0101, 0102, 0103, 0104, 0105.
 
 <!-- cosmyx-slot: T11a -->
+- Apply the Cosmyx branding at build time from tables under
+  `cosmyx-src/branding/` (image manifest of 560 rows, all missing for now,
+  and the vendored overlay), with guards before and after, an exact revert,
+  and a clean git tree. Unvalidated rows warn on development builds and fail
+  release builds. Malformed tables, symlinks, case-only path differences and
+  failing stages are refused and reverted with a report, and an interrupted
+  revert can be resumed. Builds of a tree whose upstream base is not DEV
+  (integrations onto older upstream tags) brand in tolerant mode: a row whose
+  target file or text that tree lacks is skipped with a warning; DEV and
+  release builds stay strict (`just brand-mode`, `brand-apply tolerant`); a
+  local `integration/<tag>` checkout and its real-tree tests are tolerant too. Recipes `just brand-check`, `brand-apply`, `brand-revert`,
+  `brand-sync`, `brand-refresh`, `brand-validate` (user only), `brand-table`;
+  workflow in `wiki/cosmyx/branding.md`. Pull request: pending. Decisions:
+  0120, 0121, 0122, 0123.
 
 <!-- cosmyx-slot: T13 -->
