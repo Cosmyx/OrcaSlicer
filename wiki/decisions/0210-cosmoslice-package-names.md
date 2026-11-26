@@ -92,7 +92,14 @@ what the build or the CI reads by name keeps working.
     uploads it.
   - `flatpak` in build_flatpak.yml (the Flatpak job of build_all.yml lives
     there on this base) before "Upload artifacts Flatpak": renames the bundle
-    and uploads it, keeping the upstream name format.
+    and uploads it, keeping the upstream name format. On an older upstream
+    base without build_flatpak.yml the hook sits in the flatpak job of
+    build_all.yml, and the tests look for it there.
+  On a tree whose upstream base is not DEV (the branding's tolerant mode,
+  decision 0122), the wiring tests skip, with a warning, an anchor step that
+  base does not have yet (the per-arch pull-request DMG steps), and accept a
+  workflow that upstream keeps CRLF as long as no line mixes in LF; on DEV an
+  absent anchor or a CRLF line still fails.
   An upstream upload step that runs after a stage finds no file and only
   warns; an upstream artifact uploaded before a stage is deleted by it
   (`geekyeggo/delete-artifact`, already used upstream).

@@ -89,6 +89,9 @@ here; see the upstream release notes.
   ever rewrites a text an upstream test asserts.
   On an older upstream base (tolerant mode), rename rows whose text that
   tree does not have are skipped with a warning instead of failing the build.
+  The same holds for a local integration checkout, and the package-name
+  wiring tests skip hook anchors that base lacks and find the Flatpak hook
+  in build_all.yml where there is no build_flatpak.yml.
   A guard reports any new upstream text naming OrcaSlicer; recipe
   `just brand-name-candidates` proposes the rows. The cloud web pane and
   the plugin hub fall back to CosmoCloud (orca-cloud.cosmyx3d.fr) instead of

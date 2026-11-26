@@ -31,11 +31,16 @@ from branding.product_name import catalogues, cpp, resources, tables, tokens  # 
 graft = catalogues.graft
 PN = branding.PRODUCT_NAME_DIR
 
-# The branding mode of this run (decision 0122): the cosmyx-prepare action
-# exports COSMYX_BRAND_MODE, tolerant only when the tree's upstream base is not
-# DEV, so the real-tree tests brand this checkout the way its build will.
+# The branding mode of this run (decision 0122), resolved against this
+# checkout with the engine's own brand_mode, as `just brand-check` does:
+# tolerant only when the tree's upstream base is not DEV (COSMYX_BRAND_MODE,
+# a build pull request into cosmyx-ci/<tag>, an integration/<tag> branch).
+# An engine without modes only reads the variable.
 MODE_ENV = "COSMYX_BRAND_MODE"
-REAL_TREE_ENV = {MODE_ENV: os.environ.get(MODE_ENV, "")}
+try:
+    from branding_fixture import REAL_TREE_ENV
+except ImportError:
+    REAL_TREE_ENV = {MODE_ENV: os.environ.get(MODE_ENV, "")}
 
 
 # ---------------------------------------------------------------- tokens

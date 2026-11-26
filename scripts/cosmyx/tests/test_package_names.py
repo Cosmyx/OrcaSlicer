@@ -5,6 +5,7 @@ call it."""
 from __future__ import annotations
 
 import io
+import os
 import json
 import re
 import shlex
@@ -21,9 +22,21 @@ sys.path.insert(0, str(REPO_ROOT / "scripts" / "cosmyx"))
 
 import package_names as pn  # noqa: E402
 
+try:
+    import branding  # noqa: E402
+except ImportError:  # a tree without the branding engine
+    branding = None
+
 ACTION = REPO_ROOT / ".github" / "actions" / "cosmyx-package-names" / "action.yml"
 BUILD_ORCA = REPO_ROOT / ".github" / "workflows" / "build_orca.yml"
 BUILD_FLATPAK = REPO_ROOT / ".github" / "workflows" / "build_flatpak.yml"
+# Older upstream bases have no build_flatpak.yml: their Flatpak job lives in
+# build_all.yml, and the flatpak hook sits there.
+BUILD_ALL = REPO_ROOT / ".github" / "workflows" / "build_all.yml"
+# Tolerant on a tree whose upstream base is not DEV, detected like the branding
+# (decision 0122): an anchor step that base does not have yet is skipped with a
+# warning. Strict, DEV's mode, keeps failing on it.
+TOLERANT = branding is not None and branding.brand_mode(os.environ, REPO_ROOT) == "tolerant"
 DEV_TAG = "2.6.0-dev-8_aa9dac8"
 
 
@@ -419,18 +432,56 @@ def hook_blocks(text: str) -> dict:
     return blocks
 
 
+def job_text(text: str, job: str) -> str:
+    """The lines of one top-level job of a workflow, "" when it has none."""
+    lines = text.replace("\r\n", "\n").split("\n")
+    start = next((index for index, line in enumerate(lines) if line.rstrip() == f"  {job}:"), None)
+    if start is None:
+        return ""
+    end = next((index for index in range(start + 1, len(lines)) if re.match(r"^  \S", lines[index])), len(lines))
+    return "\n".join(lines[start:end]) + "\n"
+
+
+def flatpak_workflow() -> tuple:
+    """(path, text) of the Flatpak build: build_flatpak.yml when the base has
+    it, else the flatpak job of build_all.yml."""
+    if BUILD_FLATPAK.is_file():
+        return BUILD_FLATPAK, BUILD_FLATPAK.read_bytes().decode("utf-8")
+    return BUILD_ALL, job_text(BUILD_ALL.read_bytes().decode("utf-8"), "flatpak")
+
+
+class FlatpakWorkflowTest(unittest.TestCase):
+    def test_the_flatpak_job_is_cut_out_of_build_all(self) -> None:
+        text = "jobs:\r\n  linux:\r\n    - name: A\r\n  flatpak:\r\n    steps:\r\n      - name: B\r\n  later:\r\n    - name: C\r\n"
+        self.assertEqual(step_names(job_text(text, "flatpak")), ["B"])
+        self.assertEqual(job_text(text, "missing"), "")
+
+    def test_the_flatpak_hook_file_is_found_on_this_base(self) -> None:
+        path, text = flatpak_workflow()
+        self.assertIn(path, (BUILD_FLATPAK, BUILD_ALL))
+        self.assertIn("flatpak", hook_blocks(text))
+
+
 class WiringTest(unittest.TestCase):
     def setUp(self) -> None:
         self.orca = BUILD_ORCA.read_bytes().decode("utf-8")
-        self.flatpak = BUILD_FLATPAK.read_bytes().decode("utf-8")
+        self.flatpak_path, self.flatpak = flatpak_workflow()
+
+    def anchor_index(self, names: list, anchor: str, step: str):
+        """Where `anchor` sits, or None when a tolerant (non-DEV) base does not
+        have that step yet: the check is skipped with a warning."""
+        if TOLERANT and anchor not in names:
+            print(f"warning: anchor skipped for {step!r}: {anchor!r} is absent on this upstream base", file=sys.stderr)
+            return None
+        return names.index(anchor)
 
     def assert_between(self, names: list, step: str, after: str | None, before: str | None) -> None:
         self.assertEqual(names.count(step), 1, step)
         position = names.index(step)
-        if after:
-            self.assertLess(names.index(after), position, f"{step} must come after {after}")
-        if before:
-            self.assertLess(position, names.index(before), f"{step} must come before {before}")
+        if after and (index := self.anchor_index(names, after, step)) is not None:
+            self.assertLess(index, position, f"{step} must come after {after}")
+        if before and (index := self.anchor_index(names, before, step)) is not None:
+            self.assertLess(position, index, f"{step} must come before {before}")
 
     def test_every_stage_has_one_hook(self) -> None:
         stages = sorted(list(hook_blocks(self.orca)) + list(hook_blocks(self.flatpak)))
@@ -463,16 +514,24 @@ class WiringTest(unittest.TestCase):
                     self.assertNotIn("CosmoSlice", "\n".join(block))
 
     def test_hook_files_keep_their_line_endings(self) -> None:
-        # Both workflows are LF upstream on this base; a hook never mixes in CRLF.
-        # The committed blob, not the checkout: a Windows checkout (core.autocrlf)
-        # turns every line into CRLF while the repository keeps it LF.
-        for path in (BUILD_ORCA, BUILD_FLATPAK):
+        # A hook never mixes line endings into a file: every line of the
+        # committed blob ends the same way. Both workflows are LF upstream on
+        # DEV; an older base may keep build_all.yml CRLF, and only a tolerant
+        # (non-DEV) run accepts that. The committed blob, not the checkout: a
+        # Windows checkout (core.autocrlf) changes the line endings on disk
+        # while the repository keeps its own.
+        for path in (BUILD_ORCA, self.flatpak_path):
             relative = path.relative_to(REPO_ROOT).as_posix()
             blob = subprocess.run(
                 ["git", "-C", str(REPO_ROOT), "cat-file", "blob", f":{relative}"],
                 capture_output=True, check=True,
             ).stdout
-            self.assertNotIn(b"\r\n", blob, path.name)
+            with self.subTest(path=path.name):
+                lines = blob.split(b"\n")[:-1]
+                crlf = [line.endswith(b"\r") for line in lines]
+                self.assertTrue(all(crlf) or not any(crlf), f"{path.name} mixes LF and CRLF")
+                if not TOLERANT:
+                    self.assertNotIn(b"\r\n", blob, path.name)
 
     def test_action_uploads_every_output_and_deletes_the_rest(self) -> None:
         action = ACTION.read_text(encoding="utf-8")

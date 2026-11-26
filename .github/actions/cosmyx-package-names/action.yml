@@ -1,6 +1,7 @@
 # Cosmyx package names: the CI packages and artifacts are named CosmoSlice
 # (decision 0210, wiki/cosmyx/branding.md). The "# Cosmyx" hook steps of
-# build_orca.yml and build_flatpak.yml call it with one stage each;
+# build_orca.yml and build_flatpak.yml (the flatpak job of build_all.yml on
+# older upstream bases) call it with one stage each;
 # scripts/cosmyx/package_names.py renames the files and says what to upload and
 # which upstream artifacts (OrcaSlicer_ names, profile validator) to delete.
 # A stage that does not apply to the running leg does nothing.
