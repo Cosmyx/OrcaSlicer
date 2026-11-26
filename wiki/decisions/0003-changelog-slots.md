@@ -22,7 +22,7 @@ would all insert at the top of the same section and conflict with each other.
 - A task split into sub-tasks gets one marker per sub-task, with a lower-case
   letter suffix (`<!-- cosmyx-slot: T11a -->`).
 - Markers in place, by area:
-  - `repo`: T0, T17, T20.
+  - `repo`: T0, T17, T20, T27.
   - `libslic3r`: T1, T2, T3, T4, T12.
   - `GUI`: T5, T6, T7, T11b, T11c, T11d, T11e, T11f, T28, T25, T26, T16, T18, T24, T11g.
   - `i18n`: T8.
