@@ -104,6 +104,13 @@ here; see the upstream release notes.
   resvg image (multi-size Windows icon, macOS app icon, MSIX tiles). The
   other logos (file-type icons, bed texture, web and dialog logos) keep the
   Orca files for now. Pull request: #101. Decisions: 0124, 0125, 0126.
+- Ship the remaining CosmoSlice logos in Cosmyx builds: 11 files vendored
+  from CosmoSlice (bed texture, gradient and gray logos, configuration
+  wizard and unreferenced logos) and 6 rasters derived from the SVG master
+  (macOS document, G-code and STL file-type icons, grayscale message logo,
+  title logo, web header logo). The horizontal Troubleshoot logos and
+  `web/image/logo2.png` are still missing. Pull request: #130.
+  Decisions: 0124, 0125.
 
 <!-- cosmyx-slot: T11c -->
 
