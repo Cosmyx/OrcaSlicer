@@ -23,7 +23,7 @@ would all insert at the top of the same section and conflict with each other.
   letter suffix (`<!-- cosmyx-slot: T11a -->`).
 - Markers in place, by area:
   - `repo`: T0.
-  - `libslic3r`: T1, T2, T3, T4.
+  - `libslic3r`: T1, T2, T3, T4, T12.
   - `GUI`: T5, T6, T7, T11b, T11c, T11d, T11e, T11f, T28.
   - `i18n`: T8.
   - `CI-release`: T9, T10, T11a, T13.
