@@ -105,6 +105,11 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11e -->
 
 <!-- cosmyx-slot: T11f -->
+- Always run in dark mode, on Windows, macOS and Linux, for new and existing
+  configs alike, whatever the system appearance; macOS and Linux native
+  widgets are asked for the dark appearance too. **Removed:** the way back to
+  light: the Windows Preferences "Enable dark Mode" toggle no longer has any
+  effect. Pull request: pending. Decisions: 0136, 0137, 0138, 0139.
 
 <!-- cosmyx-slot: T28 -->
 - The GUI now knows whether the selected printer is a Cosmyx machine: its
