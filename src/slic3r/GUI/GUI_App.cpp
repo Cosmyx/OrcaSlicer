@@ -23,6 +23,7 @@
 #include "slic3r/Utils/CloudDeleteQueue.hpp"
 #include "slic3r/Utils/NetworkAgent.hpp"
 #include "GUI_Init.hpp"
+#include "Cosmyx/Languages.hpp" // Cosmyx
 #include "GUI_ObjectList.hpp"
 #include "slic3r/GUI/UserManager.hpp"
 #include "slic3r/GUI/TaskManager.hpp"
@@ -8647,6 +8648,7 @@ bool GUI_App::load_language(wxString language, bool initial)
 			language_info = wxLocale::GetLanguageInfo(wxLANGUAGE_ENGLISH_US);
     }
 
+    language_info = Cosmyx::ui_language_info(language_info); // Cosmyx: offered languages only (decision 0220)
     const wxLanguageInfo *translation_language_info = language_info;
     const wxString requested_language_code = translation_language_info->CanonicalName;
     const wxLanguageInfo *locale_language_info = translation_language_info;

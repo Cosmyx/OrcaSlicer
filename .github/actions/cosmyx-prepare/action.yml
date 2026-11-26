@@ -71,7 +71,7 @@ runs:
     # Only fast, hermetic tests run here, on every build leg: the profile makes
     # the tests that need Docker, the network or a long build skip themselves
     # (they run in cosmyx-checks and `just test-scripts`).
-    - name: Test the graft, the worktree helper and the branding engine
+    - name: Test the graft, the worktree helper, the branding engine and the languages
       shell: bash
       working-directory: ${{ github.workspace }}
       env:
@@ -81,6 +81,17 @@ runs:
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_i18n_graft.py -t scripts/cosmyx/tests
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_worktree_clean.py -t scripts/cosmyx/tests
         "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p 'test_branding_*.py' -t scripts/cosmyx/tests
+        "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_languages.py -t scripts/cosmyx/tests
+
+    # The languages OrcaSlicer does not ship (decision 0220): their catalogues
+    # go into localization/i18n, where run_gettext.sh/.bat compile and package
+    # every catalogue and where the graft below finds them.
+    - name: Install the Cosmyx languages
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/languages.py install'
 
     - name: Graft the Cosmyx translations
       shell: bash
@@ -97,6 +108,16 @@ runs:
       env:
         PYTHONDONTWRITEBYTECODE: '1'
       run: '"$COSMYX_PYTHON" scripts/cosmyx/branding/cli.py apply --ci'
+
+    # The upstream catalogues of languages Cosmyx does not offer are deleted
+    # from the checkout, so the build neither compiles nor packages them; the
+    # hide step below keeps the deletion out of git diff.
+    - name: Drop the languages Cosmyx does not offer
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/languages.py drop'
 
     # Every step that edits tracked files goes above this one: hide must stay
     # last, so it covers all of them.

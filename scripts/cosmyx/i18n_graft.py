@@ -447,12 +447,37 @@ def orca_languages(i18n_dir: Path) -> dict[str, Path]:
     return languages
 
 
+# localization/cosmyx/i18n holds the full catalogues of the languages
+# OrcaSlicer does not ship (decision 0220), laid out like localization/i18n;
+# it is not a feature.
+LANGUAGES_DIR_NAME = "i18n"
+
+
+def cosmyx_languages(cosmyx_dir: Path) -> dict[str, Path]:
+    """Map each language Cosmyx adds to its OrcaSlicer_<lang>.po under
+    localization/cosmyx/i18n. scripts/cosmyx/languages.py installs them into
+    localization/i18n before the graft runs."""
+    folder = cosmyx_dir / LANGUAGES_DIR_NAME
+    return orca_languages(folder) if folder.is_dir() else {}
+
+
+def all_languages(i18n_dir: Path, cosmyx_dir: Path) -> dict[str, Path]:
+    """Every language with a catalogue, OrcaSlicer's and the ones Cosmyx adds.
+    A language on both sides is an error: Cosmyx never shadows a catalogue."""
+    orca = orca_languages(i18n_dir)
+    added = cosmyx_languages(cosmyx_dir)
+    both = sorted(set(orca) & set(added))
+    if both:
+        raise PoError(f"languages both in {i18n_dir} and in {cosmyx_dir / LANGUAGES_DIR_NAME}: {', '.join(both)}")
+    return {**orca, **added}
+
+
 def cosmyx_catalogues(cosmyx_dir: Path) -> dict[str, list[tuple[str, Path]]]:
     """Map each language to its (feature, <lang>.po) files."""
     by_language: dict[str, list[tuple[str, Path]]] = {}
     if not cosmyx_dir.is_dir():
         return by_language
-    for feature_dir in sorted(p for p in cosmyx_dir.iterdir() if p.is_dir()):
+    for feature_dir in sorted(p for p in cosmyx_dir.iterdir() if p.is_dir() and p.name != LANGUAGES_DIR_NAME):
         for po in sorted(feature_dir.glob("*.po")):
             by_language.setdefault(po.stem, []).append((feature_dir.name, po))
     return by_language
@@ -513,10 +538,12 @@ def graft_language(language: str, orca: Catalogue, cosmyx: dict[tuple, CosmyxEnt
     return result
 
 
-def graft(i18n_dir: Path, cosmyx_dir: Path) -> GraftReport:
-    """Compute the graft of every language. Writes nothing."""
+def graft(i18n_dir: Path, cosmyx_dir: Path, languages: dict[str, Path] | None = None) -> GraftReport:
+    """Compute the graft of every language. Writes nothing. `languages` maps
+    each language to the catalogue grafted into (default: the ones in
+    i18n_dir)."""
     report = GraftReport()
-    orca = orca_languages(i18n_dir)
+    orca = orca_languages(i18n_dir) if languages is None else languages
     for language, files in sorted(cosmyx_catalogues(cosmyx_dir).items()):
         entries = collect_language(files)
         if language not in orca:

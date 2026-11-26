@@ -460,8 +460,9 @@ class CommittedCataloguesTests(unittest.TestCase):
     I18N = REPO_ROOT / "localization" / "i18n"
 
     def test_every_feature_has_every_orca_language_and_its_template_msgids(self) -> None:
-        languages = set(g.orca_languages(self.I18N))
-        for feature in sorted(p for p in self.COSMYX.iterdir() if p.is_dir()):
+        catalogues = g.all_languages(self.I18N, self.COSMYX)
+        languages = set(catalogues)
+        for feature in sorted(p for p in self.COSMYX.iterdir() if p.is_dir() and p.name != g.LANGUAGES_DIR_NAME):
             template = g.read_po(feature / "messages.pot")
             keys = [e.key for e in template.messages()]
             self.assertTrue(keys, f"{feature.name}: empty template")
@@ -469,12 +470,16 @@ class CommittedCataloguesTests(unittest.TestCase):
             for po in sorted(feature.glob("*.po")):
                 catalogue = g.read_po(po)
                 self.assertEqual([e.key for e in catalogue.messages()], keys, str(po))
-                self.assertEqual(catalogue.header_field("Plural-Forms"), g.read_po(g.orca_languages(self.I18N)[po.stem]).header_field("Plural-Forms"), str(po))
+                self.assertEqual(catalogue.header_field("Plural-Forms"), g.read_po(catalogues[po.stem]).header_field("Plural-Forms"), str(po))
 
     def test_real_tree_grafts_without_error(self) -> None:
-        report = g.graft(self.I18N, self.COSMYX)
+        # The CI installs the Cosmyx languages into localization/i18n first
+        # (scripts/cosmyx/languages.py install); graft into their committed
+        # catalogues here, as a dry run.
+        languages = g.all_languages(self.I18N, self.COSMYX)
+        report = g.graft(self.I18N, self.COSMYX, languages)
         self.assertEqual(report.warnings, [])
-        self.assertEqual(len(report.results), len(g.orca_languages(self.I18N)))
+        self.assertEqual(len(report.results), len(languages))
 
 
 if __name__ == "__main__":

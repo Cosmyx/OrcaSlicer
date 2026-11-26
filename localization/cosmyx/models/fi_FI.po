@@ -1,0 +1,97 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: fi_FI\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Tämä kalibrointimalli toimii parhaiten, kun täytön suunnat on asetettu 0 "
+"asteeseen. Parhaan kalibrointituloksen saamiseksi on suositeltavaa asettaa "
+"sekä 'Täytön suunta' että 'Kiinteän täytön suunta' arvoon 0.\n"
+"Kyllä – muuta nämä asetukset automaattisesti\n"
+"Ei  – älä muuta näitä asetuksia"
+
+# AI Translated
+msgid "Calibration Suggestion"
+msgstr "Kalibrointiehdotus"
+
+# AI Translated
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Tämä kalibrointimalli toimii parhaiten tietyillä täyttöasetuksilla.\n"
+"Parhaan kalibrointituloksen saamiseksi on suositeltavaa asettaa:\n"
+"- Täytön suunta: %.0f°\n"
+"- Kiinteän täytön suunta: %.0f°\n"
+"- Vain yksi seinämä ensimmäisellä kerroksella: %s\n"
+"\n"
+"Kyllä – muuta nämä asetukset automaattisesti\n"
+"Ei  – älä muuta näitä asetuksia"
+
+# AI Translated
+msgid "Cosmyx 3D Models"
+msgstr "Cosmyx-3D-mallit"
+
+# AI Translated
+msgid "Calibration Models Dual Head"
+msgstr "Kalibrointimallit, kaksoispää"
+
+# AI Translated
+msgid "Calibration Models Single Head"
+msgstr "Kalibrointimallit, yksi pää"
+
+# AI Translated
+msgid "Cosmyx Handy Models"
+msgstr "Cosmyx-kätevät mallit"
+
+# AI Translated
+msgid "Calage 1 SNDT"
+msgstr "Calage 1 SNDT"
+
+# AI Translated
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Calage 2 SNDT"
+
+# AI Translated
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Calage 3 SNDT"
+
+# AI Translated
+msgid "Cube Bicolore"
+msgstr "Cube Bicolore"
+
+# AI Translated
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Calage 1 Nova"
+
+# AI Translated
+msgid "Cosmyx Cube"
+msgstr "Cosmyx Cube"
+
+# AI Translated
+# Needs human review: model name; check whether it should stay untranslated like the other Cosmyx model names
+msgid "Control Tension Belt"
+msgstr "Hihnan kireyden tarkistus"
+
+# AI Translated
+# Needs human review: model name (French 'Support Bobine' = spool holder); check whether it should stay untranslated
+msgid "Support Bobine"
+msgstr "Kelateline"

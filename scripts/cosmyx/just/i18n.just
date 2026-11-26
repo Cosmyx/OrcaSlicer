@@ -31,6 +31,7 @@ i18n-graft:
 i18n-ungraft:
     {{python}} scripts/cosmyx/worktree_clean.py unhide localization/i18n
     git checkout -- localization/i18n
+    {{python}} scripts/cosmyx/languages.py uninstall
 
 # List the tracked files hidden from git diff by skip-worktree (set by the CI's prepare step).
 worktree-hidden:

@@ -237,6 +237,24 @@ here; see the upstream release notes.
   changes by itself. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/125.
   Decision: 0222.
 
+<!-- cosmyx-slot: T25 -->
+- Offer exactly 22 UI languages: the Preferences selector lists only da_DK,
+  de_DE, el_GR, en_GB, es_ES, fi_FI, fr_FR, ga_IE, it_IT, ja_JP, ko_KR, nb_NO,
+  nl_BE, nl_NL, pl_PL, pt_PT, sv_SE, uk_UA, vi_VN, zh_CN, zh_HK and zh_TW,
+  each named in its own language; any other language starts in British
+  English. Arabic and Hindi are not offered yet: they need fonts and text
+  shaping the 3D scene lacks. The nine languages OrcaSlicer
+  lacks get catalogues under `localization/cosmyx/i18n`, packaged like the
+  upstream ones: nl_BE, pt_PT and zh_HK start from nl, pt_BR and zh_TW,
+  reviewed and completed by a machine pass; da_DK, el_GR, fi_FI, ga_IE and
+  nb_NO are machine-translated; en_GB holds only the British spellings and
+  falls back to the source text elsewhere. Machine translations, the Cosmyx
+  strings included, are marked for review; the unused upstream
+  catalogues (ca, cs, eu, hu, lt, pt_BR, ru, th, tr) are no longer packaged.
+  **Migration:** a user whose language was one of those now gets British
+  English and can pick another in Preferences. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/123. Decision: 0220.
+
 <!-- cosmyx-slot: T26 -->
 - The update check (at startup and from Help > Check for Updates) now looks
   for releases of the Cosmyx fork on GitHub instead of OrcaSlicer's, and only
@@ -313,7 +331,7 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T8 -->
 - Fill the Cosmyx catalogues in all 22 OrcaSlicer languages (CHT nozzle,
-  ironing temperature, Cosmyx models), using each language's OrcaSlicer terms
+  ironing temperature, Cosmyx models, update check), using each language's OrcaSlicer terms
   for shared words. Pull request: pending.
 - Translate the Cosmyx strings: per-feature catalogues under
   `localization/cosmyx/` (cht-nozzle, ironing-temperature, models) for every

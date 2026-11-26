@@ -11,6 +11,7 @@
 #include "GLCanvas3D.hpp" // ORCA: for live preview refresh when toggling "Dim lower layers"
 #include "MsgDialog.hpp"
 #include "I18N.hpp"
+#include "Cosmyx/Languages.hpp" // Cosmyx
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Color.hpp"
 #include "libslic3r/Format/DRC.hpp"
@@ -499,6 +500,7 @@ wxBoxSizer *PreferencesDialog::create_item_language_combobox(wxString title, wxS
     }
     sort_remove_duplicates(language_infos);
     std::sort(language_infos.begin(), language_infos.end(), [](const wxLanguageInfo *l, const wxLanguageInfo *r) { return l->Description < r->Description; });
+    Cosmyx::select_ui_languages(language_infos); // Cosmyx: the offered languages only (decision 0220)
 
     auto vlist = language_infos;
     auto param = "language";
@@ -584,6 +586,7 @@ wxBoxSizer *PreferencesDialog::create_item_language_combobox(wxString title, wxS
             language_name = wxString::FromUTF8("\xE0\xB9\x84\xE0\xB8\x97\xE0\xB8\xA2");
         }
 
+        language_name = Cosmyx::ui_language_name(vlist[i], language_name); // Cosmyx
         if (app_config->get(param) == vlist[i]->CanonicalName) {
             m_current_language_selected = i;
         }
