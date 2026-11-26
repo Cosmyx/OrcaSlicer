@@ -391,6 +391,7 @@ UpdateVersionDialog::UpdateVersionDialog(wxWindow *parent)
 
     auto stable_only_label = new Label(this, _L("Check for stable updates only"));
     stable_only_label->SetFont(Label::Body_12);
+    m_cb_stable_only->Hide(); stable_only_label->Hide(); // Cosmyx: only releases are ever offered (decision 0221)
 
     m_button_cancel = new Button(this, _L("Cancel"));
     m_button_cancel->SetStyle(ButtonStyle::Regular, ButtonType::Choice);

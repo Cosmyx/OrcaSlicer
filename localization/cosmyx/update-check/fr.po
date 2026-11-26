@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx update-check\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==0 || n==1) ? 0 : 1;\n"
+
+# AI Translated
+#. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
+msgid ""
+"Checking for updates is turned off while Stealth mode is on. Turn off "
+"Stealth mode in Preferences to check for a new release."
+msgstr ""
+"La recherche de mises à jour est désactivée tant que le mode furtif est "
+"actif. Désactivez le mode furtif dans les Préférences pour rechercher une "
+"nouvelle version."

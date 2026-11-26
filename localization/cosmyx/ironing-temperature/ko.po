@@ -1,0 +1,17 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx ironing-temperature\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Ironing temperature"
+msgstr "다림질 온도"
+
+msgid ""
+"Nozzle temperature while this filament irons. The nozzle goes back to the "
+"print temperature once ironing is done. 0 means no change."
+msgstr ""
+"이 필라멘트로 다림질하는 동안의 노즐 온도입니다. 다림질이 끝나면 노즐은 출력 온도로 돌아갑니다. 0은 변경 없음을 의미합니다."

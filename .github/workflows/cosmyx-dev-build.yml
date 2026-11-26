@@ -1,0 +1,260 @@
+# Cosmyx dev build (decision 0218): builds an integration tree on the OSes a
+# developer picks, on any base (DEV or an older tag). build_all.yml stays the
+# release validation build and is not touched.
+#
+# - Pull request into a cosmyx-ci/** branch: PR labels build:linux,
+#   build:windows, build:macos-arm64, build:macos-x86_64 pick the OSes; no
+#   build:* label builds Linux, Windows and macOS arm64.
+# - Manual run: the checkboxes below. The form only shows once this file is on
+#   the default branch; it then runs on any ref ("Use workflow from").
+#
+# The builds call upstream's reusable workflows with the inputs build_all.yml
+# passes them, so a base's own build steps (and the Cosmyx hooks in them) run.
+name: Cosmyx dev build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+    branches: ['cosmyx-ci/**']
+  workflow_dispatch:
+    inputs:
+      linux:
+        description: 'Linux (x86_64 and aarch64)'
+        type: boolean
+        default: true
+      windows:
+        description: 'Windows x64'
+        type: boolean
+        default: true
+      macos-arm64:
+        description: 'macOS arm64'
+        type: boolean
+        default: true
+      macos-x86_64:
+        description: 'macOS x86_64'
+        type: boolean
+        default: false
+
+concurrency:
+  # One build per PR (or ref), the newest wins. A label event outside build:*
+  # gets a group of its own, so tagging a PR never cancels its running build.
+  group: cosmyx-dev-build-${{ github.event.pull_request.number || github.ref }}${{ (github.event.action == 'labeled' || github.event.action == 'unlabeled') && !startsWith(github.event.label.name, 'build:') && format('-ignored-{0}', github.run_id) || '' }}
+  cancel-in-progress: true
+
+jobs:
+  select:
+    name: Select OSes
+    # A label event outside build:* builds nothing.
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.action != 'labeled' && github.event.action != 'unlabeled') || startsWith(github.event.label.name, 'build:') }}
+    runs-on: ubuntu-24.04
+    outputs:
+      build: ${{ steps.select.outputs.build }}
+      linux: ${{ steps.select.outputs.linux }}
+      windows: ${{ steps.select.outputs.windows }}
+      macos: ${{ steps.select.outputs.macos }}
+      macos-archs: ${{ steps.select.outputs.macos-archs }}
+      product: ${{ steps.select.outputs.product }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          lfs: 'false'
+          sparse-checkout: |
+            /scripts/cosmyx/ci/
+            /cosmyx-src/branding/product-name/
+          sparse-checkout-cone-mode: false
+      - name: Select the OSes to build
+        id: select
+        run: python3 scripts/cosmyx/ci/dev_build.py select
+
+  build_linux:
+    needs: select
+    if: ${{ !cancelled() && needs.select.outputs.linux == 'true' }}
+    strategy:
+      fail-fast: false
+      # As build_all.yml: amd64's empty arch keeps the 'linux-clang' deps cache key.
+      matrix:
+        include:
+          - arch: ''
+            os: ubuntu-24.04
+          - arch: aarch64
+            os: ubuntu-24.04-arm
+    uses: ./.github/workflows/build_check_cache.yml
+    with:
+      os: ${{ matrix.os }}
+      arch: ${{ matrix.arch }}
+      build-deps-only: false
+    secrets: inherit
+
+  build_windows:
+    name: Build Windows x64
+    needs: select
+    if: ${{ !cancelled() && needs.select.outputs.windows == 'true' }}
+    # What build_all.yml grants its Windows job.
+    permissions:
+      actions: write
+      contents: write
+      id-token: write
+    uses: ./.github/workflows/build_check_cache.yml
+    with:
+      os: windows-latest
+      arch: x64
+      compiler: clang
+      build-deps-only: false
+      force-build: false
+    secrets: inherit
+
+  build_macos_arch:
+    needs: select
+    if: ${{ !cancelled() && needs.select.outputs.macos == 'true' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJSON(needs.select.outputs.macos-archs) }}
+    uses: ./.github/workflows/build_check_cache.yml
+    with:
+      os: macos-15
+      arch: ${{ matrix.arch }}
+      build-deps-only: false
+      force-build: false
+    secrets: inherit
+
+  # Upstream ships a per-arch DMG only from a pull request on recent bases;
+  # elsewhere (older tags, manual runs) the arch leg only packs its app bundle.
+  # This job makes sure every built arch ends with <product>_Mac_<arch>_<ver>.
+  macos_dmg:
+    name: macOS DMG ${{ matrix.arch }}
+    needs: [select, build_macos_arch]
+    if: ${{ !cancelled() && needs.build_macos_arch.result == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: ${{ fromJSON(needs.select.outputs.macos-archs) }}
+    runs-on: macos-15
+    permissions:
+      actions: read
+      contents: read
+    env:
+      ARCH: ${{ matrix.arch }}
+      PRODUCT: ${{ needs.select.outputs.product }}
+    steps:
+      # The same checkout as build_orca.yml, so the version tag (and its
+      # abbreviated commit) matches the names the build gave its packages.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          lfs: 'false'
+      - name: Name the packages as the build did
+        id: version
+        run: python3 scripts/cosmyx/ci/dev_build.py version
+      - name: Find the DMG source
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VER: ${{ steps.version.outputs.ver }}
+        run: |
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" \
+            --jq '.artifacts[].name' > "$RUNNER_TEMP/artifacts.txt"
+          python3 scripts/cosmyx/ci/dev_build.py dmg-plan --arch "$ARCH" --ver "$VER" \
+            --product "$PRODUCT" --sha "$GITHUB_SHA" --names-file "$RUNNER_TEMP/artifacts.txt"
+      - name: Download the DMG source
+        if: ${{ steps.plan.outputs.action != 'skip' }}
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ steps.plan.outputs.source }}
+          path: ${{ runner.temp }}/source
+      - name: Create the ${{ needs.select.outputs.product }} DMG
+        if: ${{ steps.plan.outputs.action != 'skip' }}
+        env:
+          ACTION: ${{ steps.plan.outputs.action }}
+          ARTIFACT: ${{ steps.plan.outputs.artifact }}
+        run: |
+          src="$RUNNER_TEMP/source"
+          if [ "$ACTION" = bundle ]; then
+            tar -xzf "$src"/*.tar.gz -C "$src"
+          else
+            hdiutil attach -nobrowse -readonly -mountpoint "$src/mnt" "$src"/*.dmg
+          fi
+          apps=$(find "$src" -maxdepth 3 -type d -name '*.app' ! -name '*profile_validator*' -prune)
+          if [ "$(printf '%s\n' "$apps" | grep -c .)" != 1 ]; then
+            echo "::error::expected one app in $ACTION, found: $apps"
+            exit 1
+          fi
+          stage="$RUNNER_TEMP/stage"
+          mkdir -p "$stage"
+          cp -R "$apps" "$stage/$PRODUCT.app"
+          ln -sfn /Applications "$stage/Applications"
+          [ "$ACTION" = dmg ] && hdiutil detach "$src/mnt"
+          # Upstream's unsigned bundle is not sealed: seal and verify it, or fail.
+          python3 scripts/cosmyx/ci/dev_build.py seal-app --app "$stage/$PRODUCT.app"
+          source scripts/retry.sh
+          source scripts/create_dmg.sh
+          create_dmg "$PRODUCT" "$stage" "$ARTIFACT.dmg"
+      - name: Upload the ${{ needs.select.outputs.product }} DMG
+        if: ${{ steps.plan.outputs.action != 'skip' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.plan.outputs.artifact }}
+          path: ${{ steps.plan.outputs.artifact }}.dmg
+          if-no-files-found: error
+
+  # One test job per built arch that ships its tests, as in build_all.yml.
+  # macOS x86_64 builds no tests upstream.
+  unit_tests_linux_x86_64:
+    name: Linux x86_64
+    needs: build_linux
+    if: ${{ !cancelled() && needs.build_linux.result == 'success' }}
+    uses: ./.github/workflows/unit_tests.yml
+    with:
+      os: ubuntu-24.04
+      artifact: ${{ github.sha }}-tests-linux-x86_64
+  unit_tests_linux_aarch64:
+    name: Linux aarch64
+    needs: build_linux
+    if: ${{ !cancelled() && needs.build_linux.result == 'success' }}
+    uses: ./.github/workflows/unit_tests.yml
+    with:
+      os: ubuntu-24.04-arm
+      artifact: ${{ github.sha }}-tests-linux-aarch64
+  unit_tests_windows_x64:
+    name: Windows x64
+    needs: build_windows
+    if: ${{ !cancelled() && needs.build_windows.result == 'success' }}
+    uses: ./.github/workflows/unit_tests.yml
+    with:
+      os: windows-latest
+      artifact: ${{ github.sha }}-tests-windows-x64
+  unit_tests_macos_arm64:
+    name: macOS arm64
+    needs: [select, build_macos_arch]
+    if: ${{ !cancelled() && needs.build_macos_arch.result == 'success' && contains(fromJSON(needs.select.outputs.macos-archs), 'arm64') }}
+    uses: ./.github/workflows/unit_tests.yml
+    with:
+      os: macos-15
+      artifact: ${{ github.sha }}-tests-macos-arm64
+      test-dir: build/arm64/tests
+
+  publish_test_results:
+    name: Publish Test Results
+    needs: [select, unit_tests_linux_x86_64, unit_tests_linux_aarch64, unit_tests_windows_x64, unit_tests_macos_arm64]
+    if: ${{ !cancelled() && needs.select.outputs.build == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Test Results
+        uses: actions/download-artifact@v8
+        with:
+          pattern: test-results-*
+          path: test-results
+      # Best-effort, as in build_all.yml: the test jobs gate correctness.
+      - name: Publish Test Results
+        if: ${{ hashFiles('test-results/**/*.xml') != '' }}
+        continue-on-error: true
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "test-results/**/*.xml"
+      - name: Delete Test Results
+        if: success()
+        uses: geekyeggo/delete-artifact@v6
+        with:
+          name: test-results-*
+          failOnError: false
