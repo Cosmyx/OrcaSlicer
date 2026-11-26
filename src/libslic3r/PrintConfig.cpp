@@ -631,6 +631,7 @@ CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(LayerSeq)
 
 static t_config_enum_values s_keys_map_NozzleType {
     { "undefine",       int(NozzleType::ntUndefine) },
+    { "cht", int(NozzleType::ntCHT) }, // Cosmyx
     { "hardened_steel", int(NozzleType::ntHardenedSteel) },
     { "stainless_steel", int(NozzleType::ntStainlessSteel)},
     { "tungsten_carbide", int(NozzleType::ntTungstenCarbide)},

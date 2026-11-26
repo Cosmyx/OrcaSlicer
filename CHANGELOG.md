@@ -43,6 +43,9 @@ here; see the upstream release notes.
   Pull request: pending. Decisions: 0010, 0011, 0012.
 
 <!-- cosmyx-slot: T2 -->
+- Add the CHT nozzle type (HRC 65) to the printer nozzle type choices,
+  next to the upstream types, tungsten carbide included. Pull request: pending.
+  Decisions: 0020, 0021, 0022.
 
 <!-- cosmyx-slot: T3 -->
 
