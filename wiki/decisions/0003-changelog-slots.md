@@ -26,7 +26,7 @@ would all insert at the top of the same section and conflict with each other.
   - `libslic3r`: T1, T2, T3, T4, T12.
   - `GUI`: T5, T6, T7, T11b, T11c, T11d, T11e, T11f, T28, T26, T16, T18, T24, T11g.
   - `i18n`: T8.
-  - `CI-release`: T9, T10, T11a, T13, T15, T16a, T19, T22.
+  - `CI-release`: T9, T10, T11a, T13, T15, T16a, T19, T22, T23.
 - Decision numbers are reserved in ranges per task so parallel branches never
   take the same number: T11 uses 0120-0139, T12 uses 0110-0119, T13 uses
   0140-0149, T15 uses 0150-0159.
