@@ -15,6 +15,18 @@
       "override_sha256": "3662d4e8b52e518c211a4274cef77012193cd10cb156f24f1e3594dc297c20de"
     },
     {
+      "path": "resources/web/guide/11/earth.png",
+      "format": "png",
+      "size": "400x400",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": "user",
+      "source_ref": null,
+      "status": "validated",
+      "upstream_sha256": "8cd92a7bfa470e3f6eba0c5bf834cef1c3108bb17c1b4cd400d44c73acc55a51",
+      "override_sha256": "a900469b66ba77cf3e7a179cb40f71eaa5741db4fc7dd589494c47e8e828240f"
+    },
+    {
       "path": "resources/web/guide/img/greencheck.svg",
       "format": "svg",
       "size": "18x18",
@@ -25,6 +37,30 @@
       "status": "validated",
       "upstream_sha256": "c5f2abfc807328cecc50a865c4c05ff85a9b8c200a391320bd0d7bc4e3c95ea2",
       "override_sha256": "d8f12284d4761415f2af84469ce16067f0ff3cdb4cfa7f78d1a7e7d2f26e22cd"
+    },
+    {
+      "path": "resources/web/homepage/img/i4.png",
+      "format": "png",
+      "size": "256x256",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": "user",
+      "source_ref": null,
+      "status": "validated",
+      "upstream_sha256": "0d7b1adf8c9023850e7820c251d86595ef5e3ef65a838e61bd6ec45493733470",
+      "override_sha256": "299f1184f71975205ce80c638ad7311d601db46c7417b5019a154955efaf59f2"
+    },
+    {
+      "path": "resources/web/homepage/img/i5.png",
+      "format": "png",
+      "size": "256x256",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": "user",
+      "source_ref": null,
+      "status": "validated",
+      "upstream_sha256": "6f187d257c03224756a436bf25abebe091a79b14fbed2d79804d411a6ab631e4",
+      "override_sha256": "a4ba4a0ce0586dd47fb7df6672603bd071193bb8eaf77746920b1beef284244f"
     },
     {
       "path": "resources/web/model/img/file_g.svg",
@@ -49,6 +85,30 @@
       "status": "validated",
       "upstream_sha256": "bb393f98e83a2934eed9cd9e02b98e363670596cefa9310f99ca1bf44dc9de3f",
       "override_sha256": "ad99da10f8e7755eba5ef25523bc55e9f360d76cf478dc5cda798007c198e3f3"
+    },
+    {
+      "path": "resources/web/model/img/null.png",
+      "format": "png",
+      "size": "200x160",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": "user",
+      "source_ref": null,
+      "status": "validated",
+      "upstream_sha256": "8c417240c08e5f8e7fd2a22a712435b047205ebb13b26e1c16f5debbf4a4c3a8",
+      "override_sha256": "3d2b03c1496d33b1b5d428f08fc4f1e96f96e031ebba27f5725cfc310bccea48"
+    },
+    {
+      "path": "resources/web/model/img/null2.png",
+      "format": "png",
+      "size": "200x160",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": "user",
+      "source_ref": null,
+      "status": "validated",
+      "upstream_sha256": "23f0b447c5cf4a0a606c44dd4e849c2fa67edfdbddfd9e7b19554c86a24f91b5",
+      "override_sha256": "72bcba317ed702ceb0d229639573034f73430426573a2118769a314842cc6cde"
     },
     {
       "path": "resources/web/model/img/profile_g.svg",
