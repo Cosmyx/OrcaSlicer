@@ -127,6 +127,15 @@ here; see the upstream release notes.
 ### CI-release
 
 <!-- cosmyx-slot: T9 -->
+- Sign Windows builds of DEV and `release/*` with Azure Artifact Signing:
+  the app, the installer's payload, the uninstaller and the installer are
+  signed and timestamped, then checked; a signed build that wrote no
+  installer (`OrcaSlicer_` or `CosmoSlice_` prefix) fails. Uses the repository's existing
+  `AZURE_*` signing secrets and is off without them. Action needed: add an
+  Entra federated credential per signed branch (subject
+  `repo:Cosmyx/OrcaSlicer:ref:refs/heads/DEV`, and each `release/*`), see
+  `wiki/cosmyx/windows-signing.md`. Pull request: pending. Decisions: 0090,
+  0092, 0094, 0095, 0097, 0098, 0099.
 
 <!-- cosmyx-slot: T10 -->
 - Add the scheduled upstream sync: every two hours `Orca-Upstream` mirrors
