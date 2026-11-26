@@ -410,3 +410,10 @@ here; see the upstream release notes.
   the repository variable `COSMYX_FLATPAK` to `true` turns them back on.
   The switch sits on the Flatpak job in whichever workflow file the upstream
   base keeps it. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/113. Decisions: 0213.
+
+<!-- cosmyx-slot: T22 -->
+- A "Build all" or "Cosmyx dev build" run whose macOS jobs were cancelled because GitHub could not
+  acquire a hosted runner now reruns its failed jobs by itself, after a
+  15-minute wait and up to the fifth attempt. Runs cancelled by a user or by a
+  newer push are left alone.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/116. Decisions: 0217.
