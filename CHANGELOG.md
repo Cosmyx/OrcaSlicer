@@ -80,6 +80,15 @@ here; see the upstream release notes.
 
 <!-- cosmyx-slot: T11f -->
 
+<!-- cosmyx-slot: T28 -->
+- The GUI now knows whether the selected printer is a Cosmyx machine: its
+  preset, or the system preset it inherits from, belongs to the Cosmyx
+  printer bundle (vendor id `Cosmyx`). A custom printer with no system parent
+  is not one. Cosmyx-only features use this flag and follow it each time the
+  printer changes, the first preset load at startup included. Nothing visible
+  changes by itself. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/125.
+  Decision: 0222.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->

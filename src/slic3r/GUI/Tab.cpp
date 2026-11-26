@@ -1,5 +1,6 @@
 //#include "slic3r/Utils/Serial.hpp"
 #include "Tab.hpp"
+#include "Cosmyx/CosmyxMachineHook.hpp" // Cosmyx
 #include "PresetHints.hpp"
 #include "libslic3r/IMEXHelpers.hpp"
 #include "libslic3r/PresetBundle.hpp"
@@ -2832,6 +2833,7 @@ void Tab::on_presets_changed()
     // Check if printer agent needs switching
     if (m_type == Preset::TYPE_PRINTER) {
         wxGetApp().switch_printer_agent();
+        Cosmyx::notify_printer_changed(); // Cosmyx: Cosmyx machine flag (decision 0222)
 
         // Trigger per-vendor preset update check
         const Preset& printer_preset = m_preset_bundle->printers.get_edited_preset();
