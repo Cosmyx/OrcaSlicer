@@ -1,0 +1,326 @@
+"""The upstream product name as a token, and its replacement by CosmoSlice.
+
+- `TOKEN` finds the upstream name as a word: OrcaSlicer, Orca Slicer,
+  Orcaslicer, ORCA SLICER, ORCASLICER, Orca, ORCA, and the "Orc slicer"
+  misspelling some translations carry. It may follow an escaped newline
+  (`\\nOrca` in C++ or PO source). Identifiers never match: lowercase ones
+  (`orca_slicer`, `orcaslicer.com`) and the ones the name runs into
+  (`OrcaSlicerVersion`, `ORCA_CAD_GLYPH`, `OrcaSlicer_192px`). A combining
+  mark after the name makes another word ("Orca" + U+0301), never a match.
+- An inflected name is the name glued to a lowercase Latin suffix, as
+  inflected languages write it (cs "OrcaSliceru", hu "OrcaSlicerrel", eu
+  "OrcaSlicerren"). It is a name only in a translation (a language is
+  given): in English text "Orcas" is another word. Only a per-language row of the `inflections` table can
+  rename it: the suffix depends on the new name, so it is never guessed.
+  Without a row the name stays and `unresolved` reports it.
+- `NATIVE_TOKENS` are the spellings some translations use for the name.
+- `CLOUD_TOKEN` finds the upstream cloud service (Orca Cloud, OrcaCloud,
+  Orca cloud, and the misspellings some translations carry), renamed
+  `CLOUD_NAME` (Cosmyx Cloud), never CosmoSlice. A lowercase suffix glued to
+  it stays (hu "Orca Cloudba", eu "OrcaClouden"): the new name ends with the
+  same word, so the suffix still fits. A word before it that depends on its
+  first sound (an elision such as ca/fr "d'", the hu article "az") cannot be
+  guessed: only an inflection row whose `old` names the cloud renames it, and
+  without one the name stays and `unresolved` reports it. The cloud goes
+  first, so a product row (hu "az Orca") never cuts it.
+- `replace_tokens` rewrites the cloud name, then the name to CosmoSlice,
+  outside URLs, file names,
+  the names tied to the app key (`OrcaSlicer.conf` and the Windows data folder
+  `...\\OrcaSlicer`, decision 0133; `OrcaSlicer.app` and `.AppImage` follow
+  the CosmoSlice package names, decision 0210) and the kept names
+  (`KEPT_NAMES`: things upstream calls that, such as the Orca Cube model), so a link to the upstream wiki, an icon name, a
+  real file or a built-in model keeps working. With a language, the
+  inflection rows of that language are applied first (`apply_inflections`),
+  longest first and as whole words.
+- `visible_name` is the residue test: the text still names the upstream
+  product somewhere `replace_tokens` would rewrite, or where only a missing
+  inflection row keeps it.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+NEW_NAME = "CosmoSlice"
+
+# Combining marks: a name followed by one is another word ("Orca" + U+0301).
+_COMBINING = "\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f"
+# Lowercase Latin letters (accented ones included) an inflection glues to the name.
+_SUFFIX = "a-z\u00df-\u00f6\u00f8-\u00ff\u0100-\u024f"
+
+TOKEN = re.compile(
+    r"(?:(?<![A-Za-z0-9_])|(?<=\\n))"
+    r"(?:Orca ?[Ss]licer|ORCA ?SLICER|Orc ?[Ss]licer|Orca|ORCA)"
+    rf"(?P<suffix>[{_SUFFIX}]*)"
+    rf"(?![A-Za-z0-9_{_COMBINING}])"
+)
+
+CLOUD_NAME = "Cosmyx Cloud"
+
+# The upstream cloud service. "orca Cloud" (tr) and "OrcaSloud" (ru) are
+# misspellings of upstream translations. The lookahead lets a lowercase suffix
+# follow (kept as it is) but never an identifier (`OrcaCloudServiceAgent`).
+CLOUD_TOKEN = re.compile(
+    r"(?:(?<![A-Za-z0-9_])|(?<=\\n))"
+    r"(?:Orca ?[Cc]loud|ORCA ?CLOUD|orca Cloud|OrcaSloud)"
+    rf"(?=[{_SUFFIX}]*(?![A-Za-z0-9_{_COMBINING}]))"
+)
+
+# Words before the cloud name that depend on its first sound: an elision
+# ("d'", "l\u2019") in every language, and the Hungarian article "az" (before a
+# vowel; "Cosmyx" takes "a"). Matched against the text just before the name.
+_CLOUD_LEAD = re.compile(r"(?<!\w)\w+['\u2019]$")
+_CLOUD_LEAD_BY_LANGUAGE = {"hu": re.compile(r"(?<!\w)(?:\w+['\u2019]|[Aa]z )$")}
+
+# The committed inflection table, used when a caller passes none.
+INFLECTIONS_FILE = Path(__file__).resolve().parents[4] / "cosmyx-src" / "branding" / "product-name" / "inflections.json"
+
+# Native spellings, per catalogue language. Longest first: the Korean
+# "Orca Slicer" goes as a whole before the bare "Orca".
+NATIVE_TOKENS = {
+    "zh_CN": re.compile("逆戟[鲸鯨]"),
+    "zh_TW": re.compile("逆戟[鯨鲸]"),
+    "ko": re.compile("오르카 ?슬라이서|오르카"),
+}
+
+# Names that keep "Orca" on purpose: they name an upstream service, a built-in
+# model or calibration, or a file format, not this application (decision 0134).
+KEPT_NAMES = (
+    r"Orca Cube",
+    r"Orca String Hell",
+    r"Orca Tolerance Test",
+    r"Orca YOLO",
+    r"Orca Arena",
+    r"Orca Palette",
+    r"Orca Badge",
+    r"OrcaSliced Combo",
+    r"Orca Preset Bundle",
+    r"Orca Filament Library",
+    r"OrcaFilamentLibrary",
+)
+
+# Spans where the name is part of an address, a file name or a kept name.
+_PROTECTED = re.compile(
+    r"(?:" + "|".join(KEPT_NAMES) + r")(?![a-z])|"
+    r"(?:[a-z][a-z0-9+.-]*://|www\.)[^\s\"'<>)\]]*"  # URLs
+    r"|[\w.%-]*[Oo]rca[\w%-]*\.(?:png|svg|ico|icns|3mf|stl|step|dll|exe|desktop|json|html|js|css)\b"  # file names
+    # The config file keeps the app key (decision 0133); the .app and the
+    # AppImage are named CosmoSlice (decision 0210), so their names follow.
+    r"|[\w.%-]*[Oo]rca[\w%-]*\.conf\b"
+    r"|[\w-]+/[\w./-]*[Oo]rca[\w./-]*"  # paths such as orca/OrcaCube_v2.3mf
+    # Paths such as OrcaSlicer/build: a slash, a doubled (C source) backslash,
+    # or a backslash that does not start an escape sequence.
+    r"|[\w.-]*[Oo]rca[\w.-]*(?:/|\\\\|\\(?![abfnrtv\"'?\\0-7xuU]))[\w./\\-]*"
+    # Windows folders such as %APPDATA%\OrcaSlicer: the name after a backslash
+    # that does not start an escape sequence (or a doubled one).
+    r"|[\w.%:-]*(?:\\\\|\\(?![abfnrtv\"'?\\0-7xuU]))[\w.%-]*[Oo]rca[\w.-]*"
+    r"|[A-Za-z][\w-]*(?:\.[\w-]+){2,}"  # dotted ids such as com.orcaslicer.OrcaSlicer
+    r"|//\s*(?:ORCA|Orca)\b"  # source comment markers inside embedded code
+)
+
+
+def has_token(text: str) -> bool:
+    """True when `text` names the upstream product as an English word (no inflection)."""
+    return any(not match.group("suffix") for match in TOKEN.finditer(text))
+
+
+def has_cloud_token(text: str) -> bool:
+    """True when `text` names the upstream cloud service."""
+    return bool(CLOUD_TOKEN.search(text))
+
+
+def has_native_token(text: str, language: str | None) -> bool:
+    pattern = NATIVE_TOKENS.get(language or "")
+    return bool(pattern and pattern.search(text))
+
+
+def names_product(text: str, language: str | None = None) -> bool:
+    """True when `text` names the upstream product, in English or natively."""
+    return has_token(text) or has_native_token(text, language)
+
+
+def is_inflected(form: str) -> bool:
+    """True when `form` is exactly one inflected upstream name ("OrcaSliceru")."""
+    match = TOKEN.fullmatch(form)
+    return bool(match and match.group("suffix"))
+
+
+# ---------------------------------------------------------------- inflections
+
+_default_rows: dict | None = None
+
+
+def inflection_map(rows: list) -> dict:
+    """{language: [(old, new), ...] longest old first} from validated rows."""
+    by_language: dict = {}
+    for row in rows:
+        by_language.setdefault(row["language"], []).append((row["old"], row["new"]))
+    return {language: sorted(pairs, key=lambda pair: (-len(pair[0]), pair[0])) for language, pairs in by_language.items()}
+
+
+def default_inflections() -> dict:
+    """The committed inflection rows (none when the table is absent)."""
+    global _default_rows
+    if _default_rows is None:
+        from .tables import inflection_rows  # local import: tables imports this module
+
+        rows = []
+        if INFLECTIONS_FILE.is_file():
+            rows = json.loads(INFLECTIONS_FILE.read_text(encoding="utf-8")).get("rows", [])
+        _default_rows = inflection_map(inflection_rows(rows))
+    return _default_rows
+
+
+# ---------------------------------------------------------------- rename
+
+
+def _address_spans(text: str) -> list[tuple[int, int]]:
+    return [match.span() for match in _PROTECTED.finditer(text)]
+
+
+def protected_spans(text: str) -> list[tuple[int, int]]:
+    """Spans the product name is never renamed in: addresses, file names,
+    kept names, and a cloud name the cloud stage left for its row."""
+    return _address_spans(text) + [match.span() for match in CLOUD_TOKEN.finditer(text)]
+
+
+def _inside(spans: list, start: int, end: int) -> bool:
+    return any(low <= start and end <= high for low, high in spans)
+
+
+def _overlaps(span: tuple[int, int], start: int, end: int) -> bool:
+    return span[0] < end and start < span[1]
+
+
+def is_cloud_row(old: str) -> bool:
+    """True when an inflection row's `old` names the upstream cloud service."""
+    return has_cloud_token(old)
+
+
+def _row_pattern(old: str) -> re.Pattern:
+    """`old` as a whole-word match: a row starting (ending) with a letter or
+    digit never matches after (before) another one, so hu "az OrcaSlicer"
+    leaves "az OrcaSlicerrel" and "haz OrcaSlicer" alone. A row may follow an
+    escaped newline (`\\nOrca`), like the name itself. A cloud row may be
+    followed by a lowercase suffix, which it keeps ("az Orca Cloud" renames
+    "az Orca Cloudba")."""
+    head = r"(?:(?<!\w)|(?<=\\n))" if re.match(r"\w", old) else ""
+    tail = ""
+    if re.search(r"\w$", old):
+        suffix = f"[{_SUFFIX}]*" if is_cloud_row(old) else ""
+        tail = rf"(?={suffix}(?![\w{_COMBINING}]))"
+    return re.compile(head + re.escape(old) + tail)
+
+
+def apply_inflections(text: str, language: str | None, inflections: dict | None = None) -> tuple[str, set[str]]:
+    """(text with the inflection rows of `language` applied, the `old` of
+    every row that renamed something). Rows go longest first, so a phrase row
+    ("az OrcaSlicerrel") is applied before a shorter one it contains
+    ("az OrcaSlicer"), and a text is never renamed twice."""
+    pairs = (default_inflections() if inflections is None else inflections).get(language or "", [])
+    fired: set[str] = set()
+    # Cloud rows first, then the plain cloud name, then the product rows.
+    cloud = [pair for pair in pairs if is_cloud_row(pair[0])]
+    text = _apply_rows(text, cloud, fired, _address_spans)
+    text = _rename_cloud(text, language)[0]
+    return _apply_rows(text, [pair for pair in pairs if not is_cloud_row(pair[0])], fired, protected_spans), fired
+
+
+def _rename_cloud(text: str, language: str | None) -> tuple[str, list[str]]:
+    """(text with the plain cloud name renamed, the cloud names left because
+    the word before them needs an inflection row)."""
+    lead = _CLOUD_LEAD_BY_LANGUAGE.get(language or "", _CLOUD_LEAD) if language is not None else None
+    spans = _address_spans(text)
+    unresolved: list[str] = []
+    pieces, last = [], 0
+    for match in CLOUD_TOKEN.finditer(text):
+        if _inside(spans, *match.span()):
+            continue
+        before = lead.search(text, 0, match.start()) if lead is not None else None
+        if before is not None:
+            unresolved.append(before.group(0) + match.group(0))
+            continue
+        pieces += [text[last : match.start()], CLOUD_NAME]
+        last = match.end()
+    return "".join(pieces) + text[last:], unresolved
+
+
+def _apply_rows(text: str, pairs: list, fired: set, protect) -> str:
+    """`text` with the rows `pairs` applied, longest first, never across a
+    span `protect` returns; the `old` of every row that renamed is added to `fired`."""
+    for old, replacement in pairs:
+        spans = protect(text)
+        names = [match.span() for match in TOKEN.finditer(text)]
+        pieces, last = [], 0
+        for match in _row_pattern(old).finditer(text):
+            start, end = match.span()
+            # Never inside or across a URL, file or kept name (for a product
+            # row, a cloud name left for its row: "az Orca Cloud"), and never
+            # through part of a name: hu "az Orca" leaves "az Orca Slicerrel"
+            # (one name, "Orca Slicerrel") alone.
+            if any(_overlaps(span, start, end) for span in spans) or any(
+                _overlaps(span, start, end) and not (start <= span[0] and span[1] <= end) for span in names
+            ):
+                continue
+            pieces += [text[last : match.start()], replacement]
+            last = match.end()
+        if pieces:
+            fired.add(old)
+            text = "".join(pieces) + text[last:]
+    return text
+
+
+def _rewrite(text: str, language: str | None, new: str, inflections: dict | None) -> tuple[str, list[str]]:
+    """(renamed text, inflected forms left because no row renames them)."""
+    text = apply_inflections(text, language, inflections)[0]
+
+    # Cloud names the plain rule left: the word before them needs a row.
+    unresolved: list[str] = _rename_cloud(text, language)[1]
+    spans = protected_spans(text)
+    pieces, last = [], 0
+    for match in TOKEN.finditer(text):
+        if _inside(spans, *match.span()):
+            continue
+        if match.group("suffix"):
+            # An inflection only exists in a translation; in English it is another word.
+            if language is not None:
+                unresolved.append(match.group(0))
+            continue
+        pieces += [text[last : match.start()], new]
+        last = match.end()
+    text = "".join(pieces) + text[last:]
+
+    native = NATIVE_TOKENS.get(language or "")
+    if native is not None:
+        spans = protected_spans(text)
+        pieces, last = [], 0
+        for match in native.finditer(text):
+            if _inside(spans, *match.span()):
+                continue
+            pieces += [text[last : match.start()], new]
+            last = match.end()
+        text = "".join(pieces) + text[last:]
+    return text, unresolved
+
+
+def replace_tokens(text: str, language: str | None = None, new: str = NEW_NAME, inflections: dict | None = None) -> str:
+    """`text` with every upstream name outside URLs and file names replaced by `new`.
+
+    `inflections` is an `inflection_map`; None uses the committed table. An
+    inflected name without a row for `language` is left as it is.
+    """
+    return _rewrite(text, language, new, inflections)[0]
+
+
+def unresolved(text: str, language: str | None = None, inflections: dict | None = None) -> list[str]:
+    """The inflected upstream names of `text` that no inflection row of `language` renames."""
+    return _rewrite(text, language, NEW_NAME, inflections)[1]
+
+
+def visible_name(text: str, language: str | None = None, inflections: dict | None = None) -> bool:
+    """True when `text` names the upstream product where it would be renamed,
+    or in an inflected form that still needs its inflection row."""
+    renamed, left = _rewrite(text, language, NEW_NAME, inflections)
+    return renamed != text or bool(left)
