@@ -1,0 +1,222 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: ga_IE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : "
+"n>=7 && n<=10 ? 3 : 4);\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"Dhiúltaigh an meaisín don eochair API (HTTP 401). Seiceáil an eochair API sa "
+"chluaisín Socrú."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr "Níl cead ag an eochair API an fhaisnéis seo a léamh (HTTP 403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "Ní sholáthraíonn an meaisín an fhaisnéis seo (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"Níor fhreagair an meaisín in am. Seiceáil go bhfuil sé ar siúl agus "
+"ceangailte leis an líonra."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr ""
+"Níorbh fhéidir teacht ar an meaisín. Seiceáil an seoladh agus an líonra."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "D'fhreagair an meaisín le hearráid (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "Sheol an meaisín freagra nárbh fhéidir a léamh."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Cuir isteach seoladh IP nó óstainm an mheaisín."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Ní cheadaítear spásanna sa seoladh."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Cuir isteach an seoladh amháin, gan http:// ná https://."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Cuir isteach an seoladh amháin, gan chosán ina dhiaidh."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Ní cheadaítear ainm úsáideora sa seoladh."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "Caithfidh an port a bheith ina uimhir idir 1 agus 65535."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Níl an seoladh IPv4 seo bailí."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Níl an t-óstainm seo bailí."
+
+# AI Translated
+# Needs human review: tab label 'Setup' (configuration tab); check 'Socrú' vs 'Socrúchán'
+msgid "Setup"
+msgstr "Socrú"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Faisnéis an mheaisín"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "IP an mheaisín"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Tástáil an ceangal"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Sábháil na socruithe agus déan tástáil cheangail rathúil chun faisnéis an "
+"mheaisín a fheiceáil."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "Ní cheadaítear spásanna san eochair API."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Ag seiceáil an cheangail leis an meaisín sábháilte..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Ag tástáil an cheangail..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Ag léamh fhaisnéis an mheaisín..."
+
+# AI Translated
+msgid "Identity"
+msgstr "Céannacht"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Sraithuimhir"
+
+# AI Translated
+msgid "Software version"
+msgstr "Leagan bogearraí"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Leagan crua-earraí"
+
+# AI Translated
+msgid "Installed options"
+msgstr "Roghanna suiteáilte"
+
+# AI Translated
+# Needs human review: machine option 'Speed mode'; check wording
+msgid "Speed mode"
+msgstr "Mód luais"
+
+# AI Translated
+# Needs human review: installed option name (high-temperature kit); check wording
+msgid "High temperature"
+msgstr "Ardteocht"
+
+# AI Translated
+# Needs human review: check term for 'enclosure' (imfhálú)
+msgid "Heated enclosure"
+msgstr "Imfhálú téite"
+
+# AI Translated
+# Needs human review: fume/air extraction system; check term
+msgid "Extraction system"
+msgstr "Córas astarraingthe"
+
+# AI Translated
+# Needs human review: check term for 'enclosure' (imfhálú)
+msgid "Enclosure maximum temperature"
+msgstr "Uasteocht an imfhálaithe"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Leaba théite"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Uasteocht na leapa"
+
+# AI Translated
+# Needs human review: UPS; check téarma.ie term
+msgid "Uninterrupted power supply"
+msgstr "Soláthar cumhachta gan bhriseadh"
+
+# AI Translated
+# Needs human review: check term for 'build volume'
+msgid "Build volume"
+msgstr "Toirt tógála"
+
+# AI Translated
+# Needs human review: check term for 'bed probe'
+msgid "Bed probe"
+msgstr "Tóireadóir leapa"
+
+# AI Translated
+# Needs human review: hotend = ceann te (glossary); plural
+msgid "Hot ends"
+msgstr "Cinn te"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "Ní thuairiscíonn an meaisín aon cheann te."
+
+# AI Translated
+# Needs human review: print head number; check 'Ceann' for head
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Ceann %1%"
+
+# AI Translated
+# Needs human review: hardened (steel) nozzle; adjective form
+msgid "Hardened"
+msgstr "Cruaite"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Uasteocht"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Tiomáint dhíreach"
+
+# AI Translated
+msgid "No camera"
+msgstr "Gan cheamara"

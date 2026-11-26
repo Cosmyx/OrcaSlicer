@@ -8,6 +8,7 @@ on:
 jobs:
   flatpak:
     name: Build Flatpak
+    if: ${{ vars.COSMYX_FLATPAK == 'true' }} # Cosmyx: off unless the repo variable turns it on (decision 0213)
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
       options: --privileged
@@ -39,6 +40,8 @@ jobs:
       run:
         rm -rf /usr/local/lib/android/* /usr/share/dotnet/* /opt/ghc1/* "/usr/local/share/boost1/*" /opt/hostedtoolcache1/*
     - uses: actions/checkout@v7
+    - name: Prepare Cosmyx sources # Cosmyx
+      uses: ./.github/actions/cosmyx-prepare # Cosmyx
     - name: Get the version and date
       run: |
         ver_pure=$(grep 'set(SoftFever_VERSION' version.inc | cut -d '"' -f2)
@@ -202,6 +205,10 @@ jobs:
               curl -sSf -X DELETE -H "Authorization: Bearer $GH_TOKEN" "$api/$id"
             done
       shell: bash
+    - name: Cosmyx package names flatpak # Cosmyx
+      uses: ./.github/actions/cosmyx-package-names # Cosmyx
+      with: # Cosmyx
+        stage: flatpak # Cosmyx
     - name: Upload artifacts Flatpak
       uses: actions/upload-artifact@v7
       with:
@@ -228,7 +235,8 @@ jobs:
         # the icon SVGs (NativeCommands icon names are checked against them).
         find "$d" -mindepth 1 -maxdepth 1 -type d \
           ! -name tests ! -name build_flatpak ! -name scripts ! -name resources -exec rm -rf {} +
-        find "$d/resources" -mindepth 1 -maxdepth 1 ! -name profiles ! -name printers ! -name images -exec rm -rf {} +
+        # Cosmyx: cosmyx_tests also reads resources/cosmyx and resources/info.
+        find "$d/resources" -mindepth 1 -maxdepth 1 ! -name profiles ! -name printers ! -name images ! -name cosmyx ! -name info -exec rm -rf {} +
         # Only the SVGs are read; the png/ico/icns/gif assets are ~35MB of dead weight.
         find "$d/resources/images" -mindepth 1 -maxdepth 1 ! -name '*.svg' -exec rm -rf {} + 2>/dev/null || true
         tar -cf flatpak-test-asset.tar flatpak_app "$d"

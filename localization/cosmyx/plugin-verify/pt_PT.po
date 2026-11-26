@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: pt_PT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"O endereço do servidor de plugins não é um endereço https simples, pelo que "
+"os seus plugins não podem ser verificados. O plugin não foi instalado."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"A versão %1% do plugin é mais antiga do que a versão instalada %2%, pelo que "
+"não foi instalada."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Esta compilação não tem nenhuma chave de assinatura para o servidor de "
+"plugins da Cosmyx, pelo que os seus plugins não podem ser verificados. O "
+"plugin não foi instalado."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Não há nenhuma chave de assinatura fixada para este servidor de plugins. "
+"Fixe a sua chave nas Preferências ou permita plugins não verificados deste "
+"servidor. O plugin não foi instalado."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Não é possível verificar pacotes de plugins nesta plataforma. O plugin não "
+"foi instalado."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"O pacote do plugin falhou a verificação da assinatura (%1%). O plugin não "
+"foi instalado."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"O plugin %1% foi instalado sem verificação: este servidor pode fornecer "
+"plugins não verificados."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Não foi possível registar o pacote do plugin instalado como aquele cuja "
+"assinatura foi verificada, pelo que foi removido. O plugin não foi instalado."

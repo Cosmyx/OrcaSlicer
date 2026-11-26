@@ -1,0 +1,217 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 "
+"&& n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 "
+"&& n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"Принтер відхилив ключ API (HTTP 401). Перевірте ключ API на вкладці "
+"«Налаштування»."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr "Ключ API не має дозволу на читання цієї інформації (HTTP 403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "Принтер не надає цієї інформації (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"Принтер не відповів вчасно. Перевірте, що він увімкнений і підключений до "
+"мережі."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "Не вдалося зв'язатися з принтером. Перевірте адресу та мережу."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "Принтер відповів помилкою (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "Принтер надіслав відповідь, яку не вдалося прочитати."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Введіть IP-адресу або назву хоста принтера."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Адреса не повинна містити пробілів."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Введіть лише адресу, без http:// або https://."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Введіть лише адресу, без шляху після неї."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Адреса не повинна містити імені користувача."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "Порт має бути числом від 1 до 65535."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Ця IPv4-адреса недійсна."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Ця назва хоста недійсна."
+
+# AI Translated
+msgid "Setup"
+msgstr "Налаштування"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Інформація про принтер"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "IP принтера"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Перевірити підключення"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Збережіть налаштування та успішно перевірте підключення, щоб побачити "
+"інформацію про принтер."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "Ключ API не повинен містити пробілів."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Перевірка підключення до збереженого принтера..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Перевірка підключення..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Читання інформації про принтер..."
+
+# AI Translated
+# Needs human review: section title grouping model/serial/versions; check 'Ідентифікація' reads well as a heading
+msgid "Identity"
+msgstr "Ідентифікація"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Серійний номер"
+
+# AI Translated
+msgid "Software version"
+msgstr "Версія програмного забезпечення"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Версія апаратного забезпечення"
+
+# AI Translated
+msgid "Installed options"
+msgstr "Встановлені опції"
+
+# AI Translated
+# Needs human review: installed machine option name; check meaning on the machine
+msgid "Speed mode"
+msgstr "Швидкісний режим"
+
+# AI Translated
+# Needs human review: installed option (high-temperature kit?); check wording as an option name
+msgid "High temperature"
+msgstr "Висока температура"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "Камера з підігрівом"
+
+# AI Translated
+# Needs human review: fume extraction/filtering option; check 'Система витяжки'
+msgid "Extraction system"
+msgstr "Система витяжки"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "Максимальна температура камери"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Стіл з підігрівом"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Максимальна температура столу"
+
+# AI Translated
+msgid "Uninterrupted power supply"
+msgstr "Джерело безперебійного живлення"
+
+# AI Translated
+msgid "Build volume"
+msgstr "Область друку"
+
+# AI Translated
+# Needs human review: check 'Датчик столу' vs 'Зонд столу' (reference uses 'зонд' for probe points)
+msgid "Bed probe"
+msgstr "Датчик столу"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "Хотенди"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "Принтер не повідомляє про жоден хотенд."
+
+# AI Translated
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Головка %1%"
+
+# AI Translated
+# Needs human review: hot end property (hardened nozzle); masculine form assumes 'хотенд'/'сопло' context, check agreement
+msgid "Hardened"
+msgstr "Загартований"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Максимальна температура"
+
+# AI Translated
+# Needs human review: kept in English as in reference 'Direct Drive'; check if a Ukrainian term is preferred
+msgid "Direct drive"
+msgstr "Direct drive"
+
+# AI Translated
+msgid "No camera"
+msgstr "Немає камери"

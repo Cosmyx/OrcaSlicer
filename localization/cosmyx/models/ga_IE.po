@@ -1,0 +1,97 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: ga_IE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : "
+"n>=7 && n<=10 ? 3 : 4);\n"
+
+# AI Translated
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Oibríonn an tsamhail chalabraithe seo is fearr le treonna líonta socraithe "
+"go 0 céim. Chun na torthaí calabraithe is fearr a fháil, moltar 'Treo an "
+"líonta' agus 'Treo an líonta sholadaigh' araon a shocrú go 0.\n"
+"Tá - Athraigh na socruithe seo go huathoibríoch\n"
+"Níl  - Ná hathraigh na socruithe seo dom"
+
+# AI Translated
+msgid "Calibration Suggestion"
+msgstr "Moladh Calabraithe"
+
+# AI Translated
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Oibríonn an tsamhail chalabraithe seo is fearr le socruithe líonta "
+"sonracha.\n"
+"Chun na torthaí calabraithe is fearr a fháil, moltar na socruithe seo:\n"
+"- Treo an líonta: %.0f°\n"
+"- Treo an líonta sholadaigh: %.0f°\n"
+"- Balla amháin amháin ar an gcéad sraith: %s\n"
+"\n"
+"Tá - Athraigh na socruithe seo go huathoibríoch\n"
+"Níl  - Ná hathraigh na socruithe seo dom"
+
+# AI Translated
+msgid "Cosmyx 3D Models"
+msgstr "Samhlacha 3T Cosmyx"
+
+# AI Translated
+msgid "Calibration Models Dual Head"
+msgstr "Samhlacha Calabraithe Dé-Chinn"
+
+# AI Translated
+msgid "Calibration Models Single Head"
+msgstr "Samhlacha Calabraithe Aon Chinn"
+
+# AI Translated
+msgid "Cosmyx Handy Models"
+msgstr "Samhlacha Áisiúla Cosmyx"
+
+# AI Translated
+msgid "Calage 1 SNDT"
+msgstr "Calage 1 SNDT"
+
+# AI Translated
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Calage 2 SNDT"
+
+# AI Translated
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Calage 3 SNDT"
+
+# AI Translated
+msgid "Cube Bicolore"
+msgstr "Cube Bicolore"
+
+# AI Translated
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Calage 1 Nova"
+
+# AI Translated
+msgid "Cosmyx Cube"
+msgstr "Cosmyx Cube"
+
+# AI Translated
+msgid "Control Tension Belt"
+msgstr "Control Tension Belt"
+
+# AI Translated
+msgid "Support Bobine"
+msgstr "Support Bobine"

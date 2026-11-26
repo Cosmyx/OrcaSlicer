@@ -1,8 +1,12 @@
 #include "CloudProvider.hpp"
+#include "Cosmyx/logic/CosmyxVersion.hpp" // Cosmyx
+#include "Cosmyx/ColorMode.hpp" // Cosmyx
+#include "Cosmyx/GoldenDriver.hpp" // Cosmyx
 #include "ExportPresetBundleDialog.hpp"
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
 #include "OrcaCloudServiceAgent.hpp"
+#include "Cosmyx/logic/CloudServer.hpp" // Cosmyx
 #include "libslic3r/Technologies.hpp"
 #include "libslic3r/Platform.hpp"
 #include "GUI_App.hpp"
@@ -19,13 +23,16 @@
 #include "slic3r/Utils/CloudDeleteQueue.hpp"
 #include "slic3r/Utils/NetworkAgent.hpp"
 #include "GUI_Init.hpp"
+#include "Cosmyx/Languages.hpp" // Cosmyx
 #include "GUI_ObjectList.hpp"
 #include "slic3r/GUI/UserManager.hpp"
 #include "slic3r/GUI/TaskManager.hpp"
+#include "Cosmyx/UpdateCheckRequest.hpp" // Cosmyx
 #include "format.hpp"
 #include "libslic3r_version.h"
 #include "BuildCommit.hpp"
 #include "Downloader.hpp"
+#include "Cosmyx/AppPaths.hpp" // Cosmyx
 #include <boost/algorithm/string/split.hpp>
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
@@ -594,6 +601,7 @@ static void migrate_flatpak_legacy_datadir(const boost::filesystem::path &data_d
 {
     if (!is_running_in_flatpak())
         return; // Not running as a Flatpak, nothing to migrate.
+    if (::Slic3r::Cosmyx::skip_legacy_data_migration(data_dir_path.string())) return; // Cosmyx: start fresh (decision 0184)
     
     namespace fs = boost::filesystem;
 
@@ -633,7 +641,7 @@ bool static check_old_linux_datadir(const wxString& app_name) {
 
     std::string new_path = Slic3r::data_dir();
 
-    std::string default_path = xdg_config_dir(app_name.ToUTF8().data());
+    std::string default_path = xdg_config_dir(::Slic3r::Cosmyx::vendor_app_subdir(app_name.ToUTF8().data())); // Cosmyx
 
     if (new_path != default_path) {
         // This happens when the user specifies a custom --datadir.
@@ -2734,6 +2742,7 @@ void GUI_App::init_app_config()
 {
 	// Profiles for the alpha are stored into the PrusaSlicer-alpha directory to not mix with the current release.
     SetAppName(SLIC3R_APP_KEY);
+    Cosmyx::use_vendor_data_dir(); // Cosmyx
 //	SetAppName(SLIC3R_APP_KEY "-alpha");
 //  SetAppName(SLIC3R_APP_KEY "-beta");
 //	SetAppDisplayName(SLIC3R_APP_NAME);
@@ -3882,6 +3891,7 @@ bool GUI_App::on_init_inner()
             this->mainframe->register_win32_callbacks();
 #endif
             this->post_init();
+            Cosmyx::start_golden_driver_if_requested(); // Cosmyx
 
             update_publish_status();
         }
@@ -4171,6 +4181,7 @@ bool GUI_App::on_init_network(bool try_backup)
     Slic3r::NetworkAgentFactory::register_all_agents();
 
     // m_agent = new Slic3r::NetworkAgent(data_directory);
+    Cosmyx::apply_cloud_server(*app_config); // Cosmyx: CosmoCloud unless the user set a server (decision 0201)
     std::unique_ptr<Slic3r::NetworkAgent> agent_ptr = Slic3r::create_agent_from_config(data_directory, app_config);
     // A direct restart_networking() replaces m_agent without deleting it, so a health check in flight
     // on the old agent would still report into the GUI.
@@ -4541,6 +4552,7 @@ void GUI_App::select_machine(const std::string& agent_id)
 bool GUI_App::dark_mode()
 {
 #ifdef SUPPORT_DARK_MODE
+    if (Cosmyx::force_dark_mode()) return true; // Cosmyx
 #if __APPLE__
     // The check for dark mode returns false positive on 10.12 and 10.13,
     // which allowed setting dark menu bar and dock area, which is
@@ -6614,6 +6626,7 @@ void maybe_attach_updater_signature(Http& http, const std::string& canonical_que
 
 void GUI_App::check_new_version_sf(bool show_tips, int by_user)
 {
+    Cosmyx::check_for_update(*app_config, by_user, version_info); return; // Cosmyx: Cosmyx releases only (decision 0221)
     AppConfig* app_config = wxGetApp().app_config;
     bool       check_stable_only = app_config->get_bool("check_stable_update_only");
     auto version_check_url = app_config->version_check_url();
@@ -7024,7 +7037,7 @@ std::string GUI_App::format_display_version()
 {
     if (!version_display.empty()) return version_display;
 
-    version_display = SoftFever_VERSION;
+    version_display = Cosmyx::display_version(); // Cosmyx
     return version_display;
 }
 
@@ -8635,6 +8648,7 @@ bool GUI_App::load_language(wxString language, bool initial)
 			language_info = wxLocale::GetLanguageInfo(wxLANGUAGE_ENGLISH_US);
     }
 
+    language_info = Cosmyx::ui_language_info(language_info); // Cosmyx: offered languages only (decision 0220)
     const wxLanguageInfo *translation_language_info = language_info;
     const wxString requested_language_code = translation_language_info->CanonicalName;
     const wxLanguageInfo *locale_language_info = translation_language_info;

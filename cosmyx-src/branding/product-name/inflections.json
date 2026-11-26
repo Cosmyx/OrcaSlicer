@@ -1,0 +1,257 @@
+{
+  "schema": 1,
+  "rows": [
+    {
+      "language": "ca",
+      "old": "d'Orca Cloud",
+      "new": "de Cosmyx Cloud",
+      "source": "Elided 'd'' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant, so the preposition is written in full ('de')."
+    },
+    {
+      "language": "ca",
+      "old": "d'OrcaCloud",
+      "new": "de Cosmyx Cloud",
+      "source": "Elided 'd'' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant, so the preposition is written in full ('de')."
+    },
+    {
+      "language": "cs",
+      "old": "Orca Sliceru",
+      "new": "CosmoSlice",
+      "source": "Genitive after 'do' / 'konfigurace' (spaced spelling); same genitive form as the written nominative."
+    },
+    {
+      "language": "cs",
+      "old": "OrcaSlicera zkuste",
+      "new": "CosmoSlice a zkuste",
+      "source": "Accusative (inanimate, equals nominative); also restores the missing space before the conjunction 'a' in the upstream translation."
+    },
+    {
+      "language": "cs",
+      "old": "OrcaSlicerem",
+      "new": "aplikací CosmoSlice",
+      "source": "Instrumental ('s ...', passive agent 'není ... podporován'); apposition with 'aplikace' avoids the misleading spelling 'CosmoSlicem'."
+    },
+    {
+      "language": "cs",
+      "old": "OrcaSliceru",
+      "new": "CosmoSlice",
+      "source": "Genitive (verze, instance, spuštění, aktualizace ...); names ending in silent -ce keep the written -e as the genitive form (cf. Joyce, gen. Joyce)."
+    },
+    {
+      "language": "cs",
+      "old": "k OrcaSliceru",
+      "new": "k aplikaci CosmoSlice",
+      "source": "Dative after 'k'; CosmoSlice (silent final -ce) is left undeclined in an apposition with 'aplikace'."
+    },
+    {
+      "language": "cs",
+      "old": "v Orca Sliceru",
+      "new": "v aplikaci CosmoSlice",
+      "source": "Locative after 'v' (spaced spelling); undeclined name in an apposition with 'aplikace'."
+    },
+    {
+      "language": "cs",
+      "old": "v OrcaSliceru",
+      "new": "v aplikaci CosmoSlice",
+      "source": "Locative after 'v'; undeclined name in an apposition with 'aplikace'."
+    },
+    {
+      "language": "eu",
+      "old": "Orca-ren",
+      "new": "CosmoSlice-en",
+      "source": "genitive -en after consonant: CosmoSlice ends in /s/, so the vowel-stem Orca-ren becomes the consonant-stem CosmoSlice-en (hyphen, declined by pronunciation, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicer-etik",
+      "new": "CosmoSlice-tik",
+      "source": "ablative -tik after a sibilant (cf. Gasteiztik): CosmoSlice ends in /s/, so -etik becomes -tik (hyphen, declined by pronunciation)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicerrek",
+      "new": "CosmoSlice-ek",
+      "source": "ergative -ek after consonant; CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicerrekin",
+      "new": "CosmoSlice-ekin",
+      "source": "comitative -ekin after consonant; CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicerreko",
+      "new": "CosmoSlice-ko",
+      "source": "local genitive -ko after sibilant (cf. Gasteizko); CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicerren",
+      "new": "CosmoSlice-en",
+      "source": "genitive / inessive -en after consonant (both uses occur); CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicerrera",
+      "new": "CosmoSlice-era",
+      "source": "allative -era after consonant; CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "OrcaSlicerri",
+      "new": "CosmoSlice-i",
+      "source": "dative -i after consonant (cf. Gasteizi); CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "eu",
+      "old": "Orcak",
+      "new": "CosmoSlice-ek",
+      "source": "ergative: vowel-stem Orca-k becomes consonant-stem CosmoSlice-ek; CosmoSlice is spelt with a final vowel but ends in /s/: Basque norm writes a hyphen and declines by pronunciation (consonant stem, like Gasteiz)"
+    },
+    {
+      "language": "fr",
+      "old": "d’Orca Cloud",
+      "new": "de Cosmyx Cloud",
+      "source": "Elided 'd’' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant, so the preposition is written in full ('de')."
+    },
+    {
+      "language": "hu",
+      "old": "Az Orca",
+      "new": "A CosmoSlice",
+      "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
+    },
+    {
+      "language": "hu",
+      "old": "Az Orca Slicer",
+      "new": "A CosmoSlice",
+      "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
+    },
+    {
+      "language": "hu",
+      "old": "Az Orca Slicerbe",
+      "new": "A CosmoSlice-ba",
+      "source": "hu illative, back harmony (o-o-a): CosmoSlice-ba, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "Az OrcaCloud",
+      "new": "A Cosmyx Cloud",
+      "source": "Article 'az' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant and takes 'a'. A suffix glued to 'Cloud' stays."
+    },
+    {
+      "language": "hu",
+      "old": "Az OrcaSlicer",
+      "new": "A CosmoSlice",
+      "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
+    },
+    {
+      "language": "hu",
+      "old": "Az OrcaSlicert",
+      "new": "A CosmoSlice-t",
+      "source": "hu accusative: CosmoSlice-t (final /s/, silent e, hyphenated); article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "Orca Slicerrel",
+      "new": "CosmoSlice-szal",
+      "source": "hu instrumental: -val assimilates to the pronounced final /s/ (sz), back harmony: CosmoSlice-szal (like Alice-szel, Office-szal)"
+    },
+    {
+      "language": "hu",
+      "old": "OrcaSlicerhez",
+      "new": "CosmoSlice-hoz",
+      "source": "hu allative without article (as in the source): CosmoSlice-hoz, back harmony, hyphen after silent e"
+    },
+    {
+      "language": "hu",
+      "old": "az Orca",
+      "new": "a CosmoSlice",
+      "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
+    },
+    {
+      "language": "hu",
+      "old": "az Orca Cloud",
+      "new": "a Cosmyx Cloud",
+      "source": "Article 'az' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant and takes 'a'. A suffix glued to 'Cloud' stays."
+    },
+    {
+      "language": "hu",
+      "old": "az Orca Slicer",
+      "new": "a CosmoSlice",
+      "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
+    },
+    {
+      "language": "hu",
+      "old": "az Orca Slicerben",
+      "new": "a CosmoSlice-ban",
+      "source": "hu inessive, back harmony: CosmoSlice-ban, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az Orca Slicernek",
+      "new": "a CosmoSlice-nak",
+      "source": "hu dative, back harmony: CosmoSlice-nak, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az Orca Slicert",
+      "new": "a CosmoSlice-t",
+      "source": "hu accusative: CosmoSlice-t (final /s/, silent e, hyphenated); article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaCloud",
+      "new": "a Cosmyx Cloud",
+      "source": "Article 'az' before the vowel of 'Orca'; 'Cosmyx' starts with a consonant and takes 'a'. A suffix glued to 'Cloud' stays."
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaSlicer",
+      "new": "a CosmoSlice",
+      "source": "hu article: az becomes a before the consonant-initial name CosmoSlice (plain name after the article; the inflected forms have their own rows)"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaSlicerbe",
+      "new": "a CosmoSlice-ba",
+      "source": "hu illative, back harmony (o-o-a): CosmoSlice-ba, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaSlicerből",
+      "new": "a CosmoSlice-ból",
+      "source": "hu elative, back harmony: CosmoSlice-ból, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaSlicerhez",
+      "new": "a CosmoSlice-hoz",
+      "source": "hu allative, back harmony: CosmoSlice-hoz, hyphen after silent e; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaSlicerrel",
+      "new": "a CosmoSlice-szal",
+      "source": "hu instrumental: -val assimilates to final /s/: CosmoSlice-szal, back harmony; article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "hu",
+      "old": "az OrcaSlicert",
+      "new": "a CosmoSlice-t",
+      "source": "hu accusative: CosmoSlice-t (final /s/, silent e, hyphenated); article az becomes a before a consonant-initial name"
+    },
+    {
+      "language": "sv",
+      "old": "Orca Slicers",
+      "new": "CosmoSlices",
+      "source": "Swedish genitive -s of the spaced name form; same rule, product name written as one word"
+    },
+    {
+      "language": "sv",
+      "old": "OrcaSlicers",
+      "new": "CosmoSlices",
+      "source": "Swedish genitive -s; name spelled with final e takes plain -s (like Alices), no apostrophe"
+    }
+  ]
+}

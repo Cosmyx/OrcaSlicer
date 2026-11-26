@@ -1,0 +1,129 @@
+name: Prepare Cosmyx sources
+description: >-
+  Apply the Cosmyx build-time edits to the checked-out tree before a build:
+  graft the Cosmyx feature catalogues (localization/cosmyx) into the
+  OrcaSlicer catalogues (localization/i18n) in place, after their unit tests,
+  apply the Cosmyx branding (cosmyx-src/branding), then hide the edited
+  tracked files from git diff so the build is not marked "-dirty". Works on
+  Linux, macOS and Windows runners.
+
+runs:
+  using: composite
+  steps:
+    # In a job container the workspace belongs to another uid than the one that
+    # runs git, so git refuses it ("dubious ownership", exit 128) and every git
+    # call of the Cosmyx scripts and tests fails. actions/checkout trusts the
+    # workspace for its own calls only, so it is trusted here for the job.
+    - name: Trust the workspace for git in a container
+      shell: bash
+      run: |
+        if { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; } && command -v git >/dev/null 2>&1; then
+          git config --global --get-all safe.directory 2>/dev/null | grep -qxF "$GITHUB_WORKSPACE" \
+            || git config --global --add safe.directory "$GITHUB_WORKSPACE"
+        fi
+
+    # setup-python ships Ubuntu builds only, so inside a job container (the
+    # Flatpak job runs in a Fedora image) the container's own python3 is used
+    # when it is recent enough.
+    - name: Look for a container Python
+      id: container
+      shell: bash
+      run: |
+        if { [ -f /.dockerenv ] || [ -f /run/.containerenv ]; } \
+          && command -v python3 >/dev/null 2>&1 \
+          && python3 -c 'import sys; sys.exit(sys.version_info < (3, 9))'; then
+          echo "python=$(command -v python3)" >> "$GITHUB_OUTPUT"
+        fi
+
+    # update-environment false: the Cosmyx scripts get their own interpreter
+    # and the build steps after this action keep the runner's python on PATH.
+    - name: Set up Python for the Cosmyx scripts
+      id: python
+      if: ${{ steps.container.outputs.python == '' }}
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.12'
+        update-environment: false
+
+    # COSMYX_PYTHON is exported to the job, so the steps below and later
+    # Cosmyx steps of the calling workflow use the same interpreter.
+    - name: Export the Cosmyx interpreter
+      shell: bash
+      env:
+        PYTHON_PATH: ${{ steps.container.outputs.python || steps.python.outputs.python-path }}
+      run: echo "COSMYX_PYTHON=$PYTHON_PATH" >> "$GITHUB_ENV"
+
+    # The branding tables are written for DEV. A build of a tree whose upstream
+    # base is not DEV (a pull request into cosmyx-ci/<tag>, an integration/<tag>
+    # branch) brands in tolerant mode: a row whose target file or text that
+    # older tree lacks is skipped with a warning. Everything else stays strict.
+    # Exported once, so the real-tree tests and apply below use the same mode.
+    - name: Choose the branding mode
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: |
+        mode="$("$COSMYX_PYTHON" scripts/cosmyx/branding/cli.py mode)"
+        echo "Cosmyx branding mode: $mode"
+        echo "COSMYX_BRAND_MODE=$mode" >> "$GITHUB_ENV"
+
+    # Only fast, hermetic tests run here, on every build leg: the profile makes
+    # the tests that need Docker, the network or a long build skip themselves
+    # (they run in cosmyx-checks and `just test-scripts`).
+    - name: Test the graft, the worktree helper, the branding engine and the languages
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+        COSMYX_TEST_PROFILE: prepare
+      run: |
+        "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_i18n_graft.py -t scripts/cosmyx/tests
+        "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_worktree_clean.py -t scripts/cosmyx/tests
+        "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p 'test_branding_*.py' -t scripts/cosmyx/tests
+        "$COSMYX_PYTHON" -m unittest discover -s scripts/cosmyx/tests -p test_languages.py -t scripts/cosmyx/tests
+
+    # The languages OrcaSlicer does not ship (decision 0220): their catalogues
+    # go into localization/i18n, where run_gettext.sh/.bat compile and package
+    # every catalogue and where the graft below finds them.
+    - name: Install the Cosmyx languages
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/languages.py install'
+
+    - name: Graft the Cosmyx translations
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/i18n_graft.py'
+
+    # Vendored images, colours and product name from cosmyx-src/branding.
+    # Unvalidated rows warn on development builds and fail release builds.
+    - name: Apply Cosmyx branding
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/branding/cli.py apply --ci'
+
+    # The upstream catalogues of languages Cosmyx does not offer are deleted
+    # from the checkout, so the build neither compiles nor packages them; the
+    # hide step below keeps the deletion out of git diff.
+    - name: Drop the languages Cosmyx does not offer
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/languages.py drop'
+
+    # Every step that edits tracked files goes above this one: hide must stay
+    # last, so it covers all of them.
+    - name: Hide the build-time edits from git diff
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+      run: '"$COSMYX_PYTHON" scripts/cosmyx/worktree_clean.py hide'

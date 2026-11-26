@@ -1,0 +1,216 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"Die Maschine hat den API-Schlüssel abgelehnt (HTTP 401). Prüfen Sie den "
+"API-Schlüssel im Tab „Einrichtung“."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr ""
+"Der API-Schlüssel ist nicht berechtigt, diese Informationen zu lesen (HTTP "
+"403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "Die Maschine stellt diese Informationen nicht bereit (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"Die Maschine hat nicht rechtzeitig geantwortet. Prüfen Sie, ob sie "
+"eingeschaltet und mit dem Netzwerk verbunden ist."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr ""
+"Die Maschine ist nicht erreichbar. Prüfen Sie die Adresse und das Netzwerk."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "Die Maschine hat mit einem Fehler geantwortet (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "Die Antwort der Maschine konnte nicht gelesen werden."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Geben Sie die IP-Adresse oder den Hostnamen der Maschine ein."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Die Adresse darf keine Leerzeichen enthalten."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Geben Sie nur die Adresse ein, ohne http:// oder https://."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Geben Sie nur die Adresse ein, ohne nachfolgenden Pfad."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Die Adresse darf keinen Benutzernamen enthalten."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "Der Port muss eine Zahl von 1 bis 65535 sein."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Diese IPv4-Adresse ist ungültig."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Dieser Hostname ist ungültig."
+
+# AI Translated
+msgid "Setup"
+msgstr "Einrichtung"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Maschineninformationen"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "Maschinen-IP"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Verbindung testen"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Speichern Sie die Einstellungen und führen Sie einen erfolgreichen "
+"Verbindungstest durch, um die Maschineninformationen anzuzeigen."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "Der API-Schlüssel darf keine Leerzeichen enthalten."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Verbindung zur gespeicherten Maschine wird geprüft..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Verbindung wird getestet..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Maschineninformationen werden gelesen..."
+
+# AI Translated
+msgid "Identity"
+msgstr "Identität"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Seriennummer"
+
+# AI Translated
+msgid "Software version"
+msgstr "Softwareversion"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Hardwareversion"
+
+# AI Translated
+msgid "Installed options"
+msgstr "Installierte Optionen"
+
+# AI Translated
+# Needs human review: installed option name; check meaning on the machine
+msgid "Speed mode"
+msgstr "Geschwindigkeitsmodus"
+
+# AI Translated
+# Needs human review: installed option name (a high-temperature kit/option); check that "Hochtemperatur" reads right as a feature label
+msgid "High temperature"
+msgstr "Hochtemperatur"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "Beheiztes Gehäuse"
+
+# AI Translated
+# Needs human review: fume/air extraction option; check "Absaugsystem" matches the hardware
+msgid "Extraction system"
+msgstr "Absaugsystem"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "Maximale Gehäusetemperatur"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Heizbett"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Maximale Betttemperatur"
+
+# AI Translated
+msgid "Uninterrupted power supply"
+msgstr "Unterbrechungsfreie Stromversorgung"
+
+# AI Translated
+msgid "Build volume"
+msgstr "Bauraum"
+
+# AI Translated
+# Needs human review: bed levelling probe; check "Bettsensor" vs "Bett-Taster"
+msgid "Bed probe"
+msgstr "Bettsensor"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "Hotends"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "Die Maschine meldet kein Hotend."
+
+# AI Translated
+# Needs human review: print head index; check "Kopf" vs "Druckkopf"
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Kopf %1%"
+
+# AI Translated
+msgid "Hardened"
+msgstr "Gehärtet"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Maximaltemperatur"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Direktantrieb"
+
+# AI Translated
+msgid "No camera"
+msgstr "Keine Kamera"

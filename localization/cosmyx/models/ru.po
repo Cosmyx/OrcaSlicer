@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx models\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+
+msgid ""
+"This calibration model works best with infill directions set to 0 degrees. "
+"For optimal calibration results, it is advisable to set both 'Infill "
+"direction' and 'Solid infill direction' to 0.\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Эта калибровочная модель лучше всего работает при угле заполнения 0 "
+"градусов. Для оптимального результата калибровки рекомендуется установить "
+"для параметров «Угол шаблона заполнения» и «Угол шаблона сплошного "
+"заполнения» значение 0.\n"
+"Да - изменить эти настройки автоматически\n"
+"Нет - не менять эти настройки"
+
+msgid "Calibration Suggestion"
+msgstr "Рекомендация по калибровке"
+
+#, possible-c-format, possible-boost-format
+msgid ""
+"This calibration model works best with specific infill settings.\n"
+"For optimal calibration results, it is advisable to set:\n"
+"- Infill direction: %.0f°\n"
+"- Solid infill direction: %.0f°\n"
+"- Only one wall on first layer: %s\n"
+"\n"
+"Yes - Change these settings automatically\n"
+"No  - Do not change these settings for me"
+msgstr ""
+"Эта калибровочная модель лучше всего работает с определёнными настройками "
+"заполнения.\n"
+"Для оптимального результата калибровки рекомендуется установить:\n"
+"- Угол шаблона заполнения: %.0f°\n"
+"- Угол шаблона сплошного заполнения: %.0f°\n"
+"- Только один периметр на первом слое: %s\n"
+"\n"
+"Да - изменить эти настройки автоматически\n"
+"Нет - не менять эти настройки"
+
+msgid "Cosmyx 3D Models"
+msgstr "3D-модели Cosmyx"
+
+msgid "Calibration Models Dual Head"
+msgstr "Калибровочные модели для двух экструдеров"
+
+msgid "Calibration Models Single Head"
+msgstr "Калибровочные модели для одного экструдера"
+
+msgid "Cosmyx Handy Models"
+msgstr "Полезные модели Cosmyx"
+
+msgid "Calage 1 SNDT"
+msgstr "Калибровка 1 SNDT"
+
+msgid "Cosmyx Calage 2 SNDT"
+msgstr "Cosmyx Калибровка 2 SNDT"
+
+msgid "Cosmyx Calage 3 SNDT"
+msgstr "Cosmyx Калибровка 3 SNDT"
+
+msgid "Cube Bicolore"
+msgstr "Двухцветный куб"
+
+msgid "Cosmyx Calage 1 Nova"
+msgstr "Cosmyx Калибровка 1 Nova"
+
+msgid "Cosmyx Cube"
+msgstr "Куб Cosmyx"
+
+msgid "Control Tension Belt"
+msgstr "Контроль натяжения ремня"
+
+msgid "Support Bobine"
+msgstr "Держатель катушки"

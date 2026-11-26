@@ -1,0 +1,90 @@
+# Cosmyx package names: the CI packages and artifacts are named CosmoSlice
+# (decision 0210, wiki/cosmyx/branding.md). The "# Cosmyx" hook steps of
+# build_orca.yml and build_flatpak.yml (the flatpak job of build_all.yml on
+# older upstream bases) call it with one stage each;
+# scripts/cosmyx/package_names.py renames the files and says what to upload and
+# which upstream artifacts (OrcaSlicer_ names, profile validator) to delete.
+# A stage that does not apply to the running leg does nothing.
+name: Cosmyx package names
+description: Rename the packages of the build to CosmoSlice, upload them and delete the upstream artifacts they replace.
+
+inputs:
+  stage:
+    description: mac-app, mac-upload, windows, linux or flatpak (see scripts/cosmyx/package_names.py).
+    required: true
+
+runs:
+  using: composite
+  steps:
+    # COSMYX_PYTHON is set by cosmyx-prepare; the macOS combine job skips it and
+    # uses the runner's python3.
+    - name: Rename the packages
+      id: names
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        PYTHONDONTWRITEBYTECODE: '1'
+        COSMYX_PKG_VER: ${{ env.ver }}
+        COSMYX_PKG_ARCH: ${{ inputs.stage == 'windows' && env.ARCH_SUFFIX || env.arch_suffix }}
+        COSMYX_PKG_BUILD_DIR: ${{ env.BUILD_DIR }}
+        COSMYX_PKG_UBUNTU: ${{ env['ubuntu-ver'] }}
+        COSMYX_PKG_UBUNTU_STR: ${{ env['ubuntu-ver-str'] }}
+        STAGE: ${{ inputs.stage }}
+      run: '"${COSMYX_PYTHON:-python3}" scripts/cosmyx/package_names.py "$STAGE"'
+
+    - name: Upload the macOS DMG
+      if: steps.names.outputs.dmg_name != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.names.outputs.dmg_name }}
+        path: ${{ steps.names.outputs.dmg_path }}
+        if-no-files-found: error
+
+    - name: Upload the Windows portable folder
+      if: steps.names.outputs.portable_name != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.names.outputs.portable_name }}
+        path: ${{ steps.names.outputs.portable_path }}
+        if-no-files-found: error
+
+    - name: Upload the Windows installer
+      if: steps.names.outputs.installer_name != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.names.outputs.installer_name }}
+        path: ${{ steps.names.outputs.installer_path }}
+        if-no-files-found: error
+
+    - name: Upload the Windows MSIX
+      if: steps.names.outputs.msix_name != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.names.outputs.msix_name }}
+        path: ${{ steps.names.outputs.msix_path }}
+        if-no-files-found: error
+
+    - name: Upload the AppImage
+      if: steps.names.outputs.appimage_name != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.names.outputs.appimage_name }}
+        path: ${{ steps.names.outputs.appimage_path }}
+        if-no-files-found: error
+
+    - name: Upload the Flatpak bundle
+      if: steps.names.outputs.flatpak_name != ''
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ steps.names.outputs.flatpak_name }}
+        path: ${{ steps.names.outputs.flatpak_path }}
+        if-no-files-found: error
+
+    # The upstream steps uploaded these before the stage ran (or would have):
+    # a Cosmyx build exports neither the OrcaSlicer_ names nor the validator.
+    - name: Delete the upstream artifacts
+      if: steps.names.outputs.delete != ''
+      uses: geekyeggo/delete-artifact@v6
+      with:
+        name: ${{ steps.names.outputs.delete }}
+        failOnError: false

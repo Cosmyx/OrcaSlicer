@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: ko_KR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr "플러그인 서버 주소가 일반 https 주소가 아니므로 해당 플러그인을 검증할 수 없습니다. 플러그인이 설치되지 않았습니다."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr "플러그인 버전 %1%이(가) 설치된 버전 %2%보다 오래되어 설치되지 않았습니다."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"이 빌드에는 Cosmyx 플러그인 서버의 서명 키가 없으므로 해당 플러그인을 검증할 수 없습니다. 플러그인이 설치되지 않았습니다."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"이 플러그인 서버에 고정된 서명 키가 없습니다. 기본 설정에서 키를 고정하거나 이 서버의 검증되지 않은 플러그인을 허용하세요. 플러그인이 "
+"설치되지 않았습니다."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr "이 플랫폼에서는 플러그인 패키지를 검증할 수 없습니다. 플러그인이 설치되지 않았습니다."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr "플러그인 패키지의 서명 확인에 실패했습니다(%1%). 플러그인이 설치되지 않았습니다."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr "플러그인 %1%이(가) 검증 없이 설치되었습니다: 이 서버는 검증되지 않은 플러그인을 제공할 수 있습니다."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr "설치된 플러그인 패키지를 서명이 확인된 패키지로 기록할 수 없어 제거했습니다. 플러그인이 설치되지 않았습니다."

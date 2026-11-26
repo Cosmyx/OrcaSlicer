@@ -1,4 +1,5 @@
 #include "CloudPluginService.hpp"
+#include "slic3r/GUI/Cosmyx/PluginVerify.hpp" // Cosmyx
 
 #include "OrcaCloudServiceAgent.hpp"
 #include "slic3r/GUI/I18N.hpp"
@@ -153,6 +154,7 @@ bool CloudPluginService::download_cloud_plugin(PluginDescriptor& entry,
     std::vector<PluginDownloadData> data;
     std::vector<PluginDownloadNotFound> not_found;
     std::vector<std::string> unauthorized;
+    const PluginDownloadData* cosmyx_item = nullptr; // Cosmyx: the chosen row, checked below (decision 0204)
 
     int result = m_orca_agent->get_plugin_download_url(entry_uuid, requested_version, data, not_found, unauthorized);
     if (result != 0) {
@@ -189,6 +191,7 @@ bool CloudPluginService::download_cloud_plugin(PluginDescriptor& entry,
     for (const PluginDownloadData& item : data) {
         if (item.plugin_id == entry_uuid) {
             download_url = item.download_link;
+            cosmyx_item  = &item; // Cosmyx
             break;
         }
     }
@@ -233,6 +236,10 @@ bool CloudPluginService::download_cloud_plugin(PluginDescriptor& entry,
         error = _u8L("Plugin download returned empty data.");
         return false;
     }
+
+    // Cosmyx: signature, size, digest, kind and downgrade check, before anything is written (decision 0204).
+    if (!GUI::Cosmyx::verify_cloud_plugin_package(entry, requested_version, cosmyx_item ? &cosmyx_item->cosmyx_row : nullptr, body, error))
+        return false; // Cosmyx
 
     // Detect file format from content: PK magic bytes = zip/wheel, otherwise .py.
     const bool is_wheel   = (body.size() >= 4 && body[0] == 'P' && body[1] == 'K' && body[2] == '\x03' && body[3] == '\x04');

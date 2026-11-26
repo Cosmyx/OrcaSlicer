@@ -1,0 +1,86 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx cloud-server\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Enter the public key."
+msgstr ""
+
+msgid "The public key must not contain spaces."
+msgstr ""
+
+msgid "Enter an address."
+msgstr ""
+
+msgid "The address must start with https:// (http:// only for localhost)."
+msgstr ""
+
+msgid "The address has no host name."
+msgstr ""
+
+msgid "This address is not valid."
+msgstr ""
+
+msgid ""
+"Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
+"used when stealth mode is off."
+msgstr ""
+
+msgid "Custom Cloud Instance"
+msgstr ""
+
+msgid "API address"
+msgstr ""
+
+msgid "Authentication address"
+msgstr ""
+
+msgid "Web address"
+msgstr ""
+
+msgid "Public key"
+msgstr ""
+
+msgid "Check the addresses and save them."
+msgstr ""
+
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+
+msgid "Plugin signing key"
+msgstr ""
+
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+
+msgid "Allow unverified plugins from this server"
+msgstr ""
+
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr ""
+
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr ""
+
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr ""
+
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr ""
+
+msgid "Restart the application to connect to the new cloud server."
+msgstr ""

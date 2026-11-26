@@ -1,4 +1,5 @@
 #include "Preferences.hpp"
+#include "Cosmyx/CloudServerPrefs.hpp" // Cosmyx
 #include "slic3r/plugin/host/PluginPages.hpp"
 #include "CloudProvider.hpp"
 #include "ColorPickerDialog.hpp"
@@ -10,6 +11,7 @@
 #include "GLCanvas3D.hpp" // ORCA: for live preview refresh when toggling "Dim lower layers"
 #include "MsgDialog.hpp"
 #include "I18N.hpp"
+#include "Cosmyx/Languages.hpp" // Cosmyx
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Color.hpp"
 #include "libslic3r/Format/DRC.hpp"
@@ -82,6 +84,7 @@
 #include "slic3r/Utils/NetworkAgent.hpp"
 #include "NetworkPluginDialog.hpp"
 #include "DownloadProgressDialog.hpp"
+#include "Cosmyx/ExternalMachinesPrefs.hpp" // Cosmyx
 
 #ifdef __WINDOWS__
 #ifdef _MSW_DARK_MODE
@@ -497,6 +500,7 @@ wxBoxSizer *PreferencesDialog::create_item_language_combobox(wxString title, wxS
     }
     sort_remove_duplicates(language_infos);
     std::sort(language_infos.begin(), language_infos.end(), [](const wxLanguageInfo *l, const wxLanguageInfo *r) { return l->Description < r->Description; });
+    Cosmyx::select_ui_languages(language_infos); // Cosmyx: the offered languages only (decision 0220)
 
     auto vlist = language_infos;
     auto param = "language";
@@ -582,6 +586,7 @@ wxBoxSizer *PreferencesDialog::create_item_language_combobox(wxString title, wxS
             language_name = wxString::FromUTF8("\xE0\xB9\x84\xE0\xB8\x97\xE0\xB8\xA2");
         }
 
+        language_name = Cosmyx::ui_language_name(vlist[i], language_name); // Cosmyx
         if (app_config->get(param) == vlist[i]->CanonicalName) {
             m_current_language_selected = i;
         }
@@ -2461,6 +2466,7 @@ void PreferencesDialog::create_items()
         dlg.ShowModal();
     });
     g_sizer->Add(item_network_test);
+    g_sizer->Add(Cosmyx::create_cloud_server_prefs(m_parent), 0, wxEXPAND); // Cosmyx: custom orca-cloud instance (decision 0203)
 
     //// ONLINE > Cloud Providers
     g_sizer->Add(create_item_title(_L("Cloud Providers")), 1, wxEXPAND);
@@ -2505,6 +2511,7 @@ void PreferencesDialog::create_items()
 
     auto item_plugin_version = create_item_network_plugin_version(_L("Network plug-in version"), _L("Select the network plug-in version to use"));
     g_sizer->Add(item_plugin_version);
+    Cosmyx::setup_external_machines(g_sizer, item_bambu_cloud, item_enable_plugin); // Cosmyx: External machines section (decision 0219)
 
     g_sizer->AddSpacer(FromDIP(10));
     sizer_page->Add(g_sizer, 0, wxEXPAND);

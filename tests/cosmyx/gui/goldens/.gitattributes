@@ -1,0 +1,5 @@
+# GUI goldens (decision 0171): canonical PNG files are binary, stored in plain
+# git (no LFS); the text goldens keep LF like every text file.
+*.png binary
+*.txt text eol=lf
+*.json text eol=lf

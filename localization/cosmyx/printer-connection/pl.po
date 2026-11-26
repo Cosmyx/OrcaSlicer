@@ -1,0 +1,216 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"Drukarka odrzuciła klucz API (HTTP 401). Sprawdź klucz API na karcie "
+"Konfiguracja."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr "Klucz API nie ma uprawnień do odczytu tych informacji (HTTP 403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "Drukarka nie udostępnia tych informacji (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"Drukarka nie odpowiedziała w wyznaczonym czasie. Sprawdź, czy jest włączona "
+"i podłączona do sieci."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "Nie można połączyć się z drukarką. Sprawdź adres i sieć."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "Drukarka odpowiedziała błędem (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "Drukarka wysłała odpowiedź, której nie można odczytać."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Wprowadź adres IP lub nazwę hosta drukarki."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Adres nie może zawierać spacji."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Wprowadź sam adres, bez http:// ani https://."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Wprowadź sam adres, bez ścieżki po nim."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Adres nie może zawierać nazwy użytkownika."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "Port musi być liczbą od 1 do 65535."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Ten adres IPv4 jest nieprawidłowy."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Ta nazwa hosta jest nieprawidłowa."
+
+# AI Translated
+msgid "Setup"
+msgstr "Konfiguracja"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Informacje o drukarce"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "Adres IP drukarki"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Testuj połączenie"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Zapisz ustawienia i pomyślnie przeprowadź test połączenia, aby zobaczyć "
+"informacje o drukarce."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "Klucz API nie może zawierać spacji."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Sprawdzanie połączenia z zapisaną drukarką..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Testowanie połączenia..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Odczytywanie informacji o drukarce..."
+
+# AI Translated
+# Needs human review: UI section heading for printer identity data (model, serial); check wording
+msgid "Identity"
+msgstr "Identyfikacja"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Numer seryjny"
+
+# AI Translated
+msgid "Software version"
+msgstr "Wersja oprogramowania"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Wersja sprzętu"
+
+# AI Translated
+msgid "Installed options"
+msgstr "Zainstalowane opcje"
+
+# AI Translated
+# Needs human review: installed option name of the printer; check meaning (high-speed kit?)
+msgid "Speed mode"
+msgstr "Tryb prędkości"
+
+# AI Translated
+# Needs human review: installed option name (high-temperature kit); check wording
+msgid "High temperature"
+msgstr "Wysoka temperatura"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "Podgrzewana obudowa"
+
+# AI Translated
+# Needs human review: fume/air extraction option; check term (odciąg / filtracja)
+msgid "Extraction system"
+msgstr "System odciągu"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "Maksymalna temperatura obudowy"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Podgrzewany stół"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Maksymalna temperatura stołu"
+
+# AI Translated
+msgid "Uninterrupted power supply"
+msgstr "Zasilacz awaryjny (UPS)"
+
+# AI Translated
+# Needs human review: printer build volume value; check vs reference wording
+msgid "Build volume"
+msgstr "Obszar roboczy"
+
+# AI Translated
+# Needs human review: installed bed probe option; check term
+msgid "Bed probe"
+msgstr "Czujnik poziomowania stołu"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "Hotendy"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "Drukarka nie zgłasza żadnego hotendu."
+
+# AI Translated
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Głowica %1%"
+
+# AI Translated
+# Needs human review: hot end property (hardened nozzle); gender agreement assumes dysza/głowica
+msgid "Hardened"
+msgstr "Hartowana"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Maksymalna temperatura"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Napęd bezpośredni"
+
+# AI Translated
+msgid "No camera"
+msgstr "Brak kamery"
