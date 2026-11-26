@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "comment": "Comparison per OS (decision 0168). Linux runs in the pinned Docker image and is byte-exact; Windows and macOS run on native runners and get a pixel tolerance (recorded exception). Stability between two passes uses half of these values.",
+  "linux": {
+    "mode": "exact",
+    "webview_mask": false
+  },
+  "macos": {
+    "mode": "tolerance",
+    "channel_delta": 8,
+    "max_diff_ratio": 0.0005,
+    "tile": 16,
+    "max_tile_ratio": 0.10,
+    "webview_mask": true
+  },
+  "windows": {
+    "mode": "tolerance",
+    "channel_delta": 8,
+    "max_diff_ratio": 0.0005,
+    "tile": 16,
+    "max_tile_ratio": 0.10,
+    "webview_mask": true
+  }
+}

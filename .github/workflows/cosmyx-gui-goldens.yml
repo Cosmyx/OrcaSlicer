@@ -1,0 +1,252 @@
+# Cosmyx GUI goldens: starts the application a finished "Build all" run
+# produced, on Linux (pinned Docker image), macOS and Windows, walks it through
+# every screen of tests/cosmyx/gui/script.json, compares the captures with the
+# committed goldens and posts the commit status cosmyx/gui-goldens.
+# See wiki/cosmyx/gui-goldens.md and decisions 0162-0178.
+#
+# The harness and the Docker image always come from this workflow's own commit
+# (the default branch for workflow_run and schedule); the built commit only
+# provides data: version.inc, the script, the tolerances and the goldens.
+# Binaries are run only when the build came from this repository, never from a
+# fork (decision 0141).
+name: Cosmyx GUI goldens
+
+on:
+  workflow_run:
+    workflows: ["Build all"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'ID of the finished "Build all" run to capture'
+        required: true
+        type: string
+      mode:
+        description: 'compare: check against the goldens; update: capture new goldens to fetch (never fails)'
+        required: false
+        type: choice
+        options: [compare, update]
+        default: compare
+      stability:
+        description: 'Second pass to prove the captures are stable (auto: when the goldens tooling changed, in update mode, weekly)'
+        required: false
+        type: choice
+        options: [auto, 'on', 'off']
+        default: auto
+  schedule:
+    # Weekly, on the latest successful DEV build, with the stability pass.
+    - cron: '23 4 * * 1'
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: cosmyx-gui-goldens-${{ github.event.workflow_run.id || inputs.run_id || github.run_id }}
+  cancel-in-progress: false
+
+env:
+  CLI: tools/scripts/cosmyx/gui_goldens/cli.py
+  MODE: ${{ github.event_name == 'workflow_dispatch' && inputs.mode || 'compare' }}
+  STABILITY: ${{ github.event_name == 'workflow_dispatch' && inputs.stability || 'auto' }}
+
+jobs:
+  resolve:
+    name: Resolve the build run
+    if: github.repository != 'OrcaSlicer/OrcaSlicer'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      statuses: write
+    outputs:
+      run_id: ${{ steps.find.outputs.run_id }}
+      head_sha: ${{ steps.resolve.outputs.head_sha }}
+      head_repo: ${{ steps.resolve.outputs.head_repo }}
+      run_ok: ${{ steps.resolve.outputs.run_ok }}
+      reason: ${{ steps.resolve.outputs.reason }}
+      report_only: ${{ steps.resolve.outputs.report_only }}
+      passes: ${{ steps.resolve.outputs.passes }}
+      matrix: ${{ steps.resolve.outputs.matrix }}
+    steps:
+      - name: Check out the harness
+        uses: actions/checkout@v7
+        with:
+          path: tools
+          sparse-checkout: scripts/cosmyx
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Find the build run
+        id: find
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_RUN_ID: ${{ github.event.workflow_run.id || inputs.run_id }}
+        run: |
+          run_id="$EVENT_RUN_ID"
+          if [ -z "$run_id" ]; then
+            run_id=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow build_all.yml --branch DEV --status success \
+              --limit 1 --json databaseId --jq '.[0].databaseId')
+          fi
+          if [ -z "$run_id" ]; then
+            echo "::error::No Build all run to capture"
+            exit 1
+          fi
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > run.json
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts?per_page=100" --jq '.artifacts[]' > artifacts.jsonl
+          head_sha=$(python -c 'import json; print(json.load(open("run.json"))["head_sha"])')
+          # Files the built commit changes against DEV decide the stability pass.
+          gh api "repos/$GITHUB_REPOSITORY/compare/DEV...$head_sha" --jq '.files[].filename' > changed.txt 2>/dev/null \
+            || : > changed.txt
+
+      - name: Plan the passes
+        id: resolve
+        run: |
+          python -I "$CLI" resolve --run run.json --artifacts-list artifacts.jsonl --changed changed.txt \
+            --mode "$MODE" --stability "$STABILITY" --event "$GITHUB_EVENT_NAME" --github-output "$GITHUB_OUTPUT"
+
+      - name: Post the pending status
+        if: env.MODE == 'compare'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.resolve.outputs.head_sha }}
+          RUN_ID: ${{ steps.find.outputs.run_id }}
+        run: |
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$HEAD_SHA" -f state=pending -f context=cosmyx/gui-goldens \
+            -f description="Capturing the GUI of run $RUN_ID" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            || echo "::warning::Could not post the pending status on $HEAD_SHA"
+
+  capture:
+    name: Capture ${{ matrix.os }}
+    needs: resolve
+    if: needs.resolve.outputs.matrix != '[]' && needs.resolve.outputs.matrix != ''
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.resolve.outputs.matrix) }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 150
+    env:
+      OS_NAME: ${{ matrix.os }}
+      ARTIFACT: ${{ matrix.artifact }}
+      RUN_ID: ${{ needs.resolve.outputs.run_id }}
+      PASSES: ${{ needs.resolve.outputs.passes }}
+      REPORT_ONLY: ${{ needs.resolve.outputs.report_only == 'true' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'update') }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the harness
+        uses: actions/checkout@v7
+        with:
+          path: tools
+          sparse-checkout: |
+            scripts/cosmyx
+            tests/cosmyx/gui/docker
+          persist-credentials: false
+
+      - name: Check out the data of the built commit
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ needs.resolve.outputs.head_repo }}
+          ref: ${{ needs.resolve.outputs.head_sha }}
+          path: subject
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /version.inc
+            /tests/cosmyx/gui/
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+
+      - name: Download the build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh run download "$RUN_ID" --repo "$GITHUB_REPOSITORY" --name "$ARTIFACT" --dir "artifacts/$ARTIFACT"
+
+      - name: Set the Windows display
+        if: matrix.os == 'windows'
+        shell: pwsh
+        run: |
+          Set-DisplayResolution -Width 1920 -Height 1080 -Force
+          $dpi = (Get-ItemProperty 'HKCU:\Control Panel\Desktop\WindowMetrics' -Name AppliedDPI -ErrorAction SilentlyContinue).AppliedDPI
+          if ($dpi -and $dpi -ne 96) { throw "The display runs at $dpi DPI; the goldens need 96 (100 percent)" }
+
+      - name: Capture (Linux, pinned image)
+        if: matrix.os == 'linux'
+        run: |
+          docker build --platform linux/amd64 -t cosmyx-gui-goldens tools/tests/cosmyx/gui/docker
+          docker run --rm --platform linux/amd64 -v "$PWD:/work" -w /work cosmyx-gui-goldens \
+            python3 -I "$CLI" run --os linux --artifacts "artifacts/$ARTIFACT" --subject subject --out out --passes "$PASSES"
+
+      - name: Capture (native runner)
+        if: matrix.os != 'linux'
+        run: python -I "$CLI" run --os "$OS_NAME" --artifacts "artifacts/$ARTIFACT" --subject subject --out out --passes "$PASSES"
+
+      - name: Compare with the goldens
+        run: |
+          args=()
+          if [ "$PASSES" = "2" ]; then args+=(--second out/pass-2/images); fi
+          if [ "$REPORT_ONLY" = "true" ]; then args+=(--report-only); fi
+          python -I "$CLI" compare --os "$OS_NAME" --goldens "subject/tests/cosmyx/gui/goldens/$OS_NAME" \
+            --actual out/pass-1/images --subject subject --gcode out/pass-1/plate_1.gcode --out out/report \
+            --step-summary "$GITHUB_STEP_SUMMARY" "${args[@]}"
+
+      - name: Stage the captures
+        if: always()
+        run: |
+          mkdir -p upload/images upload/report upload/logs
+          cp -R out/pass-1/images/. upload/images/ 2>/dev/null || true
+          cp -R out/report/. upload/report/ 2>/dev/null || true
+          for log in out/pass-*/app.log out/pass-*/fails.json; do
+            [ -f "$log" ] && cp "$log" "upload/logs/$(basename "$(dirname "$log")")-$(basename "$log")"
+          done
+          true
+
+      - name: Keep the captures
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cosmyx-gui-goldens-${{ matrix.os }}
+          path: upload
+          retention-days: 30
+          if-no-files-found: warn
+
+  status:
+    name: Commit status
+    needs: [resolve, capture]
+    if: always() && needs.resolve.result == 'success' && (github.event_name != 'workflow_dispatch' || inputs.mode == 'compare')
+    runs-on: ubuntu-24.04
+    permissions:
+      statuses: write
+    steps:
+      - name: Post the final status
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ needs.resolve.outputs.head_sha }}
+          RUN_ID: ${{ needs.resolve.outputs.run_id }}
+          RUN_OK: ${{ needs.resolve.outputs.run_ok }}
+          REASON: ${{ needs.resolve.outputs.reason }}
+          REPORT_ONLY: ${{ needs.resolve.outputs.report_only }}
+          CAPTURE_RESULT: ${{ needs.capture.result }}
+        run: |
+          # MIXED (DEV merged with upstream) only reports: its status never blocks.
+          if [ "$REPORT_ONLY" = "true" ]; then
+            state=success; description="Report only (MIXED): see run $GITHUB_RUN_ID"
+          elif [ "$RUN_OK" != "true" ]; then
+            state=failure; description="Not captured: $REASON"
+          elif [ "$CAPTURE_RESULT" = "success" ]; then
+            state=success; description="GUI goldens of run $RUN_ID match"
+          else
+            state=failure; description="GUI goldens of run $RUN_ID: $CAPTURE_RESULT"
+          fi
+          gh api "repos/$GITHUB_REPOSITORY/statuses/$HEAD_SHA" -f state="$state" -f context=cosmyx/gui-goldens \
+            -f description="${description:0:140}" \
+            -f target_url="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"

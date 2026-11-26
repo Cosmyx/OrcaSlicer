@@ -1,0 +1,36 @@
+{
+  "app": {
+    "dark_color_mode": "1",
+    "default_page": "0",
+    "language": "en_US",
+    "show_daily_tips": false,
+    "show_splash_screen": false,
+    "stealth_mode": true,
+    "sync_user_preset": false,
+    "user_mode": "expert",
+    "version": "@VERSION@",
+    "version_check_url": "http://127.0.0.1:9/",
+    "window_mainframe": "16; 48; 1296; 900; 0"
+  },
+  "filaments": [
+    "Generic PLA @System"
+  ],
+  "firstguide": {
+    "finish": true,
+    "privacyuse": false
+  },
+  "models": [
+    {
+      "model": "Voron 2.4 350",
+      "nozzle_diameter": "0.4",
+      "vendor": "Voron"
+    }
+  ],
+  "presets": {
+    "filaments": [
+      "Generic PLA @System"
+    ],
+    "machine": "Voron 2.4 350 0.4 nozzle",
+    "process": "0.20mm Standard @Voron"
+  }
+}
