@@ -19,9 +19,12 @@ the edits.
 
 ## Decision
 
-`build_flatpak.yml` calls `.github/actions/cosmyx-prepare` in one two-line
+The `flatpak` job calls `.github/actions/cosmyx-prepare` in one two-line
 hook (`# Cosmyx` tags) right after its `actions/checkout` step, before the
-version step and the flatpak-builder run.
+version step and the flatpak-builder run. The job lives in `build_flatpak.yml`
+on DEV, and directly in `build_all.yml` on older OrcaSlicer tags (v2.5.2, for
+example), which Cosmyx branches are also replayed on; the hook goes in that
+job wherever the base keeps it, unchanged.
 
 The Flatpak job runs in a Fedora container, where `actions/setup-python`
 (Ubuntu builds only) is not reliable, so the action uses the container's own
@@ -32,5 +35,5 @@ The Flatpak job runs in a Fedora container, where `actions/setup-python`
 
 - Every desktop build, Flatpak included, carries the same Cosmyx catalogues.
 - One more upstream hook, placed after a checkout line upstream rarely edits.
-- Removing it: delete the two hook lines in `build_flatpak.yml`; the Flatpak
+- Removing it: delete the two hook lines in the `flatpak` job; the Flatpak
   bundle then ships the plain OrcaSlicer catalogues and branding again.
