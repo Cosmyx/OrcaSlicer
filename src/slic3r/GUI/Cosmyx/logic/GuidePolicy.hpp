@@ -3,11 +3,12 @@
 
 // Cosmyx policy for the first-run setup guide (WebGuideDialog).
 //
-// Cosmyx builds always run in stealth mode (decision 0070). The guide must
+// Cosmyx builds start in stealth mode (decisions 0070, 0200). The guide must
 // therefore never offer to leave it, nor to install the Bambu network plugin:
 //
-// - stealth_mode is reported as on, so the guide state matches the forced
-//   AppConfig::get_stealth_mode();
+// - stealth_mode is reported as on, so the guide always finishes in stealth
+//   mode; the user turns it off afterwards from Preferences or the login
+//   dialog (decision 0200);
 // - network_plugin_install and network_plugin_compability are reported as "1"
 //   (installed and compatible). resources/web/guide/22/22.js then keeps the
 //   Finish button and never shows the Next button that leads to the stealth

@@ -1,0 +1,69 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx cloud-server\n"
+"Language: da_DK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid "Enter the public key."
+msgstr "Indtast den offentlige nøgle."
+
+# AI Translated
+msgid "The public key must not contain spaces."
+msgstr "Den offentlige nøgle må ikke indeholde mellemrum."
+
+# AI Translated
+msgid "Enter an address."
+msgstr "Indtast en adresse."
+
+# AI Translated
+msgid "The address must start with https:// (http:// only for localhost)."
+msgstr "Adressen skal begynde med https:// (http:// kun for localhost)."
+
+# AI Translated
+msgid "The address has no host name."
+msgstr "Adressen har intet værtsnavn."
+
+# AI Translated
+msgid "This address is not valid."
+msgstr "Denne adresse er ikke gyldig."
+
+# AI Translated
+msgid ""
+"Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
+"used when stealth mode is off."
+msgstr ""
+"Opret forbindelse til din egen cloudserver i stedet for Cosmyx Cloud. "
+"Cloudtjenesten bruges kun, når Stealth-tilstand er slået fra."
+
+# AI Translated
+msgid "Custom Cloud Instance"
+msgstr "Brugerdefineret cloudinstans"
+
+# AI Translated
+msgid "API address"
+msgstr "API-adresse"
+
+# AI Translated
+msgid "Authentication address"
+msgstr "Godkendelsesadresse"
+
+# AI Translated
+msgid "Web address"
+msgstr "Webadresse"
+
+# AI Translated
+msgid "Public key"
+msgstr "Offentlig nøgle"
+
+# AI Translated
+msgid "Check the addresses and save them."
+msgstr "Kontroller adresserne, og gem dem."
+
+# AI Translated
+msgid "Restart the application to connect to the new cloud server."
+msgstr ""
+"Genstart programmet for at oprette forbindelse til den nye cloudserver."

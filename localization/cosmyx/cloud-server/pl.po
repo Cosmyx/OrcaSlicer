@@ -1,0 +1,70 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx cloud-server\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 "
+"|| n%100>14) ? 1 : 2);\n"
+
+# AI Translated
+msgid "Enter the public key."
+msgstr "Wprowadź klucz publiczny."
+
+# AI Translated
+msgid "The public key must not contain spaces."
+msgstr "Klucz publiczny nie może zawierać spacji."
+
+# AI Translated
+msgid "Enter an address."
+msgstr "Wprowadź adres."
+
+# AI Translated
+msgid "The address must start with https:// (http:// only for localhost)."
+msgstr "Adres musi zaczynać się od https:// (http:// tylko dla localhost)."
+
+# AI Translated
+msgid "The address has no host name."
+msgstr "Adres nie zawiera nazwy hosta."
+
+# AI Translated
+msgid "This address is not valid."
+msgstr "Ten adres jest nieprawidłowy."
+
+# AI Translated
+msgid ""
+"Connect to your own cloud server instead of Cosmyx Cloud. The cloud is only "
+"used when stealth mode is off."
+msgstr ""
+"Połącz się z własnym serwerem chmury zamiast z Cosmyx Cloud. Chmura jest "
+"używana tylko wtedy, gdy tryb Stealth jest wyłączony."
+
+# AI Translated
+msgid "Custom Cloud Instance"
+msgstr "Własna instancja chmury"
+
+# AI Translated
+msgid "API address"
+msgstr "Adres API"
+
+# AI Translated
+msgid "Authentication address"
+msgstr "Adres uwierzytelniania"
+
+# AI Translated
+# Needs human review: check whether this is the web portal address of the cloud server
+msgid "Web address"
+msgstr "Adres strony WWW"
+
+# AI Translated
+msgid "Public key"
+msgstr "Klucz publiczny"
+
+# AI Translated
+msgid "Check the addresses and save them."
+msgstr "Sprawdź adresy i zapisz je."
+
+# AI Translated
+msgid "Restart the application to connect to the new cloud server."
+msgstr "Uruchom ponownie aplikację, aby połączyć się z nowym serwerem chmury."

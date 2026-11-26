@@ -75,7 +75,7 @@ class JustfileTests(unittest.TestCase):
 SLOTS_BY_AREA = {
     "repo": ["T0", "T17"],
     "libslic3r": ["T1", "T2", "T3", "T4", "T12"],
-    "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f", "T28", "T26", "T16"],
+    "GUI": ["T5", "T6", "T7", "T11b", "T11c", "T11d", "T11e", "T11f", "T28", "T26", "T16", "T18"],
     "i18n": ["T8"],
     "CI-release": ["T9", "T10", "T11a", "T13", "T15", "T16a"],
 }
