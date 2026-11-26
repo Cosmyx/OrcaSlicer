@@ -90,7 +90,8 @@ here; see the upstream release notes.
   revert can be resumed. Builds of a tree whose upstream base is not DEV
   (integrations onto older upstream tags) brand in tolerant mode: a row whose
   target file or text that tree lacks is skipped with a warning; DEV and
-  release builds stay strict (`just brand-mode`, `brand-apply tolerant`). Recipes `just brand-check`, `brand-apply`, `brand-revert`,
+  release builds stay strict (`just brand-mode`, `brand-apply tolerant`); a
+  local `integration/<tag>` checkout and its real-tree tests are tolerant too. Recipes `just brand-check`, `brand-apply`, `brand-revert`,
   `brand-sync`, `brand-refresh`, `brand-validate` (user only), `brand-table`;
   workflow in `wiki/cosmyx/branding.md`. Pull request: pending. Decisions:
   0120, 0121, 0122, 0123.

@@ -73,7 +73,7 @@ class Context:
     def __init__(self, root: Path, env: dict | None = None, plugins: dict | None = None):
         self.root = root
         self.kind = ref_kind(env)
-        self.mode = brand_mode(env)
+        self.mode = brand_mode(env, root)
         self.tolerant = self.mode == "tolerant"
         self.manifest = manifest_module.load(root)
         self.table_problems: list = []

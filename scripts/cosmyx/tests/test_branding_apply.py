@@ -292,6 +292,80 @@ class TolerantModeTest(BrandedTreeCase):
         self.assertFalse((self.root / "resources/images/apple.svg").exists())
 
 
+class LocalBranchModeTest(BrandedTreeCase):
+    """A local checkout of an integration/<tag> branch (no GitHub variables)
+    is detected like its CI push: tolerant, so a row whose upstream source the
+    older base lacks is skipped with a warning. Any other branch stays strict."""
+
+    use_git = True
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.commit("tables")
+
+    def checkout(self, branch: str) -> None:
+        self.assertEqual(git(self.root, "checkout", "-q", "-B", branch).returncode, 0)
+
+    def test_integration_branch_is_tolerant(self) -> None:
+        self.checkout("integration/v2.5.2")
+        self.assertEqual(branding.local_ref(self.root), "refs/heads/integration/v2.5.2")
+        self.assertEqual(branding.brand_mode({}, self.root), "tolerant")
+        # The environment still wins: an explicit mode or a release ref.
+        self.assertEqual(branding.brand_mode({branding.MODE_ENV: "strict"}, self.root), "strict")
+        self.assertEqual(branding.brand_mode({"COSMYX_BRAND_REF": "refs/tags/v1"}, self.root), "strict")
+        # Without a root the checkout is not looked at.
+        self.assertEqual(branding.brand_mode({}), "strict")
+
+    def test_other_branches_and_detached_heads_are_strict(self) -> None:
+        for branch in ("DEV", "MIXED", "feat/integration/x"):
+            with self.subTest(branch=branch):
+                self.checkout(branch)
+                self.assertEqual(branding.brand_mode({}, self.root), "strict")
+        self.assertEqual(git(self.root, "checkout", "-q", "--detach").returncode, 0)
+        self.assertEqual(branding.local_ref(self.root), "HEAD")
+        self.assertEqual(branding.brand_mode({}, self.root), "strict")
+
+    def test_a_folder_inside_the_checkout_is_not_the_checkout(self) -> None:
+        self.checkout("integration/v2.5.2")
+        self.assertEqual(branding.local_ref(self.root / "resources"), "")
+        self.assertEqual(branding.brand_mode({}, self.root / "resources"), "strict")
+
+    def test_a_row_absent_upstream_is_skipped_on_an_integration_checkout(self) -> None:
+        # A fixture tree that lacks the source of a product-name row and of a
+        # colour row, as an older upstream tag does.
+        self.write_json(branding.COLOURS_FILE, dict(COLOURS, literals=[*COLOURS["literals"], GONE_LITERAL]))
+        self.write_json(f"{branding.PRODUCT_NAME_DIR}/patches.json", {"schema": 1, "rows": [NAME_PATCH, GONE_PATCH]})
+        self.commit("rows absent upstream")
+        self.checkout("DEV")
+        code, lines = self.apply(env={})
+        self.assertEqual(code, 1, lines)
+        self.checkout("integration/v2.5.2")
+        code, lines = self.apply(env={})
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(any(line.startswith("warning: G5 src/slic3r/GUI/Gone.cpp:") and "skipped" in line for line in lines), lines)
+        self.assertTrue(any(line.startswith("warning: G8 version.inc:") and "SLIC3R_GONE" in line for line in lines), lines)
+        self.assertIn("tolerant", lines[-1])
+        apply_module.revert(self.root)
+
+    def test_cli_mode_reads_the_checkout(self) -> None:
+        self.checkout("integration/v2.5.2")
+        lines = []
+        with mock.patch.dict("os.environ", {branding.MODE_ENV: "", "GITHUB_BASE_REF": "", "GITHUB_REF": ""}):
+            self.assertEqual(cli.main(["--root", str(self.root), "mode"], out=lines.append), 0)
+        self.assertEqual(lines, ["tolerant"])
+
+
+class OutsideGitModeTest(BrandedTreeCase):
+    def test_a_tree_outside_git_is_strict(self) -> None:
+        self.assertEqual(branding.local_ref(self.root), "")
+        self.assertEqual(branding.brand_mode({}, self.root), "strict")
+
+    def test_no_git_at_all_is_strict(self) -> None:
+        with mock.patch.object(branding.subprocess, "run", side_effect=FileNotFoundError("git")):
+            self.assertEqual(branding.local_ref(self.root), "")
+            self.assertEqual(branding.brand_mode({}, self.root), "strict")
+
+
 class GitCleanTest(BrandedTreeCase):
     use_git = True
 

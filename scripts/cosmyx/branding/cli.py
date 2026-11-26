@@ -160,7 +160,7 @@ def main(argv: list[str] | None = None, out=print) -> int:
         if args.command == "apply":
             return apply_module.apply(root, ci=args.ci, env=mode_env(args.mode), out=out)
         if args.command == "mode":
-            out(brand_mode())
+            out(brand_mode(root=root))
             return 0
         if args.command == "revert":
             restored = apply_module.revert(root)

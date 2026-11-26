@@ -28,11 +28,13 @@ from branding import cli  # noqa: E402
 DEV = {}
 RELEASE = {"COSMYX_BRAND_REF": "refs/heads/release/2.6"}
 
-# The branding mode of this run. The cosmyx-prepare action exports
-# COSMYX_BRAND_MODE for the job (tolerant only when the tree's upstream base is
-# not DEV), so the real-tree tests brand this checkout the way its build will.
-# Unset, it is strict.
-REAL_TREE_ENV = {branding.MODE_ENV: os.environ.get(branding.MODE_ENV, "")}
+# The branding mode of this run, detected once with the same rule as
+# `just brand-check` and the cosmyx-prepare action (brand_mode): tolerant only
+# when the checkout's upstream base is not DEV (COSMYX_BRAND_MODE, a build pull
+# request into cosmyx-ci/<tag>, or an integration/<tag> branch, pushed or
+# checked out locally). The real-tree tests copy the tree out of git, so the
+# mode is resolved here against the checkout and handed to apply explicitly.
+REAL_TREE_ENV = {branding.MODE_ENV: branding.brand_mode(os.environ, REPO_ROOT)}
 
 
 def real_tree_tolerant() -> bool:
