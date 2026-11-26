@@ -74,6 +74,12 @@ here; see the upstream release notes.
   0053, 0054, 0055, 0223.
 
 <!-- cosmyx-slot: T6 -->
+- Show the version as `<OrcaSlicer version>-<Cosmyx patch>` (for example
+  `2.6.0-8`, or `2.6.0-dev-8` on a development base; the patch starts at 8)
+  in the About dialog, the splash screen, the network test and the
+  troubleshoot dialogs, and name CI builds and artifacts
+  `<that version>_<short commit hash>`. Pull request: pending.
+  Decisions: 0060, 0061, 0062, 0063, 0064.
 
 <!-- cosmyx-slot: T7 -->
 
