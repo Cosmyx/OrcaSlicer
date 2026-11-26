@@ -46,6 +46,36 @@ here; see the upstream release notes.
   publisher identify it as Cosmyx. Pull request: pending. Decisions: 0180,
   0181, 0182, 0183, 0184.
 
+<!-- cosmyx-slot: T20 -->
+- `just cosmo-integrate` and `just cosmo-rebase-check` take `--bundle N` to
+  build one Cosmyx bundle: every branch of the integration list now has a
+  `bundle` (8 for the bundle-7 features rebased on OrcaSlicer 2.5.2, the
+  integration and build tooling and the base branding, 9 for the new features), and only the
+  branches of bundle N or earlier are kept; without the option every branch
+  is kept as before. A branch whose parent is in a later bundle is refused.
+  A branch may list several parents (`parents`), each checked the same way.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/115. Decisions: 0226.
+- Add `just cosmo-integrate [BASE]`, which rebuilds a throwaway integration
+  branch (`ci/cosmyx-integration` on DEV, `integration/<BASE>` on any other
+  base, so both coexist) from every Cosmyx pull request branch (on a base
+  other than DEV, each branch's own commits are first replayed onto it as
+  `rebase/<BASE>/<branch>`, so DEV's newer commits are not dragged in) and
+  resolves the known conflicts (changelog slots, slot lists, branding tables,
+  recorded resolutions) inside the merge commits, stopping on any other one,
+  and `just cosmo-rebase-check TAG`, a dry run that replays every branch onto
+  an upstream tag and prints a conflict table. `--push --build` builds the
+  integration through a never-merged draft pull request into
+  `cosmyx-ci/<BASE>`, a branch pushed at the base commit, which the Cosmyx
+  dev build workflow builds; `--os LIST` picks its OSes through the pull
+  request's `build:*` labels. On a base other than DEV, a resolution that
+  copies a replayed commit's whole file is refused (`--allow-whole-copy PATH`
+  accepts one), and upstream files changed by more than `--drift-threshold`
+  lines are listed in a drift warning (`--strict-drift` stops the run). The
+  branch list and
+  order live in `scripts/cosmyx/integrate/branches.json`. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/115.
+  Decisions: 0215.
+
 ### libslic3r
 
 <!-- cosmyx-slot: T1 -->
