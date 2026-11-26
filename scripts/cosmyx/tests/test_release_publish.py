@@ -30,6 +30,40 @@ RELEASE_ARTIFACTS = [
 ]
 
 
+def git(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", *args], cwd=REPO_ROOT, capture_output=True, text=True, encoding="utf-8")
+
+
+def upstream_base() -> str | None:
+    """The upstream commit this tree is built on, or None when none is found.
+
+    The integration runs the Cosmyx branches on several bases: DEV (a mirror of
+    upstream main) or an upstream release tag such as v2.5.2, and the
+    integration tool records no marker of which. The candidates are the
+    merge-base of HEAD with origin/DEV and the nearest upstream release tag
+    (three-part `vX.Y.Z[-suffix]`; the four-part Cosmyx release tags are
+    excluded). The newest of them is the base: the other is its ancestor. When
+    they have diverged, the base is ambiguous and None is returned.
+    """
+    candidates = []
+    dev = git("merge-base", "HEAD", "origin/DEV")
+    if dev.returncode == 0:
+        candidates.append(dev.stdout.strip())
+    tag = git("describe", "--tags", "--abbrev=0", "--match", "v[0-9]*", "--exclude", "v*.*.*.*", "HEAD")
+    if tag.returncode == 0:
+        candidates.append(git("rev-parse", f"{tag.stdout.strip()}^{{commit}}").stdout.strip())
+    candidates = [c for c in candidates if c]
+    if not candidates:
+        return None
+    best = candidates[0]
+    for other in candidates[1:]:
+        if git("merge-base", "--is-ancestor", best, other).returncode == 0:
+            best = other
+        elif git("merge-base", "--is-ancestor", other, best).returncode != 0:
+            return None
+    return best
+
+
 def done(stdout: str = "", returncode: int = 0, stderr: str = "") -> subprocess.CompletedProcess:
     return subprocess.CompletedProcess([], returncode, stdout, stderr)
 
@@ -238,21 +272,17 @@ class WorkflowHookTests(unittest.TestCase):
                 self.assertNotIn("CosmoSlice", line)
 
     def test_every_added_line_is_tagged(self) -> None:
-        added = subprocess.run(
-            ["git", "diff", "-U0", "origin/DEV", "--", str(WORKFLOW.relative_to(REPO_ROOT))],
-            cwd=REPO_ROOT,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-        )
+        base = upstream_base()
+        if base is None:
+            self.skipTest("no upstream base (origin/DEV or an upstream release tag) is an ancestor of HEAD")
+        added = git("diff", "-U0", base, "--", WORKFLOW.relative_to(REPO_ROOT).as_posix())
         if added.returncode != 0:
-            self.skipTest("origin/DEV is not available in this checkout")
+            self.skipTest(f"cannot diff against the upstream base {base}: {added.stderr.strip()}")
         lines = [l[1:] for l in added.stdout.splitlines() if l.startswith("+") and not l.startswith("+++")]
         for line in lines:
             if line.strip():
                 with self.subTest(line=line):
                     self.assertTrue(line.endswith("# Cosmyx") or "# Cosmyx:" in line)
-
 
 if __name__ == "__main__":
     unittest.main()

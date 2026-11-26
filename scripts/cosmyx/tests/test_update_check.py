@@ -14,7 +14,24 @@ GUI = REPO_ROOT / "src" / "slic3r" / "GUI"
 CATALOGUES = REPO_ROOT / "localization" / "cosmyx" / "update-check"
 INCLUDE = '#include "Cosmyx/UpdateCheckRequest.hpp" // Cosmyx'
 CALL = "    Cosmyx::check_for_update(*app_config, by_user, version_info); return; // Cosmyx: Cosmyx releases only (decision 0221)"
-HIDE = "    m_cb_stable_only->Hide(); // Cosmyx: only releases are ever offered (decision 0221)"
+HIDE_TAIL = " // Cosmyx: only releases are ever offered (decision 0221)"
+# The integration runs on several upstream bases, whose popups build the box in
+# different ways. Each known shape: (line that identifies it, anchor line the
+# hook follows, hook line). Every widget of the shape is hidden.
+STABLE_ONLY_SHAPES = {
+    # DEV: one LabeledCheckBox carries its own label.
+    "labeled checkbox": (
+        'm_cb_stable_only = new LabeledCheckBox(this, _L("Check for stable updates only"));',
+        "m_cb_stable_only->SetFont(Label::Body_12);",
+        "    m_cb_stable_only->Hide();" + HIDE_TAIL,
+    ),
+    # Release tags such as v2.5.2: a bare CheckBox next to a separate Label.
+    "checkbox and label": (
+        "m_cb_stable_only = new CheckBox(this);",
+        "stable_only_label->SetFont(Label::Body_12);",
+        "    m_cb_stable_only->Hide(); stable_only_label->Hide();" + HIDE_TAIL,
+    ),
+}
 
 
 def msgids(text: str) -> list[str]:
@@ -59,8 +76,15 @@ class GuiAppHookTests(unittest.TestCase):
 class ReleaseNoteHookTests(unittest.TestCase):
     def test_the_stable_only_box_is_hidden_once_built(self) -> None:
         lines = (GUI / "ReleaseNote.cpp").read_text(encoding="utf-8").splitlines()
-        index = lines.index(HIDE)
-        self.assertEqual(lines[index - 1].strip(), "m_cb_stable_only->SetFont(Label::Body_12);")
+        stripped = [l.strip() for l in lines]
+        shapes = [name for name, (marker, _, _) in STABLE_ONLY_SHAPES.items() if marker in stripped]
+        if not shapes:
+            self.skipTest("this upstream base builds no known stable-only box in ReleaseNote.cpp")
+        self.assertEqual(len(shapes), 1, f"several upstream shapes found: {shapes}")
+        _, anchor, hide = STABLE_ONLY_SHAPES[shapes[0]]
+        self.assertIn(hide, lines, f"hook for the {shapes[0]} shape is missing")
+        index = lines.index(hide)
+        self.assertEqual(stripped[index - 1], anchor)
         self.assertEqual(sum("// Cosmyx" in l for l in lines), 1)
 
 
