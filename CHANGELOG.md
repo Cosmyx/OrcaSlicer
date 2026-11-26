@@ -120,6 +120,22 @@ here; see the upstream release notes.
   changes by itself. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/125.
   Decision: 0222.
 
+<!-- cosmyx-slot: T26 -->
+- The update check (at startup and from Help > Check for Updates) now looks
+  for releases of the Cosmyx fork on GitHub instead of OrcaSlicer's, and only
+  ever offers a published release (never a draft, pre-release, dev or nightly
+  build), tagged `v<OrcaSlicer base>.<Cosmyx patch>` (for example `v2.5.2.8`)
+  and shown as `2.5.2-8`. It never goes online in Stealth mode: the menu
+  command then says so. The "Check for stable updates only" box is gone from
+  the update popup. "Publish to draft release" now publishes the CosmoSlice
+  files of a Build all run, refuses a tag outside that convention or a build
+  of another version, and creates the draft on the run's commit when it is
+  missing (the `RELEASE_PUBLISHER` repository variable must name who may run
+  it). The Stealth mode message is translated into French and
+  machine-translated for review into the 20 other offered UI languages.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/122.
+  Decision: 0221.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->

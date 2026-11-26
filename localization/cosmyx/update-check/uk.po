@@ -1,0 +1,20 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx update-check\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 "
+"&& n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 "
+"&& n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+
+# AI Translated
+#. TRN Shown by Help > Check for Updates while Stealth mode is on: the check never goes online then.
+msgid ""
+"Checking for updates is turned off while Stealth mode is on. Turn off "
+"Stealth mode in Preferences to check for a new release."
+msgstr ""
+"Перевірку оновлень вимкнено, поки ввімкнено прихований режим. Вимкніть "
+"прихований режим у розділі «Налаштування», щоб перевірити наявність нового "
+"випуску."
