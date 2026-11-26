@@ -1,0 +1,44 @@
+{
+	"type": "machine",
+	"name": "Cosmyx Nova 0.25 nozzle",
+	"inherits": "Cosmyx Nova 0.4 nozzle",
+	"from": "system",
+	"setting_id": "bZhZQ74EbFRkxCUT",
+	"instantiation": "true",
+	"nozzle_diameter": [
+		"0.25"
+	],
+	"printer_model": "Cosmyx Nova",
+	"printer_variant": "0.25",
+	"default_filament_profile": [
+		"Cosmyx PLA Basic @Cosmyx Nova"
+	],
+	"default_print_profile": "0.10mm Standard @Cosmyx Nova 0.25 nozzle",
+	"max_layer_height": [
+		"0.14"
+	],
+	"min_layer_height": [
+		"0.04"
+	],
+	"nozzle_type": "cht",
+	"retraction_length": [
+		"0.4"
+	],
+	"upward_compatible_machine": [
+		"Cosmyx P1P 0.25 nozzle",
+		"Cosmyx P1S 0.25 nozzle",
+		"Cosmyx X1 0.25 nozzle"
+	],
+	"z_hop": [
+		"0.4"
+	],
+	"z_hop_types": [
+		"Slope Lift"
+	],
+	"retract_lift_above": [
+		"1"
+	],
+	"retract_lift_below": [
+		"600"
+	]
+}

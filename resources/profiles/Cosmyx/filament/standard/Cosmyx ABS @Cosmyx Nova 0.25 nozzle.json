@@ -1,0 +1,24 @@
+{
+    "type": "filament",
+    "name": "Cosmyx ABS @Cosmyx Nova 0.25 nozzle",
+    "inherits": "Cosmyx ABS @base",
+    "from": "system",
+    "setting_id": "CnKWUv3xwJ9uFALo",
+    "instantiation": "true",
+    "filament_max_volumetric_speed": [
+        "2"
+    ],
+    "required_nozzle_HRC": [
+        "1"
+    ],
+    "compatible_printers": [
+        "Cosmyx Nova 0.25 nozzle",
+        "Cosmyx Nova 0.25 nozzle can-out",
+        "Cosmyx SuperNova 0.25 nozzle",
+        "Cosmyx SuperNova Double Tete 0.25 nozzle",
+        "Cosmyx Nova Metal Ceramique 0.25 nozzle",
+        "Cosmyx Nova Haute Temperature 0.25 nozzle",
+        "Cosmyx Nova Double Tete 0.25 nozzle",
+        "Cosmyx SuperNova Double Tete Metal Ceramique 0.25 nozzle"
+    ]
+}
