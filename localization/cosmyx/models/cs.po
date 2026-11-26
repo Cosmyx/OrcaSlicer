@@ -14,9 +14,14 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Tento kalibrační model funguje nejlépe se směrem výplně nastaveným na 0 "
+"stupňů. Pro optimální výsledky kalibrace doporučujeme nastavit „Směr výplně“ "
+"i „Směr plného vyplnění“ na 0.\n"
+"Ano - Změnit tato nastavení automaticky\n"
+"Ne  - Tato nastavení neměnit"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Doporučení ke kalibraci"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +34,47 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Tento kalibrační model funguje nejlépe s určitým nastavením výplně.\n"
+"Pro optimální výsledky kalibrace doporučujeme nastavit:\n"
+"- Směr výplně: %.0f°\n"
+"- Směr plného vyplnění: %.0f°\n"
+"- Pouze jedna stěna na první vrstvě: %s\n"
+"\n"
+"Ano - Změnit tato nastavení automaticky\n"
+"Ne  - Tato nastavení neměnit"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "3D modely Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Kalibrační modely pro dvojitou hlavu"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Kalibrační modely pro jednu hlavu"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Praktické modely Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Kalibrace 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibrace 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Kalibrace 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Dvoubarevná kostka"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Kalibrace 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Kostka Cosmyx"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Kontrola napnutí řemene"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Podpěra cívky"

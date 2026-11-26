@@ -14,9 +14,12 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"このキャリブレーションモデルは、インフィルの方向を0度に設定すると最も良い結果が得られます。最適なキャリブレーション結果を得るため、「インフィルの方向」と「ソリッドインフィルの方向」の両方を0に設定することをお勧めします。\n"
+"はい - これらの設定を自動的に変更する\n"
+"いいえ - これらの設定を変更しない"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "キャリブレーションの提案"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -29,39 +32,47 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"このキャリブレーションモデルは、特定のインフィル設定で最も良い結果が得られます。\n"
+"最適なキャリブレーション結果を得るため、次の設定をお勧めします。\n"
+"- インフィルの方向: %.0f°\n"
+"- ソリッドインフィルの方向: %.0f°\n"
+"- 1層目は壁1本のみ: %s\n"
+"\n"
+"はい - これらの設定を自動的に変更する\n"
+"いいえ - これらの設定を変更しない"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "Cosmyx 3Dモデル"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "キャリブレーションモデル デュアルヘッド"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "キャリブレーションモデル シングルヘッド"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Cosmyx ハンディモデル"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "キャリブレーション 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx キャリブレーション 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx キャリブレーション 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "2色キューブ"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx キャリブレーション 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Cosmyx キューブ"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "テンションベルト確認"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "スプールホルダー"

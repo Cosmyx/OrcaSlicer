@@ -16,9 +16,15 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ця калібрувальна модель найкраще працює, коли напрямок заповнення має "
+"значення 0 градусів. Для оптимальних результатів калібрування радимо "
+"встановити для «Напрямок часткового заповнення» та «Напрямок суцільного "
+"заповнення» значення 0.\n"
+"Так - змінити ці налаштування автоматично\n"
+"Ні  - не змінювати ці налаштування"
 
 msgid "Calibration Suggestion"
-msgstr ""
+msgstr "Рекомендація щодо калібрування"
 
 #, possible-c-format, possible-boost-format
 msgid ""
@@ -31,39 +37,48 @@ msgid ""
 "Yes - Change these settings automatically\n"
 "No  - Do not change these settings for me"
 msgstr ""
+"Ця калібрувальна модель найкраще працює з певними налаштуваннями "
+"заповнення.\n"
+"Для оптимальних результатів калібрування радимо встановити:\n"
+"- Напрямок часткового заповнення: %.0f°\n"
+"- Напрямок суцільного заповнення: %.0f°\n"
+"- Тільки одна стінка на першому шарі: %s\n"
+"\n"
+"Так - змінити ці налаштування автоматично\n"
+"Ні  - не змінювати ці налаштування"
 
 msgid "Cosmyx 3D Models"
-msgstr ""
+msgstr "3D-моделі Cosmyx"
 
 msgid "Calibration Models Dual Head"
-msgstr ""
+msgstr "Калібрувальні моделі для двоголового принтера"
 
 msgid "Calibration Models Single Head"
-msgstr ""
+msgstr "Калібрувальні моделі для одноголового принтера"
 
 msgid "Cosmyx Handy Models"
-msgstr ""
+msgstr "Корисні моделі Cosmyx"
 
 msgid "Calage 1 SNDT"
-msgstr ""
+msgstr "Калібрування 1 SNDT"
 
 msgid "Cosmyx Calage 2 SNDT"
-msgstr ""
+msgstr "Cosmyx Калібрування 2 SNDT"
 
 msgid "Cosmyx Calage 3 SNDT"
-msgstr ""
+msgstr "Cosmyx Калібрування 3 SNDT"
 
 msgid "Cube Bicolore"
-msgstr ""
+msgstr "Двоколірний куб"
 
 msgid "Cosmyx Calage 1 Nova"
-msgstr ""
+msgstr "Cosmyx Калібрування 1 Nova"
 
 msgid "Cosmyx Cube"
-msgstr ""
+msgstr "Куб Cosmyx"
 
 msgid "Control Tension Belt"
-msgstr ""
+msgstr "Перевірка натягу ременя"
 
 msgid "Support Bobine"
-msgstr ""
+msgstr "Тримач котушки"
