@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "group": "web",
+  "rows": [
+    {
+      "path": "resources/web/guide/0/loading.svg",
+      "format": "svg",
+      "size": "24x24",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": null,
+      "source_ref": null,
+      "status": "missing",
+      "upstream_sha256": "1c485c0407313e7a777a1660818abb671b78cd8a9d3864d7debb9cb17fe3d32e",
+      "override_sha256": null
+    },
+    {
+      "path": "resources/web/guide/img/greencheck.svg",
+      "format": "svg",
+      "size": "18x18",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": null,
+      "source_ref": null,
+      "status": "missing",
+      "upstream_sha256": "c5f2abfc807328cecc50a865c4c05ff85a9b8c200a391320bd0d7bc4e3c95ea2",
+      "override_sha256": null
+    },
+    {
+      "path": "resources/web/model/img/file_g.svg",
+      "format": "svg",
+      "size": "20x20",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": null,
+      "source_ref": null,
+      "status": "missing",
+      "upstream_sha256": "3b2f37c7d52d89708b65223f07a89f253e4f3f089c2352f365e4e76b9d43d9d4",
+      "override_sha256": null
+    },
+    {
+      "path": "resources/web/model/img/info_g.svg",
+      "format": "svg",
+      "size": "20x20",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": null,
+      "source_ref": null,
+      "status": "missing",
+      "upstream_sha256": "bb393f98e83a2934eed9cd9e02b98e363670596cefa9310f99ca1bf44dc9de3f",
+      "override_sha256": null
+    },
+    {
+      "path": "resources/web/model/img/profile_g.svg",
+      "format": "svg",
+      "size": "20x20",
+      "usage": "web UI image",
+      "kind": "recolour",
+      "source": null,
+      "source_ref": null,
+      "status": "missing",
+      "upstream_sha256": "673d51343e274e63a8d8ccdd1eb3b8f0d612ebce9bbfeb331f159409c34578c5",
+      "override_sha256": null
+    }
+  ]
+}
