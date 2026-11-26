@@ -1,4 +1,5 @@
 #include "ArcFitter.hpp"
+#include "Cosmyx/GCodeHooks.hpp" // Cosmyx
 #include <tuple>
 #include "BoundingBox.hpp"
 #include "Circle.hpp"
