@@ -80,4 +80,5 @@ here; see the upstream release notes.
 - **Removed:** the Flatpak build and its unit tests no longer run, on every
   build: the fork does not ship a Flatpak and the leg was often red. Setting
   the repository variable `COSMYX_FLATPAK` to `true` turns them back on.
-  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/113. Decisions: 0213.
+  The switch sits on the Flatpak job in whichever workflow file the upstream
+  base keeps it. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/113. Decisions: 0213.
