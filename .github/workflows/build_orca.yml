@@ -551,6 +551,21 @@ jobs:
           distribution: microsoft
           java-version: '21'
 
+      - name: Cosmyx code signing setup # Cosmyx
+        id: cosmyx_sign # Cosmyx
+        if: runner.os == 'Windows' && github.repository != 'OrcaSlicer/OrcaSlicer' && github.event_name != 'pull_request' && github.ref_name != 'MIXED' && (github.ref_name == 'DEV' || startsWith(github.ref_name, 'release/') || vars.COSMYX_SIGN_ALL_REFS == 'true') # Cosmyx
+        uses: ./.github/actions/cosmyx-sign # Cosmyx
+        with: # Cosmyx
+          mode: setup # Cosmyx
+          endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }} # Cosmyx
+          account: ${{ secrets.AZURE_CODE_SIGNING_NAME }} # Cosmyx
+          certificate-profile: ${{ secrets.AZURE_CERT_PROFILE_NAME }} # Cosmyx
+          subject: ${{ vars.COSMYX_SIGN_SUBJECT }} # Cosmyx
+          eku: ${{ vars.COSMYX_SIGN_EKU }} # Cosmyx
+          client-id: ${{ secrets.AZURE_CLIENT_ID }} # Cosmyx
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }} # Cosmyx
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # Cosmyx
+
       - name: Build slicer Win
         if: runner.os == 'Windows'
         working-directory: ${{ github.workspace }}
@@ -615,6 +630,12 @@ jobs:
         with:
           path: ${{ runner.temp }}/nsis/Plugins
           key: nsis-plugins-signed-${{ env.NSIS_VERSION }}-${{ steps.codesign.outputs.cert-id }}
+
+      - name: Cosmyx sign Windows binaries # Cosmyx
+        if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx
+        uses: ./.github/actions/cosmyx-sign # Cosmyx
+        with: # Cosmyx
+          mode: sign # Cosmyx
 
       - name: Pack unit tests Win
         if: runner.os == 'Windows' && inputs.compiler == 'clang'
@@ -712,6 +733,14 @@ jobs:
             $paths += $installer.FullName, $payload, (Join-Path $installed 'Uninstall.exe')
           }
           ./scripts/sign_windows.ps1 -Verify -Path $paths
+
+      - name: Cosmyx verify Windows signatures # Cosmyx
+        if: steps.cosmyx_sign.outputs.enabled == 'true' # Cosmyx
+        timeout-minutes: 20 # Cosmyx
+        uses: ./.github/actions/cosmyx-sign # Cosmyx
+        with: # Cosmyx
+          mode: verify # Cosmyx
+          require-installer: ${{ !vars.SELF_HOSTED }} # Cosmyx
 
       - name: Upload artifacts Win zip
         if: runner.os == 'Windows'
