@@ -8,6 +8,7 @@ on:
 jobs:
   flatpak:
     name: Build Flatpak
+    if: ${{ vars.COSMYX_FLATPAK == 'true' }} # Cosmyx: off unless the repo variable turns it on (decision 0213)
     container:
       image: ghcr.io/flathub-infra/flatpak-github-actions:gnome-50
       options: --privileged
