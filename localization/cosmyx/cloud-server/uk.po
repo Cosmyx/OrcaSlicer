@@ -67,5 +67,57 @@ msgid "Check the addresses and save them."
 msgstr "Перевірте адреси та збережіть їх."
 
 # AI Translated
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+"Відкритий ключ, яким підписано пакети плагінів цього сервера, — 64 "
+"шістнадцяткові символи. Сервер публікує його за адресою /pkg/v1/keys; звірте "
+"ідентифікатор ключа з оператором сервера."
+
+# AI Translated
+msgid "Plugin signing key"
+msgstr "Ключ підпису плагінів"
+
+# AI Translated
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+"Встановлювати плагіни з цього сервера, навіть якщо ключ підпису не "
+"закріплено. Їхній розмір і хеш-суму все одно буде перевірено, але ніщо не "
+"підтверджує, хто їх створив."
+
+# AI Translated
+msgid "Allow unverified plugins from this server"
+msgstr "Дозволити неперевірені плагіни з цього сервера"
+
+# AI Translated
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr "Ідентифікатор ключа: %1%"
+
+# AI Translated
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr "Ключ підпису плагінів має складатися з 64 шістнадцяткових символів."
+
+# AI Translated
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr ""
+"Налаштування підпису плагінів не збережено: не вдається прочитати збережені "
+"налаштування."
+
+# AI Translated
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr ""
+"Адресу API змінено: це налаштування підпису плагінів для нової адреси. "
+"Перевірте їх і застосуйте ще раз, щоб змінити."
+
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr "Перезапустіть програму, щоб підключитися до нового хмарного сервера."

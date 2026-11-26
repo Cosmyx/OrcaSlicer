@@ -246,6 +246,22 @@ here; see the upstream release notes.
   http on the local machine (localhost) for testing; cloud addresses set by
   the user always win.
   Pull request: pending. Decisions: 0200, 0201, 0202, 0203.
+- **Breaking:** cloud plugins are installed and updated only when their
+  CosmoCloud package signature verifies, and never as an older version than
+  the one installed. The production signing key is not pinned yet, so plugins
+  from the Cosmyx cloud cannot be installed until a release adds it; installed
+  plugins keep working. A custom cloud instance needs its signing key pinned
+  in Preferences, or the user's explicit choice to allow unverified plugins
+  from it; these settings belong to one server address. Plugins are refused
+  from a cloud address that is not a plain `https://host[:port][/path]`
+  (plain http only on the local machine), and Preferences no longer accepts
+  such addresses: plain http on the local machine now needs `localhost`,
+  `[::1]` or `127.x.x.x` without leading zeros. A package swapped during its
+  install, or whose entry package could escape the plugin folder, is refused,
+  and so is a plugin download that ends after the app was closed. The
+  plugin signing settings and messages are translated into French, and
+  machine-translated for review into the 20 other offered UI languages.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/112. Decision: 0204.
 
 ### i18n
 

@@ -64,5 +64,57 @@ msgid "Check the addresses and save them."
 msgstr "Kontroller adressene og lagre dem."
 
 # AI Translated
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+"Offentlig nøkkel som signerer programtilleggspakkene til denne serveren, 64 "
+"heksadesimale tegn. Serveren viser den under /pkg/v1/keys; kontroller "
+"nøkkel-ID-en med serverens operatør."
+
+# AI Translated
+msgid "Plugin signing key"
+msgstr "Signeringsnøkkel for programtillegg"
+
+# AI Translated
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+"Installer programtillegg fra denne serveren selv om ingen signeringsnøkkel "
+"er festet. Størrelsen og sjekksummen kontrolleres fortsatt, men ingenting "
+"beviser hvem som har laget dem."
+
+# AI Translated
+msgid "Allow unverified plugins from this server"
+msgstr "Tillat ubekreftede programtillegg fra denne serveren"
+
+# AI Translated
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr "Nøkkel-ID: %1%"
+
+# AI Translated
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr "Signeringsnøkkelen for programtillegg må være 64 heksadesimale tegn."
+
+# AI Translated
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr ""
+"Signeringsinnstillingene for programtillegg ble ikke lagret: de lagrede "
+"innstillingene kan ikke leses."
+
+# AI Translated
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr ""
+"API-adressen er endret: dette er signeringsinnstillingene for programtillegg "
+"for den nye adressen. Kontroller dem og bruk dem på nytt for å endre dem."
+
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr "Start programmet på nytt for å koble til den nye skyserveren."

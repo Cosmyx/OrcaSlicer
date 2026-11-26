@@ -29,7 +29,8 @@ the CosmoCloud defaults.
   same machine (for example CosmoCloud at `http://localhost:8000`) can be
   tested without a certificate: `localhost`, any name under `.localhost`
   (RFC 6761 reserves it for loopback), `127.0.0.0/8` written as four decimal
-  octets, and `[::1]`. Traffic to those hosts never leaves the machine, so the
+  octets without leading zeros, and `::1` in any IPv6 spelling (decision 0204
+  says why other spellings are refused). Traffic to those hosts never leaves the machine, so the
   sign-in tokens are not exposed; every other host still needs https, a
   private LAN address included. An explicit scheme is never rewritten: an
   `http://` address on another host is refused, not upgraded to https.

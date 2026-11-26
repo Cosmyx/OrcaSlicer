@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: zh_HK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr "插件伺服器地址並非標準的 https 地址，因此無法驗證其插件。插件未有安裝。"
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr "插件版本 %1% 比已安裝的版本 %2% 舊，因此未有安裝。"
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr "此版本沒有 Cosmyx 插件伺服器的簽署金鑰，因此無法驗證其插件。插件未有安裝。"
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr "此插件伺服器未固定簽署金鑰。請在偏好設定中固定其金鑰，或允許來自此伺服器的未驗證插件。插件未有安裝。"
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr "無法在此平台上驗證插件套件。插件未有安裝。"
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr "插件套件未能通過簽署檢查（%1%）。插件未有安裝。"
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr "插件 %1% 已在未驗證的情況下安裝：此伺服器可提供未驗證的插件。"
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr "無法將已安裝的插件套件記錄為已通過簽署檢查的套件，因此已將其移除。插件未有安裝。"

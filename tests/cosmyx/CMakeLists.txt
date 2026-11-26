@@ -17,7 +17,15 @@ add_executable(${_TEST_NAME}_tests
     ${COSMYX_GUI_LOGIC_SOURCES}
     ../fff_print/test_helpers.cpp
     )
-target_link_libraries(${_TEST_NAME}_tests test_common libslic3r Catch2::Catch2WithMain)
+# OpenSSL::Crypto for the plugin package signatures (logic/PluginSigning.cpp,
+# decision 0204); libslic3r links it privately, so its headers are not inherited.
+target_link_libraries(${_TEST_NAME}_tests test_common libslic3r OpenSSL::Crypto Catch2::Catch2WithMain)
+# The static OpenSSL of the Windows deps reads the system certificate store
+# (Cert* functions), which lives in crypt32; libslic3r_gui gets it through the
+# libcurl target in the top-level CMakeLists.txt, the same way.
+if (WIN32)
+    target_link_libraries(${_TEST_NAME}_tests crypt32)
+endif ()
 # src/ so tests include "slic3r/GUI/Cosmyx/logic/..." and "libslic3r/Cosmyx/...";
 # fff_print/ for the shared print fixtures in test_helpers.hpp.
 target_include_directories(${_TEST_NAME}_tests PRIVATE

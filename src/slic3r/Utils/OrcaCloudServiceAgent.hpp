@@ -36,6 +36,7 @@ struct PluginDownloadData
     std::string download_link;
     std::string requested_os;
     std::string returned_os;
+    nlohmann::json cosmyx_row; // Cosmyx: the row as served, for the package signature check (decision 0204)
 };
 
 struct PluginDownloadNotFound

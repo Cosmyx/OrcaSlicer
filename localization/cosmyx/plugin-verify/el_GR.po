@@ -1,0 +1,82 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: el_GR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Η διεύθυνση του διακομιστή πρόσθετων δεν είναι απλή διεύθυνση https, "
+"επομένως τα πρόσθετά του δεν μπορούν να επαληθευτούν. Το πρόσθετο δεν "
+"εγκαταστάθηκε."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Η έκδοση %1% του πρόσθετου είναι παλαιότερη από την εγκατεστημένη έκδοση "
+"%2%, επομένως δεν εγκαταστάθηκε."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Αυτή η έκδοση δεν διαθέτει κλειδί υπογραφής για τον διακομιστή πρόσθετων της "
+"Cosmyx, επομένως τα πρόσθετά του δεν μπορούν να επαληθευτούν. Το πρόσθετο "
+"δεν εγκαταστάθηκε."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Δεν έχει καρφιτσωθεί κλειδί υπογραφής για αυτόν τον διακομιστή πρόσθετων. "
+"Καρφιτσώστε το κλειδί του στις Προτιμήσεις ή επιτρέψτε μη επαληθευμένα "
+"πρόσθετα από αυτόν. Το πρόσθετο δεν εγκαταστάθηκε."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Τα πακέτα πρόσθετων δεν μπορούν να επαληθευτούν σε αυτή την πλατφόρμα. Το "
+"πρόσθετο δεν εγκαταστάθηκε."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Το πακέτο του πρόσθετου απέτυχε στον έλεγχο υπογραφής (%1%). Το πρόσθετο δεν "
+"εγκαταστάθηκε."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Το πρόσθετο %1% εγκαταστάθηκε χωρίς επαλήθευση: αυτός ο διακομιστής "
+"επιτρέπεται να παρέχει μη επαληθευμένα πρόσθετα."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Το εγκατεστημένο πακέτο πρόσθετου δεν ήταν δυνατό να καταγραφεί ως αυτό του "
+"οποίου ελέγχθηκε η υπογραφή, επομένως αφαιρέθηκε. Το πρόσθετο δεν "
+"εγκαταστάθηκε."

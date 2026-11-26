@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Het adres van de plug-inserver is geen gewoon https-adres, dus de plug-ins "
+"ervan kunnen niet worden geverifieerd. De plug-in is niet geïnstalleerd."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Plug-inversie %1% is ouder dan de geïnstalleerde versie %2% en is daarom "
+"niet geïnstalleerd."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Deze build heeft geen ondertekeningssleutel voor de Cosmyx-plug-inserver, "
+"dus de plug-ins ervan kunnen niet worden geverifieerd. De plug-in is niet "
+"geïnstalleerd."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Er is geen ondertekeningssleutel vastgezet voor deze plug-inserver. Zet de "
+"sleutel vast in Voorkeuren, of sta niet-geverifieerde plug-ins van deze "
+"server toe. De plug-in is niet geïnstalleerd."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Plug-inpakketten kunnen op dit platform niet worden geverifieerd. De plug-in "
+"is niet geïnstalleerd."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Het plug-inpakket heeft de handtekeningcontrole niet doorstaan (%1%). De "
+"plug-in is niet geïnstalleerd."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Plug-in %1% is niet-geverifieerd geïnstalleerd: deze server mag "
+"niet-geverifieerde plug-ins aanbieden."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Het geïnstalleerde plug-inpakket kon niet worden vastgelegd als het pakket "
+"waarvan de handtekening is gecontroleerd en is daarom verwijderd. De plug-in "
+"is niet geïnstalleerd."

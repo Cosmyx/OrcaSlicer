@@ -65,5 +65,55 @@ msgid "Check the addresses and save them."
 msgstr "Kiểm tra các địa chỉ và lưu chúng."
 
 # AI Translated
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+"Khóa công khai dùng để ký các gói plugin của máy chủ này, gồm 64 ký tự thập "
+"lục phân. Máy chủ liệt kê khóa này tại /pkg/v1/keys; hãy kiểm tra ID khóa "
+"với người vận hành máy chủ."
+
+# AI Translated
+msgid "Plugin signing key"
+msgstr "Khóa ký plugin"
+
+# AI Translated
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+"Cài đặt plugin từ máy chủ này ngay cả khi chưa ghim khóa ký nào. Kích thước "
+"và mã băm của chúng vẫn được kiểm tra, nhưng không có gì chứng minh ai đã "
+"tạo ra chúng."
+
+# AI Translated
+msgid "Allow unverified plugins from this server"
+msgstr "Cho phép plugin chưa xác minh từ máy chủ này"
+
+# AI Translated
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr "ID khóa: %1%"
+
+# AI Translated
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr "Khóa ký plugin phải gồm 64 ký tự thập lục phân."
+
+# AI Translated
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr "Chưa lưu cài đặt ký plugin: không thể đọc cài đặt đã lưu trước đó."
+
+# AI Translated
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr ""
+"Địa chỉ API đã thay đổi: đây là cài đặt ký plugin của địa chỉ mới. Hãy kiểm "
+"tra và áp dụng lại để thay đổi chúng."
+
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr "Khởi động lại ứng dụng để kết nối với máy chủ đám mây mới."

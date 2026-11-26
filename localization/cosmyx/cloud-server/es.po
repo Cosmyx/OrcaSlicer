@@ -64,5 +64,59 @@ msgid "Check the addresses and save them."
 msgstr "Compruebe las direcciones y guárdelas."
 
 # AI Translated
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+"Clave pública que firma los paquetes de plugins de este servidor, de 64 "
+"caracteres hexadecimales. El servidor la publica en /pkg/v1/keys; compruebe "
+"su identificador de clave con el operador del servidor."
+
+# AI Translated
+msgid "Plugin signing key"
+msgstr "Clave de firma de plugins"
+
+# AI Translated
+# Needs human review: 'resumen' for digest (hash) and 'fijada' for pinned key
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+"Instalar plugins de este servidor aunque no haya ninguna clave de firma "
+"fijada. Se siguen comprobando su tamaño y su resumen, pero nada demuestra "
+"quién los ha creado."
+
+# AI Translated
+msgid "Allow unverified plugins from this server"
+msgstr "Permitir plugins no verificados de este servidor"
+
+# AI Translated
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr "Identificador de clave: %1%"
+
+# AI Translated
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr "La clave de firma de plugins debe tener 64 caracteres hexadecimales."
+
+# AI Translated
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr ""
+"No se ha guardado la configuración de firma de plugins: no se puede leer la "
+"configuración almacenada."
+
+# AI Translated
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr ""
+"La dirección de la API ha cambiado: esta es la configuración de firma de "
+"plugins de la nueva dirección. Revísela y vuelva a aplicarla para "
+"modificarla."
+
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr "Reinicie la aplicación para conectarse al nuevo servidor en la nube."

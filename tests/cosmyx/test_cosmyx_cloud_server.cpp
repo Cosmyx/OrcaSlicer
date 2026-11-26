@@ -6,6 +6,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <string>
+#include <utility>
 
 #include "libslic3r/AppConfig.hpp"
 #include "libslic3r/Cosmyx/StealthMode.hpp"
@@ -196,7 +197,7 @@ TEST_CASE("Cloud addresses must be https with a host, or http on loopback", "[co
 {
     CHECK(CC::check_cloud_url("https://cloud.example.org") == CloudValueError::None);
     CHECK(CC::check_cloud_url("HTTPS://cloud.example.org") == CloudValueError::None);
-    CHECK(CC::check_cloud_url("https://cloud.example.org/base/path?x=1#y") == CloudValueError::None);
+    CHECK(CC::check_cloud_url("https://cloud.example.org/base/path") == CloudValueError::None);
     CHECK(CC::check_cloud_url("https://cloud.example.org:8443") == CloudValueError::None);
     CHECK(CC::check_cloud_url("https://192.168.1.10") == CloudValueError::None);
     CHECK(CC::check_cloud_url("https://[::1]:443") == CloudValueError::None);
@@ -224,6 +225,49 @@ TEST_CASE("Cloud addresses must be https with a host, or http on loopback", "[co
     CHECK(CC::check_cloud_url("https://[::1]x") == CloudValueError::Invalid);
     CHECK(CC::check_cloud_url("https://[::1]:") == CloudValueError::Invalid);
     CHECK(CC::check_cloud_url("https://cloud.example.org\t") == CloudValueError::Invalid);
+    // What the plugin check would not recognise (decision 0204): Preferences
+    // never takes an address whose plugins would all be refused.
+    CHECK(CC::check_cloud_url("https://cloud.example.org/base/path?x=1#y") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cloud.example.org/#y") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cloud%2Eexample.org") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cloud.example.org/a/../b") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cloud.example.org/.") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cloud.example.org\\api") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cloud..example.org") == CloudValueError::Invalid);
+    CHECK(CC::check_cloud_url("https://cl\xc3\xb6ud.example.org") == CloudValueError::Invalid);
+}
+
+TEST_CASE("A server address is read in its one spelling or not at all", "[cosmyx]")
+{
+    const std::pair<std::string, std::string> recognised[] = {
+        {" HTTPS://Cloud.Example.ORG.:0443//", "https://cloud.example.org"},
+        {"https://cloud.example.org:", "https://cloud.example.org"},
+        {"https://cloud.example.org:8443/API//v1/", "https://cloud.example.org:8443/API//v1"},
+        {"http://[::1]:080", "http://[::1]"},
+        {"https://[FE80::1]", "https://[fe80::1]"},
+        {"https://cloud_1.example.org/a.b/..c", "https://cloud_1.example.org/a.b/..c"},
+    };
+    for (const auto& [typed, expected] : recognised) {
+        INFO(typed);
+        CC::ServerAddress address;
+        REQUIRE(CC::parse_server_address(typed, address));
+        CHECK(address.url() == expected);
+    }
+    CC::ServerAddress address;
+    REQUIRE(CC::parse_server_address("https://h.example.org:8443/p", address));
+    CHECK(address.scheme == "https");
+    CHECK(address.host == "h.example.org");
+    CHECK(address.port == "8443");
+    CHECK(address.path == "/p");
+
+    for (const std::string typed : {"", "cloud.example.org", "ws://cloud.example.org", "https:/cloud.example.org",
+                                    "https://u@cloud.example.org", "https://cloud.example.org/%41", "https://cloud.example.org?x",
+                                    "https://cloud.example.org/..", "https://cloud.example.org/./", "https://[::1",
+                                    "https://[::1]:x", "https://[::g]",
+                                    "https://cloud.example.org:-1", "https://cloud.example.org:443:443", "https://-.example.org/ x"}) {
+        INFO(typed);
+        CHECK_FALSE(CC::parse_server_address(typed, address));
+    }
 }
 
 TEST_CASE("Plain http is accepted only on a loopback host", "[cosmyx]")

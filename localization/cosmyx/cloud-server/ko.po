@@ -62,5 +62,50 @@ msgid "Check the addresses and save them."
 msgstr "주소를 확인하고 저장합니다."
 
 # AI Translated
+msgid ""
+"Public key that signs this server's plugin packages, 64 hexadecimal "
+"characters. The server lists it at /pkg/v1/keys; check its key id with the "
+"server's operator."
+msgstr ""
+"이 서버의 플러그인 패키지에 서명하는 공개 키로, 16진수 64자입니다. 서버는 /pkg/v1/keys에 이 키를 게시합니다. 키 ID는 "
+"서버 운영자에게 확인하세요."
+
+# AI Translated
+msgid "Plugin signing key"
+msgstr "플러그인 서명 키"
+
+# AI Translated
+msgid ""
+"Install plugins from this server even when no signing key is pinned. Their "
+"size and digest are still checked, but nothing proves who made them."
+msgstr ""
+"고정된 서명 키가 없어도 이 서버의 플러그인을 설치합니다. 크기와 다이제스트는 계속 확인되지만, 누가 만들었는지는 증명되지 않습니다."
+
+# AI Translated
+msgid "Allow unverified plugins from this server"
+msgstr "이 서버의 검증되지 않은 플러그인 허용"
+
+# AI Translated
+#. TRN %1% is a 64-character hexadecimal key id.
+#, possible-boost-format
+msgid "Key id: %1%"
+msgstr "키 ID: %1%"
+
+# AI Translated
+msgid "The plugin signing key must be 64 hexadecimal characters."
+msgstr "플러그인 서명 키는 16진수 64자여야 합니다."
+
+# AI Translated
+msgid ""
+"The plugin signing settings were not saved: the stored ones cannot be read."
+msgstr "플러그인 서명 설정을 저장하지 못했습니다: 저장된 설정을 읽을 수 없습니다."
+
+# AI Translated
+msgid ""
+"The API address changed: these are the plugin signing settings of the new "
+"address. Check them and apply again to change them."
+msgstr "API 주소가 변경되었습니다: 다음은 새 주소의 플러그인 서명 설정입니다. 설정을 확인하고, 변경하려면 다시 적용하세요."
+
+# AI Translated
 msgid "Restart the application to connect to the new cloud server."
 msgstr "새 클라우드 서버에 연결하려면 애플리케이션을 다시 시작하세요."

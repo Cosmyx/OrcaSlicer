@@ -1,0 +1,62 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr "外掛伺服器位址不是單純的 https 位址，因此無法驗證其外掛。外掛未安裝。"
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr "外掛版本 %1% 比已安裝的版本 %2% 舊，因此未安裝。"
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr "此版本沒有 Cosmyx 外掛伺服器的簽署金鑰，因此無法驗證其外掛。外掛未安裝。"
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr "此外掛伺服器未固定簽署金鑰。請在偏好設定中固定其金鑰，或允許來自該伺服器的未驗證外掛。外掛未安裝。"
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr "無法在此平台上驗證外掛套件。外掛未安裝。"
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr "外掛套件未通過簽章檢查（%1%）。外掛未安裝。"
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr "外掛 %1% 已在未驗證的情況下安裝：此伺服器可能提供未驗證的外掛。"
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr "無法將已安裝的外掛套件記錄為已通過簽章檢查的套件，因此已將其移除。外掛未安裝。"
