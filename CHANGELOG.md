@@ -37,6 +37,10 @@ here; see the upstream release notes.
 ### libslic3r
 
 <!-- cosmyx-slot: T1 -->
+- A bed temperature of -1 turns the bed heater off: the G-code writes
+  `M140 S0` and never waits with `M190`, and the bed temperature placeholders
+  read 0. A value of 0 still means the filament does not support the plate.
+  Pull request: pending. Decisions: 0010, 0011, 0012.
 
 <!-- cosmyx-slot: T2 -->
 
