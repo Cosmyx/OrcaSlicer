@@ -243,10 +243,23 @@ def same_text(path: Path, expected: str) -> bool:
 
 # The hex rule of the frozen contract: `#RRGGBB` in any case, not followed by
 # another hex digit (so `#RRGGBBAA` matches its first six digits and keeps the
-# alpha), never inside an `href`, a `url(...)` reference or base64 data.
+# alpha), never inside an `href`, a `url(...)` reference, a URL fragment
+# (`scheme://...#RRGGBB`), a numeric character reference (`&#NNNNNN;`) or
+# base64 data.
 HEX_RE = re.compile(r"#([0-9A-Fa-f]{6})(?:[0-9A-Fa-f]{2})?(?![0-9A-Fa-f])")
-_SKIP_BEFORE_RE = re.compile(r"(?:href\s*=\s*[\"']?|url\(\s*[\"']?)$", re.IGNORECASE)
+_SKIP_BEFORE_RE = re.compile(r"(?:href\s*=\s*[\"']?|url\(\s*[\"']?|&)$", re.IGNORECASE)
 _BASE64_RE = re.compile(r"base64,[A-Za-z0-9+/=\s]+")
+# A URL runs back from the `#` until whitespace, a quote, a bracket or an
+# angle bracket; it is a URL when that run holds `scheme://`.
+_URL_RUN_RE = re.compile(r"[A-Za-z][A-Za-z0-9+.-]*://[^\s\"'`()<>\[\]{}]*$")
+HEX_LOOKBACK = 2048
+
+
+def hex_is_skipped(before: str) -> bool:
+    """True when a `#` preceded by `before` is not a colour: an `href` or
+    `url(...)` target, a URL fragment, or a numeric character reference.
+    `before` is the text right before the `#` (a bounded window is enough)."""
+    return bool(_SKIP_BEFORE_RE.search(before[-16:]) or _URL_RUN_RE.search(before[-HEX_LOOKBACK:]))
 
 
 def find_hexes(text: str) -> list[str]:
@@ -254,8 +267,7 @@ def find_hexes(text: str) -> list[str]:
     text = _BASE64_RE.sub("base64,", text)
     found = []
     for match in HEX_RE.finditer(text):
-        before = text[max(0, match.start() - 16) : match.start()]
-        if _SKIP_BEFORE_RE.search(before):
+        if hex_is_skipped(text[max(0, match.start() - HEX_LOOKBACK) : match.start()]):
             continue
         found.append("#" + match.group(1).upper())
     return found

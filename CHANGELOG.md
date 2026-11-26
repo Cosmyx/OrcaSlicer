@@ -113,6 +113,18 @@ here; see the upstream release notes.
   Decisions: 0124, 0125.
 
 <!-- cosmyx-slot: T11c -->
+- Turn the Orca teal into the Cosmyx violets at build time: 24 colour
+  mappings (all validated by the user on 2026-11-19, with their WCAG contrast
+  on white and on the dark screen), 115 exact literal rows for numeric colours,
+  the dark grey `#242323` as default filament colour instead of the teal
+  (accents stay violet), one dark-mode snippet for the CSS-form SVG icons,
+  and a guard that fails on any teal left unless allow-listed. URL fragments and numeric character references are never
+  taken for colours, and palette values must be uppercase `#RRGGBB`. On an
+  older upstream base (tolerant mode, decision 0122) literal rows whose file
+  or text that tree lacks are skipped with a warning.
+  Recipes `just brand-colour-candidates` and
+  `brand-colour-literals`. Pull request: pending. Decisions: 0127, 0128,
+  0129, 0130.
 
 <!-- cosmyx-slot: T11d -->
 
