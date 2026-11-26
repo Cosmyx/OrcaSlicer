@@ -336,6 +336,21 @@ here; see the upstream release notes.
   the connection animation keep their upstream look. Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/114.
   Decisions: 0214.
 
+<!-- cosmyx-slot: T31 -->
+- On a Cosmyx printer, the "Connection" button of the printer title bar opens
+  a Cosmyx physical printer dialog instead of the generic one. Its "Setup" tab
+  asks only for the preset name, the machine IP (or host name, with an
+  optional port) and the API key, saves the OctoPrint address, the machine web
+  interface and the key into the printer preset, and tests the connection.
+  Its "Machine information" tab, enabled once the settings are saved and a
+  connection test succeeded (one runs by itself when the dialog opens on a
+  configured machine), reads the model, serial number, versions, installed
+  options, hot ends and camera from the machine. Other printers keep the
+  generic dialog. The dialog is translated into French and machine-translated
+  for review into the 20 other offered UI languages. Pull request:
+  https://github.com/Cosmyx/OrcaSlicer/pull/127.
+  Decision: 0225.
+
 ### i18n
 
 <!-- cosmyx-slot: T8 -->

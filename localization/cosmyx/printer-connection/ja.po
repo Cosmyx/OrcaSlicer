@@ -1,0 +1,208 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr "マシンがAPIキーを拒否しました (HTTP 401)。「設定」タブでAPIキーを確認してください。"
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr "このAPIキーにはこの情報を読み取る権限がありません (HTTP 403)。"
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "マシンはこの情報を提供していません (HTTP 404)。"
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr "マシンが時間内に応答しませんでした。電源が入っていて、ネットワークに接続されていることを確認してください。"
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "マシンに接続できませんでした。アドレスとネットワークを確認してください。"
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "マシンがエラーを返しました (HTTP %1%)。"
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "マシンから読み取れない応答が返されました。"
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "マシンのIPアドレスまたはホスト名を入力してください。"
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "アドレスにスペースを含めることはできません。"
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "http:// や https:// を付けずに、アドレスのみを入力してください。"
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "後ろにパスを付けずに、アドレスのみを入力してください。"
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "アドレスにユーザー名を含めることはできません。"
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "ポートは1から65535までの数値で指定してください。"
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "このIPv4アドレスは無効です。"
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "このホスト名は無効です。"
+
+# AI Translated
+# Needs human review: Tab title: check whether "設定" or "セットアップ" reads better next to the Machine information tab
+msgid "Setup"
+msgstr "設定"
+
+# AI Translated
+msgid "Machine information"
+msgstr "マシン情報"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "マシンのIP"
+
+# AI Translated
+msgid "Test connection"
+msgstr "接続テスト"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr "マシン情報を表示するには、設定を保存して接続テストを成功させてください。"
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "APIキーにスペースを含めることはできません。"
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "保存済みのマシンへの接続を確認しています..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "接続をテストしています..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "マシン情報を読み取っています..."
+
+# AI Translated
+# Needs human review: Section heading for model / serial / versions: check wording
+msgid "Identity"
+msgstr "識別情報"
+
+# AI Translated
+msgid "Serial number"
+msgstr "シリアル番号"
+
+# AI Translated
+msgid "Software version"
+msgstr "ソフトウェアバージョン"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "ハードウェアバージョン"
+
+# AI Translated
+msgid "Installed options"
+msgstr "搭載オプション"
+
+# AI Translated
+# Needs human review: Installed machine option name: check the vendor's Japanese term
+msgid "Speed mode"
+msgstr "スピードモード"
+
+# AI Translated
+# Needs human review: Installed option (high-temperature kit), not a temperature value: check wording
+msgid "High temperature"
+msgstr "高温仕様"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "加熱式エンクロージャー"
+
+# AI Translated
+# Needs human review: Fume/air extraction option: check whether 排気 or 集塵 fits the hardware
+msgid "Extraction system"
+msgstr "排気システム"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "エンクロージャーの最高温度"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "ヒートベッド"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "ベッドの最高温度"
+
+# AI Translated
+msgid "Uninterrupted power supply"
+msgstr "無停電電源装置 (UPS)"
+
+# AI Translated
+msgid "Build volume"
+msgstr "ビルドボリューム"
+
+# AI Translated
+msgid "Bed probe"
+msgstr "ベッドプローブ"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "ホットエンド"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "マシンからホットエンドが報告されていません。"
+
+# AI Translated
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "ヘッド %1%"
+
+# AI Translated
+# Needs human review: Hot end attribute (hardened nozzle): check that 焼入れ reads well alone as a value
+msgid "Hardened"
+msgstr "焼入れ"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "最高温度"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "ダイレクトドライブ"
+
+# AI Translated
+msgid "No camera"
+msgstr "カメラなし"

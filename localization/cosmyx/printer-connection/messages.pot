@@ -1,0 +1,166 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the OrcaSlicer-Cosmyx package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer-Cosmyx\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-25 09:54+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr ""
+
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr ""
+
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+
+msgid "Could not reach the machine. Check the address and the network."
+msgstr ""
+
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr ""
+
+msgid "The machine sent an answer that could not be read."
+msgstr ""
+
+msgid "Enter the IP address or the host name of the machine."
+msgstr ""
+
+msgid "The address must not contain spaces."
+msgstr ""
+
+msgid "Enter the address only, without http:// or https://."
+msgstr ""
+
+msgid "Enter the address only, without a path after it."
+msgstr ""
+
+msgid "The address must not contain a user name."
+msgstr ""
+
+msgid "The port must be a number from 1 to 65535."
+msgstr ""
+
+msgid "This IPv4 address is not valid."
+msgstr ""
+
+msgid "This host name is not valid."
+msgstr ""
+
+msgid "Setup"
+msgstr ""
+
+msgid "Machine information"
+msgstr ""
+
+msgid "Machine IP"
+msgstr ""
+
+msgid "Test connection"
+msgstr ""
+
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+
+msgid "The API key must not contain spaces."
+msgstr ""
+
+msgid "Checking the connection to the saved machine..."
+msgstr ""
+
+msgid "Testing the connection..."
+msgstr ""
+
+msgid "Reading the machine information..."
+msgstr ""
+
+msgid "Identity"
+msgstr ""
+
+msgid "Serial number"
+msgstr ""
+
+msgid "Software version"
+msgstr ""
+
+msgid "Hardware version"
+msgstr ""
+
+msgid "Installed options"
+msgstr ""
+
+msgid "Speed mode"
+msgstr ""
+
+msgid "High temperature"
+msgstr ""
+
+msgid "Heated enclosure"
+msgstr ""
+
+msgid "Extraction system"
+msgstr ""
+
+msgid "Enclosure maximum temperature"
+msgstr ""
+
+msgid "Heated bed"
+msgstr ""
+
+msgid "Bed maximum temperature"
+msgstr ""
+
+msgid "Uninterrupted power supply"
+msgstr ""
+
+msgid "Build volume"
+msgstr ""
+
+msgid "Bed probe"
+msgstr ""
+
+msgid "Hot ends"
+msgstr ""
+
+msgid "The machine reports no hot end."
+msgstr ""
+
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr ""
+
+msgid "Hardened"
+msgstr ""
+
+msgid "Maximum temperature"
+msgstr ""
+
+msgid "Direct drive"
+msgstr ""
+
+msgid "No camera"
+msgstr ""

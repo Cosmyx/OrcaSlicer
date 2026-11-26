@@ -1,0 +1,208 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: zh_HK\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr "機器拒絕了 API 金鑰（HTTP 401）。請在「設定」分頁檢查 API 金鑰。"
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr "此 API 金鑰無權讀取這項資訊（HTTP 403）。"
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "機器未提供這項資訊（HTTP 404）。"
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr "機器未能及時回應。請檢查機器是否已開啟並已連接網絡。"
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "無法連線至機器。請檢查地址及網絡。"
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "機器回應錯誤（HTTP %1%）。"
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "機器傳回的回應無法讀取。"
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "請輸入機器的 IP 地址或主機名稱。"
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "地址不可包含空格。"
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "請只輸入地址，不要加上 http:// 或 https://。"
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "請只輸入地址，後面不要加上路徑。"
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "地址不可包含用戶名稱。"
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "連接埠必須是 1 至 65535 之間的數字。"
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "此 IPv4 地址無效。"
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "此主機名稱無效。"
+
+# AI Translated
+msgid "Setup"
+msgstr "設定"
+
+# AI Translated
+msgid "Machine information"
+msgstr "機器資訊"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "機器 IP"
+
+# AI Translated
+msgid "Test connection"
+msgstr "測試連線"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr "請儲存設定並成功完成連線測試，以查看機器資訊。"
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "API 金鑰不可包含空格。"
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "正在檢查與已儲存機器的連線..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "正在測試連線..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "正在讀取機器資訊..."
+
+# AI Translated
+# Needs human review: section title for machine identity data (name/model/serial); check 身分 vs 識別資訊
+msgid "Identity"
+msgstr "身分"
+
+# AI Translated
+msgid "Serial number"
+msgstr "序號"
+
+# AI Translated
+msgid "Software version"
+msgstr "軟件版本"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "硬件版本"
+
+# AI Translated
+msgid "Installed options"
+msgstr "已安裝選配"
+
+# AI Translated
+msgid "Speed mode"
+msgstr "速度模式"
+
+# AI Translated
+# Needs human review: installed option name (high-temperature kit); check whether 高溫套件 fits better
+msgid "High temperature"
+msgstr "高溫"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "加熱機箱"
+
+# AI Translated
+# Needs human review: fume/air extraction option; check 抽風系統 vs 排氣系統
+msgid "Extraction system"
+msgstr "抽風系統"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "機箱最高溫度"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "熱床"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "熱床最高溫度"
+
+# AI Translated
+# Needs human review: HK usage 不間斷電源 vs 不斷電電源
+msgid "Uninterrupted power supply"
+msgstr "不斷電電源（UPS）"
+
+# AI Translated
+msgid "Build volume"
+msgstr "成型尺寸"
+
+# AI Translated
+msgid "Bed probe"
+msgstr "熱床探針"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "熱端"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "機器未報告任何熱端。"
+
+# AI Translated
+# Needs human review: print head numbered from 0; check 噴頭 vs 打印頭
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "噴頭 %1%"
+
+# AI Translated
+# Needs human review: hot end flag (hardened nozzle); check 硬化 alone reads well
+msgid "Hardened"
+msgstr "硬化"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "最高溫度"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "近程擠出"
+
+# AI Translated
+msgid "No camera"
+msgstr "沒有攝影機"

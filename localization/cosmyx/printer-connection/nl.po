@@ -1,0 +1,216 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx printer-connection\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+# AI Translated
+msgid ""
+"The machine refused the API key (HTTP 401). Check the API key in the Setup "
+"tab."
+msgstr ""
+"De machine heeft de API-sleutel geweigerd (HTTP 401). Controleer de "
+"API-sleutel op het tabblad Configuratie."
+
+# AI Translated
+msgid "The API key is not allowed to read this information (HTTP 403)."
+msgstr ""
+"De API-sleutel heeft geen toestemming om deze informatie te lezen (HTTP 403)."
+
+# AI Translated
+msgid "The machine does not provide this information (HTTP 404)."
+msgstr "De machine geeft deze informatie niet (HTTP 404)."
+
+# AI Translated
+msgid ""
+"The machine did not answer in time. Check that it is switched on and "
+"connected to the network."
+msgstr ""
+"De machine heeft niet op tijd geantwoord. Controleer of deze is ingeschakeld "
+"en met het netwerk is verbonden."
+
+# AI Translated
+msgid "Could not reach the machine. Check the address and the network."
+msgstr "De machine is niet bereikbaar. Controleer het adres en het netwerk."
+
+# AI Translated
+#. TRN %1% is an HTTP status code, for example 500.
+#, possible-boost-format
+msgid "The machine answered with an error (HTTP %1%)."
+msgstr "De machine antwoordde met een fout (HTTP %1%)."
+
+# AI Translated
+msgid "The machine sent an answer that could not be read."
+msgstr "De machine stuurde een antwoord dat niet kon worden gelezen."
+
+# AI Translated
+msgid "Enter the IP address or the host name of the machine."
+msgstr "Voer het IP-adres of de hostnaam van de machine in."
+
+# AI Translated
+msgid "The address must not contain spaces."
+msgstr "Het adres mag geen spaties bevatten."
+
+# AI Translated
+msgid "Enter the address only, without http:// or https://."
+msgstr "Voer alleen het adres in, zonder http:// of https://."
+
+# AI Translated
+msgid "Enter the address only, without a path after it."
+msgstr "Voer alleen het adres in, zonder pad erachter."
+
+# AI Translated
+msgid "The address must not contain a user name."
+msgstr "Het adres mag geen gebruikersnaam bevatten."
+
+# AI Translated
+msgid "The port must be a number from 1 to 65535."
+msgstr "De poort moet een getal van 1 tot en met 65535 zijn."
+
+# AI Translated
+msgid "This IPv4 address is not valid."
+msgstr "Dit IPv4-adres is ongeldig."
+
+# AI Translated
+msgid "This host name is not valid."
+msgstr "Deze hostnaam is ongeldig."
+
+# AI Translated
+# Needs human review: tab name; check 'Configuratie' fits the dialog tab and matches the 401 message
+msgid "Setup"
+msgstr "Configuratie"
+
+# AI Translated
+msgid "Machine information"
+msgstr "Machine-informatie"
+
+# AI Translated
+msgid "Machine IP"
+msgstr "IP-adres van de machine"
+
+# AI Translated
+msgid "Test connection"
+msgstr "Verbinding testen"
+
+# AI Translated
+msgid ""
+"Save the settings and run a successful connection test to see the machine "
+"information."
+msgstr ""
+"Sla de instellingen op en voer een geslaagde verbindingstest uit om de "
+"machine-informatie te zien."
+
+# AI Translated
+msgid "The API key must not contain spaces."
+msgstr "De API-sleutel mag geen spaties bevatten."
+
+# AI Translated
+msgid "Checking the connection to the saved machine..."
+msgstr "Verbinding met de opgeslagen machine controleren..."
+
+# AI Translated
+msgid "Testing the connection..."
+msgstr "Verbinding testen..."
+
+# AI Translated
+msgid "Reading the machine information..."
+msgstr "Machine-informatie uitlezen..."
+
+# AI Translated
+# Needs human review: section title for model/serial; check 'Identificatie' vs 'Identiteit'
+msgid "Identity"
+msgstr "Identificatie"
+
+# AI Translated
+msgid "Serial number"
+msgstr "Serienummer"
+
+# AI Translated
+msgid "Software version"
+msgstr "Softwareversie"
+
+# AI Translated
+msgid "Hardware version"
+msgstr "Hardwareversie"
+
+# AI Translated
+msgid "Installed options"
+msgstr "Geïnstalleerde opties"
+
+# AI Translated
+# Needs human review: installed hardware option, not a print speed preset; check wording
+msgid "Speed mode"
+msgstr "Snelheidsmodus"
+
+# AI Translated
+# Needs human review: installed option (high-temperature kit); check wording
+msgid "High temperature"
+msgstr "Hoge temperatuur"
+
+# AI Translated
+msgid "Heated enclosure"
+msgstr "Verwarmde behuizing"
+
+# AI Translated
+# Needs human review: fume extraction option; check 'Afzuigsysteem'
+msgid "Extraction system"
+msgstr "Afzuigsysteem"
+
+# AI Translated
+msgid "Enclosure maximum temperature"
+msgstr "Maximale temperatuur behuizing"
+
+# AI Translated
+msgid "Heated bed"
+msgstr "Verwarmd printbed"
+
+# AI Translated
+msgid "Bed maximum temperature"
+msgstr "Maximale temperatuur printbed"
+
+# AI Translated
+# Needs human review: UPS option; check 'Noodstroomvoeding (UPS)' vs 'Ononderbroken stroomvoorziening'
+msgid "Uninterrupted power supply"
+msgstr "Noodstroomvoeding (UPS)"
+
+# AI Translated
+msgid "Build volume"
+msgstr "Bouwvolume"
+
+# AI Translated
+# Needs human review: bed levelling probe; check 'Printbedsensor' vs 'Bedtaster'
+msgid "Bed probe"
+msgstr "Printbedsensor"
+
+# AI Translated
+msgid "Hot ends"
+msgstr "Hotends"
+
+# AI Translated
+msgid "The machine reports no hot end."
+msgstr "De machine meldt geen hotend."
+
+# AI Translated
+#. TRN %1% is the head number reported by the machine (0, 1, ...).
+#, possible-boost-format
+msgid "Head %1%"
+msgstr "Kop %1%"
+
+# AI Translated
+msgid "Hardened"
+msgstr "Gehard"
+
+# AI Translated
+msgid "Maximum temperature"
+msgstr "Maximale temperatuur"
+
+# AI Translated
+msgid "Direct drive"
+msgstr "Direct drive"
+
+# AI Translated
+msgid "No camera"
+msgstr "Geen camera"
