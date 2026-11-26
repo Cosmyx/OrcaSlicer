@@ -8,11 +8,11 @@
       "size": "multi",
       "usage": "macOS app bundle icon (src/CMakeLists.txt MACOSX_BUNDLE_ICON_FILE)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "validated",
       "upstream_sha256": "e50995e3e3c48d57bef4ee724035e430d4919ca8d8ef32e7df556ac6fc78db19",
-      "override_sha256": null
+      "override_sha256": "91354ace7decabda0d3d56aef60445bf1c928eecf871ea6336ba4e4734da3395"
     },
     {
       "path": "resources/images/OrcaSlicer-mac_128px.png",
@@ -32,11 +32,11 @@
       "size": "256",
       "usage": "macOS main frame icon (MainFrame.cpp)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "17f4aa4b6362723a4e8539d0ed536977670c826c108d425d4b5d0757398312f1",
-      "override_sha256": null
+      "override_sha256": "9481429d4895a83445bb4a98e7e968ca11394622f18b797865c7f420b00929c1"
     },
     {
       "path": "resources/images/OrcaSlicer.icns",
@@ -56,11 +56,11 @@
       "size": "16,32,48,64,128,256",
       "usage": "Windows executable and installer icon (OrcaSlicer.rc.in, CPack/NSIS)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "validated",
       "upstream_sha256": "8abf41c3cd9865443d0ada46d69bf86b1128b8b9832cfe1940766d8315bb212f",
-      "override_sha256": null
+      "override_sha256": "d261f845d51b19c50933767a779935783aa869c040e628d2cf68c805ed992a48"
     },
     {
       "path": "resources/images/OrcaSlicer.png",
@@ -68,11 +68,11 @@
       "size": "154x154",
       "usage": "Linux desktop integration (DesktopIntegrationDialog.cpp)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "fcf2f11a86488d753e452fa5a9800c4551909bf4fb12765fa74fe3f7b6438308",
-      "override_sha256": null
+      "override_sha256": "e0bd2ac0a94bfa46e18bd22e2ca6b6c465c219ecf45268ca1bd95571a77280b9"
     },
     {
       "path": "resources/images/OrcaSlicer.svg",
@@ -80,11 +80,11 @@
       "size": "64x64",
       "usage": "app logo: release notes, update and message dialogs, Flatpak icon",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "40c454caa70ef2d7a9a60139ae249f74386f6c1033961193cb3323f0b5ff3306",
-      "override_sha256": null
+      "override_sha256": "a073735a806572e5df1701b4074bbfeac2329c3a8526327ae04afc84a203732a"
     },
     {
       "path": "resources/images/OrcaSlicerTitle.ico",
@@ -92,11 +92,11 @@
       "size": "154",
       "usage": "Windows dialog title icon (AMSDryControl, AmsMappingPopup, DeviceErrorDialog, SafetyOptionsDialog)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "4c263639c743921b313e4fae9f8cde2aa5ae5afaaedfa19dbdb1dd58cc084740",
-      "override_sha256": null
+      "override_sha256": "01399ca76757b81ebc4070c7837b1318fd6c33daa0013995eb954ab46779dd81"
     },
     {
       "path": "resources/images/OrcaSlicerTitle.png",
@@ -116,11 +116,11 @@
       "size": "128x128",
       "usage": "main frame icon (MainFrame.cpp); Linux hicolor 128",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "63b9220099c83c0c8c88b89482ed587a6df901cb8388314527c9c057e97e9f05",
-      "override_sha256": null
+      "override_sha256": "4b1fb7abe48fba248e378dafc30912b58d3da44a1f4fb3421ff612997e04f1df"
     },
     {
       "path": "resources/images/OrcaSlicer_154.png",
@@ -152,11 +152,11 @@
       "size": "192x192",
       "usage": "About dialog, system info dialog; Linux hicolor 192",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "9f8cfa161c2e8f7b0dbdcdc23e23e82ac12fb293eb4524fd32e93911a511a913",
-      "override_sha256": null
+      "override_sha256": "571228f93f0fbe2dd10109211e0e5ec828946a200ca4d9cce03cbc83fea264e8"
     },
     {
       "path": "resources/images/OrcaSlicer_192px_grayscale.png",
@@ -188,11 +188,11 @@
       "size": "32x32",
       "usage": "Linux hicolor 32 (CMakeLists.txt)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "f5031459506583da22f0a93a0f36313073e0a5c273656aea665d4253832fe9e7",
-      "override_sha256": null
+      "override_sha256": "24104efd2297c0f6fcd52e4a8eb5f3df3942f2aca139190505c06e2760ea00e3"
     },
     {
       "path": "resources/images/OrcaSlicer_64.png",
@@ -212,11 +212,11 @@
       "size": "560x125",
       "usage": "About dialog banner, light (AboutDialog.cpp)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "8382dca12e5a9f9b3e6656865ca3902bec9dd76dcfc1a0012911c7b1b62d9510",
-      "override_sha256": null
+      "override_sha256": "455447695317470791942990322b2ec02d888b68548d10d25596250c6bfac8b7"
     },
     {
       "path": "resources/images/OrcaSlicer_about_dark.svg",
@@ -224,11 +224,11 @@
       "size": "560x125",
       "usage": "About dialog banner, dark (AboutDialog.cpp)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@d317226e47",
+      "status": "validated",
       "upstream_sha256": "17570c0c3f806f5db27b79cbbfa22796a82a4915545c837082786b71e8ac9d3c",
-      "override_sha256": null
+      "override_sha256": "eec9f74eb8df7f11c09d816af9db4782cb92ea5c956680baf76e9dbbb18daf3d"
     },
     {
       "path": "resources/images/OrcaSlicer_gradient.svg",
@@ -320,11 +320,11 @@
       "size": "480x480",
       "usage": "splash screen, light (GUI_App.cpp, 480x480 canvas)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@bab368d306",
+      "status": "validated",
       "upstream_sha256": "4edd359439985ea14153e04172fbafb89de65d87415b20541cbaf3dcaeec2a63",
-      "override_sha256": null
+      "override_sha256": "399a0e8db6bb6d701b85ce1c46b57887ccacb1703298318e475907dec4d95709"
     },
     {
       "path": "resources/images/splash_logo_dark.svg",
@@ -332,11 +332,11 @@
       "size": "480x480",
       "usage": "splash screen, dark (GUI_App.cpp, 480x480 canvas)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "cosmoslice",
+      "source_ref": "CosmoSlice@bab368d306",
+      "status": "validated",
       "upstream_sha256": "c7a4173651e388bbdd7dda614770e9ac093cfa83846ea86283e43c3e33cc8de5",
-      "override_sha256": null
+      "override_sha256": "a84159bb3462f6bdd205d6f48d8deae7d17def36685c3815f820c2d152c180db"
     },
     {
       "path": "resources/images/stl.icns",
@@ -392,11 +392,11 @@
       "size": "150x150",
       "usage": "MSIX tile (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "validated",
       "upstream_sha256": "305628f5f522158dc348e17cd2613e077cd13785fb46977e616a26ab0175b44b",
-      "override_sha256": null
+      "override_sha256": "833ce7631776b9325268225b6398498aa939dda17bfea9b68f92891f219a7027"
     },
     {
       "path": "scripts/msix/assets/Square44x44Logo.png",
@@ -404,11 +404,11 @@
       "size": "44x44",
       "usage": "MSIX small tile (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "validated",
       "upstream_sha256": "0114ecee82b55c56c234a59cffe8410ad8738e216d48afab73a0f03c1aacb241",
-      "override_sha256": null
+      "override_sha256": "4be7bba80fd148e3bf61c371bb058b8869cece5ed42b0775bcec48a4a282d9c0"
     },
     {
       "path": "scripts/msix/assets/Square44x44Logo.targetsize-44_altform-unplated.png",
@@ -416,11 +416,11 @@
       "size": "44x44",
       "usage": "MSIX taskbar icon (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "validated",
       "upstream_sha256": "0114ecee82b55c56c234a59cffe8410ad8738e216d48afab73a0f03c1aacb241",
-      "override_sha256": null
+      "override_sha256": "4be7bba80fd148e3bf61c371bb058b8869cece5ed42b0775bcec48a4a282d9c0"
     },
     {
       "path": "scripts/msix/assets/StoreLogo.png",
@@ -428,11 +428,11 @@
       "size": "50x50",
       "usage": "MSIX store logo (AppxManifest.xml)",
       "kind": "logo",
-      "source": null,
-      "source_ref": null,
-      "status": "missing",
+      "source": "derived",
+      "source_ref": "just brand-derive (scripts/cosmyx/branding/derive/derived-assets.toml) from resources/images/OrcaSlicer.svg",
+      "status": "validated",
       "upstream_sha256": "31bdb5b60a90503679b7449c04539bd36c1385d931a31bc441a5ba6cb045fcff",
-      "override_sha256": null
+      "override_sha256": "04ca63a13d4d7fba7d05e0c94020ade829ce72cd6b38a950ac40e89007b7928e"
     }
   ]
 }

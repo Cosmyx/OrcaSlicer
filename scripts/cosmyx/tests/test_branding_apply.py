@@ -474,7 +474,8 @@ class RealTreeTest(unittest.TestCase):
     def test_a_vendored_logo_applies_and_reverts(self) -> None:
         target = "resources/images/OrcaSlicer.svg"
         write(self.root, f"{branding.OVERLAY_DIR}/{target}", svg("#8000FF", 64))
-        manifest.sync(self.root)
+        # The committed row may already carry a vendored logo: re-baseline it on the new overlay.
+        manifest.refresh(self.root, target)
         render.write(self.root, manifest.load(self.root))
         before = snapshot(self.root)
         self.assertEqual(apply_module.apply(self.root, env=REAL_TREE_ENV, out=lambda _: None), 0)

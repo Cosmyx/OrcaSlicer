@@ -88,6 +88,13 @@ here; see the upstream release notes.
   request: pending. Decisions: 0070, 0071, 0072, 0073.
 
 <!-- cosmyx-slot: T11b -->
+- Ship the CosmoSlice application icon, About dialog logos and splash
+  screen in Cosmyx builds: 11 files vendored from CosmoSlice (window,
+  taskbar and Linux desktop icons, About banner, splash) and 6 rasters
+  derived from the CosmoSlice SVG master by `just brand-derive` in a pinned
+  resvg image (multi-size Windows icon, macOS app icon, MSIX tiles). The
+  other logos (file-type icons, bed texture, web and dialog logos) keep the
+  Orca files for now. Pull request: #101. Decisions: 0124, 0125, 0126.
 
 <!-- cosmyx-slot: T11c -->
 
