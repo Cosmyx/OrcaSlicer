@@ -19,6 +19,9 @@ are checked too:
 - notarization: the DMG and its apps are stapled, Gatekeeper sees a notarised
   Developer ID app (`spctl -t exec`) and accepts the DMG (`spctl -t open`).
 In not-configured mode with strict, the missing signing is a failure.
+
+Then, while the image is mounted and the build may be run, the smoke run and
+the slice of smoke_native.py (decision 0160).
 """
 
 from __future__ import annotations
@@ -29,7 +32,7 @@ import sys
 from collections.abc import Callable
 from pathlib import Path
 
-from . import binfmt, signing_policy
+from . import binfmt, signing_policy, smoke_native
 from .allowlist import Allowlist
 from .inventory import Artifact
 from .records import Record, build_manifest, posix_relative
@@ -197,7 +200,10 @@ def scan_tree(artifact: Artifact, mount: Path, allow: Allowlist, run: Runner, mo
 def check(artifacts_dir: Path, artifacts: list[Artifact], work: Path, allow: Allowlist, run: Runner = subprocess.run,
           tree_hook: TreeHook | None = None, manifests: dict | None = None,
           enforce_stale: bool = False, mode: str = signing_policy.REPORT, team: str = "",
-          strict: bool = False) -> list[Record]:
+          strict: bool = False, exec_ok: bool = False, subject: Path | None = None,
+          expectations: dict | None = None, host_arch: str | None = None) -> list[Record]:
+    """Mount each disk image and check it. The smoke run and the slice need
+    expectations and subject (the built commit's data files)."""
     records = []
     enforce = mode == signing_policy.ENFORCE
     if enforce and not team:
@@ -230,6 +236,9 @@ def check(artifacts_dir: Path, artifacts: list[Artifact], work: Path, allow: All
                 manifests[artifact.name] = build_manifest(mount)
             if tree_hook and artifact.spec.get("app"):
                 records += tree_hook(artifact, mount)
+            if expectations is not None and subject is not None and artifact.spec.get("app"):
+                records += smoke_native.macos_records(artifact, mount, subject, work, expectations, exec_ok, run,
+                                                      host_arch)
         finally:
             if _run(run, ["hdiutil", "detach", str(mount)]).returncode != 0:
                 _run(run, ["hdiutil", "detach", "-force", str(mount)])
