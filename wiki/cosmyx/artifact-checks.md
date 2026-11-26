@@ -5,7 +5,8 @@ what the build produced and checks it on the OS it is meant for: signatures,
 installer payload, architectures, ELF files, a smoke run and a slice on Linux,
 the build tag in the names, the shipped translations and models. The result is
 a JUnit report, a Markdown summary on the run page, and the commit status
-`cosmyx/artifact-checks` on the built commit. Decisions 0140 to 0149.
+`cosmyx/artifact-checks` on the built commit. Decisions 0140 to 0149, and
+0156 for the macOS Developer ID rules.
 
 ## How it runs
 
@@ -50,7 +51,14 @@ patterns and limits are in `data/expectations.json`.
   valid arm64 signature (`codesign --verify --strict --arch arm64`, ad-hoc is
   enough).
 - Each `.app`: `codesign --verify --deep --strict` and its signature class,
-  reported only: "not Developer-ID signed (expected, 0146)".
+  reported only: "not Developer-ID signed (expected, 0146)", unless the build
+  was Developer ID signed (macOS `enforce` mode, decision 0156). Then, for the
+  universal app and the profile validator DMGs: the app is Developer ID signed
+  by the `TEAM_ID` team; every Mach-O file has a Developer ID authority, the
+  team, the hardened runtime, a secure timestamp and no `get-task-allow`
+  (`macho_identity`); the DMG is Developer ID signed by the team (`dmg_sig`);
+  the DMG and its apps are stapled and Gatekeeper accepts them as notarised
+  (`notarization`). The per-arch DMGs stay ad-hoc and are reported only.
 
 ### Linux
 
@@ -83,12 +91,13 @@ A check whose sources are not merged yet (T5, T6, T8) is skipped and says so.
 
 ## Modes
 
-The Windows signature rules follow the signing predicate of the build
-(decisions 0098, 0144):
+The signature rules follow the signing predicate of the build (decisions
+0098, 0144, 0156). Windows and macOS have one mode each: Windows reads the six
+Azure secrets, macOS the seven Apple secrets of `wiki/cosmyx/macos-signing.md`.
 
 | Mode | When | Signatures |
 |------|------|------------|
-| `enforce` | DEV or `release/*` (or `COSMYX_SIGN_ALL_REFS`), not a pull request, not MIXED, and the six Azure secrets set | Every rule is a failure when broken. |
+| `enforce` | DEV or `release/*` (or `COSMYX_SIGN_ALL_REFS`), not a pull request, not MIXED, and that OS's signing secrets all set | Every rule is a failure when broken. |
 | `not-configured` | Same refs, but the secrets are not all set | Reported with a notice; a failure in strict mode. |
 | `report` | Pull requests, MIXED, other refs | Reported with the count of unsigned files. |
 
@@ -121,6 +130,7 @@ Repository settings the checks read (Settings, Secrets and variables, Actions):
 | Setting | Kind | Effect |
 |---------|------|--------|
 | `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID`, `AZURE_TRUSTED_SIGNING_ENDPOINT`, `AZURE_CODE_SIGNING_NAME`, `AZURE_CERT_PROFILE_NAME` | secrets (T9) | All set: signed refs are checked in `enforce` mode. Only their presence is read. |
+| `BUILD_CERTIFICATE_BASE64`, `P12_PASSWORD`, `KEYCHAIN_PASSWORD`, `MACOS_CERTIFICATE_ID`, `APPLE_DEV_ACCOUNT`, `APP_PWD`, `TEAM_ID` | secrets (T15) | All set: signed refs get the macOS `enforce` mode. Only their presence is read, except `TEAM_ID`, which the macOS leg compares with the signatures (`COSMYX_MAC_TEAM_ID`, masked). |
 | `COSMYX_SIGN_ALL_REFS` | variable (T9) | `true`: every non-PR, non-MIXED ref counts as signed. |
 | `COSMYX_SIGN_EKU` | variable, optional | Pins our identity to the certificate profile's own EKU (`1.3.6.1.4.1.311.97.<n>...`), stable across renewals. Recommended. |
 | `COSMYX_SIGN_SUBJECT` | variable, optional | Pins the exact certificate subject. |
@@ -141,12 +151,13 @@ protection rules.
   checks, the names check and the report there (`out/report.md`). Other OSes
   are skipped with a message. The Windows installer is never run locally. A
   local run cannot read the secrets: set `COSMYX_HAS_<SECRET>=true` for each of
-  the six to check in `enforce` mode.
+  the six Azure secrets (Windows) or the seven Apple secrets (macOS, with
+  `COSMYX_MAC_TEAM_ID` set to the team) to check in `enforce` mode.
 - `just test-scripts` runs the tests (`scripts/cosmyx/tests/test_artifact_checks_*.py`
   and `artifact_checks_windows.Tests.ps1`).
 
 ## Deferred
 
 Smoke and slice runs on Windows and macOS, aarch64 runs on arm runners, the
-identity of nested signatures, Developer ID signing and notarisation checks,
-and the branding guard.
+identity of nested Windows signatures, and the branding guard. macOS
+Developer ID and notarisation are checked since T15 (decision 0156).

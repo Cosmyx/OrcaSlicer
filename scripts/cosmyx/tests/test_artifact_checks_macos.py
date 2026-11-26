@@ -55,7 +55,7 @@ class FakeTools:
             ok = name in self.signed
             return subprocess.CompletedProcess(args, 0 if ok else 1, "", "" if ok else
                                                f"{args[-1]}: code object is not signed at all")
-        if args[:2] == ["codesign", "-dv"]:
+        if args[:3] == ["codesign", "-d", "--verbose=4"]:
             return subprocess.CompletedProcess(args, 0, "", self.dv)
         if args[0] == "hdiutil":
             return subprocess.CompletedProcess(args, 0, "", "")
@@ -138,6 +138,130 @@ class ScanTests(unittest.TestCase):
         self.assertTrue(any(c[:2] == ["hdiutil", "detach"] for c in tools.calls))
         # The empty mount has no Mach-O file.
         self.assertTrue(any(r.status == "fail" and "no Mach-O" in r.reason for r in records))
+
+
+TEAM = "TEAM123456"
+DEVELOPER_ID = f"""Executable=/x
+CodeDirectory v=20500 size=1 flags=0x10000(runtime) hashes=1+7 location=embedded
+Authority=Developer ID Application: Example Corp ({TEAM})
+Authority=Developer ID Certification Authority
+Timestamp=19 Nov 2026 at 10:00:00
+TeamIdentifier={TEAM}
+"""
+
+
+class SignedTools(FakeTools):
+    """A Developer ID signed, notarised build; `broken` names files whose
+    signature, stapling or Gatekeeper answer is wrong."""
+
+    def __init__(self, archs: dict[str, str], display: str = DEVELOPER_ID, broken: set[str] | None = None) -> None:
+        super().__init__(archs, set(archs) | {"OrcaSlicer.app", "OrcaSlicer.dmg"}, display)
+        self.broken = broken or set()
+
+    def __call__(self, args, **kwargs):
+        args = [str(a) for a in args]
+        name = Path(args[-1]).name
+        if args[:3] == ["codesign", "-d", "--verbose=4"]:
+            self.calls.append(args)
+            text = self.dv.replace("flags=0x10000(runtime)", "flags=0x0(none)") if name in self.broken else self.dv
+            return subprocess.CompletedProcess(args, 0, "", text)
+        if args[:3] == ["xcrun", "stapler", "validate"]:
+            self.calls.append(args)
+            return subprocess.CompletedProcess(args, 65 if name in self.broken else 0, "", "")
+        if args[0] == "spctl":
+            self.calls.append(args)
+            source = "Unnotarized Developer ID" if name in self.broken else "Notarized Developer ID"
+            return subprocess.CompletedProcess(args, 0, "", f"{args[-1]}: accepted\nsource={source}\n")
+        return super().__call__(args, **kwargs)
+
+
+class EnforceTests(unittest.TestCase):
+    """Decision 0156: Developer ID rules once the build is signed."""
+
+    def setUp(self) -> None:
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.mount = Path(self.tmp.name) / "mnt"
+        macos_dir = self.mount / "OrcaSlicer.app" / "Contents" / "MacOS"
+        macos_dir.mkdir(parents=True)
+        (macos_dir / "OrcaSlicer").write_bytes(fat_header())
+        self.archs = {"OrcaSlicer": "x86_64 arm64"}
+
+    def scan(self, tools, team=TEAM, name=f"OrcaSlicer_Mac_universal_{TAG}"):
+        return macos.scan_tree(artifact(name), self.mount, allowlist.Allowlist(), tools, macos.signing_policy.ENFORCE,
+                               team)
+
+    def by_check(self, records):
+        found = {}
+        for record in records:
+            found.setdefault(record.check, []).append(record.status)
+        return found
+
+    def test_signed_build_passes(self) -> None:
+        checks = self.by_check(self.scan(SignedTools(self.archs)))
+        self.assertEqual(checks["macho_identity"], ["pass"])
+        self.assertEqual(checks["bundle_sig"], ["pass"])
+
+    def test_wrong_team_and_missing_runtime_fail(self) -> None:
+        checks = self.by_check(self.scan(SignedTools(self.archs), team="OTHERTEAM1"))
+        self.assertEqual(checks["macho_identity"], ["fail"])
+        self.assertEqual(checks["bundle_sig"], ["fail"])
+        records = self.scan(SignedTools(self.archs, broken={"OrcaSlicer"}))
+        identity = next(r for r in records if r.check == "macho_identity")
+        self.assertEqual(identity.status, "fail")
+        self.assertIn("no hardened runtime", identity.reason)
+
+    def test_adhoc_build_fails_in_enforce_mode(self) -> None:
+        tools = SignedTools(self.archs, display="Signature=adhoc\nTeamIdentifier=not set\n")
+        checks = self.by_check(self.scan(tools))
+        self.assertEqual(checks["macho_identity"], ["fail"])
+        self.assertEqual(checks["bundle_sig"], ["fail"])
+
+    def test_report_mode_runs_no_identity_check(self) -> None:
+        records = macos.scan_tree(artifact(), self.mount, allowlist.Allowlist(), SignedTools(self.archs))
+        self.assertNotIn("macho_identity", self.by_check(records))
+
+    def test_dmg_signature_and_notarisation(self) -> None:
+        dmg = Path(self.tmp.name) / "OrcaSlicer.dmg"
+        records = macos.dmg_records(artifact(), dmg, self.mount, TEAM, SignedTools(self.archs))
+        self.assertEqual([(r.check, r.path, r.status) for r in records],
+                         [("dmg_sig", "OrcaSlicer.dmg", "pass"), ("notarization", "OrcaSlicer.dmg", "pass"),
+                          ("notarization", "OrcaSlicer.app", "pass")])
+        tools = SignedTools(self.archs, broken={"OrcaSlicer.app", "OrcaSlicer.dmg"})
+        records = macos.dmg_records(artifact(), dmg, self.mount, TEAM, tools)
+        notarization = [r for r in records if r.check == "notarization"]
+        self.assertTrue(all(r.status == "fail" for r in notarization))
+        self.assertIn("not stapled", notarization[0].reason)
+        self.assertIn("Gatekeeper", notarization[1].reason)
+        open_call = next(c for c in tools.calls if c[0] == "spctl" and "open" in c)
+        self.assertIn("context:primary-signature", open_call)
+
+    def check(self, mode, team=TEAM, strict=False, name=f"OrcaSlicer_Mac_universal_{TAG}"):
+        artifacts = Path(self.tmp.name) / "artifacts"
+        folder = artifacts / name
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / "OrcaSlicer.dmg").write_bytes(b"dmg")
+        return macos.check(artifacts, [artifact(name)], Path(self.tmp.name) / "work", allowlist.Allowlist(),
+                           SignedTools(self.archs), mode=mode, team=team, strict=strict)
+
+    def test_check_enforce_adds_dmg_records_for_signed_families_only(self) -> None:
+        enforce = macos.signing_policy.ENFORCE
+        checks = self.by_check(self.check(enforce))
+        self.assertIn("dmg_sig", checks)
+        self.assertIn("notarization", checks)
+        per_arch = self.by_check(self.check(enforce, name=f"OrcaSlicer_Mac_arm64_{TAG}"))
+        self.assertNotIn("dmg_sig", per_arch)
+        self.assertNotIn("macho_identity", per_arch)
+
+    def test_check_enforce_without_team_fails(self) -> None:
+        records = self.check(macos.signing_policy.ENFORCE, team="")
+        self.assertTrue(any(r.status == "fail" and "COSMYX_MAC_TEAM_ID" in r.reason for r in records))
+
+    def test_not_configured_fails_only_in_strict_mode(self) -> None:
+        mode = macos.signing_policy.NOT_CONFIGURED
+        self.assertFalse(any(r.artifact == "signing" for r in self.check(mode)))
+        strict = [r for r in self.check(mode, strict=True) if r.artifact == "signing"]
+        self.assertEqual([r.status for r in strict], ["fail"])
 
 
 REAL_TOOLS = sys.platform == "darwin" and all(shutil.which(t) for t in ("cc", "codesign", "lipo"))
