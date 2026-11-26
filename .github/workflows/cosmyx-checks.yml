@@ -27,6 +27,10 @@ on:
       # run when upstream edits them.
       - '.github/workflows/build_orca.yml'
       - '.github/workflows/build_flatpak.yml'
+      # The Cosmyx vendor bundle is checked with the upstream profile tool.
+      - 'resources/profiles/Cosmyx/**'
+      - 'resources/profiles/Cosmyx.json'
+      - 'scripts/orca_profile_tool.py'
   push:
     branches:
       - DEV
@@ -50,6 +54,10 @@ on:
       # run when upstream edits them.
       - '.github/workflows/build_orca.yml'
       - '.github/workflows/build_flatpak.yml'
+      # The Cosmyx vendor bundle is checked with the upstream profile tool.
+      - 'resources/profiles/Cosmyx/**'
+      - 'resources/profiles/Cosmyx.json'
+      - 'scripts/orca_profile_tool.py'
   workflow_dispatch:
 
 permissions:
