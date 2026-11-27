@@ -1,0 +1,83 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Die Adresse des Plugin-Servers ist keine einfache https-Adresse, daher "
+"können seine Plugins nicht verifiziert werden. Das Plugin wurde nicht "
+"installiert."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Die Plugin-Version %1% ist älter als die installierte Version %2% und wurde "
+"daher nicht installiert."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Dieser Build hat keinen Signaturschlüssel für den Cosmyx-Plugin-Server, "
+"daher können seine Plugins nicht verifiziert werden. Das Plugin wurde nicht "
+"installiert."
+
+# AI Translated
+# Needs human review: 'pin' rendered as 'hinterlegen'; check it matches the Preferences wording
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Für diesen Plugin-Server ist kein Signaturschlüssel hinterlegt. Hinterlegen "
+"Sie seinen Schlüssel in den Einstellungen oder lassen Sie nicht verifizierte "
+"Plugins von ihm zu. Das Plugin wurde nicht installiert."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Plugin-Pakete können auf dieser Plattform nicht verifiziert werden. Das "
+"Plugin wurde nicht installiert."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Das Plugin-Paket hat die Signaturprüfung nicht bestanden (%1%). Das Plugin "
+"wurde nicht installiert."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Plugin %1% wurde ohne Verifizierung installiert: Dieser Server darf nicht "
+"verifizierte Plugins bereitstellen."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Das installierte Plugin-Paket konnte nicht als das Paket mit geprüfter "
+"Signatur erfasst werden und wurde daher entfernt. Das Plugin wurde nicht "
+"installiert."

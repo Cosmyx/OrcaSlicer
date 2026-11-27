@@ -1,0 +1,80 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: ga_IE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n>=3 && n<=6 ? 2 : "
+"n>=7 && n<=10 ? 3 : 4);\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Ní seoladh https simplí é seoladh fhreastalaí na mbreiseán, mar sin ní "
+"féidir a bhreiseáin a fhíorú. Níor suiteáladh an breiseán."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Tá leagan %1% den bhreiseán níos sine ná an leagan suiteáilte %2%, mar sin "
+"níor suiteáladh é."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Níl aon eochair shínithe ag an tógáil seo d'fhreastalaí breiseán Cosmyx, mar "
+"sin ní féidir a bhreiseáin a fhíorú. Níor suiteáladh an breiseán."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Níl aon eochair shínithe pionnáilte don fhreastalaí breiseán seo. Pionnáil a "
+"eochair sna Sainroghanna, nó ceadaigh breiseáin neamhfhíoraithe uaidh. Níor "
+"suiteáladh an breiseán."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Ní féidir pacáistí breiseán a fhíorú ar an ardán seo. Níor suiteáladh an "
+"breiseán."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Theip ar sheiceáil shínithe phacáiste an bhreiseáin (%1%). Níor suiteáladh "
+"an breiseán."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Suiteáladh an breiseán %1% gan fíorú: d'fhéadfadh an freastalaí seo "
+"breiseáin neamhfhíoraithe a sholáthar."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Níorbh fhéidir pacáiste an bhreiseáin suiteáilte a thaifeadadh mar an ceann "
+"ar seiceáladh a shíniú, mar sin baineadh é. Níor suiteáladh an breiseán."

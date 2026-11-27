@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Adressen till servern för insticksmoduler är inte en vanlig https-adress, så "
+"dess insticksmoduler kan inte verifieras. Insticksmodulen installerades inte."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Insticksmodulens version %1% är äldre än den installerade versionen %2%, så "
+"den installerades inte."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Den här versionen saknar signeringsnyckel för Cosmyx server för "
+"insticksmoduler, så dess insticksmoduler kan inte verifieras. "
+"Insticksmodulen installerades inte."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Ingen signeringsnyckel är fäst för den här servern för insticksmoduler. Fäst "
+"dess nyckel i Inställningar, eller tillåt overifierade insticksmoduler från "
+"den. Insticksmodulen installerades inte."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"Insticksmodulpaket kan inte verifieras på den här plattformen. "
+"Insticksmodulen installerades inte."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Insticksmodulpaketet klarade inte signaturkontrollen (%1%). Insticksmodulen "
+"installerades inte."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Insticksmodulen %1% installerades overifierad: den här servern får "
+"tillhandahålla overifierade insticksmoduler."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Det installerade insticksmodulpaketet kunde inte registreras som det vars "
+"signatur kontrollerades, så det togs bort. Insticksmodulen installerades "
+"inte."

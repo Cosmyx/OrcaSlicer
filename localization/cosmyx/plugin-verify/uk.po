@@ -1,0 +1,78 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OrcaSlicer Cosmyx plugin-verify\n"
+"Language: uk_UA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 "
+"&& n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 "
+"&& n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+
+# AI Translated
+msgid ""
+"The plugin server address is not a plain https address, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"Адреса сервера плагінів не є звичайною адресою https, тому його плагіни "
+"неможливо перевірити. Плагін не встановлено."
+
+# AI Translated
+#. TRN %1% is the version offered by the server, %2% the installed version.
+#, possible-boost-format
+msgid ""
+"Plugin version %1% is older than the installed version %2%, so it was not "
+"installed."
+msgstr ""
+"Версія плагіна %1% старіша за встановлену версію %2%, тому її не встановлено."
+
+# AI Translated
+msgid ""
+"This build has no signing key for the Cosmyx plugin server, so its plugins "
+"cannot be verified. The plugin was not installed."
+msgstr ""
+"У цій збірці немає ключа підпису для сервера плагінів Cosmyx, тому його "
+"плагіни неможливо перевірити. Плагін не встановлено."
+
+# AI Translated
+msgid ""
+"No signing key is pinned for this plugin server. Pin its key in Preferences, "
+"or allow unverified plugins from it. The plugin was not installed."
+msgstr ""
+"Для цього сервера плагінів не закріплено ключ підпису. Закріпіть його ключ у "
+"розділі «Налаштування» або дозвольте неперевірені плагіни з нього. Плагін не "
+"встановлено."
+
+# AI Translated
+msgid ""
+"Plugin packages cannot be verified on this platform. The plugin was not "
+"installed."
+msgstr ""
+"На цій платформі неможливо перевірити пакети плагінів. Плагін не встановлено."
+
+# AI Translated
+#. TRN %1% is a fixed code naming the failed check, such as bad_signature or sha256_mismatch.
+#, possible-boost-format
+msgid ""
+"The plugin package failed its signature check (%1%). The plugin was not "
+"installed."
+msgstr ""
+"Пакет плагіна не пройшов перевірку підпису (%1%). Плагін не встановлено."
+
+# AI Translated
+#. TRN %1% is the plugin name.
+#, possible-boost-format
+msgid ""
+"Plugin %1% was installed unverified: this server may serve unverified "
+"plugins."
+msgstr ""
+"Плагін %1% встановлено без перевірки: цей сервер може надавати неперевірені "
+"плагіни."
+
+# AI Translated
+msgid ""
+"The installed plugin package could not be recorded as the one whose "
+"signature was checked, so it was removed. The plugin was not installed."
+msgstr ""
+"Не вдалося зафіксувати встановлений пакет плагіна як той, підпис якого було "
+"перевірено, тому його видалено. Плагін не встановлено."
