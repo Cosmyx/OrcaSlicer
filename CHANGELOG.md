@@ -81,4 +81,4 @@ here; see the upstream release notes.
   flatpak-builder caches, and anything of 256 MB or more) are now deleted
   while and after it runs, so they no longer evict the deps caches that the
   builds of DEV and of the pull requests need. MIXED builds compile cold.
-  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/TBD. Decisions: 0227.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/132. Decisions: 0227.
