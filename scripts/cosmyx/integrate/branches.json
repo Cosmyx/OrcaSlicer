@@ -215,6 +215,12 @@
       "bundle": 8
     },
     {
+      "name": "ci/cosmyx-cache-trim",
+      "pr": 132,
+      "parent": "chore/cosmyx-foundation",
+      "bundle": 8
+    },
+    {
       "name": "feat/cosmyx-languages",
       "pr": 123,
       "parents": ["feat/cosmyx-translations-fill", "feat/cosmyx-update-check"],

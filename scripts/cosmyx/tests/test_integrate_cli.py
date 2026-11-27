@@ -1004,7 +1004,7 @@ class BranchListTests(unittest.TestCase):
 
     def test_shipped_list_has_the_ci_branches(self) -> None:
         names = [entry.name for entry in cli.load_branches()[1]]
-        for name in ("ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build"):
+        for name in ("ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build", "ci/cosmyx-cache-trim"):
             self.assertIn(name, names)
         # Superseded by the dev build (#119).
         self.assertNotIn("ci/cosmyx-arm64-pr-builds", names)
@@ -1095,7 +1095,8 @@ class BranchListTests(unittest.TestCase):
             "feat/cosmyx-models-cosmyx-only", "ci/cosmyx-branding-engine", "feat/cosmyx-logos",
             "feat/cosmyx-product-name", "feat/cosmyx-install-paths",
             "ci/cosmyx-artifact-checks", "ci/cosmyx-macos-signing", "ci/cosmyx-exec-smoke", "ci/cosmyx-flatpak-off",
-            "ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build", "docs/cosmyx-changelogs",
+            "ci/cosmyx-integrate", "ci/cosmyx-mac-retry", "ci/cosmyx-dev-build", "ci/cosmyx-cache-trim",
+            "docs/cosmyx-changelogs",
             "docs/cosmyx-rebase-skill"})
         self.assertEqual(len(cli.load_branches(bundle=9)[1]), len(cli.load_branches()[1]))
 
