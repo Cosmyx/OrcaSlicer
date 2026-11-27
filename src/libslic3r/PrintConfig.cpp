@@ -1,4 +1,5 @@
 #include "PrintConfig.hpp"
+#include "Cosmyx/ConfigDefExtensions.hpp" // Cosmyx
 #include "CommonDefs.hpp"
 #include "Point.hpp"
 #include "Polygon.hpp"
@@ -630,6 +631,7 @@ CONFIG_OPTION_ENUM_DEFINE_STATIC_MAPS(LayerSeq)
 
 static t_config_enum_values s_keys_map_NozzleType {
     { "undefine",       int(NozzleType::ntUndefine) },
+    { "cht", int(NozzleType::ntCHT) }, // Cosmyx
     { "hardened_steel", int(NozzleType::ntHardenedSteel) },
     { "stainless_steel", int(NozzleType::ntStainlessSteel)},
     { "tungsten_carbide", int(NozzleType::ntTungstenCarbide)},
@@ -1008,6 +1010,7 @@ PrintConfigDef::PrintConfigDef()
     assign_printer_technology_to_unknown(this->options, ptAny);
     this->init_fff_params();
     this->init_extruder_option_keys();
+    Cosmyx::extend_print_config_def(*this); // Cosmyx
     assign_printer_technology_to_unknown(this->options, ptFFF);
     this->init_sla_params();
     assign_printer_technology_to_unknown(this->options, ptSLA);

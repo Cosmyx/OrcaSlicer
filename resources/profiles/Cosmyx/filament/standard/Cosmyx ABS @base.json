@@ -1,0 +1,20 @@
+{
+	"type": "filament",
+	"name": "Cosmyx ABS @base",
+	"inherits": "fdm_filament_abs",
+	"from": "system",
+	"filament_id": "OFHXhiYz",
+	"instantiation": "false",
+	"filament_flow_ratio": [
+		"0.95"
+	],
+	"filament_cost": [
+		"24.99"
+	],
+	"filament_vendor": [
+		"Cosmyx"
+	],
+	"required_nozzle_HRC": [
+		"1"
+	]
+}

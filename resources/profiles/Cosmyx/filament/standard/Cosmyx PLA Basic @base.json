@@ -1,0 +1,25 @@
+{
+	"type": "filament",
+	"name": "Cosmyx PLA Basic @base",
+	"inherits": "fdm_filament_pla",
+	"from": "system",
+	"filament_id": "OFxUqdoU",
+	"instantiation": "false",
+	"filament_vendor": [
+		"Cosmyx"
+	],
+	"filament_cost": [
+		"24.99"
+	],
+	"filament_flow_ratio": [
+		"0.98"
+	],
+	"filament_density": [
+		"1.26"
+	],
+	"filament_start_gcode": [],
+	"required_nozzle_HRC": [
+		"1"
+	],
+	"compatible_printers": []
+}

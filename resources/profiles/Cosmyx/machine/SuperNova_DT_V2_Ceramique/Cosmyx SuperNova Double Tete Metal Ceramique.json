@@ -1,0 +1,13 @@
+{
+    "type": "machine_model",
+    "name": "Cosmyx SuperNova Double Tete Metal Ceramique",
+    "model_id": "BL-P003",
+    "url": "http://www.cosmyx.com/Parameters/printer_model/Cosmyx SuperNova_dualhead.json",
+    "nozzle_diameter": "0.4;0.25;0.6;0.8",
+    "machine_tech": "FFF",
+    "family": "Cosmyx-3DP",
+    "bed_model": "SuperNova-bed_model.stl",
+    "bed_texture": "SuperNova-bed_texture.png",
+    "hotend_model": "",
+    "default_materials": "CAPIFIL PLA BLANC @Cosmyx Nova;CAPIFIL PLA BLEU @Cosmyx Nova;CAPIFIL PLA NOIR @Cosmyx Nova;Cosmyx ASA @Cosmyx Nova 0.4 nozzle;Cosmyx PA6-CF @Cosmyx Nova;Cosmyx PETG Basic @Cosmyx Nova;Cosmyx PLA Basic @Cosmyx Nova;Cosmyx TPU 95A @Cosmyx Nova;ENKY PETG CF @Cosmyx Nova;ENKY TPU 95A @Cosmyx Nova;FILKEMP PLN @Cosmyx Nova;FORMFUTURA PVA @Cosmyx Nova;KIMYA TPC 91A @Cosmyx Nova;TECTONIC ASA+ @Cosmyx Nova 0.4 nozzle;TECTONIC Breakaway @Cosmyx Nova;TECTONIC CPE JAUNE @Cosmyx Nova;TECTONIC CPE ROUGE @Cosmyx Nova;TECTONIC PP-CF15 @Cosmyx Nova;TENET PP-CF15 @Cosmyx Nova"
+}

@@ -1,0 +1,121 @@
+{
+    "type": "filament",
+    "name": "TECTONIC PP-CF15 @Cosmyx Nova",
+    "inherits": "Cosmyx PA6-CF @Cosmyx Nova",
+    "from": "system",
+    "setting_id": "XSlPqXKCudeHPEdC",
+    "filament_id": "OFfhR2MB",
+    "instantiation": "true",
+    "default_filament_colour": [
+        "#808080"
+    ],
+    "fan_max_speed": [
+        "70"
+    ],
+    "fan_min_speed": [
+        "70"
+    ],
+    "filament_settings_id": [
+        "TECTONIC PP-CF15 @Cosmyx Nova"
+    ],
+    "filament_vendor": [
+        "TECTONIC"
+    ],
+    "nozzle_temperature": [
+        "295"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "295"
+    ],
+    "overhang_fan_speed": [
+        "70"
+    ],
+    "reduce_fan_stop_start_freq": [
+        "1"
+    ],
+    "fan_cooling_layer_time": [
+        "80"
+    ],
+    "filament_density": [
+        "1.07"
+    ],
+    "filament_max_volumetric_speed": [
+        "6.8"
+    ],
+    "filament_type": [
+        "PP-CF"
+    ],
+    "supertack_plate_temp": [
+        "80"
+    ],
+    "supertack_plate_temp_initial_layer": [
+        "80"
+    ],
+    "cool_plate_temp": [
+        "80"
+    ],
+    "cool_plate_temp_initial_layer": [
+        "80"
+    ],
+    "textured_cool_plate_temp": [
+        "80"
+    ],
+    "textured_cool_plate_temp_initial_layer": [
+        "80"
+    ],
+    "eng_plate_temp": [
+        "80"
+    ],
+    "eng_plate_temp_initial_layer": [
+        "80"
+    ],
+    "hot_plate_temp": [
+        "80"
+    ],
+    "hot_plate_temp_initial_layer": [
+        "80"
+    ],
+    "textured_plate_temp": [
+        "80"
+    ],
+    "textured_plate_temp_initial_layer": [
+        "80"
+    ],
+    "required_nozzle_HRC": [
+        "91"
+    ],
+    "compatible_printers": [
+        "Cosmyx Nova 0.25 nozzle",
+        "Cosmyx Nova 0.4 nozzle",
+        "Cosmyx Nova 0.6 nozzle",
+        "Cosmyx Nova 0.8 nozzle",
+        "Cosmyx Nova Metal Ceramique 0.25 nozzle",
+        "Cosmyx Nova Metal Ceramique 0.4 nozzle",
+        "Cosmyx Nova Metal Ceramique 0.6 nozzle",
+        "Cosmyx Nova Metal Ceramique 0.8 nozzle",
+        "Cosmyx Nova 0.25 nozzle can-out",
+        "Cosmyx Nova 0.4 nozzle can-out",
+        "Cosmyx Nova 0.6 nozzle can-out",
+        "Cosmyx Nova 0.8 nozzle can-out",
+        "Cosmyx Nova Haute Temperature 0.25 nozzle",
+        "Cosmyx Nova Haute Temperature 0.4 nozzle",
+        "Cosmyx Nova Haute Temperature 0.6 nozzle",
+        "Cosmyx Nova Haute Temperature 0.8 nozzle",
+        "Cosmyx SuperNova 0.25 nozzle",
+        "Cosmyx SuperNova 0.4 nozzle",
+        "Cosmyx SuperNova 0.6 nozzle",
+        "Cosmyx SuperNova 0.8 nozzle",
+        "Cosmyx SuperNova Double Tete 0.25 nozzle",
+        "Cosmyx SuperNova Double Tete 0.4 nozzle",
+        "Cosmyx SuperNova Double Tete 0.6 nozzle",
+        "Cosmyx SuperNova Double Tete 0.8 nozzle",
+        "Cosmyx SuperNova Double Tete Metal Ceramique 0.25 nozzle",
+        "Cosmyx SuperNova Double Tete Metal Ceramique 0.4 nozzle",
+        "Cosmyx SuperNova Double Tete Metal Ceramique 0.6 nozzle",
+        "Cosmyx SuperNova Double Tete Metal Ceramique 0.8 nozzle",
+        "Cosmyx Nova Double Tete 0.25 nozzle",
+        "Cosmyx Nova Double Tete 0.4 nozzle",
+        "Cosmyx Nova Double Tete 0.6 nozzle",
+        "Cosmyx Nova Double Tete 0.8 nozzle"
+    ]
+}

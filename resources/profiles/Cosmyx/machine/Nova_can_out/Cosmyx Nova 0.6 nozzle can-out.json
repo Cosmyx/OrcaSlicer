@@ -1,0 +1,14 @@
+{
+	"type": "machine",
+	"name": "Cosmyx Nova 0.6 nozzle can-out",
+	"inherits": "Cosmyx Nova 0.6 nozzle",
+	"setting_id": "lfjKzNRSJfSpRFOk",
+	"instantiation": "true",
+	"nozzle_diameter": [
+		"0.6"
+	],
+	"printer_model": "Cosmyx Nova can-out",
+	"printer_variant": "0.6",
+	"nozzle_type": "cht",
+	"machine_start_gcode": "M104 S[first_layer_temperature] ; set extruder temp\nM140 S[first_layer_bed_temperature] ; set bed temp\nM190 S[first_layer_bed_temperature] ; wait for bed temp\nM109 S[first_layer_temperature] ; wait for extruder temp\nG1 Z5 F15000 ; lift\nG1 X299 Y160 F4500 ; move to prime\nG1 Z0.29 F4500 ; get ready to prime\nG92 E0 ; reset extrusion distance\nG1 Y150 E5.0 F600 ; prime nozzle\nG1 Y110 E9.5 F600 ; prime nozzle\nG1 Y80 F5000 ; quick wipe\n;; start_print ;;\n"
+}
