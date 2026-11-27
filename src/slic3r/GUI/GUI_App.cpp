@@ -3,6 +3,7 @@
 #include "ICloudServiceAgent.hpp"
 #include "IPrinterAgent.hpp"
 #include "OrcaCloudServiceAgent.hpp"
+#include "Cosmyx/logic/CloudServer.hpp" // Cosmyx
 #include "libslic3r/Technologies.hpp"
 #include "libslic3r/Platform.hpp"
 #include "GUI_App.hpp"
@@ -4171,6 +4172,7 @@ bool GUI_App::on_init_network(bool try_backup)
     Slic3r::NetworkAgentFactory::register_all_agents();
 
     // m_agent = new Slic3r::NetworkAgent(data_directory);
+    Cosmyx::apply_cloud_server(*app_config); // Cosmyx: CosmoCloud unless the user set a server (decision 0201)
     std::unique_ptr<Slic3r::NetworkAgent> agent_ptr = Slic3r::create_agent_from_config(data_directory, app_config);
     // A direct restart_networking() replaces m_agent without deleting it, so a health check in flight
     // on the old agent would still report into the GUI.

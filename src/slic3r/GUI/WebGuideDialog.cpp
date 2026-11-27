@@ -1,4 +1,5 @@
 #include "WebGuideDialog.hpp"
+#include "Cosmyx/logic/GuidePolicy.hpp" // Cosmyx
 #include "CloudProvider.hpp"
 #include "ConfigWizard.hpp"
 
@@ -1757,6 +1758,7 @@ int GuideFrame::SaveProfileData()
 
         StealthMode = wxGetApp().app_config->get_bool("app","stealth_mode");
         m_ProfileJson["stealth_mode"] = StealthMode;
+        Cosmyx::apply_guide_policy(m_ProfileJson, StealthMode); // Cosmyx
     }
     catch (std::exception &e) {
         BOOST_LOG_TRIVIAL(error) << __FUNCTION__ << ", error: "<< e.what() <<std::endl;
