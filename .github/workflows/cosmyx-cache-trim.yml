@@ -1,0 +1,49 @@
+# Cosmyx: deletes the large caches that "Build all" saves on MIXED (ccache-*,
+# flatpak-builder-*, anything over the size threshold) so they never push the
+# deps caches of DEV and of the pull requests out of the 10 GB repository
+# cache (decision 0227). The small deps caches of MIXED are kept.
+#
+# requested: watches the run and trims every few minutes while its jobs save
+# their caches, which keeps the peak low. completed: one last pass.
+# workflow_run only fires from the copy of this file on the default branch.
+name: Cosmyx MIXED cache trim
+
+on:
+  workflow_run:
+    workflows: ["Build all"]
+    types: [requested, completed]
+    branches: [MIXED]
+
+permissions:
+  actions: write
+
+concurrency:
+  group: cosmyx-cache-trim-${{ github.event.workflow_run.id }}-${{ github.event.action }}
+  cancel-in-progress: false
+
+jobs:
+  trim:
+    name: Trim the MIXED caches
+    # Our fork only, and only for MIXED of this repository (a fork's pull
+    # request from a branch named MIXED has another head repository).
+    if: >-
+      github.repository != 'OrcaSlicer/OrcaSlicer' &&
+      github.event.workflow_run.head_branch == 'MIXED' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 345
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RUN_ID: ${{ github.event.workflow_run.id }}
+      MODE: ${{ github.event.action == 'completed' && 'trim' || 'watch' }}
+      CACHE_TRIM_THRESHOLD_MB: ${{ vars.COSMYX_CACHE_TRIM_THRESHOLD_MB || '256' }}
+      CACHE_TRIM_INTERVAL_SECONDS: ${{ vars.COSMYX_CACHE_TRIM_INTERVAL_SECONDS || '300' }}
+      CACHE_TRIM_WATCH_MINUTES: '330'
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts/cosmyx/ci
+          persist-credentials: false
+
+      - name: Trim
+        run: python3 scripts/cosmyx/ci/cache_trim.py "$MODE"

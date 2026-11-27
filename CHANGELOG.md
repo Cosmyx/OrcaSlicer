@@ -75,3 +75,10 @@ here; see the upstream release notes.
 <!-- cosmyx-slot: T11a -->
 
 <!-- cosmyx-slot: T13 -->
+
+<!-- cosmyx-slot: T32 -->
+- The large caches that "Build all" saves on MIXED (compiler and
+  flatpak-builder caches, and anything of 256 MB or more) are now deleted
+  while and after it runs, so they no longer evict the deps caches that the
+  builds of DEV and of the pull requests need. MIXED builds compile cold.
+  Pull request: https://github.com/Cosmyx/OrcaSlicer/pull/TBD. Decisions: 0227.
